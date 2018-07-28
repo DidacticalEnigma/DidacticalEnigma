@@ -6,7 +6,18 @@
         xmlns:local="clr-namespace:DidacticalEnigma"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <local:MainWindowVM/>
+    </Window.DataContext>
     <Grid>
-        
+        <Grid.ColumnDefinitions/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="{Binding T}" FontSize="36">
+
+        </TextBlock>
+        <TextBox Grid.Row="1" TextWrapping="Wrap" Text="{Binding S}" PreviewKeyDown="UpdateOnEnter" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
     </Grid>
 </Window>
