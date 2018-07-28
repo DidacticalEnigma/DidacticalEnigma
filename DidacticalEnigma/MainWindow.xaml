@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DidacticalEnigma"
+        xmlns:models="clr-namespace:DidacticalEnigma.Models"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.DataContext>
@@ -15,9 +16,30 @@
             <RowDefinition Height="10*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="{Binding T}" FontSize="36">
-
-        </TextBlock>
-        <TextBox Grid.Row="1" TextWrapping="Wrap" Text="{Binding S}" PreviewKeyDown="UpdateOnEnter" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+        <FlowDocumentScrollViewer Grid.Row="0" >
+            <local:SimpleFlowDocument DataSource="{Binding T}" RootTextElementType="{x:Type Paragraph}">
+                <local:SimpleFlowDocument.ContentTemplateSelector>
+                    <local:TrivialTemplateSelector>
+                        <local:TrivialTemplateSelector.Default>
+                            <DataTemplate>
+                                <Run FontSize="24" Background="Transparent" ToolTipService.InitialShowDelay="0" ToolTipService.ShowDuration="120000" Text="{Binding StringForm, Mode=OneWay}">
+                                    <Run.ToolTip>
+                                        <TextBlock Text="{Binding Word.DictionaryStringBlurb}" />
+                                    </Run.ToolTip>
+                                </Run>
+                            </DataTemplate>
+                        </local:TrivialTemplateSelector.Default>
+                    </local:TrivialTemplateSelector>
+                </local:SimpleFlowDocument.ContentTemplateSelector>
+            </local:SimpleFlowDocument>
+        </FlowDocumentScrollViewer>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" TextWrapping="Wrap" Text="{Binding S}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+            <Button Grid.Column="1" Content="Update" Command="{Binding Update}"/>
+        </Grid>
     </Grid>
 </Window>

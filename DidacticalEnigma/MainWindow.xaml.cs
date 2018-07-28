@@ -24,18 +24,5 @@ namespace DidacticalEnigma
         {
             InitializeComponent();
         }
-
-        private void UpdateOnEnter(object sender, KeyEventArgs e)
-        {
-            var bindingExpression = BindingOperations.GetBindingExpression((TextBox)sender, TextBox.TextProperty);
-            if (e.Key == Key.Enter)
-            {
-                bindingExpression?.UpdateSource();
-            }
-            if (e.Key == Key.Escape)
-            {
-                bindingExpression?.UpdateTarget();
-            }
-        }
     }
 }
