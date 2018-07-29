@@ -24,56 +24,59 @@
             <Button Content="Katakana" />
             <Button Content="About" />
         </ToolBar>
-        <FlowDocumentScrollViewer Grid.Row="1" Grid.ColumnSpan="2">
-            <enigma:SimpleFlowDocument DataSource="{Binding AnnotatedOutput}" RootTextElementType="{x:Type Paragraph}">
-                <enigma:SimpleFlowDocument.ContentTemplateSelector>
-                    <enigma:TrivialTemplateSelector>
-                        <enigma:TrivialTemplateSelector.Default>
-                            <DataTemplate DataType="{x:Type models:CodePointVM}">
-                                <Run
-                                    Background="{Binding IsMouseOver, RelativeSource={RelativeSource Self}, Converter={x:Static enigma:BooleanToBrushConverter.Default}}"
-                                    FontSize="24"
-                                    Text="{Binding StringForm, Mode=OneWay}"
-                                    ToolTipService.InitialShowDelay="0"
-                                    ToolTipService.ShowDuration="120000">
-                                    <Run.ToolTip>
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition />
-                                            </Grid.RowDefinitions>
-                                            <TextBlock
-                                                Grid.Row="0"
-                                                Text="Has similar letters"
-                                                Visibility="{Binding HasSimilar, Converter={x:Static enigma:BooleanToVisibilityConverter.Default}}" />
-                                            <TextBlock Grid.Row="1" Text="{Binding FullName, Mode=OneWay}" />
-                                            <TextBlock Grid.Row="2" Text="{Binding Word.DictionaryStringBlurb, Mode=OneWay}" />
-                                        </Grid>
+        <ListView
+            Grid.Row="1"
+            ItemsSource="{Binding AnnotatedOutput}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+                        Width="Auto"
+                        Background="{Binding IsMouseOver, RelativeSource={RelativeSource Self}, Converter={x:Static enigma:BooleanToBrushConverter.Default}}"
+                        FontSize="24"
+                        Text="{Binding StringForm, Mode=OneWay}"
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.ShowDuration="120000">
+                        <TextBlock.ToolTip>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Text="Has similar letters"
+                                    Visibility="{Binding HasSimilar, Converter={x:Static enigma:BooleanToVisibilityConverter.Default}}" />
+                                <TextBlock Grid.Row="1" Text="{Binding FullName, Mode=OneWay}" />
+                                <TextBlock Grid.Row="2" Text="{Binding Word.DictionaryStringBlurb, Mode=OneWay}" />
+                            </Grid>
 
-                                    </Run.ToolTip>
-                                    <Run.ContextMenu>
-                                        <ContextMenu ItemsSource="{Binding Similar}">
-                                            <ContextMenu.ItemContainerStyle>
-                                                <Style TargetType="MenuItem">
-                                                    <Setter Property="Command" Value="{Binding DataContext.PlaceInClipboard, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
-                                                    <Setter Property="CommandParameter" Value="{Binding .}" />
-                                                </Style>
-                                            </ContextMenu.ItemContainerStyle>
-                                            <ContextMenu.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding ., Converter={x:Static enigma:CodePointToLongStringConverter.Default}}" />
-                                                </DataTemplate>
-                                            </ContextMenu.ItemTemplate>
-                                        </ContextMenu>
-                                    </Run.ContextMenu>
-                                </Run>
-                            </DataTemplate>
-                        </enigma:TrivialTemplateSelector.Default>
-                    </enigma:TrivialTemplateSelector>
-                </enigma:SimpleFlowDocument.ContentTemplateSelector>
-            </enigma:SimpleFlowDocument>
-        </FlowDocumentScrollViewer>
+                        </TextBlock.ToolTip>
+                        <TextBlock.ContextMenu>
+                            <ContextMenu ItemsSource="{Binding Similar}">
+                                <ContextMenu.ItemContainerStyle>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="Command" Value="{Binding DataContext.PlaceInClipboard, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                        <Setter Property="CommandParameter" Value="{Binding .}" />
+                                    </Style>
+                                </ContextMenu.ItemContainerStyle>
+                                <ContextMenu.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ., Converter={x:Static enigma:CodePointToLongStringConverter.Default}}" />
+                                    </DataTemplate>
+                                </ContextMenu.ItemTemplate>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <Grid Grid.Row="2" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
