@@ -1,0 +1,69 @@
+﻿<UserControl
+    x:Class="DidacticalEnigma.JapaneseTextPreview"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enigma="clr-namespace:DidacticalEnigma"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:DidacticalEnigma.Models"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ItemsControl ItemsSource="{Binding Lines}" PreviewMouseDown="ItemsControl_PreviewMouseLeftButtonDown">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <ItemsControl ItemsSource="{Binding Words}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <ItemsControl ItemsSource="{Binding CodePoints}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock FontSize="24" Text="{Binding StringForm}">
+                                                <TextBlock.ContextMenu>
+                                                    <ContextMenu ItemsSource="{Binding Similar}">
+                                                        <ContextMenu.ItemContainerStyle>
+                                                            <Style TargetType="MenuItem">
+                                                                <Setter Property="Command" Value="{Binding DataContext.PlaceInClipboard, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                                                <Setter Property="CommandParameter" Value="{Binding .}" />
+                                                            </Style>
+                                                        </ContextMenu.ItemContainerStyle>
+                                                        <ContextMenu.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding ., Converter={x:Static enigma:CodePointToLongStringConverter.Default}}" />
+                                                            </DataTemplate>
+                                                        </ContextMenu.ItemTemplate>
+                                                    </ContextMenu>
+                                                </TextBlock.ContextMenu>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <TextBlock
+                                    Background="Transparent"
+                                    FontSize="24"
+                                    Text=" " />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

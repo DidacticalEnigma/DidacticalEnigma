@@ -1,0 +1,89 @@
+﻿using DidacticalEnigma.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace DidacticalEnigma
+{
+    /// <summary>
+    /// Interaction logic for JapaneseTextPreview.xaml
+    /// </summary>
+    public partial class JapaneseTextPreview : UserControl
+    {
+        public JapaneseTextPreview()
+        {
+            InitializeComponent();
+        }
+
+        public ObservableBatchCollection<LineVM> Lines
+        {
+            get { return (ObservableBatchCollection<LineVM>)GetValue(LinesProperty); }
+            set { SetValue(LinesProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Lines.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty LinesProperty =
+            DependencyProperty.Register(
+                nameof(Lines),
+                typeof(ObservableBatchCollection<LineVM>),
+                typeof(JapaneseTextPreview),
+                new PropertyMetadata(null));
+
+        private StackPanel previousClickedWord = null;
+
+        private TextBlock previousClickedLetter = null;
+
+        private void ItemsControl_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var clickedPoint = e.GetPosition(null);
+            var clickedLetter =
+                FindAncestor<TextBlock>((DependencyObject)e.OriginalSource);
+            var clickedWordPanel = FindAncestor<StackPanel>(clickedLetter);
+            if (clickedLetter != previousClickedLetter && clickedLetter.Text.Trim() != "")
+            {
+                if (previousClickedLetter != null)
+                {
+                    previousClickedLetter.Background = Brushes.Transparent;
+                }
+                clickedLetter.Background = Brushes.Green;
+                if(clickedWordPanel != previousClickedWord)
+                {
+                    if(previousClickedWord != null)
+                    {
+                        previousClickedWord.Background = Brushes.Transparent;
+                    }
+                    clickedWordPanel.Background = Brushes.Yellow;
+                }
+                previousClickedLetter = clickedLetter;
+                previousClickedWord = clickedWordPanel;
+            }
+            //clickedItem.SetCurrentValue(BackgroundProperty, Brushes.Yellow);
+        }
+
+        private static T FindAncestor<T>(DependencyObject current)
+            where T : DependencyObject
+        {
+            do
+            {
+                var ancestor = current as T;
+                if (ancestor != null)
+                {
+                    return ancestor;
+                }
+                current = VisualTreeHelper.GetParent(current);
+            } while (current != null);
+            return null;
+        }
+    }
+}

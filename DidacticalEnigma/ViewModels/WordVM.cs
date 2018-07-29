@@ -1,19 +1,11 @@
 ﻿using JDict;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace DidacticalEnigma.Models
 {
-    public class LineVM
-    {
-        public ObservableBatchCollection<WordVM> Words { get; }
-
-        public LineVM(IEnumerable<WordVM> words)
-        {
-            Words = new ObservableBatchCollection<WordVM>(words);
-        }
-    }
 
     public class WordVM : INotifyPropertyChanged
     {
@@ -35,9 +27,18 @@ namespace DidacticalEnigma.Models
             }
         }
 
+        private readonly ObservableBatchCollection<CodePointVM> codePoints = new ObservableBatchCollection<CodePointVM>();
+        public IEnumerable<CodePointVM> CodePoints => codePoints;
+
         public WordVM(string s, ILanguageService lang)
         {
             StringForm = s;
+            codePoints.AddRange(s.AsCodePoints().Select(rawCp =>
+            {
+                var cp = CodePoint.FromInt(rawCp);
+                var vm = new CodePointVM(cp, lang.LookupRelatedCharacters(cp));
+                return vm;
+            }));
             this.lang = lang;
         }
 

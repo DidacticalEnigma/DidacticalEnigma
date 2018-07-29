@@ -155,12 +155,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClipboardHook.cs" />
+    <Compile Include="JapaneseTextPreview.xaml.cs">
+      <DependentUpon>JapaneseTextPreview.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\DualDictionary.cs" />
     <Compile Include="Utils\TrivialTemplateSelector.cs" />
     <Compile Include="ViewModels\BooleanToBrushConverter.cs" />
     <Compile Include="ViewModels\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModels\CodePointToLongStringConverter.cs" />
-    <Compile Include="ViewModels\ILanguageService.cs" />
+    <Compile Include="Models\ILanguageService.cs" />
+    <Compile Include="ViewModels\LineVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\CodePointVM.cs" />
     <Compile Include="Models\KanaProperties.cs" />
@@ -172,6 +176,10 @@
     <Compile Include="SimpleFlowDocument.cs" />
     <Compile Include="Utils\StringExt.cs" />
     <Compile Include="Utils\UnionFindNode.cs" />
+    <Page Include="JapaneseTextPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

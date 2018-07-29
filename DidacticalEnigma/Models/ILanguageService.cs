@@ -9,6 +9,8 @@ namespace DidacticalEnigma
 {
     public interface ILanguageService : IDisposable
     {
+        IEnumerable<CodePoint> LookupRelatedCharacters(CodePoint point);
+
         CodePoint LookupCharacter(string s, int position = 0);
         WordInfo LookupWord(string word);
 
@@ -89,6 +91,15 @@ namespace DidacticalEnigma
             {
                 yield return input.Substring(start, end - start);
             }
+        }
+
+        public IEnumerable<CodePoint> LookupRelatedCharacters(CodePoint point)
+        {
+            var oppositeSized = point is Kana k && k.HasOppositeSizedVersion
+                ? Enumerable.Repeat(CodePoint.FromInt(k.OppositeSizedVersion), 1)
+                : Enumerable.Empty<CodePoint>();
+            return oppositeSized
+                .Concat(similar.FindSimilar(point) ?? Enumerable.Empty<CodePoint>());
         }
     }
 }

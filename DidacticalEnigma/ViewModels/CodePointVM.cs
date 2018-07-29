@@ -15,7 +15,7 @@ namespace DidacticalEnigma.Models
 
         public bool HasSimilar => Similar.Any();
 
-        public CodePointVM(CodePoint cp, WordVM word, IEnumerable<CodePoint> similar)
+        public CodePointVM(CodePoint cp, IEnumerable<CodePoint> similar)
         {
             CodePoint = cp;
             Similar = similar;
