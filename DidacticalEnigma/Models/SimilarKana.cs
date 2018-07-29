@@ -23,8 +23,12 @@ namespace DidacticalEnigma.Models
         public IEnumerable<CodePoint> FindSimilar(CodePoint point)
         {
             similarityGroups.TryGetValue(point, out var listOfSimilar);
+            var oppositeSized = point is Kana k && k.HasOppositeSizedVersion
+                ? Enumerable.Repeat(CodePoint.FromInt(k.OppositeSizedVersion), 1)
+                : Enumerable.Empty<CodePoint>();
             var similar = listOfSimilar ?? Enumerable.Empty<CodePoint>();
-            return similar
+            return oppositeSized
+                .Concat(similar)
                 .Except(Enumerable.Repeat(point, 1))
                 .OrderBy(other =>
                 {

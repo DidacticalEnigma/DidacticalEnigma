@@ -79,6 +79,8 @@ namespace DidacticalEnigma
             self.OnDataSourceCollectionChanged(self.DataSource, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
+
+
         private void OnDataSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // TODO: handle it
@@ -140,6 +142,7 @@ namespace DidacticalEnigma
 
         }
     }
+
 
     public class TrivialTemplateSelector : DataTemplateSelector
     {

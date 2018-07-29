@@ -39,7 +39,7 @@ namespace DidacticalEnigma.Models
     {
         public CodePoint CodePoint { get; }
 
-        public string FullName => CodePoint.Name;
+        public string FullName => CodePoint.ToLongString();
 
         public string StringForm => CodePoint.ToString();
 
@@ -60,9 +60,14 @@ namespace DidacticalEnigma.Models
     // To check: do I need normalization forms?
     public class CodePoint : IEquatable<CodePoint>
     {
-        private int codePoint;
+        protected readonly int codePoint;
 
         public string Name => UnicodeInfo.GetCharInfo(codePoint).Name;
+
+        public string ToLongString()
+        {
+            return $"{char.ConvertFromUtf32(codePoint)}: {Name}";
+        }
 
         public override string ToString()
         {
@@ -126,7 +131,20 @@ namespace DidacticalEnigma.Models
         }
     }
 
-    public class Hiragana : CodePoint
+    public abstract class Kana : CodePoint
+    {
+        internal Kana(int s) :
+            base(s)
+        {
+
+        }
+
+        public bool HasOppositeSizedVersion => KanaProperties.OppositeSizedVersionOf(codePoint).HasValue;
+
+        public int OppositeSizedVersion => KanaProperties.OppositeSizedVersionOf(codePoint).Value;
+    }
+
+    public class Hiragana : Kana
     {
         internal Hiragana(int s) :
             base(s)
@@ -135,7 +153,7 @@ namespace DidacticalEnigma.Models
         }
     }
 
-    public class Katakana : CodePoint
+    public class Katakana : Kana
     {
         internal Katakana(int s) :
             base(s)

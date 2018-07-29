@@ -152,8 +152,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="CodePointToLongStringConverter.cs" />
     <Compile Include="MainWindowVM.cs" />
+    <Compile Include="Models\KanaProperties.cs" />
     <Compile Include="Models\SimilarKana.cs" />
+    <Compile Include="ObservableBatchCollection.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="SimpleFlowDocument.cs" />
     <Compile Include="StringExt.cs" />

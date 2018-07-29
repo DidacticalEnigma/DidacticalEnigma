@@ -20,7 +20,7 @@
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         <FlowDocumentScrollViewer Grid.Row="0">
-            <enigma:SimpleFlowDocument DataSource="{Binding T}" RootTextElementType="{x:Type Paragraph}">
+            <enigma:SimpleFlowDocument DataSource="{Binding AnnotatedOutput}" RootTextElementType="{x:Type Paragraph}">
                 <enigma:SimpleFlowDocument.ContentTemplateSelector>
                     <enigma:TrivialTemplateSelector>
                         <enigma:TrivialTemplateSelector.Default>
@@ -57,7 +57,7 @@
                                             </ContextMenu.ItemContainerStyle>
                                             <ContextMenu.ItemTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding .}" />
+                                                    <TextBlock Text="{Binding ., Converter={x:Static enigma:CodePointToLongStringConverter.Default}}" />
                                                 </DataTemplate>
                                             </ContextMenu.ItemTemplate>
                                         </ContextMenu>
@@ -72,16 +72,23 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox
                 Grid.Column="0"
                 AcceptsReturn="True"
-                Text="{Binding S}"
+                Text="{Binding Input}"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Auto" />
+            <TextBox
+                Grid.Column="1"
+                AcceptsReturn="True"
+                Text="{Binding RawOutput, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
             <Button
-                Grid.Column="1"
+                Grid.Column="2"
                 Command="{Binding Update}"
                 Content="Update" />
         </Grid>
