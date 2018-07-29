@@ -12,6 +12,8 @@ namespace DidacticalEnigma
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null)
+                return null;
             var cp = (CodePoint)value;
             return cp.ToLongString();
         }

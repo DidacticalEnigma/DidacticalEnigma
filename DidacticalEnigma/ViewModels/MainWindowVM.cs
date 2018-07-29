@@ -8,6 +8,7 @@ using DidacticalEnigma.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows;
 
 namespace DidacticalEnigma
 {
@@ -34,6 +35,14 @@ namespace DidacticalEnigma
                 var parsed = tagger.Parse(input);
                 RawOutput = string.Join("", SplitWords(parsed)
                         .Select(word => word.Contains("\r") || word.Contains("\n") ? "\n" : word));
+            }, () =>
+            {
+                return string.IsNullOrEmpty(RawOutput);
+            });
+            PlaceInClipboard = new RelayCommand((p) =>
+            {
+                var codePoint = (CodePoint)p;
+                Clipboard.SetText(codePoint.ToString());
             });
         }
 
@@ -41,7 +50,6 @@ namespace DidacticalEnigma
         {
             AnnotatedOutput.Clear();
             AnnotatedOutput.AddRange(SplitWords(unannotatedOutput)
-                .Select(word => word.Trim(' ') == "" ? "          " : word)
                 .Select(word => new WordVM(word, dictionary.Lookup(word)))
                 .SelectMany(wordVm => wordVm.StringForm.Select(rawCp =>
                 {
@@ -54,7 +62,7 @@ namespace DidacticalEnigma
 
         public ObservableBatchCollection<CodePointVM> AnnotatedOutput { get; } = new ObservableBatchCollection<CodePointVM>();
 
-        private string rawOutput;
+        private string rawOutput = "";
         public string RawOutput
         {
             get => rawOutput;
@@ -64,6 +72,7 @@ namespace DidacticalEnigma
                     return;
                 rawOutput = value;
                 OnPropertyChanged();
+                Update.OnExecuteChanged();
                 SetAnnotations(RawOutput);
             }
         }
@@ -78,7 +87,9 @@ namespace DidacticalEnigma
             }
         }
 
-        public ICommand Update { get; }
+        public RelayCommand PlaceInClipboard { get; }
+
+        public RelayCommand Update { get; }
 
         private IEnumerable<string> SplitWords(string input)
         {

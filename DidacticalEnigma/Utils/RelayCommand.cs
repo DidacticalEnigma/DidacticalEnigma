@@ -3,25 +3,44 @@ using System.Windows.Input;
 
 namespace DidacticalEnigma
 {
-    internal class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
-        private Action p;
+        private readonly Action<object> action;
 
-        public RelayCommand(Action p)
+        private readonly Func<object, bool> canExecute;
+
+        public RelayCommand(Action action, Func<bool> canExecute = null)
         {
-            this.p = p;
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            this.action = (parameter) => action();
+            this.canExecute = (parameter) => canExecute();
+        }
+
+        public RelayCommand(Action<object> action, Func<object, bool> canExecute = null)
+        {
+            this.action = action ?? throw new ArgumentNullException(nameof(action));
+            this.canExecute = canExecute ?? (p => true);
         }
 
         public event EventHandler CanExecuteChanged;
 
+        public void OnExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, new EventArgs());
+        }
+
         public bool CanExecute(object parameter)
         {
-            return true;
+            return canExecute(parameter);
         }
 
         public void Execute(object parameter)
         {
-            p();
+            action(parameter);
         }
     }
 }

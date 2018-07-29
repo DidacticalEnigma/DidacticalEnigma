@@ -154,13 +154,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utils\TrivialTemplateSelector.cs" />
+    <Compile Include="ViewModels\BooleanToBrushConverter.cs" />
     <Compile Include="ViewModels\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModels\CodePointToLongStringConverter.cs" />
-    <Compile Include="MainWindowVM.cs" />
-    <Compile Include="Models\CodePointVM.cs" />
+    <Compile Include="ViewModels\MainWindowVM.cs" />
+    <Compile Include="ViewModels\CodePointVM.cs" />
     <Compile Include="Models\KanaProperties.cs" />
     <Compile Include="Models\SimilarKana.cs" />
-    <Compile Include="Models\WordVM.cs" />
+    <Compile Include="ViewModels\WordVM.cs" />
     <Compile Include="Utils\ObservableBatchCollection.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="SimpleFlowDocument.cs" />

@@ -26,11 +26,10 @@
                         <enigma:TrivialTemplateSelector.Default>
                             <DataTemplate DataType="{x:Type models:CodePointVM}">
                                 <Run
-                                    Background="Transparent"
+                                    Background="{Binding IsMouseOver, RelativeSource={RelativeSource Self}, Converter={x:Static enigma:BooleanToBrushConverter.Default}}"
                                     FontSize="24"
                                     Text="{Binding StringForm, Mode=OneWay}"
                                     ToolTipService.InitialShowDelay="0"
-                                    ToolTipService.IsEnabled="{Binding Word.DictionaryStringBlurb}"
                                     ToolTipService.ShowDuration="120000">
                                     <Run.ToolTip>
                                         <Grid>
@@ -52,7 +51,8 @@
                                         <ContextMenu ItemsSource="{Binding Similar}">
                                             <ContextMenu.ItemContainerStyle>
                                                 <Style TargetType="MenuItem">
-                                                    <!--<Setter Property="Command" Value="{Binding AssociatedCommand}" />-->
+                                                    <Setter Property="Command" Value="{Binding DataContext.PlaceInClipboard, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                                    <Setter Property="CommandParameter" Value="{Binding .}" />
                                                 </Style>
                                             </ContextMenu.ItemContainerStyle>
                                             <ContextMenu.ItemTemplate>
