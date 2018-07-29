@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows;
+using System;
+using System.IO;
 
 namespace DidacticalEnigma
 {
@@ -20,16 +22,17 @@ namespace DidacticalEnigma
 
         public MainWindowVM()
         {
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             tagger = MeCabTagger.Create(new MeCabParam
             {
-                DicDir = @"C:\Users\IEUser\Desktop\DidacticalEnigma\DidacticalEnigma\dic\ipadic",
+                DicDir = Path.Combine(baseDir, @"dic\ipadic"),
                 LatticeLevel = MeCabLatticeLevel.Zero,
                 OutputFormatType = "wakati",
                 AllMorphs = false,
                 Partial = false
             });
-            dictionary = new EDict(@"C:\Users\IEUser\Desktop\DidacticalEnigma\DidacticalEnigma\dic\edict2_utf8", Encoding.UTF8);
-            similar = SimilarKana.FromFile(@"C:\Users\IEUser\Desktop\DidacticalEnigma\DidacticalEnigma\dic\confused.txt");
+            dictionary = new EDict(Path.Combine(baseDir, @"dic\edict2_utf8"), Encoding.UTF8);
+            similar = SimilarKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt"));
             Update = new RelayCommand(() =>
             {
                 var parsed = tagger.Parse(input);
