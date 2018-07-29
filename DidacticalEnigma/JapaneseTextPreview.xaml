@@ -34,7 +34,14 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock FontSize="24" Text="{Binding StringForm}">
+                                            <TextBlock
+                                                FontSize="24"
+                                                Text="{Binding StringForm}"
+                                                ToolTipService.InitialShowDelay="0"
+                                                ToolTipService.ShowDuration="120000">
+                                                <TextBlock.ToolTip>
+                                                    <TextBlock Text="Has similar letters" Visibility="{Binding HasSimilar, Converter={x:Static enigma:BooleanToVisibilityConverter.Default}}" />
+                                                </TextBlock.ToolTip>
                                                 <TextBlock.ContextMenu>
                                                     <ContextMenu ItemsSource="{Binding Similar}">
                                                         <ContextMenu.ItemContainerStyle>

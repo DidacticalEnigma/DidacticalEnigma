@@ -26,9 +26,9 @@ namespace DidacticalEnigma
             InitializeComponent();
         }
 
-        public ObservableBatchCollection<LineVM> Lines
+        public IEnumerable<LineVM> Lines
         {
-            get { return (ObservableBatchCollection<LineVM>)GetValue(LinesProperty); }
+            get { return (IEnumerable<LineVM>)GetValue(LinesProperty); }
             set { SetValue(LinesProperty, value); }
         }
 
@@ -36,7 +36,35 @@ namespace DidacticalEnigma
         public static readonly DependencyProperty LinesProperty =
             DependencyProperty.Register(
                 nameof(Lines),
-                typeof(ObservableBatchCollection<LineVM>),
+                typeof(IEnumerable<LineVM>),
+                typeof(JapaneseTextPreview),
+                new PropertyMetadata(null));
+
+        public CodePointVM SelectedCharacter
+        {
+            get { return (CodePointVM)GetValue(SelectedCharacterProperty); }
+            set { SetValue(SelectedCharacterProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Lines.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectedCharacterProperty =
+            DependencyProperty.Register(
+                nameof(SelectedCharacter),
+                typeof(CodePointVM),
+                typeof(JapaneseTextPreview),
+                new PropertyMetadata(null));
+
+        public WordVM SelectedWord
+        {
+            get { return (WordVM)GetValue(SelectedWordProperty); }
+            set { SetValue(SelectedWordProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Lines.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectedWordProperty =
+            DependencyProperty.Register(
+                nameof(SelectedWord),
+                typeof(WordVM),
                 typeof(JapaneseTextPreview),
                 new PropertyMetadata(null));
 
@@ -64,9 +92,11 @@ namespace DidacticalEnigma
                         previousClickedWord.Background = Brushes.Transparent;
                     }
                     clickedWordPanel.Background = Brushes.Yellow;
+                    previousClickedWord = clickedWordPanel;
+                    SetCurrentValue(SelectedWordProperty, (WordVM)clickedWordPanel.DataContext);
                 }
                 previousClickedLetter = clickedLetter;
-                previousClickedWord = clickedWordPanel;
+                SetCurrentValue(SelectedCharacterProperty, (CodePointVM)clickedLetter.DataContext);
             }
             //clickedItem.SetCurrentValue(BackgroundProperty, Brushes.Yellow);
         }

@@ -24,5 +24,11 @@ namespace DidacticalEnigma
         {
             InitializeComponent();
         }
+
+        private void ShowAboutWindow(object sender, RoutedEventArgs e)
+        {
+            var window = new AboutWindow();
+            window.ShowDialog();
+        }
     }
 }
