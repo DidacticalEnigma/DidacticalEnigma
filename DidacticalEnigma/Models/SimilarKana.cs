@@ -10,7 +10,7 @@ namespace DidacticalEnigma.Models
     {
         private Dictionary<CodePoint, IEnumerable<CodePoint>> similarityGroups;
 
-        private Dictionary<Type, int> position = new Dictionary<Type, int>
+        private static IReadOnlyDictionary<Type, int> position = new Dictionary<Type, int>
         {
             { typeof(Hiragana), 1 },
             { typeof(Katakana), 2 },
