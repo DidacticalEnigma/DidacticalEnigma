@@ -154,6 +154,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ClipboardHook.cs" />
     <Compile Include="Utils\TrivialTemplateSelector.cs" />
     <Compile Include="ViewModels\BooleanToBrushConverter.cs" />
     <Compile Include="ViewModels\BooleanToVisibilityConverter.cs" />

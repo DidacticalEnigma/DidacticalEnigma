@@ -6,7 +6,7 @@
     xmlns:enigma="clr-namespace:DidacticalEnigma"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:DidacticalEnigma.Models"
-    Title="MainWindow"
+    Title="Didactical Enigma"
     Width="800"
     Height="450"
     mc:Ignorable="d">
@@ -14,12 +14,17 @@
         <enigma:MainWindowVM />
     </Window.DataContext>
     <Grid>
-        <Grid.ColumnDefinitions />
         <Grid.RowDefinitions>
-            <RowDefinition Height="10*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="5*" />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
-        <FlowDocumentScrollViewer Grid.Row="0">
+        <ToolBar Grid.Row="0" Grid.ColumnSpan="2">
+            <Button Content="Hiragana" />
+            <Button Content="Katakana" />
+            <Button Content="About" />
+        </ToolBar>
+        <FlowDocumentScrollViewer Grid.Row="1" Grid.ColumnSpan="2">
             <enigma:SimpleFlowDocument DataSource="{Binding AnnotatedOutput}" RootTextElementType="{x:Type Paragraph}">
                 <enigma:SimpleFlowDocument.ContentTemplateSelector>
                     <enigma:TrivialTemplateSelector>
@@ -69,7 +74,7 @@
                 </enigma:SimpleFlowDocument.ContentTemplateSelector>
             </enigma:SimpleFlowDocument>
         </FlowDocumentScrollViewer>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />

@@ -14,11 +14,12 @@ using System.IO;
 
 namespace DidacticalEnigma
 {
-    public class MainWindowVM : INotifyPropertyChanged
+    public class MainWindowVM : INotifyPropertyChanged, IDisposable
     {
         private MeCabTagger tagger;
         private EDict dictionary;
         private SimilarKana similar;
+        private ClipboardHook hook;
 
         public MainWindowVM()
         {
@@ -47,6 +48,13 @@ namespace DidacticalEnigma
                 var codePoint = (CodePoint)p;
                 Clipboard.SetText(codePoint.ToString());
             });
+            hook = new ClipboardHook();
+            hook.ClipboardChanged += SetContent;
+        }
+
+        private void SetContent(object sender, string e)
+        {
+            Input = e;
         }
 
         private void SetAnnotations(string unannotatedOutput)
@@ -123,6 +131,12 @@ namespace DidacticalEnigma
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Dispose()
+        {
+            hook.Dispose();
+            tagger.Dispose();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
