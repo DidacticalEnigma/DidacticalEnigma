@@ -104,6 +104,10 @@ namespace DidacticalEnigma
                                 {
                                     tooltip.DataContext = o;
                                 }
+                                if (c.ContextMenu is FrameworkElement contextMenu)
+                                {
+                                    contextMenu.DataContext = o;
+                                }
                             }
                         }
                         this.Blocks.Clear();
@@ -119,6 +123,21 @@ namespace DidacticalEnigma
                 var c = (TextElement)dataTemplate.LoadContent();
                 return c;
             }
+
+            void PrintLogicalTree(int depth, object obj)
+            {
+                // Print the object with preceding spaces that represent its depth
+                Debug.WriteLine(new string(' ', depth) + obj);
+
+                // Sometimes leaf nodes aren't DependencyObjects (e.g. strings)
+                if (!(obj is DependencyObject)) return;
+
+                // Recursive call for each logical child
+                foreach (object child in LogicalTreeHelper.GetChildren(
+                  obj as DependencyObject))
+                    PrintLogicalTree(depth + 1, child);
+            }
+
         }
     }
 

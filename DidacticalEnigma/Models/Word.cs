@@ -39,24 +39,30 @@ namespace DidacticalEnigma.Models
     {
         public CodePoint CodePoint { get; }
 
+        public string FullName => CodePoint.Name;
+
         public string StringForm => CodePoint.ToString();
 
         public WordVM Word { get; }
 
         public IEnumerable<CodePoint> Similar { get; }
 
+        public bool HasSimilar => Similar.Any();
+
         public CodePointVM(CodePoint cp, WordVM word, IEnumerable<CodePoint> similar)
         {
             CodePoint = cp;
             Word = word;
-            Similar = similar.ToList();
+            Similar = similar;
         }
     }
 
     // To check: do I need normalization forms?
-    public class CodePoint
+    public class CodePoint : IEquatable<CodePoint>
     {
         private int codePoint;
+
+        public string Name => UnicodeInfo.GetCharInfo(codePoint).Name;
 
         public override string ToString()
         {
@@ -82,6 +88,32 @@ namespace DidacticalEnigma.Models
                 default:
                     return new CodePoint(codePoint);
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as CodePoint);
+        }
+
+        public bool Equals(CodePoint other)
+        {
+            return other != null &&
+                   codePoint == other.codePoint;
+        }
+
+        public override int GetHashCode()
+        {
+            return -1644926438 + codePoint.GetHashCode();
+        }
+
+        public static bool operator ==(CodePoint point1, CodePoint point2)
+        {
+            return EqualityComparer<CodePoint>.Default.Equals(point1, point2);
+        }
+
+        public static bool operator !=(CodePoint point1, CodePoint point2)
+        {
+            return !(point1 == point2);
         }
     }
     

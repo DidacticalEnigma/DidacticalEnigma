@@ -23,6 +23,7 @@ namespace DidacticalEnigma
         public MainWindow()
         {
             InitializeComponent();
+            var i = System.Unicode.UnicodeInfo.GetCharInfo('っ');
         }
     }
 }

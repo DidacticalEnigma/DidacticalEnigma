@@ -15,6 +15,7 @@ namespace DidacticalEnigma
     {
         private MeCabTagger tagger;
         private EDict dictionary;
+        private SimilarKana similar;
 
         public MainWindowVM()
         {
@@ -27,15 +28,20 @@ namespace DidacticalEnigma
                 Partial = false
             });
             dictionary = new EDict(@"C:\Users\IEUser\Desktop\DidacticalEnigma\DidacticalEnigma\dic\edict2_utf8", Encoding.UTF8);
+            similar = SimilarKana.FromFile(@"C:\Users\IEUser\Desktop\DidacticalEnigma\DidacticalEnigma\dic\confused.txt");
             Update = new RelayCommand(() =>
             {
                 T.Clear();
-                foreach (var word in SplitWords(tagger.Parse(s)))
+                var parsed = tagger.Parse(s);
+                foreach (var word in SplitWords(parsed))
                 {
-                    var wordVm = new WordVM(word, dictionary.Lookup(word));
-                    foreach (var codePoint in word.AsCodePoints())
+                    var wordTrimmed = word.Contains("\r") || word.Contains("\n") ? "\n" : word;
+                    wordTrimmed = word.Trim(' ') == "" ? "          " : wordTrimmed;
+                    var wordVm = new WordVM(wordTrimmed, dictionary.Lookup(wordTrimmed));
+                    foreach (var codePoint in wordTrimmed.AsCodePoints())
                     {
-                        var cpVm = new CodePointVM(CodePoint.FromInt(codePoint), wordVm, Enumerable.Empty<CodePoint>());
+                        var cp = CodePoint.FromInt(codePoint);
+                        var cpVm = new CodePointVM(cp, wordVm, similar.FindSimilar(cp));
                         T.Add(cpVm);
                     }
                 }

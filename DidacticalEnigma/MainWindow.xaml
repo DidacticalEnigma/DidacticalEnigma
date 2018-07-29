@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:DidacticalEnigma"
+    xmlns:enigma="clr-namespace:DidacticalEnigma"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:DidacticalEnigma.Models"
     Title="MainWindow"
@@ -11,7 +11,7 @@
     Height="450"
     mc:Ignorable="d">
     <Window.DataContext>
-        <local:MainWindowVM />
+        <enigma:MainWindowVM />
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions />
@@ -20,10 +20,10 @@
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         <FlowDocumentScrollViewer Grid.Row="0">
-            <local:SimpleFlowDocument DataSource="{Binding T}" RootTextElementType="{x:Type Paragraph}">
-                <local:SimpleFlowDocument.ContentTemplateSelector>
-                    <local:TrivialTemplateSelector>
-                        <local:TrivialTemplateSelector.Default>
+            <enigma:SimpleFlowDocument DataSource="{Binding T}" RootTextElementType="{x:Type Paragraph}">
+                <enigma:SimpleFlowDocument.ContentTemplateSelector>
+                    <enigma:TrivialTemplateSelector>
+                        <enigma:TrivialTemplateSelector.Default>
                             <DataTemplate DataType="{x:Type models:CodePointVM}">
                                 <Run
                                     Background="Transparent"
@@ -33,14 +33,41 @@
                                     ToolTipService.IsEnabled="{Binding Word.DictionaryStringBlurb}"
                                     ToolTipService.ShowDuration="120000">
                                     <Run.ToolTip>
-                                        <TextBlock Text="{Binding Word.DictionaryStringBlurb, Mode=OneWay}" />
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                Text="Has similar letters"
+                                                Visibility="{Binding HasSimilar, Converter={x:Static enigma:BooleanToVisibilityConverter.Default}}" />
+                                            <TextBlock Grid.Row="1" Text="{Binding FullName, Mode=OneWay}" />
+                                            <TextBlock Grid.Row="2" Text="{Binding Word.DictionaryStringBlurb, Mode=OneWay}" />
+                                        </Grid>
+
                                     </Run.ToolTip>
+                                    <Run.ContextMenu>
+                                        <ContextMenu ItemsSource="{Binding Similar}">
+                                            <ContextMenu.ItemContainerStyle>
+                                                <Style TargetType="MenuItem">
+                                                    <!--<Setter Property="Command" Value="{Binding AssociatedCommand}" />-->
+                                                </Style>
+                                            </ContextMenu.ItemContainerStyle>
+                                            <ContextMenu.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding .}" />
+                                                </DataTemplate>
+                                            </ContextMenu.ItemTemplate>
+                                        </ContextMenu>
+                                    </Run.ContextMenu>
                                 </Run>
                             </DataTemplate>
-                        </local:TrivialTemplateSelector.Default>
-                    </local:TrivialTemplateSelector>
-                </local:SimpleFlowDocument.ContentTemplateSelector>
-            </local:SimpleFlowDocument>
+                        </enigma:TrivialTemplateSelector.Default>
+                    </enigma:TrivialTemplateSelector>
+                </enigma:SimpleFlowDocument.ContentTemplateSelector>
+            </enigma:SimpleFlowDocument>
         </FlowDocumentScrollViewer>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
