@@ -154,16 +154,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BooleanToVisibilityConverter.cs" />
-    <Compile Include="CodePointToLongStringConverter.cs" />
+    <Compile Include="ViewModels\BooleanToVisibilityConverter.cs" />
+    <Compile Include="ViewModels\CodePointToLongStringConverter.cs" />
     <Compile Include="MainWindowVM.cs" />
+    <Compile Include="Models\CodePointVM.cs" />
     <Compile Include="Models\KanaProperties.cs" />
     <Compile Include="Models\SimilarKana.cs" />
-    <Compile Include="ObservableBatchCollection.cs" />
-    <Compile Include="RelayCommand.cs" />
+    <Compile Include="Models\WordVM.cs" />
+    <Compile Include="Utils\ObservableBatchCollection.cs" />
+    <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="SimpleFlowDocument.cs" />
-    <Compile Include="StringExt.cs" />
-    <Compile Include="UnionFindNode.cs" />
+    <Compile Include="Utils\StringExt.cs" />
+    <Compile Include="Utils\UnionFindNode.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -178,7 +180,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Word.cs" />
+    <Compile Include="Models\CodePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

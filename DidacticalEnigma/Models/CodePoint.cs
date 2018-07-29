@@ -1,5 +1,4 @@
-﻿using JDict;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,53 +8,6 @@ using System.Unicode;
 
 namespace DidacticalEnigma.Models
 {
-    public class WordVM
-    {
-        public enum WordKind
-        {
-            Unknown,
-            Particle,
-            Noun,
-            Verb,
-        }
-
-        public string DictionaryStringBlurb { get; }
-
-        public EDictEntry DictionaryEntry { get; }
-
-        public string StringForm { get; }
-
-        public WordKind Kind { get; }
-
-        public WordVM(string s, EDictEntry entry)
-        {
-            StringForm = s;
-            DictionaryEntry = entry;
-            DictionaryStringBlurb = entry?.ToString();
-        }
-    }
-
-    public class CodePointVM
-    {
-        public CodePoint CodePoint { get; }
-
-        public string FullName => CodePoint.ToLongString();
-
-        public string StringForm => CodePoint.ToString();
-
-        public WordVM Word { get; }
-
-        public IEnumerable<CodePoint> Similar { get; }
-
-        public bool HasSimilar => Similar.Any();
-
-        public CodePointVM(CodePoint cp, WordVM word, IEnumerable<CodePoint> similar)
-        {
-            CodePoint = cp;
-            Word = word;
-            Similar = similar;
-        }
-    }
 
     // To check: do I need normalization forms?
     public class CodePoint : IEquatable<CodePoint>
