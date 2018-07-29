@@ -21,10 +21,10 @@
                 <local:SimpleFlowDocument.ContentTemplateSelector>
                     <local:TrivialTemplateSelector>
                         <local:TrivialTemplateSelector.Default>
-                            <DataTemplate>
+                            <DataTemplate DataType="{x:Type models:CodePointVM}">
                                 <Run FontSize="24" Background="Transparent" ToolTipService.InitialShowDelay="0" ToolTipService.ShowDuration="120000" Text="{Binding StringForm, Mode=OneWay}">
                                     <Run.ToolTip>
-                                        <TextBlock Text="{Binding Word.DictionaryStringBlurb}" />
+                                        <TextBlock Text="{Binding Word.DictionaryStringBlurb, Mode=OneWay}" />
                                     </Run.ToolTip>
                                 </Run>
                             </DataTemplate>

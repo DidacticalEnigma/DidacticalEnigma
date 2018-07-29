@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,9 +25,9 @@ namespace DidacticalEnigma
         }
 
         public static readonly DependencyProperty RootTextElementTypeProperty =
-            DependencyProperty.Register(nameof(RootTextElementType), typeof(Type), typeof(SimpleFlowDocument), new PropertyMetadata(typeof(Section), OnRootTextElementChanged));
+            DependencyProperty.Register(nameof(RootTextElementType), typeof(Type), typeof(SimpleFlowDocument), new PropertyMetadata(typeof(Section), OnRootTextElementTypeChanged));
 
-        private static void OnRootTextElementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnRootTextElementTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var self = (SimpleFlowDocument)d;
             self.OnDataSourceCollectionChanged(self, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -95,9 +96,19 @@ namespace DidacticalEnigma
                         {
                             TextElement c = Create(o);
                             selfAdd.AddChild(c);
+                            c.DataContext = o;
+
+                            // GROSS HACK
+                            {
+                                if (c.ToolTip is FrameworkElement tooltip)
+                                {
+                                    tooltip.DataContext = o;
+                                }
+                            }
                         }
                         this.Blocks.Clear();
                         this.Blocks.Add((Block)selfAdd);
+
                     }
                     break;
             }
@@ -106,7 +117,6 @@ namespace DidacticalEnigma
             {
                 var dataTemplate = ContentTemplateSelector.SelectTemplate(o, this);
                 var c = (TextElement)dataTemplate.LoadContent();
-                c.SetCurrentValue(DataContextProperty, o);
                 return c;
             }
         }
