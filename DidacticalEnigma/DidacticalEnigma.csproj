@@ -155,14 +155,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClipboardHook.cs" />
+    <Compile Include="Utils\DualDictionary.cs" />
     <Compile Include="Utils\TrivialTemplateSelector.cs" />
     <Compile Include="ViewModels\BooleanToBrushConverter.cs" />
     <Compile Include="ViewModels\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModels\CodePointToLongStringConverter.cs" />
+    <Compile Include="ViewModels\ILanguageService.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\CodePointVM.cs" />
     <Compile Include="Models\KanaProperties.cs" />
     <Compile Include="Models\SimilarKana.cs" />
+    <Compile Include="Models\WordInfo.cs" />
     <Compile Include="ViewModels\WordVM.cs" />
     <Compile Include="Utils\ObservableBatchCollection.cs" />
     <Compile Include="Utils\RelayCommand.cs" />

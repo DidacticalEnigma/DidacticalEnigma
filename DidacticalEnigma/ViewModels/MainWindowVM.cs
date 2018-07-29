@@ -14,31 +14,27 @@ using System.IO;
 
 namespace DidacticalEnigma
 {
+
     public class MainWindowVM : INotifyPropertyChanged, IDisposable
     {
-        private MeCabTagger tagger;
-        private EDict dictionary;
-        private SimilarKana similar;
+        private readonly ILanguageService lang;
+
         private ClipboardHook hook;
 
         public MainWindowVM()
         {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            tagger = MeCabTagger.Create(new MeCabParam
-            {
-                DicDir = Path.Combine(baseDir, @"dic\ipadic"),
-                LatticeLevel = MeCabLatticeLevel.Zero,
-                OutputFormatType = "wakati",
-                AllMorphs = false,
-                Partial = false
-            });
-            dictionary = new EDict(Path.Combine(baseDir, @"dic\edict2_utf8"), Encoding.UTF8);
-            similar = SimilarKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt"));
+            lang = new LanguageService(
+                new MeCabParam
+                {
+                    DicDir = Path.Combine(baseDir, @"dic\ipadic"),
+                },
+                new EDict(Path.Combine(baseDir, @"dic\edict2_utf8"), Encoding.UTF8),
+                SimilarKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")));
             Update = new RelayCommand(() =>
             {
-                var parsed = tagger.Parse(input);
-                RawOutput = string.Join("", SplitWords(parsed)
-                        .Select(word => word.Contains("\r") || word.Contains("\n") ? "\n" : word));
+                RawOutput = string.Join("\n", lang.BreakIntoSentences(Input)
+                    .Select(sentence => string.Join(" ", sentence.Select(word => word.RawWord))));
             }, () =>
             {
                 return string.IsNullOrEmpty(RawOutput);
@@ -59,19 +55,18 @@ namespace DidacticalEnigma
 
         private void SetAnnotations(string unannotatedOutput)
         {
-            AnnotatedOutput.Clear();
-            AnnotatedOutput.AddRange(SplitWords(unannotatedOutput)
-                .Select(word => new WordVM(word, dictionary.Lookup(word)))
-                .SelectMany(wordVm => wordVm.StringForm.Select(rawCp =>
-                {
-                    var cp = CodePoint.FromInt(rawCp);
-                    return new CodePointVM(cp, wordVm, similar.FindSimilar(cp));
-                })));
+            Lines.Clear();
+            Lines.AddRange(unannotatedOutput
+                .Split('\n')
+                .Select(line =>
+                    new LineVM(line
+                        .Split(' ')
+                        .Select(word => new WordVM(word, lang)))));
         }
 
         private string input = "";
 
-        public ObservableBatchCollection<CodePointVM> AnnotatedOutput { get; } = new ObservableBatchCollection<CodePointVM>();
+        public ObservableBatchCollection<LineVM> Lines { get; } = new ObservableBatchCollection<LineVM>();
 
         private string rawOutput = "";
         public string RawOutput
@@ -136,7 +131,7 @@ namespace DidacticalEnigma
         public void Dispose()
         {
             hook.Dispose();
-            tagger.Dispose();
+            lang.Dispose();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

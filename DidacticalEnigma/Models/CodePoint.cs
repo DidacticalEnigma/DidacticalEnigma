@@ -18,7 +18,7 @@ namespace DidacticalEnigma.Models
 
         public string ToLongString()
         {
-            return $"{char.ConvertFromUtf32(codePoint)}: {Name}";
+            return $"{char.ConvertFromUtf32(codePoint)} ({codePoint}): {Name}";
         }
 
         public override string ToString()
@@ -45,6 +45,11 @@ namespace DidacticalEnigma.Models
                 default:
                     return new CodePoint(codePoint);
             }
+        }
+
+        public static CodePoint FromString(string codePoint, int position = 0)
+        {
+            return FromInt(char.ConvertToUtf32(codePoint, position));
         }
 
         public override bool Equals(object obj)

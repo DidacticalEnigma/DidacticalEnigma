@@ -11,8 +11,6 @@ namespace DidacticalEnigma.Models
 
         public string StringForm => CodePoint.ToString();
 
-        public WordVM Word { get; }
-
         public IEnumerable<CodePoint> Similar { get; }
 
         public bool HasSimilar => Similar.Any();
@@ -20,7 +18,6 @@ namespace DidacticalEnigma.Models
         public CodePointVM(CodePoint cp, WordVM word, IEnumerable<CodePoint> similar)
         {
             CodePoint = cp;
-            Word = word;
             Similar = similar;
         }
     }

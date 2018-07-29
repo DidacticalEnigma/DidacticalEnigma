@@ -23,12 +23,8 @@ namespace DidacticalEnigma.Models
         public IEnumerable<CodePoint> FindSimilar(CodePoint point)
         {
             similarityGroups.TryGetValue(point, out var listOfSimilar);
-            var oppositeSized = point is Kana k && k.HasOppositeSizedVersion
-                ? Enumerable.Repeat(CodePoint.FromInt(k.OppositeSizedVersion), 1)
-                : Enumerable.Empty<CodePoint>();
             var similar = listOfSimilar ?? Enumerable.Empty<CodePoint>();
-            return oppositeSized
-                .Concat(similar)
+            return similar
                 .Except(Enumerable.Repeat(point, 1))
                 .OrderBy(other =>
                 {
@@ -70,7 +66,7 @@ namespace DidacticalEnigma.Models
         {
             return new SimilarKana(
                 File.ReadLines(path, Encoding.UTF8)
-                    .Select(line => line.AsCodePoints().Select(cp => new CodePoint(cp))));
+                    .Select(line => line.AsCodePoints().Select(cp => CodePoint.FromInt(cp))));
             
         }
     }
