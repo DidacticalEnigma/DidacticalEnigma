@@ -128,7 +128,7 @@ namespace JDict
                 foreach (var sense in Senses)
                 {
                     sb.Append(sense);
-                    sb.Append("/");
+                    sb.AppendLine();
                 }
             }
             return sb.ToString();

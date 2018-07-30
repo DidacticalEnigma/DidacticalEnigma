@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace DidacticalEnigma.Models
 {
+    class MultimediaLookup
+    {
+
+    }
+
     class SimilarKana
     {
         private Dictionary<CodePoint, List<CodePoint>> similarityGroups;

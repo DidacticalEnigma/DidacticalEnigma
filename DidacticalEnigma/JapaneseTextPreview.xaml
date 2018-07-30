@@ -9,71 +9,75 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <ItemsControl
-        ItemsSource="{Binding Lines}"
-        PreviewMouseDown="SelectText"
-        PreviewMouseMove="SelectText">
-        <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-                <StackPanel Orientation="Vertical" />
-            </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <ItemsControl ItemsSource="{Binding Words}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <ItemsControl ItemsSource="{Binding CodePoints}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                FontSize="24"
-                                                Text="{Binding StringForm}"
-                                                ToolTipService.InitialShowDelay="0"
-                                                ToolTipService.ShowDuration="120000">
-                                                <TextBlock.ToolTip>
-                                                    <TextBlock Text="Has similar letters" Visibility="{Binding HasSimilar, Converter={x:Static enigma:BooleanToVisibilityConverter.Default}}" />
-                                                </TextBlock.ToolTip>
-                                                <TextBlock.ContextMenu>
-                                                    <ContextMenu ItemsSource="{Binding Similar}">
-                                                        <ContextMenu.ItemContainerStyle>
-                                                            <Style TargetType="MenuItem">
-                                                                <Setter Property="Command" Value="{Binding DataContext.PlaceInClipboard, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
-                                                                <Setter Property="CommandParameter" Value="{Binding .}" />
-                                                            </Style>
-                                                        </ContextMenu.ItemContainerStyle>
-                                                        <ContextMenu.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding ., Converter={x:Static enigma:CodePointToLongStringConverter.Default}}" />
-                                                            </DataTemplate>
-                                                        </ContextMenu.ItemTemplate>
-                                                    </ContextMenu>
-                                                </TextBlock.ContextMenu>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+    <ScrollViewer>
+        <ItemsControl
+            ItemsSource="{Binding Lines}"
+            PreviewMouseDown="SelectText"
+            PreviewMouseMove="SelectText">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding Words}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <ItemsControl ItemsSource="{Binding CodePoints}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock
+                                                    ContextMenuService.IsEnabled="{Binding HasSimilar}"
+                                                    FontSize="24"
+                                                    Text="{Binding StringForm}"
+                                                    ToolTipService.InitialShowDelay="0"
+                                                    ToolTipService.IsEnabled="{Binding HasSimilar}"
+                                                    ToolTipService.ShowDuration="120000">
+                                                    <TextBlock.ToolTip>
+                                                        <TextBlock Text="Has similar letters" />
+                                                    </TextBlock.ToolTip>
+                                                    <TextBlock.ContextMenu>
+                                                        <ContextMenu ItemsSource="{Binding Similar}">
+                                                            <ContextMenu.ItemContainerStyle>
+                                                                <Style TargetType="MenuItem">
+                                                                    <Setter Property="Command" Value="{Binding DataContext.PlaceInClipboard, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                                                    <Setter Property="CommandParameter" Value="{Binding .}" />
+                                                                </Style>
+                                                            </ContextMenu.ItemContainerStyle>
+                                                            <ContextMenu.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ., Converter={x:Static enigma:CodePointToLongStringConverter.Default}}" />
+                                                                </DataTemplate>
+                                                            </ContextMenu.ItemTemplate>
+                                                        </ContextMenu>
+                                                    </TextBlock.ContextMenu>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
 
-                                <TextBlock
-                                    Background="Transparent"
-                                    FontSize="24"
-                                    Text=" " />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+                                    <TextBlock
+                                        Background="Transparent"
+                                        FontSize="24"
+                                        Text=" " />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
 </UserControl>

@@ -41,6 +41,13 @@ namespace DidacticalEnigma
             {
                 return string.IsNullOrEmpty(RawOutput);
             });
+            Reset = new RelayCommand(() =>
+            {
+                RawOutput = "";
+            }, () =>
+            {
+                return !string.IsNullOrEmpty(RawOutput);
+            });
             PlaceInClipboard = new RelayCommand((p) =>
             {
                 var codePoint = (CodePoint)p;
@@ -81,6 +88,7 @@ namespace DidacticalEnigma
                 rawOutput = value;
                 OnPropertyChanged();
                 Update.OnExecuteChanged();
+                Reset.OnExecuteChanged();
                 SetAnnotations(RawOutput);
             }
         }
@@ -98,6 +106,7 @@ namespace DidacticalEnigma
         public RelayCommand PlaceInClipboard { get; }
 
         public RelayCommand Update { get; }
+        public RelayCommand Reset { get; }
 
         private IEnumerable<string> SplitWords(string input)
         {

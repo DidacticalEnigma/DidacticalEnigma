@@ -66,10 +66,20 @@
                 Text="{Binding RawOutput, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" />
-            <Button
-                Grid.Column="2"
-                Command="{Binding Update}"
-                Content="Update" />
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Button
+                    Grid.Row="0"
+                    Command="{Binding Update}"
+                    Content="Update" />
+                <Button
+                    Grid.Row="1"
+                    Command="{Binding Reset}"
+                    Content="Reset" />
+            </Grid>
         </Grid>
     </Grid>
 </Window>
