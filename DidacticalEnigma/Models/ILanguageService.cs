@@ -31,7 +31,7 @@ namespace DidacticalEnigma
                     .Select(word => word.Contains("\r") || word.Contains("\n") ? "\n" : word));
             return output
                 .Split('\n')
-                .Select(line => line.Split().Select(word => new WordInfo(word, LookupWord(word)?.ToString() ?? "")));
+                .Select(line => line.Split().Select(word => LookupWord(word)));
         }
 
         public void Dispose()
@@ -46,7 +46,9 @@ namespace DidacticalEnigma
 
         public WordInfo LookupWord(string word)
         {
-            var entry = dictionary.Lookup(word.Trim());
+            //var entry = dictionary.Lookup(word.Trim());
+            //return new WordInfo(word, entry?.ToString());
+            var entry = jdict.Lookup(word.Trim());
             return new WordInfo(word, entry?.ToString());
         }
 
@@ -56,7 +58,9 @@ namespace DidacticalEnigma
 
         private readonly SimilarKana similar;
 
-        public LanguageService(MeCabParam mecabParam, EDict dictionary, SimilarKana similar)
+        private readonly JMDict jdict;
+
+        public LanguageService(MeCabParam mecabParam, EDict dictionary, SimilarKana similar, JMDict jdict)
         {
             mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
             mecabParam.OutputFormatType = "wakati";
@@ -65,6 +69,7 @@ namespace DidacticalEnigma
             this.mecab = MeCabTagger.Create(mecabParam);
             this.dictionary = dictionary;
             this.similar = similar;
+            this.jdict = jdict;
         }
 
         private IEnumerable<string> SplitWords(string input)

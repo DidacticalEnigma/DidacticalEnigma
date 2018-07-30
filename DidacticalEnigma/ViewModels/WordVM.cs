@@ -9,7 +9,14 @@ namespace DidacticalEnigma.Models
 
     public class WordVM : INotifyPropertyChanged
     {
-        public string DictionaryStringBlurb => lang.LookupWord(StringForm).DictionaryDefinition;
+        public string DictionaryStringBlurb
+        {
+            get
+            {
+                var a = lang.LookupWord(StringForm).DictionaryDefinition;
+                return a;
+            }
+        }
 
         private string stringForm;
         private readonly ILanguageService lang;

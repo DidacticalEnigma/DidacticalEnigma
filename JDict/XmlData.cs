@@ -55,7 +55,7 @@ namespace JDict.Internal.XmlModels
         public string[] Information { get; set; }
 
         [XmlElement("lsource")]
-        public string[] LoanWordSource { get; set; }
+        public LoanSource[] LoanWordSource { get; set; }
 
         [XmlElement("dial")]
         public string[] Dialect { get; set; }
@@ -75,6 +75,9 @@ namespace JDict.Internal.XmlModels
 
         [XmlAttribute("ls_wasei")]
         public string Wasei { get; set; }
+
+        [XmlText]
+        public string Text { get; set; }
     }
 
     public class Gloss
@@ -87,6 +90,9 @@ namespace JDict.Internal.XmlModels
 
         [XmlAttribute("g_type")]
         public string Type { get; set; }
+
+        [XmlText]
+        public string Text { get; set; }
     }
 
     public class ReadingElement

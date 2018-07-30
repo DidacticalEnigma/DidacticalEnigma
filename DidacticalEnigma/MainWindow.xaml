@@ -31,17 +31,20 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock
+            <TextBox
                 Grid.Column="0"
+                AcceptsReturn="True"
                 FontSize="18"
-                Text="{Binding SelectedCharacter.FullName, ElementName=Jp}"
+                IsReadOnly="True"
+                Text="{Binding SelectedCharacter.FullName, ElementName=Jp, Mode=OneWay}"
                 TextWrapping="Wrap" />
-            <ScrollViewer Grid.Column="1">
-                <TextBlock
-                    FontSize="18"
-                    Text="{Binding SelectedWord.DictionaryStringBlurb, ElementName=Jp}"
-                    TextWrapping="Wrap" />
-            </ScrollViewer>
+            <TextBox
+                Grid.Column="1"
+                AcceptsReturn="True"
+                FontSize="18"
+                IsReadOnly="True"
+                Text="{Binding SelectedWord.DictionaryStringBlurb, ElementName=Jp, Mode=OneWay}"
+                TextWrapping="Wrap" />
         </Grid>
         <Grid Grid.Row="3" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>

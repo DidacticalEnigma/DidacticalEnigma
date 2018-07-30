@@ -24,13 +24,16 @@ namespace DidacticalEnigma
         public MainWindowVM()
         {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml"));
+            var jdict = JDict.JMDict.Create(Path.Combine(baseDir, @"dic\JMdict_e"));
             lang = new LanguageService(
                 new MeCabParam
                 {
                     DicDir = Path.Combine(baseDir, @"dic\ipadic"),
                 },
                 new EDict(Path.Combine(baseDir, @"dic\edict2_utf8"), Encoding.UTF8),
-                SimilarKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")));
+                SimilarKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
+                jdict);
             Update = new RelayCommand(() =>
             {
                 RawOutput = string.Join("\n", lang.BreakIntoSentences(Input)
