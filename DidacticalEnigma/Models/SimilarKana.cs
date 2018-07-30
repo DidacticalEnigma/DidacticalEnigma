@@ -71,6 +71,7 @@ namespace DidacticalEnigma.Models
         {
             return new SimilarKana(
                 File.ReadLines(path, Encoding.UTF8)
+                    .Where(line => !line.StartsWith("#"))
                     .Select(line => line.AsCodePoints().Select(cp => CodePoint.FromInt(cp))));
             
         }

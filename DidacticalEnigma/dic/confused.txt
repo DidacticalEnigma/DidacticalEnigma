@@ -1,4 +1,11 @@
-﻿きさち
+﻿# This file uses material from the Wiktionary articles
+# https://en.wiktionary.org/wiki/Appendix:Easily_confused_Japanese_kana
+# and
+# https://en.wiktionary.org/wiki/Appendix:Easily_confused_Chinese_characters
+# which are released under the
+# Creative Commons Attribution-ShareAlike 3.0 Unported License
+# https://en.wiktionary.org/wiki/Wiktionary:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License
+きさち
 ちら
 おむ
 こて
