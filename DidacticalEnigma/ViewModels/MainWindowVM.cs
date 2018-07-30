@@ -31,7 +31,6 @@ namespace DidacticalEnigma
                 {
                     DicDir = Path.Combine(baseDir, @"dic\ipadic"),
                 },
-                new EDict(Path.Combine(baseDir, @"dic\edict2_utf8"), Encoding.UTF8),
                 SimilarKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
                 jdict);
             Update = new RelayCommand(() =>

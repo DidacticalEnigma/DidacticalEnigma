@@ -59,20 +59,17 @@ namespace DidacticalEnigma
 
         private readonly MeCabTagger mecab;
 
-        private readonly EDict dictionary;
-
         private readonly SimilarKana similar;
 
         private readonly JMDict jdict;
 
-        public LanguageService(MeCabParam mecabParam, EDict dictionary, SimilarKana similar, JMDict jdict)
+        public LanguageService(MeCabParam mecabParam, SimilarKana similar, JMDict jdict)
         {
             mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
             mecabParam.OutputFormatType = "wakati";
             mecabParam.AllMorphs = false;
             mecabParam.Partial = false;
             this.mecab = MeCabTagger.Create(mecabParam);
-            this.dictionary = dictionary;
             this.similar = similar;
             this.jdict = jdict;
         }

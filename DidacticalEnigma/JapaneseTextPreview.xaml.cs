@@ -72,8 +72,11 @@ namespace DidacticalEnigma
 
         private TextBlock previousClickedLetter = null;
 
-        private void ItemsControl_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void SelectText(object sender, MouseEventArgs e)
         {
+            if (!(e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed))
+                return;
+
             var clickedPoint = e.GetPosition(null);
             var clickedLetter =
                 FindAncestor<TextBlock>((DependencyObject)e.OriginalSource);

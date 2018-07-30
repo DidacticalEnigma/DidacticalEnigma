@@ -16,7 +16,7 @@ namespace DidacticalEnigma.Models
 
         public string Name => UnicodeInfo.GetCharInfo(codePoint).Name;
 
-        public string ToLongString()
+        public virtual string ToLongString()
         {
             return $"{char.ConvertFromUtf32(codePoint)} ({codePoint}): {Name}";
         }
@@ -40,7 +40,7 @@ namespace DidacticalEnigma.Models
                     return new Hiragana(codePoint);
                 case "Katakana":
                     return new Katakana(codePoint);
-                case "Kanji":
+                case "CJK Unified Ideographs":
                     return new Kanji(codePoint);
                 default:
                     return new CodePoint(codePoint);
@@ -85,6 +85,20 @@ namespace DidacticalEnigma.Models
             base(s)
         {
             
+        }
+
+        public override string ToLongString()
+        {
+            var info = UnicodeInfo.GetCharInfo(codePoint);
+            return base.ToLongString() + "\n" +
+                "Kun: " + info.JapaneseKunReading + "\n" +
+                "On: " + info.JapaneseOnReading + "\n" +
+                string.Join("\n", info.UnicodeRadicalStrokeCounts.Select(r =>
+                {
+                    var radicalInfo = UnicodeInfo.GetCjkRadicalInfo(r.Radical);
+                    return char.ConvertFromUtf32(radicalInfo.TraditionalRadicalCodePoint);
+                })) + "\n\n" +
+                info.Definition + "\n";
         }
     }
 

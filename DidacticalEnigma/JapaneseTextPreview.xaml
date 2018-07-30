@@ -9,7 +9,10 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <ItemsControl ItemsSource="{Binding Lines}" PreviewMouseDown="ItemsControl_PreviewMouseLeftButtonDown">
+    <ItemsControl
+        ItemsSource="{Binding Lines}"
+        PreviewMouseDown="SelectText"
+        PreviewMouseMove="SelectText">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <StackPanel Orientation="Vertical" />
@@ -20,7 +23,7 @@
                 <ItemsControl ItemsSource="{Binding Words}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" />
+                            <WrapPanel Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
