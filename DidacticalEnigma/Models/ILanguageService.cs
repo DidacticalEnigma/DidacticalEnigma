@@ -49,7 +49,12 @@ namespace DidacticalEnigma
             //var entry = dictionary.Lookup(word.Trim());
             //return new WordInfo(word, entry?.ToString());
             var entry = jdict.Lookup(word.Trim());
-            return new WordInfo(word, entry?.ToString());
+            string joined = null;
+            if(entry != null)
+            {
+                joined = string.Join("\n\n", entry.Select(e => e.ToString()));
+            }
+            return new WordInfo(word, joined);
         }
 
         private readonly MeCabTagger mecab;

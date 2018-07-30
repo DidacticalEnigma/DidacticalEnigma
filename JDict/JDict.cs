@@ -15,7 +15,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
-        private Dictionary<string, JMDictEntry> root;
+        private Dictionary<string, List<JMDictEntry>> root;
 
         private JMDict Init(Stream stream)
         {
@@ -29,11 +29,12 @@ namespace JDict
             };
             using (var xmlReader = XmlReader.Create(stream, xmlSettings))
             {
-                root = new Dictionary<string, JMDictEntry>();
+                root = new Dictionary<string, List<JMDictEntry>>();
                 var entries = ((JdicRoot)serializer.Deserialize(xmlReader)).Entries
                     .SelectMany(e =>
                     {
-                        return e.KanjiElements
+                        var mainkanjiElement = e.KanjiElements?.FirstOrDefault();
+                        return Enumerable.Repeat(mainkanjiElement, mainkanjiElement != null ? 1 : 0)
                             ?.Select(k => new KeyValuePair<string, JdicEntry>(k.Key, e))
                             ?.Concat(e.ReadingElements.Select(r => new KeyValuePair<string, JdicEntry>(r.Reb, e)))
                             ?? Enumerable.Empty<KeyValuePair<string, JdicEntry>>();
@@ -41,17 +42,21 @@ namespace JDict
                 foreach(var kvp in entries)
                 {
                     var xmlEntry = kvp.Value;
-                    root[kvp.Key] = new JMDictEntry(
+                    if (!root.ContainsKey(kvp.Key))
+                        root[kvp.Key] = new List<JMDictEntry>();
+                    root[kvp.Key].Add(new JMDictEntry(
                         xmlEntry.Number,
                         xmlEntry.ReadingElements.Select(r => r.Reb),
-                        xmlEntry.KanjiElements.Select(k => k.Key),
-                        xmlEntry.Senses.Select(s => new JMDictSense(string.Join("\n", s.Glosses.Select(g => g.Text)))));
+                        xmlEntry.KanjiElements?.Select(k => k.Key) ?? Enumerable.Empty<string>(),
+                        xmlEntry.Senses.Select(s => new JMDictSense(
+                            string.Join("/", s.PartOfSpeech ?? Enumerable.Empty<string>()),
+                            string.Join("/", s.Glosses.Select(g => g.Text.Trim()))))));
                 }
             }
             return this;
         }
 
-        public JMDictEntry Lookup(string v)
+        public IEnumerable<JMDictEntry> Lookup(string v)
         {
             root.TryGetValue(v, out var entry);
             return entry;
@@ -89,6 +94,8 @@ namespace JDict
 
         public IEnumerable<string> Kanji { get; }
 
+        public IEnumerable<string> PartOfSpeech { get; }
+
         public IEnumerable<JMDictSense> Senses { get; }
 
         public override string ToString()
@@ -111,7 +118,7 @@ namespace JDict
                 foreach (var reading in Readings)
                 {
                     if (!first)
-                        sb.Append(";  ");
+                        sb.AppendLine();
                     first = false;
                     sb.Append(reading);
                 }
@@ -121,7 +128,7 @@ namespace JDict
                 foreach (var sense in Senses)
                 {
                     sb.Append(sense);
-                    sb.AppendLine();
+                    sb.Append("/");
                 }
             }
             return sb.ToString();
@@ -142,15 +149,19 @@ namespace JDict
 
     public class JMDictSense
     {
-        private string text;
-        public JMDictSense(string text)
+        public string PartOfSpeech { get; }
+
+        public string Description { get; }
+
+        public JMDictSense(string pos, string text)
         {
-            this.text = text;
+            PartOfSpeech = pos;
+            Description = text;
         }
 
         public override string ToString()
         {
-            return text;
+            return PartOfSpeech + "\n" + Description;
         }
     }
 }
