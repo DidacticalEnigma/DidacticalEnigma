@@ -36,7 +36,7 @@
                 AcceptsReturn="True"
                 FontSize="18"
                 IsReadOnly="True"
-                Text="{Binding SelectedCharacter.FullName, ElementName=Jp, Mode=OneWay}"
+                Text="{Binding SelectedCharacter.Description, ElementName=Jp, Mode=OneWay}"
                 TextWrapping="Wrap" />
             <TextBox
                 Grid.Column="1"

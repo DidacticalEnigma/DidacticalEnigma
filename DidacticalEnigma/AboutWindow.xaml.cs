@@ -32,6 +32,8 @@ This program uses and relies on:
     https://osdn.net/projects/nmecab
 - JMdict project:
     http://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project
+- KRADFILE/RADKFILE:
+    http://www.edrdg.org/krad/kradinf.html
 - Resources available from the following wikipedia pages:
     https://en.wiktionary.org/wiki/Appendix:Easily_confused_Japanese_kana
     https://en.wikipedia.org/wiki/Hiragana

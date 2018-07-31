@@ -43,7 +43,10 @@ namespace DidacticalEnigma.Models
             codePoints.AddRange(s.AsCodePoints().Select(rawCp =>
             {
                 var cp = CodePoint.FromInt(rawCp);
-                var vm = new CodePointVM(cp, lang.LookupRelatedCharacters(cp));
+                var vm = new CodePointVM(
+                    cp,
+                    lang.LookupRelatedCharacters(cp),
+                    cp is Kanji k ? lang.LookupRadicals(k) : Enumerable.Empty<CodePoint>());
                 return vm;
             }));
             this.lang = lang;

@@ -7,18 +7,28 @@ namespace DidacticalEnigma.Models
     {
         public CodePoint CodePoint { get; }
 
-        public string FullName => CodePoint.ToLongString();
+        public string Description
+        {
+            get
+            {
+                return CodePoint.ToDescriptionString() + "\n" +
+                string.Join(" ; ", radicals);
+            }
+        }
 
         public string StringForm => CodePoint.ToString();
 
         public IEnumerable<CodePoint> Similar { get; }
 
+        private readonly IEnumerable<string> radicals;
+
         public bool HasSimilar => Similar.Any();
 
-        public CodePointVM(CodePoint cp, IEnumerable<CodePoint> similar)
+        public CodePointVM(CodePoint cp, IEnumerable<CodePoint> similar, IEnumerable<CodePoint> radicals)
         {
             CodePoint = cp;
             Similar = similar;
+            this.radicals = radicals?.Select(r => r.ToString()).ToList() ?? Enumerable.Empty<string>();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,23 @@ namespace DidacticalEnigma.Models
 
     }
 
-    class SimilarKana
+    interface IMedium
+    {
+        Uri Uri { get; }
+
+        ContentType Type { get; }
+
+        Task PreloadEntireMedium();
+
+        Stream GetStream();
+    }
+
+    class Image
+    {
+
+    }
+
+    class SimilarKana : ISimilarKana
     {
         private Dictionary<CodePoint, List<CodePoint>> similarityGroups;
 

@@ -161,6 +161,8 @@
     <Compile Include="JapaneseTextPreview.xaml.cs">
       <DependentUpon>JapaneseTextPreview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\ISimilarKana.cs" />
+    <Compile Include="Models\NullSimilarKana.cs" />
     <Compile Include="Utils\DualDictionary.cs" />
     <Compile Include="Utils\TrivialTemplateSelector.cs" />
     <Compile Include="ViewModels\BooleanToBrushConverter.cs" />
