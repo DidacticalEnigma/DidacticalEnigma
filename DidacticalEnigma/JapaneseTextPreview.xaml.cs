@@ -80,6 +80,8 @@ namespace DidacticalEnigma
             var clickedPoint = e.GetPosition(null);
             var clickedLetter =
                 FindAncestor<TextBlock>((DependencyObject)e.OriginalSource);
+            if (clickedLetter == null)
+                return;
             var clickedWordPanel = FindAncestor<StackPanel>(clickedLetter);
             if (clickedLetter != previousClickedLetter && clickedLetter.Text.Trim() != "")
             {
@@ -107,6 +109,10 @@ namespace DidacticalEnigma
         private static T FindAncestor<T>(DependencyObject current)
             where T : DependencyObject
         {
+            if(current == null)
+            {
+                return null;
+            }
             do
             {
                 var ancestor = current as T;
