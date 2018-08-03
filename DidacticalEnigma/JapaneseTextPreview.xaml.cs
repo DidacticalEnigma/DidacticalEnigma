@@ -89,14 +89,14 @@ namespace DidacticalEnigma
                 {
                     previousClickedLetter.Background = Brushes.Transparent;
                 }
-                clickedLetter.Background = Brushes.Green;
+                clickedLetter.Background = Brushes.Yellow;
                 if(clickedWordPanel != previousClickedWord)
                 {
                     if(previousClickedWord != null)
                     {
                         previousClickedWord.Background = Brushes.Transparent;
                     }
-                    clickedWordPanel.Background = Brushes.Yellow;
+                    clickedWordPanel.Background = Brushes.AntiqueWhite;
                     previousClickedWord = clickedWordPanel;
                     SetCurrentValue(SelectedWordProperty, (WordVM)clickedWordPanel.DataContext);
                 }

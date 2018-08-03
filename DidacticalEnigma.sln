@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma", "DidacticalEnigma\DidacticalEnigma.csproj", "{BA5B8792-EAF8-4A87-B58E-225290FD14A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDict", "JDict\JDict.csproj", "{82E18376-40E8-4F9D-BC46-E166354BCCB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JDict", "JDict\JDict.csproj", "{82E18376-40E8-4F9D-BC46-E166354BCCB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDict.Tests", "JDict.Tests\JDict.Tests.csproj", "{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{82E18376-40E8-4F9D-BC46-E166354BCCB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82E18376-40E8-4F9D-BC46-E166354BCCB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82E18376-40E8-4F9D-BC46-E166354BCCB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

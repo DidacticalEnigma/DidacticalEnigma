@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows;
 using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace DidacticalEnigma
 {
@@ -24,6 +26,9 @@ namespace DidacticalEnigma
         public MainWindowVM()
         {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            {
+                
+            }
             var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml"));
             var jdict = JDict.JMDict.Create(Path.Combine(baseDir, @"dic\JMdict_e"));
             var kradfile = new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
@@ -37,8 +42,7 @@ namespace DidacticalEnigma
                 kradfile);
             Update = new RelayCommand(() =>
             {
-                RawOutput = string.Join("\n", lang.BreakIntoSentences(Input)
-                    .Select(sentence => string.Join(" ", sentence.Select(word => word.RawWord))));
+                SetAnnotations(Input);
             }, () =>
             {
                 return string.IsNullOrEmpty(RawOutput);
@@ -46,6 +50,7 @@ namespace DidacticalEnigma
             Reset = new RelayCommand(() =>
             {
                 RawOutput = "";
+                SetAnnotations("");
             }, () =>
             {
                 return !string.IsNullOrEmpty(RawOutput);
@@ -67,12 +72,15 @@ namespace DidacticalEnigma
         private void SetAnnotations(string unannotatedOutput)
         {
             Lines.Clear();
-            Lines.AddRange(unannotatedOutput
-                .Split('\n')
-                .Select(line =>
-                    new LineVM(line
-                        .Split(' ')
-                        .Select(word => new WordVM(word, lang)))));
+            Lines.AddRange(
+                lang.BreakIntoSentences(unannotatedOutput)
+                    .Select(sentence => new LineVM(sentence.Select(word => new WordVM(word, lang)))));
+            RawOutput = string.Join(
+                "\n",
+                Lines.Select(
+                    line => string.Join(
+                        " ",
+                        line.Words.Select(word => word.StringForm))));
         }
 
         private string input = "";
@@ -91,7 +99,7 @@ namespace DidacticalEnigma
                 OnPropertyChanged();
                 Update.OnExecuteChanged();
                 Reset.OnExecuteChanged();
-                SetAnnotations(RawOutput);
+                SetAnnotations(value);
             }
         }
         public string Input

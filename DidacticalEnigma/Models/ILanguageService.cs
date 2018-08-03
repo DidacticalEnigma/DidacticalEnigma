@@ -1,4 +1,5 @@
 ﻿using DidacticalEnigma.Models;
+using DidacticalEnigma.Utils;
 using JDict;
 using NMeCab;
 using System;
@@ -28,14 +29,16 @@ namespace DidacticalEnigma
         {
             if (input.Trim() == "")
                 return Enumerable.Empty<IEnumerable<WordInfo>>();
-            var parsed = mecab.Parse(input);
-            var output = string.Join(
-                "",
-                SplitWords(parsed)
-                    .Select(word => word.Contains("\r") || word.Contains("\n") ? "\n" : word));
-            return output
-                .Split('\n')
-                .Select(line => line.Split().Select(word => LookupWord(word)));
+            return input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
+                .Select(line =>
+                {
+                    return mecab.ParseToEntries(line)
+                        .Where(a => a.IsRegular)
+                        .Select(word => new WordInfo(
+                            word.OriginalForm,
+                            LookupWord(word.OriginalForm).DictionaryDefinition,
+                            word.PartOfSpeech));
+                });
         }
 
         public void Dispose()
@@ -79,7 +82,7 @@ namespace DidacticalEnigma
             mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
             mecabParam.OutputFormatType = "wakati";
             mecabParam.AllMorphs = false;
-            mecabParam.Partial = false;
+            mecabParam.Partial = true;
             this.mecab = MeCabTagger.Create(mecabParam);
             this.similar = similar;
             this.jdict = jdict;

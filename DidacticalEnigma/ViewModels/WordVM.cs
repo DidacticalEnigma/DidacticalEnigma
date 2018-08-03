@@ -9,36 +9,18 @@ namespace DidacticalEnigma.Models
 
     public class WordVM : INotifyPropertyChanged
     {
-        public string DictionaryStringBlurb
-        {
-            get
-            {
-                var a = lang.LookupWord(StringForm).DictionaryDefinition;
-                return a;
-            }
-        }
+        public string DictionaryStringBlurb => WordInfo.DictionaryDefinition;
 
-        private string stringForm;
-        private readonly ILanguageService lang;
+        public WordInfo WordInfo { get; }
 
-        public string StringForm
-        {
-            get => stringForm;
-            set
-            {
-                if (stringForm == value)
-                    return;
-                stringForm = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(DictionaryStringBlurb));
-            }
-        }
+        public string StringForm { get; }
 
         private readonly ObservableBatchCollection<CodePointVM> codePoints = new ObservableBatchCollection<CodePointVM>();
         public IEnumerable<CodePointVM> CodePoints => codePoints;
 
-        public WordVM(string s, ILanguageService lang)
+        public WordVM(WordInfo wordInfo, ILanguageService lang)
         {
+            var s = wordInfo.RawWord;
             StringForm = s;
             codePoints.AddRange(s.AsCodePoints().Select(rawCp =>
             {
@@ -49,7 +31,7 @@ namespace DidacticalEnigma.Models
                     cp is Kanji k ? lang.LookupRadicals(k) : Enumerable.Empty<CodePoint>());
                 return vm;
             }));
-            this.lang = lang;
+            WordInfo = wordInfo;
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
