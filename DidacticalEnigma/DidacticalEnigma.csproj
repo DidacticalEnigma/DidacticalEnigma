@@ -154,9 +154,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AboutWindow.xaml.cs">
-      <DependentUpon>AboutWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ClipboardHook.cs" />
     <Compile Include="JapaneseTextPreview.xaml.cs">
       <DependentUpon>JapaneseTextPreview.xaml</DependentUpon>
@@ -183,10 +180,6 @@
     <Compile Include="SimpleFlowDocument.cs" />
     <Compile Include="Utils\StringExt.cs" />
     <Compile Include="Utils\UnionFindNode.cs" />
-    <Page Include="AboutWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="JapaneseTextPreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -256,6 +249,11 @@
     <Analyzer Include="..\packages\WpfAnalyzers.2.1.4.0\analyzers\dotnet\cs\Gu.Roslyn.CodeFixExtensions.dll" />
     <Analyzer Include="..\packages\WpfAnalyzers.2.1.4.0\analyzers\dotnet\cs\WpfAnalyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\WpfAnalyzers.2.1.4.0\analyzers\dotnet\cs\WpfAnalyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="dic\about.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NMeCab.0.06.4\build\NMeCab.targets" Condition="Exists('..\packages\NMeCab.0.06.4\build\NMeCab.targets')" />

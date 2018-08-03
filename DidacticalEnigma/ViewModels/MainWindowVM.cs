@@ -23,6 +23,8 @@ namespace DidacticalEnigma
 
         private ClipboardHook hook;
 
+        public string AboutText => File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"dic\about.txt"), Encoding.UTF8);
+
         public MainWindowVM()
         {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
