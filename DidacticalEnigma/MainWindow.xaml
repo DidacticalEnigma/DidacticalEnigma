@@ -18,7 +18,7 @@
             <RowDefinition Height="4*" />
             <RowDefinition Height="5*" />
         </Grid.RowDefinitions>
-        <enigma:JapaneseTextPreview x:Name="Jp" Grid.Row="1" />
+        <enigma:JapaneseTextPreview x:Name="Jp" Grid.Row="0" />
         <TabControl Grid.Row="2">
             <TabItem Header="Main">
                 <Grid>
@@ -26,67 +26,76 @@
                         <RowDefinition Height="3*" />
                         <RowDefinition Height="2*" />
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox
-                            Grid.Column="0"
-                            AcceptsReturn="True"
-                            FontSize="18"
-                            IsReadOnly="True"
-                            Text="{Binding SelectedCharacter.Description, ElementName=Jp, Mode=OneWay}"
-                            TextWrapping="Wrap" />
-                        <TextBox
-                            Grid.Column="1"
-                            AcceptsReturn="True"
-                            FontSize="18"
-                            IsReadOnly="True"
-                            Text="{Binding SelectedWord.DictionaryStringBlurb, ElementName=Jp, Mode=OneWay}"
-                            TextWrapping="Wrap" />
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox
-                            Grid.Column="0"
-                            AcceptsReturn="True"
-                            FontSize="18"
-                            Text="{Binding Input}"
-                            TextWrapping="Wrap"
-                            VerticalScrollBarVisibility="Auto" />
-                        <TextBox
-                            Grid.Column="1"
-                            AcceptsReturn="True"
-                            FontSize="18"
-                            Text="{Binding RawOutput, UpdateSourceTrigger=PropertyChanged}"
-                            TextWrapping="Wrap"
-                            VerticalScrollBarVisibility="Auto" />
-                        <Grid Grid.Column="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Button
-                                Grid.Row="0"
-                                Command="{Binding Update}"
-                                Content="Update" />
-                            <Button
-                                Grid.Row="1"
-                                Command="{Binding Reset}"
-                                Content="Reset" />
-                        </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        AcceptsReturn="True"
+                        FontSize="18"
+                        IsReadOnly="True"
+                        Text="{Binding SelectedCharacter.Description, ElementName=Jp, Mode=OneWay}"
+                        TextWrapping="Wrap" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        AcceptsReturn="True"
+                        FontSize="18"
+                        IsReadOnly="True"
+                        Text="{Binding SelectedWord.DictionaryStringBlurb, ElementName=Jp, Mode=OneWay}"
+                        TextWrapping="Wrap" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        AcceptsReturn="True"
+                        FontSize="18"
+                        Text="{Binding Input}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        AcceptsReturn="True"
+                        FontSize="18"
+                        Text="{Binding RawOutput, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                    <Grid Grid.Row="1" Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Button
+                            Grid.Row="0"
+                            Command="{Binding Update}"
+                            Content="Update" />
+                        <Button
+                            Grid.Row="1"
+                            Command="{Binding Reset}"
+                            Content="Reset" />
+
                     </Grid>
                 </Grid>
             </TabItem>
+            <TabItem Header="Usage">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="8*" />
+                    </Grid.ColumnDefinitions>
+                    <TreeView Grid.Column="0" />
+                    <FlowDocumentScrollViewer Grid.Column="1" />
+                </Grid>
+            </TabItem>
             <TabItem Header="Hiragana" />
-            <TabItem Header="Kanji" />
+            <TabItem Header="Kanji">
+                <enigma:KanjiRadicalLookupControl />
+            </TabItem>
             <TabItem Header="Katakana" />
-            <TabItem Header="Usage" />
             <TabItem Header="About">
                 <TextBox IsReadOnly="True" Text="{Binding AboutText, Mode=OneWay}" />
             </TabItem>

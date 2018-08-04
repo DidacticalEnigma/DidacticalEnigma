@@ -34,6 +34,7 @@ namespace DidacticalEnigma
             var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml"));
             var jdict = JDict.JMDict.Create(Path.Combine(baseDir, @"dic\JMdict_e"));
             var kradfile = new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
+            var radkfile = new Radkfile(Path.Combine(baseDir, @"dic\radkfile1_plus_2_utf8"), Encoding.UTF8);
             lang = new LanguageService(
                 new MeCabParam
                 {
@@ -41,7 +42,8 @@ namespace DidacticalEnigma
                 },
                 SimilarKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
                 jdict,
-                kradfile);
+                kradfile,
+                radkfile);
             Update = new RelayCommand(() =>
             {
                 SetAnnotations(Input);

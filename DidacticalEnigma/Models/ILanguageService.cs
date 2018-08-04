@@ -14,6 +14,10 @@ namespace DidacticalEnigma
 
         IEnumerable<CodePoint> LookupRadicals(Kanji kanji);
 
+        IEnumerable<CodePoint> AllRadicals();
+
+        IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals);
+
         CodePoint LookupCharacter(int codePoint);
 
         CodePoint LookupCharacter(string s, int position = 0);
@@ -77,7 +81,9 @@ namespace DidacticalEnigma
 
         private readonly Kradfile kradfile;
 
-        public LanguageService(MeCabParam mecabParam, SimilarKana similar, JMDict jdict, Kradfile kradfile)
+        private readonly Radkfile radkfile;
+
+        public LanguageService(MeCabParam mecabParam, SimilarKana similar, JMDict jdict, Kradfile kradfile, Radkfile radkfile)
         {
             mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
             mecabParam.OutputFormatType = "wakati";
@@ -87,6 +93,7 @@ namespace DidacticalEnigma
             this.similar = similar;
             this.jdict = jdict;
             this.kradfile = kradfile;
+            this.radkfile = radkfile;
         }
 
         private IEnumerable<string> SplitWords(string input)
@@ -127,6 +134,16 @@ namespace DidacticalEnigma
         public IEnumerable<CodePoint> LookupRadicals(Kanji kanji)
         {
             return kradfile.LookupRadicals(kanji.ToString()).Select(cp => CodePoint.FromString(cp, 0));
+        }
+
+        public IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<CodePoint> AllRadicals()
+        {
+            return radkfile.Radicals.Select(rad => CodePoint.FromInt(rad.CodePoint));
         }
     }
 }
