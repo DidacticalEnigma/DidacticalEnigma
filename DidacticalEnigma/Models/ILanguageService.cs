@@ -77,7 +77,7 @@ namespace DidacticalEnigma
 
         private readonly MeCabTagger mecab;
 
-        private readonly SimilarKana similar;
+        private readonly EasilyConfusedKana similar;
 
         private readonly JMDict jdict;
 
@@ -87,7 +87,16 @@ namespace DidacticalEnigma
 
         private readonly KanjiDict kanjidict;
 
-        public LanguageService(MeCabParam mecabParam, SimilarKana similar, JMDict jdict, Kradfile kradfile, Radkfile radkfile, KanjiDict kanjiDict)
+        private readonly KanaProperties kanaProperties;
+
+        public LanguageService(
+            MeCabParam mecabParam,
+            EasilyConfusedKana similar,
+            JMDict jdict,
+            Kradfile kradfile,
+            Radkfile radkfile,
+            KanjiDict kanjiDict,
+            KanaProperties kanaProperties)
         {
             mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
             mecabParam.OutputFormatType = "wakati";
@@ -99,6 +108,7 @@ namespace DidacticalEnigma
             this.kradfile = kradfile;
             this.radkfile = radkfile;
             this.kanjidict = kanjiDict;
+            this.kanaProperties = kanaProperties;
         }
 
         private IEnumerable<string> SplitWords(string input)
@@ -129,8 +139,8 @@ namespace DidacticalEnigma
 
         public IEnumerable<CodePoint> LookupRelatedCharacters(CodePoint point)
         {
-            var oppositeSized = point is Kana k && k.HasOppositeSizedVersion
-                ? Enumerable.Repeat(CodePoint.FromInt(k.OppositeSizedVersion), 1)
+            var oppositeSized = kanaProperties.OppositeSizedVersionOf(point.Utf32) != null
+                ? Enumerable.Repeat(CodePoint.FromInt(kanaProperties.OppositeSizedVersionOf(point.Utf32).Value), 1)
                 : Enumerable.Empty<CodePoint>();
             return oppositeSized
                 .Concat(similar.FindSimilar(point) ?? Enumerable.Empty<CodePoint>());

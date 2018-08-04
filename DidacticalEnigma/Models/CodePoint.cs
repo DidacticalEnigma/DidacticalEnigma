@@ -14,6 +14,8 @@ namespace DidacticalEnigma.Models
     {
         protected readonly int codePoint;
 
+        public int Utf32 => codePoint;
+
         public string Name => UnicodeInfo.GetCharInfo(codePoint).Name;
 
         public string ToLongString()
@@ -109,10 +111,6 @@ namespace DidacticalEnigma.Models
         {
 
         }
-
-        public bool HasOppositeSizedVersion => KanaProperties.OppositeSizedVersionOf(codePoint).HasValue;
-
-        public int OppositeSizedVersion => KanaProperties.OppositeSizedVersionOf(codePoint).Value;
     }
 
     public class Hiragana : Kana

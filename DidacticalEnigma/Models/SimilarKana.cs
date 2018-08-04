@@ -30,7 +30,7 @@ namespace DidacticalEnigma.Models
 
     }
 
-    class SimilarKana : ISimilarKana
+    class EasilyConfusedKana : ISimilarKana
     {
         private Dictionary<CodePoint, List<CodePoint>> similarityGroups;
 
@@ -54,7 +54,7 @@ namespace DidacticalEnigma.Models
                 });
         }
 
-        private SimilarKana(IEnumerable<IEnumerable<CodePoint>> input)
+        private EasilyConfusedKana(IEnumerable<IEnumerable<CodePoint>> input)
         {
             var similaritySets = new ConcurrentDictionary<CodePoint, UnionFindNode>();
             foreach (var group in input)
@@ -84,9 +84,9 @@ namespace DidacticalEnigma.Models
             }
         }
 
-        public static SimilarKana FromFile(string path)
+        public static EasilyConfusedKana FromFile(string path)
         {
-            return new SimilarKana(
+            return new EasilyConfusedKana(
                 File.ReadLines(path, Encoding.UTF8)
                     .Where(line => !line.StartsWith("#"))
                     .Select(line => line.AsCodePoints().Select(cp => CodePoint.FromInt(cp))));

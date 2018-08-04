@@ -42,16 +42,18 @@ namespace DidacticalEnigma
             var jdict = JDict.JMDict.Create(Path.Combine(baseDir, @"dic\JMdict_e"));
             var kradfile = new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
             var radkfile = new Radkfile(Path.Combine(baseDir, @"dic\radkfile1_plus_2_utf8"), Encoding.UTF8);
+            var kanaProperties = new KanaProperties();
             lang = new LanguageService(
                 new MeCabParam
                 {
                     DicDir = Path.Combine(baseDir, @"dic\ipadic"),
                 },
-                SimilarKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
+                EasilyConfusedKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
                 jdict,
                 kradfile,
                 radkfile,
-                kanjidict);
+                kanjidict,
+                kanaProperties);
             HiraganaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\hiragana_romaji.txt"), Encoding.UTF8, lang);
             KatakanaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\katakana_romaji.txt"), Encoding.UTF8, lang);
             Update = new RelayCommand(() =>

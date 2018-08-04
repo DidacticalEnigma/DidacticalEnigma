@@ -2,7 +2,7 @@
 
 namespace DidacticalEnigma.Models
 {
-    public static class KanaProperties
+    public class KanaProperties
     {
         private static readonly DualDictionary<int, int> smallLargeVersions = new DualDictionary<int, int>(new Dictionary<int, int>
         {
@@ -30,7 +30,7 @@ namespace DidacticalEnigma.Models
             { 'ヵ' ,'カ' },
         });
 
-        public static int? OppositeSizedVersionOf(int codePoint)
+        public int? OppositeSizedVersionOf(int codePoint)
         {
             if (smallLargeVersions.TryGetKey(codePoint, out var outKana))
             {
@@ -46,7 +46,7 @@ namespace DidacticalEnigma.Models
             }
         }
 
-        public static int? LargeKanaOf(int codePoint)
+        public int? LargeKanaOf(int codePoint)
         {
             if(smallLargeVersions.TryGetValue(codePoint, out var outKana))
             {
@@ -58,7 +58,7 @@ namespace DidacticalEnigma.Models
             }
         }
 
-        public static int? SmallKanaOf(int codePoint)
+        public int? SmallKanaOf(int codePoint)
         {
             if (smallLargeVersions.TryGetKey(codePoint, out var outKana))
             {
