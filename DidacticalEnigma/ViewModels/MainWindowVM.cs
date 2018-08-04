@@ -13,6 +13,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using DidacticalEnigma.ViewModels;
 
 namespace DidacticalEnigma
 {
@@ -24,6 +25,8 @@ namespace DidacticalEnigma
         private ClipboardHook hook;
 
         public string AboutText => File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"dic\about.txt"), Encoding.UTF8);
+
+        public KanjiRadicalLookupControlVM KanjiLookupVM { get; }
 
         public MainWindowVM()
         {
@@ -66,6 +69,7 @@ namespace DidacticalEnigma
             });
             hook = new ClipboardHook();
             hook.ClipboardChanged += SetContent;
+            KanjiLookupVM = new KanjiRadicalLookupControlVM(lang);
         }
 
         private void SetContent(object sender, string e)

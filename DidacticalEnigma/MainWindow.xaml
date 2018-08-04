@@ -93,7 +93,7 @@
             </TabItem>
             <TabItem Header="Hiragana" />
             <TabItem Header="Kanji">
-                <enigma:KanjiRadicalLookupControl />
+                <enigma:KanjiRadicalLookupControl DataContext="{Binding KanjiLookupVM}" />
             </TabItem>
             <TabItem Header="Katakana" />
             <TabItem Header="About">

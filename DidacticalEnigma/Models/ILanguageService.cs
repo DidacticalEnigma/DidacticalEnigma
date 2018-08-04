@@ -138,7 +138,7 @@ namespace DidacticalEnigma
 
         public IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals)
         {
-            throw new NotImplementedException();
+            return radkfile.LookupMatching(radicals.Select(r => r.Name)).Select(cp => CodePoint.FromString(cp, 0));
         }
 
         public IEnumerable<CodePoint> AllRadicals()

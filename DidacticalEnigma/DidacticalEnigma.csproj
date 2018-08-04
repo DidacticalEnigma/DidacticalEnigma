@@ -158,6 +158,9 @@
     <Compile Include="JapaneseTextPreview.xaml.cs">
       <DependentUpon>JapaneseTextPreview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="KanjiRadicalLookupControl.xaml.cs">
+      <DependentUpon>KanjiRadicalLookupControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\ISimilarKana.cs" />
     <Compile Include="Models\NullSimilarKana.cs" />
     <Compile Include="Utils\DualDictionary.cs" />
@@ -167,6 +170,7 @@
     <Compile Include="ViewModels\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModels\CodePointToLongStringConverter.cs" />
     <Compile Include="Models\ILanguageService.cs" />
+    <Compile Include="ViewModels\KanjiRadicalLookupControlVM.cs" />
     <Compile Include="ViewModels\LineVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\CodePointVM.cs" />
@@ -181,6 +185,10 @@
     <Compile Include="Utils\StringExt.cs" />
     <Compile Include="Utils\UnionFindNode.cs" />
     <Page Include="JapaneseTextPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="KanjiRadicalLookupControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

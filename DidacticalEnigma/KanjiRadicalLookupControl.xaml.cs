@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DidacticalEnigma.Models;
+using DidacticalEnigma.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,12 @@ namespace DidacticalEnigma
         public KanjiRadicalLookupControl()
         {
             InitializeComponent();
+        }
+
+        private void ListView_Selected(object sender, RoutedEventArgs e)
+        {
+            var vm = (KanjiRadicalLookupControlVM)DataContext;
+            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<CodePoint>());
         }
     }
 }

@@ -13,7 +13,38 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ListBox Grid.Column="0" />
-        <ListBox Grid.Column="1" />
+        <ListView
+            x:Name="RadicalSelector"
+            Grid.Column="0"
+            ItemsSource="{Binding Radicals}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            SelectionChanged="ListView_Selected"
+            SelectionMode="Multiple">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock FontSize="24" Text="{Binding .}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListView>
+        <ListBox
+            Grid.Column="1"
+            ItemsSource="{Binding Kanji}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock FontSize="24" Text="{Binding .}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>
