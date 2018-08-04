@@ -24,6 +24,15 @@ namespace JDict.Tests
             CollectionAssert.AreEqual(
                 expected,
                 actual);
+
+            input = new int[][]
+            {
+                new int[]{},
+                new int[]{1},
+            };
+            CollectionAssert.AreEqual(
+                new[] { 1 },
+                DidacticalEnigma.Utils.EnumerableExt.IntersperseSequencesWith(input, -1).ToList());
         }
     }
 }

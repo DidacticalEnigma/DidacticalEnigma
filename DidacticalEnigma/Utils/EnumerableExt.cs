@@ -64,9 +64,8 @@ namespace DidacticalEnigma.Utils
                 foreach(var e in newSequence)
                 {
                     yield return e;
+                    firstSequence = false;
                 }
-
-                firstSequence = false;
             }
         }
     }
