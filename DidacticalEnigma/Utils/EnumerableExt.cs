@@ -26,5 +26,19 @@ namespace DidacticalEnigma.Utils
             if (i != 0)
                 yield return list;
         }
+
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> Valuefactory)
+        {
+            if (dict.TryGetValue(key, out var value))
+            {
+                return value;
+            }
+            else
+            {
+                value = Valuefactory();
+                dict[key] = value;
+                return value;
+            }
+        }
     }
 }

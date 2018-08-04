@@ -42,7 +42,11 @@ namespace DidacticalEnigma
             var jdict = JDict.JMDict.Create(Path.Combine(baseDir, @"dic\JMdict_e"));
             var kradfile = new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
             var radkfile = new Radkfile(Path.Combine(baseDir, @"dic\radkfile1_plus_2_utf8"), Encoding.UTF8);
-            var kanaProperties = new KanaProperties();
+            var kanaProperties = new KanaProperties(
+                Path.Combine(baseDir, @"dic\hiragana_romaji.txt"),
+                Path.Combine(baseDir, @"dic\katakana_romaji.txt"),
+                Path.Combine(baseDir, @"dic\kana_related.txt"),
+                Encoding.UTF8);
             lang = new LanguageService(
                 new MeCabParam
                 {

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using DidacticalEnigma.Utils;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace DidacticalEnigma.Models
 {
-    public class KanaProperties
+    public class KanaProperties : ISimilarKana
     {
         private static readonly DualDictionary<int, int> smallLargeVersions = new DualDictionary<int, int>(new Dictionary<int, int>
         {
@@ -29,6 +32,35 @@ namespace DidacticalEnigma.Models
             { 'ョ' ,'ヨ' },
             { 'ヵ' ,'カ' },
         });
+
+        public Dictionary<string, string> romajiMapping = new Dictionary<string, string>();
+
+        public Dictionary<string, List<string>> mapping = new Dictionary<string, List<string>>();
+
+        public KanaProperties(string katakanaPath, string hiraganaPath, string complexPath, Encoding encoding)
+        {
+            ReadKanaFile(katakanaPath);
+            ReadKanaFile(hiraganaPath);
+
+            foreach (var lineColumn in File.ReadLines(complexPath, encoding))
+            {
+                var components = lineColumn.Split(' ');
+                if (components.Length > 2)
+                    romajiMapping.Add(components[1], components[2]);
+                var list = mapping.GetOrAdd(components[0], () => new List<string>());
+                list.Add(components[1]);
+            }
+
+            void ReadKanaFile(string kanaPath)
+            {
+                foreach (var lineColumn in File.ReadLines(kanaPath, encoding))
+                {
+                    var components = lineColumn.Split(' ');
+                    if (components.Length > 1)
+                        romajiMapping.Add(components[0], components[1]);
+                }
+            }
+        }
 
         public int? OppositeSizedVersionOf(int codePoint)
         {
@@ -68,6 +100,12 @@ namespace DidacticalEnigma.Models
             {
                 return null;
             }
+        }
+
+        // TOFIX: support combo kana
+        public IEnumerable<CodePoint> FindSimilar(CodePoint point)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
