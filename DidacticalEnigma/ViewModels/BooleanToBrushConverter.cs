@@ -15,8 +15,9 @@ namespace DidacticalEnigma
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var b = (bool)value;
+            var brush = parameter is SolidColorBrush br ? br : Brushes.Yellow;
             //return b ? Brushes.Transparent : (Brush)parameter;
-            return b ? Brushes.Yellow : Brushes.Transparent;
+            return b ? brush : Brushes.Transparent;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

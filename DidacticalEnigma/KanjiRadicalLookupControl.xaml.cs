@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static DidacticalEnigma.ViewModels.KanjiRadicalLookupControlVM;
 
 namespace DidacticalEnigma
 {
@@ -30,7 +31,7 @@ namespace DidacticalEnigma
         private void ListView_Selected(object sender, RoutedEventArgs e)
         {
             var vm = (KanjiRadicalLookupControlVM)DataContext;
-            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<CodePoint>());
+            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<RadicalVM>().Select(r => r.CodePoint));
         }
     }
 }

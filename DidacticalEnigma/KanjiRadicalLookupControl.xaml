@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:DidacticalEnigma"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=local:KanjiRadicalLookupControl,
+                                     IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -13,32 +15,63 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ListView
-            x:Name="RadicalSelector"
-            Grid.Column="0"
-            ItemsSource="{Binding Radicals}"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            SelectionChanged="ListView_Selected"
-            SelectionMode="Multiple">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <local:VirtualizingTilePanel ItemHeight="{Binding Height}" ItemWidth="{Binding Width}" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        FontSize="24"
-                        Text="{Binding .}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListView>
-        <ItemsControl
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <CheckBox IsChecked="{Binding HideNonMatchingRadicals}">
+                <TextBlock Text="Hide non-matching radicals" />
+            </CheckBox>
+            <ListView
+                x:Name="RadicalSelector"
+                Grid.Row="1"
+                ItemsSource="{Binding Radicals}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="ListView_Selected"
+                SelectionMode="Multiple">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel
+                            ItemHeight="{Binding Height}"
+                            ItemWidth="{Binding Width}"
+                            Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="IsEnabled" Value="{Binding Enabled}" />
+                        <Setter Property="Visibility" Value="{Binding Visible}" />
+                    </Style>
+
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Focusable="{Binding Enabled}"
+                            FontSize="24"
+                            Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <ListBox
             Grid.Column="1"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
             ItemsSource="{Binding Kanji}"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl.ItemsPanel>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Padding" Value="0,0,0,0" />
+                    <Setter Property="Margin" Value="0,0,0,0" />
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <local:VirtualizingTilePanel
                         CanHorizontallyScroll="False"
@@ -46,16 +79,18 @@
                         ItemHeight="{Binding Height}"
                         ItemWidth="{Binding Width}" />
                 </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Button
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
                         Command="{Binding DataContext.KanjiClick, RelativeSource={RelativeSource AncestorType={x:Type Grid}, Mode=FindAncestor}}"
                         CommandParameter="{Binding .}"
                         Content="{Binding .}"
                         FontSize="24" />
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>
