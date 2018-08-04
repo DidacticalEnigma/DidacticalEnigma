@@ -83,6 +83,8 @@ namespace DidacticalEnigma
             hook = new ClipboardHook();
             hook.ClipboardChanged += SetContent;
             KanjiLookupVM = new KanjiRadicalLookupControlVM(lang);
+            // lots of data has been loaded into memory
+            GC.Collect();
         }
 
         private void SetContent(object sender, string e)

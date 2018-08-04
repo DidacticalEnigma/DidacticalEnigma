@@ -37,6 +37,7 @@ namespace JDict.Tests
             tagger.Dispose();
         }
 
+        [Ignore("takes too long to run")]
         [Test]
         public void Tanaka()
         {

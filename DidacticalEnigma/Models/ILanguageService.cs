@@ -68,7 +68,7 @@ namespace DidacticalEnigma
             //return new WordInfo(word, entry?.ToString());
             var entry = jdict.Lookup(word.Trim());
             string joined = null;
-            if(entry != null)
+            if (entry != null)
             {
                 joined = string.Join("\n\n", entry.Select(e => e.ToString()));
             }
@@ -77,7 +77,7 @@ namespace DidacticalEnigma
 
         private readonly MeCabTagger mecab;
 
-        private readonly EasilyConfusedKana similar;
+        private readonly EasilyConfusedKana confused;
 
         private readonly JMDict jdict;
 
@@ -103,7 +103,7 @@ namespace DidacticalEnigma
             mecabParam.AllMorphs = false;
             mecabParam.Partial = true;
             this.mecab = MeCabTagger.Create(mecabParam);
-            this.similar = similar;
+            this.confused = similar;
             this.jdict = jdict;
             this.kradfile = kradfile;
             this.radkfile = radkfile;
@@ -139,11 +139,12 @@ namespace DidacticalEnigma
 
         public IEnumerable<CodePoint> LookupRelatedCharacters(CodePoint point)
         {
-            var oppositeSized = kanaProperties.OppositeSizedVersionOf(point.Utf32) != null
-                ? Enumerable.Repeat(CodePoint.FromInt(kanaProperties.OppositeSizedVersionOf(point.Utf32).Value), 1)
-                : Enumerable.Empty<CodePoint>();
-            return oppositeSized
-                .Concat(similar.FindSimilar(point) ?? Enumerable.Empty<CodePoint>());
+            return EnumerableExt.IntersperseSequencesWith(new[]
+            {
+                kanaProperties.FindSimilar(point),
+                confused.FindSimilar(point)
+            },
+            null as CodePoint);
         }
 
         public IEnumerable<CodePoint> LookupRadicals(Kanji kanji)

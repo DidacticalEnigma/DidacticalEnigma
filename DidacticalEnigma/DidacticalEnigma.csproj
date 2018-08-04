@@ -185,6 +185,7 @@
     <Compile Include="Models\KanaProperties.cs" />
     <Compile Include="Models\SimilarKana.cs" />
     <Compile Include="Models\WordInfo.cs" />
+    <Compile Include="ViewModels\NullabilityToBooleanConverter.cs" />
     <Compile Include="ViewModels\PartOfSpeechToColorConverter.cs" />
     <Compile Include="ViewModels\WordVM.cs" />
     <Compile Include="Utils\ObservableBatchCollection.cs" />
@@ -292,20 +293,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dic\hiragana_complex_romaji.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="dic\hiragana_romaji.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="dic\kanjidic2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="dic\katakana_complex_romaji.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="dic\katakana_romaji.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dic\kana_related.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

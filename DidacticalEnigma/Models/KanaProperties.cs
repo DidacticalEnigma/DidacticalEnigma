@@ -1,6 +1,7 @@
 ﻿using DidacticalEnigma.Utils;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace DidacticalEnigma.Models
@@ -102,10 +103,23 @@ namespace DidacticalEnigma.Models
             }
         }
 
-        // TOFIX: support combo kana
         public IEnumerable<CodePoint> FindSimilar(CodePoint point)
         {
-            throw new System.NotImplementedException();
+            var oppositeSizedCp = OppositeSizedVersionOf(point.Utf32);
+            var oppositeSized = (oppositeSizedCp != null
+                ? Enumerable.Repeat(char.ConvertFromUtf32(oppositeSizedCp.Value), 1)
+                : Enumerable.Empty<string>())
+                .Select(s => CodePoint.FromString(s));
+
+            mapping.TryGetValue(point.ToString(), out var restStr);
+            restStr = restStr ?? new List<string>();
+
+            // TOFIX: support combo kana
+            var rest = restStr
+                .Where(s => s.Length == 1)
+                .Select(s => CodePoint.FromString(s));
+
+            return oppositeSized.Concat(rest);
         }
     }
 }

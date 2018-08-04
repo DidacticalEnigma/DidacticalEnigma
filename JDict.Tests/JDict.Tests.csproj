@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnumerableExt.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Kradfile.cs" />
     <Compile Include="Program.cs" />

@@ -40,5 +40,34 @@ namespace DidacticalEnigma.Utils
                 return value;
             }
         }
+
+        private static IEnumerable<T> PrependIfNonEmpty<T>(T element, IEnumerable<T> sequence)
+        {
+            bool first = true;
+            var previous = element;
+            foreach(var e in sequence)
+            {
+                yield return previous;
+                previous = e;
+                first = false;
+            }
+            if (!first)
+                yield return previous;
+        }
+
+        public static IEnumerable<T> IntersperseSequencesWith<T>(IEnumerable<IEnumerable<T>> sequences, T element)
+        {
+            bool firstSequence = true;
+            foreach(var sequence in sequences)
+            {
+                var newSequence = firstSequence ? sequence : PrependIfNonEmpty(element, sequence);
+                foreach(var e in newSequence)
+                {
+                    yield return e;
+                }
+
+                firstSequence = false;
+            }
+        }
     }
 }

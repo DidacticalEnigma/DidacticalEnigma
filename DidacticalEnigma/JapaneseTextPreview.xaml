@@ -53,6 +53,7 @@
                                                         <ContextMenu ItemsSource="{Binding Similar}">
                                                             <ContextMenu.ItemContainerStyle>
                                                                 <Style TargetType="MenuItem">
+                                                                    <Setter Property="IsEnabled" Value="{Binding ., Converter={x:Static enigma:NullabilityToBooleanConverter.Default}}" />
                                                                     <Setter Property="Command" Value="{Binding DataContext.PlaceInClipboard, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
                                                                     <Setter Property="CommandParameter" Value="{Binding .}" />
                                                                 </Style>
