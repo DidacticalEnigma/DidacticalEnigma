@@ -46,7 +46,8 @@ namespace DidacticalEnigma
                 SimilarKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
                 jdict,
                 kradfile,
-                radkfile);
+                radkfile,
+                kanjidict);
             Update = new RelayCommand(() =>
             {
                 SetAnnotations(Input);

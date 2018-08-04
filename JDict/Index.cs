@@ -40,32 +40,11 @@ namespace JDict
     // only supports read operations and string to string mappings
     // file format: 32 byte header
     // 4 first bytes: "IND\x01"
-    // 8 next bytes correspond to the number N of key/value pairs (*not* the number of records), little endian
-    // 4 next bytes indicating the length L of the record (must be more than 32), little endian
-    // 16 bytes reserved
-    // N records of length L
-    // An individual entry can span more than one record
-    // The record's first byte is the continuation byte
-    // The rest are data bytes
-    // First byte of the record corresponds to the length of the entry:
-    // x0: this is the starting record
-    // 0x: this is the ending record
-    // x1: the ending record is 2 > X >= 1 records after this one
-    // 1x: the starting record is 2 > X >= 1 records before this one
-    // x2: the ending record is 4 > X >= 2 records after this one
-    // 2x: the starting record is 4 > X >= 2 records before this one
-    // x3: the ending record is 8 > X >= 4 records after this one
-    // 3x: the starting record is 8 > X >= 4 records before this one
-    // x4: the ending record is 16 > X >= 8 records after this one
-    // 4x: the starting record is 16 > X >= 8 records before this one
-    // x5: the ending record is 32 > X >= 16 records after this one
-    // 5x: the starting record is 32 > X >= 16 records before this one
-    // ... 6789ABCDE
-    // xE: the ending record is 8192 >= X records after this one
-    // Ex: the starting record is 8192 >= X records before this one
-    // xF: reserved
-    // Fx: reserved
-    //
+    // 8 next bytes correspond to the position in the text file where the values start, little endian
+    // 20 bytes reserved
+    // Sequence of:
+    // - null terminated UTF-8 string
+    // 
     // rest of the record constitute data bytes
     // a sequence of records is an entry
     // disregarding continuation bytes

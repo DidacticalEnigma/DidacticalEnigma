@@ -21,23 +21,24 @@ namespace JDict
 
     public class Radkfile
     {
-        private Dictionary<int, Tuple<int, HashSet<int>>> entries = new Dictionary<int, Tuple<int, HashSet<int>>>();
+        private Dictionary<int, Tuple<int, List<int>>> entries = new Dictionary<int, Tuple<int, List<int>>>();
 
         private List<KeyValuePair<int, int>> radicals = new List<KeyValuePair<int, int>>();
 
         public IEnumerable<string> LookupMatching(IEnumerable<string> radicals)
         {
-            bool first = false;
-            var set = new HashSet<int>();
+            bool first = true;
+            IEnumerable<int> set = new List<int>();
             foreach(var radical in radicals)
             {
                 if(first)
                 {
-                    set = new HashSet<int>(entries[char.ConvertToUtf32(radical, 0)].Item2);
+                    set = new List<int>(entries[char.ConvertToUtf32(radical, 0)].Item2);
+                    first = false;
                 }
                 else
                 {
-                    set.IntersectWith(entries[char.ConvertToUtf32(radical, 0)].Item2);
+                    set = set.Intersect(entries[char.ConvertToUtf32(radical, 0)].Item2);
                 }
             }
             return set.Select(cp => char.ConvertFromUtf32(cp)).ToList();
@@ -48,7 +49,7 @@ namespace JDict
         private void Init(TextReader reader)
         {
             string line;
-            HashSet<int> current = null;
+            List<int> current = null;
             while ((line = reader.ReadLine()) != null)
             {
                 if (line.StartsWith("#"))
@@ -60,7 +61,7 @@ namespace JDict
                     int radical = char.ConvertToUtf32(components[0].Trim(), 0);
                     int strokeCount = int.Parse(components[1]);
                     radicals.Add(new KeyValuePair<int, int>(strokeCount, radical));
-                    current = GetOrAdd(entries, radical, () => Tuple.Create(strokeCount, new HashSet<int>())).Item2;
+                    current = GetOrAdd(entries, radical, () => Tuple.Create(strokeCount, new List<int>())).Item2;
                 }
                 else
                 {
@@ -70,7 +71,7 @@ namespace JDict
                     }
                 }
             }
-            radicals = radicals.OrderBy(p => p.Key).ToList();
+            radicals = radicals.Distinct().OrderBy(p => p.Key).ThenBy(p => p.Value).ToList();
         }
 
         public Radkfile(string path, Encoding encoding)

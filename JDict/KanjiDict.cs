@@ -67,11 +67,17 @@ namespace JDict
 
     public class KanjiEntry
     {
-        private KanjiCharacter ch;
+        public string Literal { get; }
+
+        public int StrokeCount { get; }
+
+        public int FrequencyRating { get; }
 
         public KanjiEntry(KanjiCharacter ch)
         {
-            this.ch = ch;
+            Literal = ch.Literal;
+            StrokeCount = ch.Misc.StrokeCount[0];
+            FrequencyRating = ch.Misc.FrequencyRating;
         }
     }
 }

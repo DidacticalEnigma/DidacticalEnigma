@@ -15,7 +15,7 @@ namespace JDict.Tests
     {
         private MeCabTagger tagger;
 
-        private readonly string baseDir = @"C:\Users\IEUser\Desktop\DidacticalEnigma\DidacticalEnigma\";
+        public static readonly string baseDir = @"C:\Users\IEUser\Desktop\DidacticalEnigma\DidacticalEnigma\";
 
         [SetUp]
         public void SetUp()

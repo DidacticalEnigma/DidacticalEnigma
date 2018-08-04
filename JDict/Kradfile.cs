@@ -17,6 +17,14 @@ namespace JDict
             return entry;
         }
 
+        public IEnumerable<KeyValuePair<string, IEnumerable<string>>> AllRadicals()
+        {
+            foreach(var entry in entries)
+            {
+                yield return entry;
+            }
+        }
+
         private void Init(TextReader reader)
         {
             string line;

@@ -22,29 +22,40 @@
             SelectionMode="Multiple">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
+                    <local:VirtualizingTilePanel ItemHeight="{Binding Height}" ItemWidth="{Binding Width}" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock FontSize="24" Text="{Binding .}" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="24"
+                        Text="{Binding .}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListView>
-        <ListBox
+        <ItemsControl
             Grid.Column="1"
             ItemsSource="{Binding Kanji}"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ListBox.ItemsPanel>
+            <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
+                    <local:VirtualizingTilePanel
+                        CanHorizontallyScroll="False"
+                        CanVerticallyScroll="True"
+                        ItemHeight="{Binding Height}"
+                        ItemWidth="{Binding Width}" />
                 </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock FontSize="24" Text="{Binding .}" />
+                    <Button
+                        Command="{Binding DataContext.KanjiClick, RelativeSource={RelativeSource AncestorType={x:Type Grid}, Mode=FindAncestor}}"
+                        CommandParameter="{Binding .}"
+                        Content="{Binding .}"
+                        FontSize="24" />
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>

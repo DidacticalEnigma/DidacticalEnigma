@@ -184,6 +184,7 @@
     <Compile Include="SimpleFlowDocument.cs" />
     <Compile Include="Utils\StringExt.cs" />
     <Compile Include="Utils\UnionFindNode.cs" />
+    <Compile Include="VirtualizingTilePanel.cs" />
     <Page Include="JapaneseTextPreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

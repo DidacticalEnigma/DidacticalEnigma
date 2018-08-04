@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncEnumerator" Version="2.2.1" />
+    <PackageReference Include="LiteDB" Version="4.1.4" />
   </ItemGroup>
 
 </Project>

@@ -21,6 +21,7 @@ namespace DidacticalEnigma
         CodePoint LookupCharacter(int codePoint);
 
         CodePoint LookupCharacter(string s, int position = 0);
+
         WordInfo LookupWord(string word);
 
         IEnumerable<IEnumerable<WordInfo>> BreakIntoSentences(string input);
@@ -48,6 +49,7 @@ namespace DidacticalEnigma
         public void Dispose()
         {
             mecab.Dispose();
+            jdict.Dispose();
         }
 
         public CodePoint LookupCharacter(string character, int position = 0)
@@ -83,7 +85,9 @@ namespace DidacticalEnigma
 
         private readonly Radkfile radkfile;
 
-        public LanguageService(MeCabParam mecabParam, SimilarKana similar, JMDict jdict, Kradfile kradfile, Radkfile radkfile)
+        private readonly KanjiDict kanjidict;
+
+        public LanguageService(MeCabParam mecabParam, SimilarKana similar, JMDict jdict, Kradfile kradfile, Radkfile radkfile, KanjiDict kanjiDict)
         {
             mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
             mecabParam.OutputFormatType = "wakati";
@@ -94,6 +98,7 @@ namespace DidacticalEnigma
             this.jdict = jdict;
             this.kradfile = kradfile;
             this.radkfile = radkfile;
+            this.kanjidict = kanjiDict;
         }
 
         private IEnumerable<string> SplitWords(string input)
@@ -138,7 +143,7 @@ namespace DidacticalEnigma
 
         public IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals)
         {
-            return radkfile.LookupMatching(radicals.Select(r => r.Name)).Select(cp => CodePoint.FromString(cp, 0));
+            return radkfile.LookupMatching(radicals.Select(r => r.ToString())).OrderBy(r => kanjidict.Lookup(r).StrokeCount).Select(cp => CodePoint.FromString(cp, 0));
         }
 
         public IEnumerable<CodePoint> AllRadicals()

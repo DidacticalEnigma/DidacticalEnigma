@@ -11,7 +11,7 @@ namespace JDict
 {
 
     // represents a lookup over an JMdict file
-    public class JMDict
+    public class JMDict : IDisposable
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
@@ -39,7 +39,7 @@ namespace JDict
                             ?.Concat(e.ReadingElements.Select(r => new KeyValuePair<string, JdicEntry>(r.Reb, e)))
                             ?? Enumerable.Empty<KeyValuePair<string, JdicEntry>>();
                     });
-                foreach(var kvp in entries)
+                foreach (var kvp in entries)
                 {
                     var xmlEntry = kvp.Value;
                     if (!root.ContainsKey(kvp.Key))
@@ -83,6 +83,11 @@ namespace JDict
         public static JMDict Create(Stream stream)
         {
             return new JMDict().Init(stream);
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 
