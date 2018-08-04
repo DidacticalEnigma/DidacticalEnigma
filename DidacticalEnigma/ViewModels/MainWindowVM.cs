@@ -28,6 +28,10 @@ namespace DidacticalEnigma
 
         public KanjiRadicalLookupControlVM KanjiLookupVM { get; }
 
+        public KanaBoardVM HiraganaBoard { get; }
+
+        public KanaBoardVM KatakanaBoard { get; }
+
         public MainWindowVM()
         {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -48,6 +52,8 @@ namespace DidacticalEnigma
                 kradfile,
                 radkfile,
                 kanjidict);
+            HiraganaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\hiragana_romaji.txt"), Encoding.UTF8, lang);
+            KatakanaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\katakana_romaji.txt"), Encoding.UTF8, lang);
             Update = new RelayCommand(() =>
             {
                 SetAnnotations(Input);

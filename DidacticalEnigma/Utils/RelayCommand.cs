@@ -17,6 +17,7 @@ namespace DidacticalEnigma
             }
 
             this.action = (parameter) => action();
+            canExecute = canExecute ?? (() => true);
             this.canExecute = (parameter) => canExecute();
         }
 

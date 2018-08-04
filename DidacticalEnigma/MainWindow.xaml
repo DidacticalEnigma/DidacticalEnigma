@@ -91,11 +91,15 @@
                     <FlowDocumentScrollViewer Grid.Column="1" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Hiragana" />
+            <TabItem Header="Hiragana">
+                <enigma:KanaBoard DataContext="{Binding HiraganaBoard}" />
+            </TabItem>
             <TabItem Header="Kanji">
                 <enigma:KanjiRadicalLookupControl DataContext="{Binding KanjiLookupVM}" />
             </TabItem>
-            <TabItem Header="Katakana" />
+            <TabItem Header="Katakana">
+                <enigma:KanaBoard DataContext="{Binding KatakanaBoard}" />
+            </TabItem>
             <TabItem Header="About">
                 <TextBox IsReadOnly="True" Text="{Binding AboutText, Mode=OneWay}" />
             </TabItem>
