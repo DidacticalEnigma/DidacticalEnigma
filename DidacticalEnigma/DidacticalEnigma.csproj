@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AsyncEnumerable, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0426b068161bd1d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncEnumerator.2.2.1\lib\net45\AsyncEnumerable.dll</HintPath>
+    </Reference>
     <Reference Include="LibNMeCab, Version=0.0.6.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NMeCab.0.06.4\lib\LibNMeCab.dll</HintPath>
     </Reference>
@@ -166,6 +169,7 @@
     <Compile Include="KanjiRadicalLookupControl.xaml.cs">
       <DependentUpon>KanjiRadicalLookupControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\IDataSource.cs" />
     <Compile Include="Models\ISimilarKana.cs" />
     <Compile Include="Models\NullSimilarKana.cs" />
     <Compile Include="Utils\DualDictionary.cs" />
