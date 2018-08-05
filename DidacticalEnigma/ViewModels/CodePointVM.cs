@@ -12,7 +12,8 @@ namespace DidacticalEnigma.Models
             get
             {
                 return CodePoint.ToDescriptionString() + "\n" +
-                string.Join(" ; ", radicals);
+                    (romaji != null ? romaji + "\n" : "") +
+                    string.Join(" ; ", radicals);
             }
         }
 
@@ -22,13 +23,16 @@ namespace DidacticalEnigma.Models
 
         private readonly IEnumerable<string> radicals;
 
+        private readonly string romaji;
+
         public bool HasSimilar => Similar.Any();
 
-        public CodePointVM(CodePoint cp, IEnumerable<CodePoint> similar, IEnumerable<CodePoint> radicals)
+        public CodePointVM(CodePoint cp, IEnumerable<CodePoint> similar, IEnumerable<CodePoint> radicals, string romaji)
         {
             CodePoint = cp;
             Similar = similar;
             this.radicals = radicals?.Select(r => r.ToString()).ToList() ?? Enumerable.Empty<string>();
+            this.romaji = romaji;
         }
     }
 }

@@ -28,7 +28,8 @@ namespace DidacticalEnigma.Models
                 var vm = new CodePointVM(
                     cp,
                     lang.LookupRelatedCharacters(cp),
-                    cp is Kanji k ? lang.LookupRadicals(k) : Enumerable.Empty<CodePoint>());
+                    cp is Kanji k ? lang.LookupRadicals(k) : Enumerable.Empty<CodePoint>(),
+                    cp is Kana kana ? lang.LookupRomaji(kana) : null);
                 return vm;
             }));
             WordInfo = wordInfo;

@@ -16,6 +16,8 @@ namespace DidacticalEnigma
 
         IEnumerable<CodePoint> AllRadicals();
 
+        string LookupRomaji(Kana kana);
+
         IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals);
 
         CodePoint LookupCharacter(int codePoint);
@@ -50,6 +52,11 @@ namespace DidacticalEnigma
         {
             mecab.Dispose();
             jdict.Dispose();
+        }
+
+        public string LookupRomaji(Kana kana)
+        {
+            return kanaProperties.LookupRomaji(kana.ToString());
         }
 
         public CodePoint LookupCharacter(string character, int position = 0)

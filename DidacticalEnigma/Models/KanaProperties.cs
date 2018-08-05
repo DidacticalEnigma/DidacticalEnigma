@@ -34,9 +34,9 @@ namespace DidacticalEnigma.Models
             { 'ヵ' ,'カ' },
         });
 
-        public Dictionary<string, string> romajiMapping = new Dictionary<string, string>();
+        private Dictionary<string, string> romajiMapping = new Dictionary<string, string>();
 
-        public Dictionary<string, List<string>> mapping = new Dictionary<string, List<string>>();
+        private Dictionary<string, List<string>> mapping = new Dictionary<string, List<string>>();
 
         public KanaProperties(string katakanaPath, string hiraganaPath, string complexPath, Encoding encoding)
         {
@@ -101,6 +101,17 @@ namespace DidacticalEnigma.Models
             {
                 return null;
             }
+        }
+
+        public string LookupRomaji(string s)
+        {
+            if(s.Length == 1)
+            {
+                var largeOpt = LargeKanaOf(char.ConvertToUtf32(s, 0));
+                s = largeOpt != null ? char.ConvertFromUtf32(largeOpt.Value) : s;
+            }
+            romajiMapping.TryGetValue(s, out var value);
+            return value;
         }
 
         public IEnumerable<CodePoint> FindSimilar(CodePoint point)
