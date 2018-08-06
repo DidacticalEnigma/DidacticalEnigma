@@ -40,9 +40,9 @@ namespace DidacticalEnigma.Models
 
         }
 
-        public IAsyncEnumerable<FlowDocument> Answer(Request request)
+        public IAsyncEnumerable<RichFormatting> Answer(Request request)
         {
-            return new AsyncEnumerable<FlowDocument>(async yield =>
+            return new AsyncEnumerable<RichFormatting>(async yield =>
             {
                 var dataSource = await this.dataSource.ConfigureAwait(false);
                 var results = dataSource.Answer(request);

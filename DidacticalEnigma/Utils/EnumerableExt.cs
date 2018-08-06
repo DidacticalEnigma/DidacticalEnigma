@@ -55,6 +55,18 @@ namespace DidacticalEnigma.Utils
                 yield return previous;
         }
 
+        public static IEnumerable<T> Intersperse<T>(this IEnumerable<T> input, T element)
+        {
+            bool first = true;
+            foreach (var e in input)
+            {
+                if (!first)
+                    yield return element;
+                yield return e;
+                first = false;
+            }
+        }
+
         public static IEnumerable<T> IntersperseSequencesWith<T>(IEnumerable<IEnumerable<T>> sequences, T element)
         {
             bool firstSequence = true;

@@ -16,13 +16,16 @@
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="8*" />
         </Grid.ColumnDefinitions>
-        <ListView ItemsSource="{Binding DataSources}">
+        <ListView
+            ItemsSource="{Binding DataSources}"
+            SelectedIndex="{Binding SelectedDataSourceIndex}"
+            SelectedItem="{Binding SelectedDataSource}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Descriptor.Name}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <FlowDocumentScrollViewer Grid.Column="1" />
+        <FlowDocumentScrollViewer Grid.Column="1" Document="{Binding SelectedDataSource.Document}" />
     </Grid>
 </UserControl>

@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using System.Windows.Markup;
+using System.Windows.Threading;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -15,20 +17,23 @@ namespace DidacticalEnigma.ViewModels
     {
         private AsyncDataSource dataSource;
 
-        private FlowDocument document;
-        public FlowDocument Document
+        private RichFormatting formattedResult;
+        public RichFormatting FormattedResult
         {
-            get => document;
+            get => formattedResult;
             set
             {
-                if (document == value)
+                if (formattedResult == value)
                     return;
-                document = value;
+                formattedResult = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsProcessing));
                 OnPropertyChanged(nameof(HasFound));
+                OnPropertyChanged(nameof(Document));
             }
         }
+
+        public FlowDocument Document => FormattedResult?.Render();
 
         public DataSourceDescriptor Descriptor => dataSource.Descriptor;
 
@@ -47,12 +52,12 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        public bool HasFound => Document != null;
+        public bool HasFound => FormattedResult != null;
 
         public async Task Search(Request request)
         {
             IsProcessing = true;
-            Document = await dataSource.Answer(request).FirstAsync();
+            FormattedResult = await dataSource.Answer(request).FirstOrDefaultAsync();
             IsProcessing = false;
         }
 
@@ -88,6 +93,20 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
+        private DataSourceVM selectedDataSource = null;
+        public DataSourceVM SelectedDataSource
+        {
+            get => selectedDataSource;
+            set
+            {
+                if (selectedDataSource == value)
+                    return;
+
+                selectedDataSource = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string queryText = null;
         public string QueryText
         {
@@ -99,17 +118,7 @@ namespace DidacticalEnigma.ViewModels
 
                 queryText = value;
                 OnPropertyChanged();
-                Search(queryText);
-            }
-        }
-
-        public FlowDocument CurrentFlowDocument
-        {
-            get
-            {
-                if (SelectedDataSourceIndex == -1)
-                    return null;
-                return DataSources[SelectedDataSourceIndex].Document;
+                Task.Run(() => Search(queryText));
             }
         }
 

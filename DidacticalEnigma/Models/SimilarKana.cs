@@ -9,27 +9,6 @@ using System.Threading.Tasks;
 
 namespace DidacticalEnigma.Models
 {
-    class MultimediaLookup
-    {
-
-    }
-
-    interface IMedium
-    {
-        Uri Uri { get; }
-
-        ContentType Type { get; }
-
-        Task PreloadEntireMedium();
-
-        Stream GetStream();
-    }
-
-    class Image
-    {
-
-    }
-
     class EasilyConfusedKana : ISimilarKana
     {
         private Dictionary<CodePoint, List<CodePoint>> similarityGroups;

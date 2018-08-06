@@ -173,6 +173,7 @@
     <Compile Include="Models\IDataSource.cs" />
     <Compile Include="Models\ISimilarKana.cs" />
     <Compile Include="Models\NullSimilarKana.cs" />
+    <Compile Include="Models\RichFormatting.cs" />
     <Compile Include="UsageDataSourcePreview.xaml.cs">
       <DependentUpon>UsageDataSourcePreview.xaml</DependentUpon>
     </Compile>

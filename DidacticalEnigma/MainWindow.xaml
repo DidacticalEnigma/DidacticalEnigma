@@ -82,7 +82,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Usage">
-                <enigma:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.SelectedWord, ElementName=Jp, Mode=OneWay}" />
+                <enigma:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding SelectedWord.StringForm, ElementName=Jp, Mode=OneWay}" />
             </TabItem>
             <TabItem Header="Hiragana">
                 <enigma:KanaBoard DataContext="{Binding HiraganaBoard}" />

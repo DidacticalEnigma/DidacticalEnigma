@@ -14,7 +14,7 @@ namespace DidacticalEnigma.Models
 {
     public interface IDataSource : IDisposable
     {
-        IAsyncEnumerable<FlowDocument> Answer(Request request);
+        IAsyncEnumerable<RichFormatting> Answer(Request request);
 
         Task<UpdateResult> UpdateLocalDataSource(
             CancellationToken cancellation = default(CancellationToken));
@@ -66,21 +66,32 @@ namespace DidacticalEnigma.Models
             "These sentences are from Tanaka Corpus",
             new Uri("http://www.edrdg.org/wiki/index.php/Tanaka_Corpus"));
 
-        public IAsyncEnumerable<FlowDocument> Answer(Request request)
+        public IAsyncEnumerable<RichFormatting> Answer(Request request)
         {
-            return new AsyncEnumerable<FlowDocument>(async yield =>
+            return new AsyncEnumerable<RichFormatting>(async yield =>
             {
-                var flow = new FlowDocument();
-                var sentences = tanaka.SearchByJapaneseTextAsync(request.QueryText);
-                await sentences.ForEachAsync(sentence =>
+                var rich = new RichFormatting();
+                var sentences = tanaka.SearchByJapaneseText(request.QueryText);
+                foreach(var sentence in sentences.Take(20))
                 {
-                    var paragraph = new Paragraph();
-                    paragraph.Inlines.Add(new Run(sentence.JapaneseSentence));
-                    paragraph.Inlines.Add(new Run(sentence.EnglishSentence));
-                    flow.Blocks.Add(paragraph);
-                }).ConfigureAwait(false);
-                await yield.ReturnAsync(flow).ConfigureAwait(false);
+                    var paragraph = new TextParagraph();
+                    foreach(var part in HighlightWords(sentence.JapaneseSentence, request.QueryText))
+                    {
+                        paragraph.Content.Add(new Text(part.text, part.highlight));
+                    }
+                    paragraph.Content.Add(new Text(sentence.EnglishSentence));
+                    rich.Paragraphs.Add(paragraph);
+                };
+                if (rich.Paragraphs.Count != 0)
+                {
+                    await yield.ReturnAsync(rich).ConfigureAwait(false);
+                }
             });
+        }
+
+        private IEnumerable<(string text, bool highlight)> HighlightWords(string input, string word)
+        {
+            return input.Split(new string[]{word}, StringSplitOptions.None).Select(part => (part, false)).Intersperse((word, true));
         }
 
         public void Dispose()
@@ -108,15 +119,17 @@ namespace DidacticalEnigma.Models
             "The data JMdict by Electronic Dictionary Research and Development Group",
             new Uri("http://www.edrdg.org/jmdict/j_jmdict.html"));
 
-        public IAsyncEnumerable<FlowDocument> Answer(Request request)
+        public IAsyncEnumerable<RichFormatting> Answer(Request request)
         {
-            return new AsyncEnumerable<FlowDocument>(async yield =>
+            return new AsyncEnumerable<RichFormatting>(async yield =>
             {
                 foreach (var entry in jdict.Lookup(request.QueryText) ?? Enumerable.Empty<JMDictEntry>())
                 {
-                    var flow = new FlowDocument();
-                    flow.Blocks.Add(new Paragraph(new Run(entry.ToString())));
-                    await yield.ReturnAsync(flow);
+                    var rich = new RichFormatting();
+                    var p = new TextParagraph();
+                    p.Content.Add(new Text(entry.ToString()));
+                    rich.Paragraphs.Add(p);
+                    await yield.ReturnAsync(rich);
                 }
             });
         }
