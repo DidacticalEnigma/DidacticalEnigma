@@ -1,4 +1,5 @@
 ﻿using DidacticalEnigma.Models;
+using DidacticalEnigma.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -94,7 +95,7 @@ namespace DidacticalEnigma.ViewModels
             foreach (var radical in Radicals)
             {
                 var kanjiForRadical = service.LookupByRadicals(Enumerable.Repeat(radical.CodePoint, 1));
-                radical.Enabled = kanjiForRadical.Any(kanji => lookupHash.Contains(kanji));
+                radical.Enabled = lookupHash.IsIntersectionNonEmpty(kanjiForRadical);
             }
         }
 

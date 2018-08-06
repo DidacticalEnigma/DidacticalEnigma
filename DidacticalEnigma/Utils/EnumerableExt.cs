@@ -68,5 +68,10 @@ namespace DidacticalEnigma.Utils
                 }
             }
         }
+
+        public static bool IsIntersectionNonEmpty<T>(this ISet<T> set, IEnumerable<T> otherSet)
+        {
+            return otherSet.Any(element => set.Contains(element));
+        }
     }
 }
