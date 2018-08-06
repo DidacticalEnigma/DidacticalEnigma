@@ -15,7 +15,7 @@
         <vms:TreeSplitDataTemplateSelector x:Key="RecursiveTree">
             <vms:TreeSplitDataTemplateSelector.RootTemplate>
                 <DataTemplate DataType="{x:Type vms:Root}">
-                    <ContentPresenter Content="{Binding Tree}" />
+                    <ContentPresenter Content="{Binding Tree}" Style="{DynamicResource RecursiveStyle}" />
                 </DataTemplate>
             </vms:TreeSplitDataTemplateSelector.RootTemplate>
             <vms:TreeSplitDataTemplateSelector.VSplitTemplate>
@@ -23,12 +23,18 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <ContentPresenter Grid.Column="0" Content="{Binding First}" />
-                        <GridSplitter Grid.Column="1" />
-                        <ContentPresenter Grid.Column="2" Content="{Binding Right}" />
+                        <ContentPresenter
+                            Grid.Column="0"
+                            Content="{Binding First}"
+                            Style="{DynamicResource RecursiveStyle}" />
+                        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
+                        <ContentPresenter
+                            Grid.Column="2"
+                            Content="{Binding Second}"
+                            Style="{DynamicResource RecursiveStyle}" />
                     </Grid>
                 </DataTemplate>
             </vms:TreeSplitDataTemplateSelector.VSplitTemplate>
@@ -37,12 +43,18 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <ContentPresenter Grid.Row="0" Content="{Binding First}" />
-                        <GridSplitter Grid.Row="1" />
-                        <ContentPresenter Grid.Row="2" Content="{Binding Right}" />
+                        <ContentPresenter
+                            Grid.Row="0"
+                            Content="{Binding First}"
+                            Style="{DynamicResource RecursiveStyle}" />
+                        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
+                        <ContentPresenter
+                            Grid.Row="2"
+                            Content="{Binding Second}"
+                            Style="{DynamicResource RecursiveStyle}" />
                     </Grid>
                 </DataTemplate>
             </vms:TreeSplitDataTemplateSelector.HSplitTemplate>
@@ -53,16 +65,36 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <UniformGrid Grid.Row="0" Rows="3">
-                            <Button Command="{Binding HSplit}" Content="HSplit" />
-                            <Button Command="{Binding VSplit}" Content="VSplit" />
-                            <Button Content="Close" />
-                        </UniformGrid>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                Grid.Column="0"
+                                Command="{Binding HSplit}"
+                                Content="H" />
+                            <Button
+                                Grid.Column="1"
+                                Command="{Binding VSplit}"
+                                Content="V" />
+                            <ComboBox Grid.Column="2" />
+                            <Button
+                                Grid.Column="3"
+                                Command="{Binding Close}"
+                                Content="X" />
+                        </Grid>
                         <TextBlock Grid.Row="1" Text="{Binding Content}" />
                     </Grid>
                 </DataTemplate>
             </vms:TreeSplitDataTemplateSelector.LeafTemplate>
         </vms:TreeSplitDataTemplateSelector>
+
+        <Style x:Key="RecursiveStyle" TargetType="ContentPresenter">
+            <Setter Property="ContentTemplateSelector" Value="{StaticResource RecursiveTree}" />
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -79,10 +111,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ContentPresenter
-            Grid.Column="1"
-            Content="{Binding Root}"
-            ContentTemplateSelector="{StaticResource RecursiveTree}">
+        <ContentPresenter Grid.Column="1" Content="{Binding Root}">
             <ContentPresenter.Style>
                 <Style TargetType="ContentPresenter">
                     <Setter Property="ContentTemplateSelector" Value="{StaticResource RecursiveTree}" />

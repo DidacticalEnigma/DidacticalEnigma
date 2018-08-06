@@ -21,6 +21,7 @@ namespace DidacticalEnigma.ViewModels
                 if (children[0] == value)
                     return;
                 children[0] = value;
+                children[0].Parent = this;
                 OnPropertyChanged();
             }
         }
@@ -33,6 +34,7 @@ namespace DidacticalEnigma.ViewModels
                 if (children[1] == value)
                     return;
                 children[1] = value;
+                children[1].Parent = this;
                 OnPropertyChanged();
             }
         }
@@ -43,10 +45,9 @@ namespace DidacticalEnigma.ViewModels
 
         private readonly ObservableBatchCollection<Element> children;
 
-        public Split(Func<Element> factory, Element parent)
+        public Split(Func<Element> factory)
         {
             this.factory = factory;
-            Parent = parent;
             children = new ObservableBatchCollection<Element>
             {
                 null,
@@ -72,13 +73,73 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
+        private void DoClose()
+        {
+            switch (Parent)
+            {
+                case Root root:
+                    {
+                        // do nothing
+                    }
+                    break;
+                case Split parentSplit:
+                    {
+                        Element other;
+                        if (parentSplit.First == this)
+                        {
+                            other = parentSplit.Second;
+                        }
+                        else if (parentSplit.Second == this)
+                        {
+                            other = parentSplit.First;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("invariant violated: supposed parents don't have this node as a child");
+                        }
+                        FixUpGrandParent(parentSplit, other);
+                    }
+                    break;
+                default:
+                    throw new InvalidOperationException("invariant violated: leaf node is a parent");
+            }
+
+            void FixUpGrandParent(Element parent, Element other)
+            {
+                switch (parent.Parent)
+                {
+                    case Root grandParentRoot:
+                        {
+                            grandParentRoot.Tree = other;
+                        }
+                        break;
+                    case Split grandParentSplit:
+                        {
+                            if (grandParentSplit.First == parent)
+                            {
+                                grandParentSplit.First = other;
+                            }
+                            else if (grandParentSplit.Second == parent)
+                            {
+                                grandParentSplit.Second = other;
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("invariant violated: supposed parents don't have this node as a child");
+                            }
+                        }
+                        break;
+                    default:
+                        throw new InvalidOperationException("invariant violated: leaf node is a parent");
+                }
+            }
+        }
+
         private void Split(Split split)
         {
             var previousParent = Parent;
             split.First = this;
-            split.First.Parent = split;
             split.Second = new Leaf(factory);
-            split.Second.Parent = split;
             switch (previousParent)
             {
                 case Root root:
@@ -107,6 +168,8 @@ namespace DidacticalEnigma.ViewModels
 
         public ICommand VSplit { get; }
 
+        public ICommand Close { get; }
+
         public Leaf(Func<object> factory)
         {
             Content = factory();
@@ -114,11 +177,15 @@ namespace DidacticalEnigma.ViewModels
 
             HSplit = new RelayCommand(() =>
             {
-                Split(new HSplit(() => new Leaf(this.factory), Parent));
+                Split(new HSplit(() => new Leaf(this.factory)));
             });
             VSplit = new RelayCommand(() =>
             {
-                Split(new VSplit(() => new Leaf(factory), Parent));
+                Split(new VSplit(() => new Leaf(factory)));
+            });
+            Close = new RelayCommand(() =>
+            {
+                DoClose();
             });
         }
     }
@@ -149,14 +216,14 @@ namespace DidacticalEnigma.ViewModels
 
     public class HSplit : Split
     {
-        public HSplit(Func<Element> factory, Element parent) : base(factory, parent)
+        public HSplit(Func<Element> factory) : base(factory)
         {
         }
     }
 
     public class VSplit : Split
     {
-        public VSplit(Func<Element> factory, Element parent) : base(factory, parent)
+        public VSplit(Func<Element> factory) : base(factory)
         {
         }
     }
@@ -173,6 +240,7 @@ namespace DidacticalEnigma.ViewModels
                 if (children[0] == value)
                     return;
                 children[0] = value;
+                children[0].Parent = this;
                 OnPropertyChanged();
             }
         }
@@ -186,7 +254,6 @@ namespace DidacticalEnigma.ViewModels
                 null
             };
             Tree = factory();
-            Tree.Parent = this;
         }
     }
 
