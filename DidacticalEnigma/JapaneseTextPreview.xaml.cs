@@ -1,4 +1,5 @@
 ﻿using DidacticalEnigma.Models;
+using DidacticalEnigma.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,47 +27,34 @@ namespace DidacticalEnigma
             InitializeComponent();
         }
 
-        public IEnumerable<LineVM> Lines
+        public IReadOnlyList<LineVM> Lines
         {
-            get { return (IEnumerable<LineVM>)GetValue(LinesProperty); }
+            get { return (IReadOnlyList<LineVM>)GetValue(LinesProperty); }
             set { SetValue(LinesProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Lines.  This enables animation, styling, binding, etc...
+        /// <summary>Identifies the <see cref="Lines"/> dependency property.</summary>
         public static readonly DependencyProperty LinesProperty =
             DependencyProperty.Register(
                 nameof(Lines),
-                typeof(IEnumerable<LineVM>),
+                typeof(IReadOnlyList<LineVM>),
                 typeof(JapaneseTextPreview),
                 new PropertyMetadata(null));
 
-        public CodePointVM SelectedCharacter
+        public SelectionInfoVM SelectionInfo
         {
-            get { return (CodePointVM)GetValue(SelectedCharacterProperty); }
-            set { SetValue(SelectedCharacterProperty, value); }
+            get { return (SelectionInfoVM)GetValue(SelectionInfoProperty); }
+            set { SetValue(SelectionInfoProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Lines.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SelectedCharacterProperty =
+        /// <summary>Identifies the <see cref="SelectedCharacter"/> dependency property.</summary>
+        public static readonly DependencyProperty SelectionInfoProperty =
             DependencyProperty.Register(
-                nameof(SelectedCharacter),
-                typeof(CodePointVM),
+                nameof(SelectionInfo),
+                typeof(SelectionInfoVM),
                 typeof(JapaneseTextPreview),
                 new PropertyMetadata(null));
 
-        public WordVM SelectedWord
-        {
-            get { return (WordVM)GetValue(SelectedWordProperty); }
-            set { SetValue(SelectedWordProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Lines.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SelectedWordProperty =
-            DependencyProperty.Register(
-                nameof(SelectedWord),
-                typeof(WordVM),
-                typeof(JapaneseTextPreview),
-                new PropertyMetadata(null));
 
         private StackPanel previousClickedWord = null;
 
@@ -74,8 +62,13 @@ namespace DidacticalEnigma
 
         private void SelectText(object sender, MouseEventArgs e)
         {
+            var shiftWasPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
             if (!(e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed))
                 return;
+
+            CodePointVM codePointVM = null;
+            WordVM wordVM = null;
+            string text = null;
 
             var clickedPoint = e.GetPosition(null);
             var clickedLetter =
@@ -98,12 +91,14 @@ namespace DidacticalEnigma
                     }
                     clickedWordPanel.Background = Brushes.AntiqueWhite;
                     previousClickedWord = clickedWordPanel;
-                    SetCurrentValue(SelectedWordProperty, (WordVM)clickedWordPanel.DataContext);
+                    wordVM = (WordVM)clickedWordPanel.DataContext;
                 }
                 previousClickedLetter = clickedLetter;
-                SetCurrentValue(SelectedCharacterProperty, (CodePointVM)clickedLetter.DataContext);
+                codePointVM = (CodePointVM)clickedLetter.DataContext;
+                SetCurrentValue(SelectionInfoProperty, SelectionInfo == null
+                    ? new SelectionInfoVM(codePointVM, wordVM, text)
+                    : SelectionInfo.Clone(codePointVM, wordVM, text));
             }
-            //clickedItem.SetCurrentValue(BackgroundProperty, Brushes.Yellow);
         }
 
         private static T FindAncestor<T>(DependencyObject current)

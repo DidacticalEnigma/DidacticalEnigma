@@ -29,6 +29,8 @@ namespace DidacticalEnigma
         IEnumerable<IEnumerable<WordInfo>> BreakIntoSentences(string input);
     }
 
+
+
     // composite 
     class LanguageService : ILanguageService
     {
@@ -51,7 +53,6 @@ namespace DidacticalEnigma
         public void Dispose()
         {
             mecab.Dispose();
-            jdict.Dispose();
         }
 
         public string LookupRomaji(Kana kana)
@@ -73,20 +74,18 @@ namespace DidacticalEnigma
         {
             //var entry = dictionary.Lookup(word.Trim());
             //return new WordInfo(word, entry?.ToString());
-            var entry = jdict.Lookup(word.Trim());
+            /*var entry = jdict.Lookup(word.Trim());
             string joined = null;
             if (entry != null)
             {
                 joined = string.Join("\n\n", entry.Select(e => e.ToString()));
-            }
-            return new WordInfo(word, joined);
+            }*/
+            return new WordInfo(word, "");
         }
 
         private readonly MeCabTagger mecab;
 
         private readonly EasilyConfusedKana confused;
-
-        private readonly JMDict jdict;
 
         private readonly Kradfile kradfile;
 
@@ -99,7 +98,6 @@ namespace DidacticalEnigma
         public LanguageService(
             MeCabParam mecabParam,
             EasilyConfusedKana similar,
-            JMDict jdict,
             Kradfile kradfile,
             Radkfile radkfile,
             KanjiDict kanjiDict,
@@ -111,7 +109,6 @@ namespace DidacticalEnigma
             mecabParam.Partial = true;
             this.mecab = MeCabTagger.Create(mecabParam);
             this.confused = similar;
-            this.jdict = jdict;
             this.kradfile = kradfile;
             this.radkfile = radkfile;
             this.kanjidict = kanjiDict;

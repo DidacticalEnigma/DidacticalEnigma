@@ -16,6 +16,8 @@ namespace DidacticalEnigma.Models
     {
         private readonly Task<IDataSource> dataSource;
 
+        private bool disposed = false;
+
         public enum InitializationState
         {
             InProgress,
@@ -55,6 +57,9 @@ namespace DidacticalEnigma.Models
 
         public async void Dispose()
         {
+            if (disposed)
+                return;
+            disposed = true;
             if (State == InitializationState.Success)
             {
                 dataSource.Result.Dispose();

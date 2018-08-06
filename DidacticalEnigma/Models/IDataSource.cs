@@ -21,12 +21,15 @@ namespace DidacticalEnigma.Models
     }
     public class Request
     {
+        public string Word { get; }
+
         public string QueryText { get; }
 
         public PartOfSpeech PartOfSpeech { get; }
 
-        public Request(string queryText, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown)
+        public Request(string word, string queryText, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown)
         {
+            Word = word;
             QueryText = queryText;
             PartOfSpeech = partOfSpeech;
         }
@@ -72,10 +75,10 @@ namespace DidacticalEnigma.Models
             {
                 var rich = new RichFormatting();
                 var sentences = tanaka.SearchByJapaneseText(request.QueryText);
-                foreach(var sentence in sentences.Take(20))
+                foreach (var sentence in sentences.Take(20))
                 {
                     var paragraph = new TextParagraph();
-                    foreach(var part in HighlightWords(sentence.JapaneseSentence, request.QueryText))
+                    foreach (var part in HighlightWords(sentence.JapaneseSentence, request.QueryText))
                     {
                         paragraph.Content.Add(new Text(part.text, part.highlight));
                     }
@@ -91,12 +94,12 @@ namespace DidacticalEnigma.Models
 
         private IEnumerable<(string text, bool highlight)> HighlightWords(string input, string word)
         {
-            return input.Split(new string[]{word}, StringSplitOptions.None).Select(part => (part, false)).Intersperse((word, true));
+            return input.Split(new string[] { word }, StringSplitOptions.None).Select(part => (part, false)).Intersperse((word, true));
         }
 
         public void Dispose()
         {
-            
+
         }
 
         public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
@@ -123,14 +126,14 @@ namespace DidacticalEnigma.Models
         {
             return new AsyncEnumerable<RichFormatting>(async yield =>
             {
-                foreach (var entry in jdict.Lookup(request.QueryText) ?? Enumerable.Empty<JMDictEntry>())
-                {
-                    var rich = new RichFormatting();
-                    var p = new TextParagraph();
-                    p.Content.Add(new Text(entry.ToString()));
-                    rich.Paragraphs.Add(p);
-                    await yield.ReturnAsync(rich);
-                }
+                var entry = jdict.Lookup(request.Word.Trim());
+                if (entry == null)
+                    return;
+                var rich = new RichFormatting();
+                var p = new TextParagraph();
+                p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
+                rich.Paragraphs.Add(p);
+                await yield.ReturnAsync(rich);
             });
         }
 

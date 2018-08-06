@@ -13,7 +13,7 @@ using System.Windows.Threading;
 
 namespace DidacticalEnigma.ViewModels
 {
-    public class DataSourceVM : INotifyPropertyChanged
+    public class DataSourceVM : INotifyPropertyChanged, IDisposable
     {
         private AsyncDataSource dataSource;
 
@@ -33,7 +33,9 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        public FlowDocument Document => FormattedResult?.Render();
+        private FlowDocument emptyDocument = new FlowDocument(new System.Windows.Documents.Paragraph(new Run("nothing found")));
+
+        public FlowDocument Document => FormattedResult?.Render() ?? emptyDocument;
 
         public DataSourceDescriptor Descriptor => dataSource.Descriptor;
 
@@ -48,7 +50,6 @@ namespace DidacticalEnigma.ViewModels
                 isProcessing = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HasFound));
-                OnPropertyChanged(nameof(IsProcessing));
             }
         }
 
@@ -73,9 +74,14 @@ namespace DidacticalEnigma.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public void Dispose()
+        {
+            dataSource.Dispose();
+        }
     }
 
-    public class UsageDataSourcePreviewVM : INotifyPropertyChanged
+    public class UsageDataSourcePreviewVM : INotifyPropertyChanged, IDisposable
     {
         public ObservableBatchCollection<DataSourceVM> DataSources { get; } = new ObservableBatchCollection<DataSourceVM>();
 
@@ -107,33 +113,34 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private string queryText = null;
-        public string QueryText
+        private Request request = null;
+        public Request Request
         {
-            get => queryText;
+            get => request;
             set
             {
-                if (queryText == value)
+                if (request == value)
                     return;
 
-                queryText = value;
+                request = value;
                 OnPropertyChanged();
-                Task.Run(() => Search(queryText));
+                Task.Run(() => Search(request));
             }
         }
 
-        public Task Search(string queryText)
+        public Task Search(Request req)
         {
             var tasks = new List<Task>();
             foreach(var dataSource in DataSources)
             {
-                tasks.Add(dataSource.Search(new Request(queryText)));
+                tasks.Add(dataSource.Search(req));
             }
             return Task.WhenAll(tasks);
         }
 
         public UsageDataSourcePreviewVM(string dataSourcePath)
         {
+            DataSources.Add(new DataSourceVM(typeof(JMDictDataSource), dataSourcePath));
             DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath));
         }
 
@@ -142,6 +149,14 @@ namespace DidacticalEnigma.ViewModels
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Dispose()
+        {
+            foreach(var dataSource in DataSources)
+            {
+                dataSource.Dispose();
+            }
         }
     }
 }

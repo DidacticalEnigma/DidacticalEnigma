@@ -26,25 +26,25 @@ namespace DidacticalEnigma
         public static readonly DependencyProperty SearchQueryProperty =
             DependencyProperty.Register(
                 nameof(SearchQuery),
-                typeof(string),
+                typeof(Request),
                 typeof(UsageDataSourcePreview),
                 new PropertyMetadata(null, OnSearchQueryChanged));
 
         private static void OnSearchQueryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var self = (UsageDataSourcePreview)d;
-            var oldValue = (string)e.OldValue;
-            var newValue = (string)e.NewValue;
+            var oldValue = (Request)e.OldValue;
+            var newValue = (Request)e.NewValue;
 
             if(self.DataContext is UsageDataSourcePreviewVM vm)
             {
-                vm.QueryText = newValue;
+                vm.Request = newValue;
             }
         }
 
-        public string SearchQuery
+        public Request SearchQuery
         {
-            get { return (string)GetValue(SearchQueryProperty); }
+            get { return (Request)GetValue(SearchQueryProperty); }
             set { SetValue(SearchQueryProperty, value); }
         }
 

@@ -21,7 +21,7 @@ namespace DidacticalEnigma
     public class MainWindowVM : INotifyPropertyChanged, IDisposable
     {
         private readonly ILanguageService lang;
-
+        private readonly JMDict jdict;
         private ClipboardHook hook;
 
         public string AboutText => File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"dic\about.txt"), Encoding.UTF8);
@@ -41,7 +41,6 @@ namespace DidacticalEnigma
                 
             }
             var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml"));
-            var jdict = JDict.JMDict.Create(Path.Combine(baseDir, @"dic\JMdict_e"));
             var kradfile = new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
             var radkfile = new Radkfile(Path.Combine(baseDir, @"dic\radkfile1_plus_2_utf8"), Encoding.UTF8);
             var kanaProperties = new KanaProperties(
@@ -55,7 +54,6 @@ namespace DidacticalEnigma
                     DicDir = Path.Combine(baseDir, @"dic\ipadic"),
                 },
                 EasilyConfusedKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
-                jdict,
                 kradfile,
                 radkfile,
                 kanjidict,
@@ -86,8 +84,6 @@ namespace DidacticalEnigma
             hook = new ClipboardHook();
             hook.ClipboardChanged += SetContent;
             KanjiLookupVM = new KanjiRadicalLookupControlVM(lang);
-            // lots of data has been loaded into memory
-            GC.Collect();
         }
 
         private void SetContent(object sender, string e)
@@ -139,6 +135,20 @@ namespace DidacticalEnigma
             }
         }
 
+        private SelectionInfoVM selectionInfo;
+        public SelectionInfoVM SelectionInfo
+        {
+            get => selectionInfo;
+
+            set
+            {
+                if (selectionInfo == value)
+                    return;
+                selectionInfo = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RelayCommand PlaceInClipboard { get; }
 
         public RelayCommand Update { get; }
@@ -178,7 +188,9 @@ namespace DidacticalEnigma
         public void Dispose()
         {
             hook.Dispose();
+            UsageDataSourceVM.Dispose();
             lang.Dispose();
+            jdict.Dispose();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

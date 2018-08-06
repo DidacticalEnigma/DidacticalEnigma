@@ -6,6 +6,7 @@
     xmlns:enigma="clr-namespace:DidacticalEnigma"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:DidacticalEnigma.Models"
+    xmlns:vms="clr-namespace:DidacticalEnigma.ViewModels"
     Title="Didactical Enigma"
     Width="960"
     Height="900"
@@ -18,7 +19,7 @@
             <RowDefinition Height="4*" />
             <RowDefinition Height="5*" />
         </Grid.RowDefinitions>
-        <enigma:JapaneseTextPreview x:Name="Jp" Grid.Row="0" />
+        <enigma:JapaneseTextPreview Grid.Row="0" SelectionInfo="{Binding DataContext.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Mode=OneWayToSource}" />
         <TabControl Grid.Row="2">
             <TabItem Header="Main">
                 <Grid>
@@ -37,7 +38,7 @@
                         AcceptsReturn="True"
                         FontSize="18"
                         IsReadOnly="True"
-                        Text="{Binding SelectedCharacter.Description, ElementName=Jp, Mode=OneWay}"
+                        Text="{Binding SelectionInfo.Character.Description, Mode=OneWay}"
                         TextWrapping="Wrap" />
                     <TextBox
                         Grid.Row="0"
@@ -46,7 +47,7 @@
                         AcceptsReturn="True"
                         FontSize="18"
                         IsReadOnly="True"
-                        Text="{Binding SelectedWord.DictionaryStringBlurb, ElementName=Jp, Mode=OneWay}"
+                        Text="{Binding SelectionInfo.Word.DictionaryStringBlurb, Mode=OneWay}"
                         TextWrapping="Wrap" />
                     <TextBox
                         Grid.Row="1"
@@ -82,7 +83,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Usage">
-                <enigma:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding SelectedWord.StringForm, ElementName=Jp, Mode=OneWay}" />
+                <enigma:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Converter={x:Static vms:SelectionInfoToRequestConverter.Default}, Mode=OneWay}" />
             </TabItem>
             <TabItem Header="Hiragana">
                 <enigma:KanaBoard DataContext="{Binding HiraganaBoard}" />

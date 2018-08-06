@@ -196,6 +196,8 @@
     <Compile Include="Models\WordInfo.cs" />
     <Compile Include="ViewModels\NullabilityToBooleanConverter.cs" />
     <Compile Include="ViewModels\PartOfSpeechToColorConverter.cs" />
+    <Compile Include="ViewModels\SelectionInfoToRequestConverter.cs" />
+    <Compile Include="ViewModels\SelectionInfoVM.cs" />
     <Compile Include="ViewModels\UsageDataSourcePreviewVM.cs" />
     <Compile Include="ViewModels\WordVM.cs" />
     <Compile Include="Utils\ObservableBatchCollection.cs" />
