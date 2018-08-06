@@ -80,13 +80,23 @@
                                 Grid.Column="1"
                                 Command="{Binding VSplit}"
                                 Content="V" />
-                            <ComboBox Grid.Column="2" />
+                            <ComboBox
+                                Grid.Column="2"
+                                ItemsSource="{Binding Content.Parent.DataSources}"
+                                SelectedIndex="{Binding Content.SelectedDataSourceIndex}"
+                                SelectedItem="{Binding Content.SelectedDataSource}">
+                                <ComboBox.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ComboBoxItem}">
+                                        <Setter Property="IsEnabled" Value="{Binding IsUsed, Converter={x:Static vms:BooleanNegationConverter.Default}}" />
+                                    </Style>
+                                </ComboBox.ItemContainerStyle>
+                            </ComboBox>
                             <Button
                                 Grid.Column="3"
                                 Command="{Binding Close}"
                                 Content="X" />
                         </Grid>
-                        <TextBlock Grid.Row="1" Text="{Binding Content}" />
+                        <FlowDocumentScrollViewer Grid.Row="1" Document="{Binding Content.SelectedDataSource.Document}" />
                     </Grid>
                 </DataTemplate>
             </vms:TreeSplitDataTemplateSelector.LeafTemplate>
@@ -99,18 +109,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="8*" />
         </Grid.ColumnDefinitions>
-        <ListView
-            ItemsSource="{Binding DataSources}"
-            SelectedIndex="{Binding SelectedDataSourceIndex}"
-            SelectedItem="{Binding SelectedDataSource}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Descriptor.Name}" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
         <ContentPresenter Grid.Column="1" Content="{Binding Root}">
             <ContentPresenter.Style>
                 <Style TargetType="ContentPresenter">
@@ -119,34 +118,5 @@
             </ContentPresenter.Style>
 
         </ContentPresenter>
-        <!--<TreeView ItemsSource="{Binding Root}">
-            <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type vms:Root}" ItemsSource="{Binding Children}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Root" />
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vms:HSplit}" ItemsSource="{Binding Children}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="HSplit" />
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vms:VSplit}" ItemsSource="{Binding Children}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="VSplit" />
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vms:Leaf}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Content}" />
-                        <Button Command="{Binding HSplit}" Content="HSplit" />
-                        <Button Command="{Binding VSplit}" Content="VSplit" />
-                        <Button Content="Close" />
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.Resources>
-
-        </TreeView>-->
-        <!--<FlowDocumentScrollViewer Grid.Column="1" Document="{Binding SelectedDataSource.Document}" />-->
     </Grid>
 </UserControl>

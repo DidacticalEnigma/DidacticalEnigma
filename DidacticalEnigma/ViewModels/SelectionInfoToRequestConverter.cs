@@ -19,7 +19,11 @@ namespace DidacticalEnigma.ViewModels
             if (value == null)
                 return null;
             var selectionInfo = (SelectionInfoVM)value;
-            return new Request(selectionInfo.Word.StringForm, selectionInfo.Word.StringForm, selectionInfo.Word.WordInfo.EstimatedPartOfSpeech);
+            return new Request(
+                selectionInfo.Character.StringForm,
+                selectionInfo.Word.StringForm,
+                selectionInfo.Word.StringForm,
+                selectionInfo.Word.WordInfo.EstimatedPartOfSpeech);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

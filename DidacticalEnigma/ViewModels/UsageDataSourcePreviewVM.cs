@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Threading;
@@ -53,6 +54,29 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
+        private bool isUsed;
+        public bool IsUsed
+        {
+            get => isUsed;
+            set
+            {
+                if (isUsed == value)
+                    return;
+                isUsed = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Visibility Visible
+        {
+            get
+            {
+                if (isUsed)
+                    return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
+
         public bool HasFound => FormattedResult != null;
 
         public async Task Search(Request request)
@@ -68,6 +92,12 @@ namespace DidacticalEnigma.ViewModels
                 () => Task.Run(() => (IDataSource)Activator.CreateInstance(type, path)), type);
         }
 
+        public DataSourceVM(IDataSource dataSource)
+        {
+            this.dataSource = new AsyncDataSource(
+                () => Task.FromResult(dataSource), dataSource.GetType());
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -79,11 +109,33 @@ namespace DidacticalEnigma.ViewModels
         {
             dataSource.Dispose();
         }
+
+        public override string ToString()
+        {
+            return Descriptor.Name;
+        }
     }
 
-    public class UsageDataSourcePreviewVM : INotifyPropertyChanged, IDisposable
+    public class DataSourcePreviewVM : INotifyPropertyChanged
     {
-        public ObservableBatchCollection<DataSourceVM> DataSources { get; } = new ObservableBatchCollection<DataSourceVM>();
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public DataSourcePreviewVM(UsageDataSourcePreviewVM parent, int index = -1)
+        {
+            Parent = parent;
+            SelectedDataSourceIndex = index;
+            if(index != -1)
+            {
+                SelectedDataSource = Parent.DataSources[index];
+            }
+        }
+
+        public UsageDataSourcePreviewVM Parent { get; }
 
         private int selectedDataSourceIndex = -1;
         public int SelectedDataSourceIndex
@@ -107,11 +159,19 @@ namespace DidacticalEnigma.ViewModels
             {
                 if (selectedDataSource == value)
                     return;
-
+                var oldSource = selectedDataSource;
                 selectedDataSource = value;
                 OnPropertyChanged();
+                value.IsUsed = true;
+                if(oldSource != null)
+                    oldSource.IsUsed = false;
             }
         }
+    }
+
+    public class UsageDataSourcePreviewVM : INotifyPropertyChanged, IDisposable
+    {
+        public ObservableBatchCollection<DataSourceVM> DataSources { get; } = new ObservableBatchCollection<DataSourceVM>();
 
         public Root Root { get; }
 
@@ -140,14 +200,18 @@ namespace DidacticalEnigma.ViewModels
             return Task.WhenAll(tasks);
         }
 
-        public UsageDataSourcePreviewVM(string dataSourcePath)
+        public UsageDataSourcePreviewVM(ILanguageService lang, string dataSourcePath)
         {
+            DataSources.Add(new DataSourceVM(new CharacterDataSource(lang)));
             DataSources.Add(new DataSourceVM(typeof(JMDictDataSource), dataSourcePath));
             DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath));
 
-            var counter = 1;
-            Func<Element> fac = () => new Leaf(() => counter++);
+            Func<Element> fac = () => new Leaf(() => new DataSourcePreviewVM(this));
             Root = new Root(fac);
+            // being lazy
+            (Root.Tree as Leaf).VSplit.Execute(null);
+            (((Root.Tree as Split).First as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 0;
+            (((Root.Tree as Split).Second as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 1;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

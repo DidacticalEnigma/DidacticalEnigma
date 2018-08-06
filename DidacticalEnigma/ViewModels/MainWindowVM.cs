@@ -60,7 +60,7 @@ namespace DidacticalEnigma
                 kanaProperties);
             HiraganaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\hiragana_romaji.txt"), Encoding.UTF8, lang);
             KatakanaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\katakana_romaji.txt"), Encoding.UTF8, lang);
-            UsageDataSourceVM = new UsageDataSourcePreviewVM(Path.Combine(baseDir, "dic"));
+            UsageDataSourceVM = new UsageDataSourcePreviewVM(lang, Path.Combine(baseDir, "dic"));
             Update = new RelayCommand(() =>
             {
                 SetAnnotations(Input);

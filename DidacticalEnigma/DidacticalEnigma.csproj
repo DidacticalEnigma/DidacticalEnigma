@@ -182,6 +182,7 @@
     <Compile Include="Utils\GridEx.cs" />
     <Compile Include="Utils\NMeCabExt.cs" />
     <Compile Include="Utils\TrivialTemplateSelector.cs" />
+    <Compile Include="ViewModels\BooleanNegationConverter.cs" />
     <Compile Include="ViewModels\BooleanToBrushConverter.cs" />
     <Compile Include="ViewModels\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModels\CodePointToLongStringConverter.cs" />
