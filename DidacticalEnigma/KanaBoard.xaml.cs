@@ -24,5 +24,17 @@ namespace DidacticalEnigma
         {
             InitializeComponent();
         }
+
+        public ICommand KeyClickCommand
+        {
+            get { return (ICommand)GetValue(KeyClickCommandProperty); }
+            set { SetValue(KeyClickCommandProperty, value); }
+        }
+
+        /// <summary>Identifies the <see cref="KeyClickCommand"/> dependency property.</summary>
+        public static readonly DependencyProperty KeyClickCommandProperty =
+            DependencyProperty.Register("KeyClickCommand", typeof(ICommand), typeof(KanaBoard), new PropertyMetadata(null));
+
+
     }
 }

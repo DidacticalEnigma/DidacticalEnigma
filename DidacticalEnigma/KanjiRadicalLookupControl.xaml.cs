@@ -33,5 +33,15 @@ namespace DidacticalEnigma
             var vm = (KanjiRadicalLookupControlVM)DataContext;
             vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<RadicalVM>().Select(r => r.CodePoint));
         }
+
+        public ICommand KeyClickCommand
+        {
+            get { return (ICommand)GetValue(KeyClickCommandProperty); }
+            set { SetValue(KeyClickCommandProperty, value); }
+        }
+
+        /// <summary>Identifies the <see cref="KeyClickCommand"/> dependency property.</summary>
+        public static readonly DependencyProperty KeyClickCommandProperty =
+            DependencyProperty.Register("KeyClickCommand", typeof(ICommand), typeof(KanjiRadicalLookupControl), new PropertyMetadata(null));
     }
 }

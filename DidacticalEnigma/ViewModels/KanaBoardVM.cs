@@ -14,8 +14,6 @@ namespace DidacticalEnigma.ViewModels
     {
         public class KanaVM
         {
-            public ICommand KanaClick { get; }
-
             public CodePoint CodePoint { get; }
 
             public string Kana => CodePoint?.ToString() ?? "";
@@ -28,18 +26,15 @@ namespace DidacticalEnigma.ViewModels
 
             public bool IsRegular => CodePoint != null;
 
-            public KanaVM(CodePoint codePoint, string romaji, int x, int y)
+            private KanaBoardVM boardVM;
+
+            public KanaVM(KanaBoardVM boardVM, CodePoint codePoint, string romaji, int x, int y)
             {
+                this.boardVM = boardVM;
                 CodePoint = codePoint;
                 Romaji = romaji;
                 X = x;
                 Y = y;
-
-                KanaClick = new RelayCommand(() =>
-                {
-                    if(IsRegular)
-                        Clipboard.SetText(Kana);
-                });
             }
         }
 
@@ -58,9 +53,9 @@ namespace DidacticalEnigma.ViewModels
             {
                 var components = lineColumn.Split(' ');
                 if (components.Length > 1)
-                    Kana.Add(new KanaVM(service.LookupCharacter(components[0]), components[1], x, y));
+                    Kana.Add(new KanaVM(this, service.LookupCharacter(components[0]), components[1], x, y));
                 else
-                    Kana.Add(new KanaVM(null, null, x, y));
+                    Kana.Add(new KanaVM(this, null, null, x, y));
 
                 x++;
                 if(x == 5)

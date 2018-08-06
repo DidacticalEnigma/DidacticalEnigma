@@ -38,6 +38,45 @@ namespace DidacticalEnigma
             }
         }
 
+        private int selectionLength;
+        public int SelectionLength
+        {
+            get => selectionLength;
+            set
+            {
+                if (selectionLength == value)
+                    return;
+                selectionLength = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int caretIndex;
+        public int CaretIndex
+        {
+            get => caretIndex;
+            set
+            {
+                if (caretIndex == value)
+                    return;
+                caretIndex = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string selectedText;
+        public string SelectedText
+        {
+            get => selectedText;
+            set
+            {
+                if (selectedText == value)
+                    return;
+                selectedText = value;
+                OnPropertyChanged();
+            }
+        }
+
         private SelectionInfoVM selectionInfo;
         public SelectionInfoVM SelectionInfo
         {
@@ -51,6 +90,8 @@ namespace DidacticalEnigma
                 OnPropertyChanged();
             }
         }
+
+        public RelayCommand InsertTextAtCaret { get; }
 
         public string Name { get; }
 
@@ -79,6 +120,12 @@ namespace DidacticalEnigma
         {
             this.lang = lang;
             Name = name;
+            InsertTextAtCaret = new RelayCommand((s) =>
+            {
+                var inputStr = s.ToString();
+                // TODO: insert at caret, not at the end of the string
+                RawOutput += inputStr;
+            });
         }
     }
 

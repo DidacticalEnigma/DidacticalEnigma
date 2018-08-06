@@ -21,7 +21,8 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Button
-                    Command="{Binding KanaClick}"
+                    Command="{Binding KeyClickCommand, RelativeSource={RelativeSource AncestorType=local:KanaBoard, Mode=FindAncestor}, Mode=OneWay}"
+                    CommandParameter="{Binding Kana}"
                     Content="{Binding Kana}"
                     FontSize="24"
                     ToolTipService.IsEnabled="{Binding IsRegular}"

@@ -85,7 +85,7 @@
                     <Button
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Command="{Binding DataContext.KanjiClick, RelativeSource={RelativeSource AncestorType={x:Type Grid}, Mode=FindAncestor}}"
+                        Command="{Binding KeyClickCommand, RelativeSource={RelativeSource AncestorType={x:Type local:KanjiRadicalLookupControl}, Mode=FindAncestor}}"
                         CommandParameter="{Binding .}"
                         Content="{Binding .}"
                         FontSize="24" />
