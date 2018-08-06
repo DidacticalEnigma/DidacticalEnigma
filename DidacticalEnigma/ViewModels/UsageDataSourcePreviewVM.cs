@@ -113,6 +113,8 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
+        public Root Root { get; }
+
         private Request request = null;
         public Request Request
         {
@@ -142,6 +144,10 @@ namespace DidacticalEnigma.ViewModels
         {
             DataSources.Add(new DataSourceVM(typeof(JMDictDataSource), dataSourcePath));
             DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath));
+
+            var counter = 1;
+            Func<Element> fac = () => new Leaf(() => counter++);
+            Root = new Root(fac);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

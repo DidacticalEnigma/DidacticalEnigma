@@ -11,6 +11,59 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <vms:TreeSplitDataTemplateSelector x:Key="RecursiveTree">
+            <vms:TreeSplitDataTemplateSelector.RootTemplate>
+                <DataTemplate DataType="{x:Type vms:Root}">
+                    <ContentPresenter Content="{Binding Tree}" />
+                </DataTemplate>
+            </vms:TreeSplitDataTemplateSelector.RootTemplate>
+            <vms:TreeSplitDataTemplateSelector.VSplitTemplate>
+                <DataTemplate DataType="{x:Type vms:VSplit}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter Grid.Column="0" Content="{Binding First}" />
+                        <GridSplitter Grid.Column="1" />
+                        <ContentPresenter Grid.Column="2" Content="{Binding Right}" />
+                    </Grid>
+                </DataTemplate>
+            </vms:TreeSplitDataTemplateSelector.VSplitTemplate>
+            <vms:TreeSplitDataTemplateSelector.HSplitTemplate>
+                <DataTemplate DataType="{x:Type vms:HSplit}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <ContentPresenter Grid.Row="0" Content="{Binding First}" />
+                        <GridSplitter Grid.Row="1" />
+                        <ContentPresenter Grid.Row="2" Content="{Binding Right}" />
+                    </Grid>
+                </DataTemplate>
+            </vms:TreeSplitDataTemplateSelector.HSplitTemplate>
+            <vms:TreeSplitDataTemplateSelector.LeafTemplate>
+                <DataTemplate DataType="{x:Type vms:Leaf}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <UniformGrid Grid.Row="0" Rows="3">
+                            <Button Command="{Binding HSplit}" Content="HSplit" />
+                            <Button Command="{Binding VSplit}" Content="VSplit" />
+                            <Button Content="Close" />
+                        </UniformGrid>
+                        <TextBlock Grid.Row="1" Text="{Binding Content}" />
+                    </Grid>
+                </DataTemplate>
+            </vms:TreeSplitDataTemplateSelector.LeafTemplate>
+        </vms:TreeSplitDataTemplateSelector>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
@@ -26,6 +79,45 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <FlowDocumentScrollViewer Grid.Column="1" Document="{Binding SelectedDataSource.Document}" />
+        <ContentPresenter
+            Grid.Column="1"
+            Content="{Binding Root}"
+            ContentTemplateSelector="{StaticResource RecursiveTree}">
+            <ContentPresenter.Style>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="ContentTemplateSelector" Value="{StaticResource RecursiveTree}" />
+                </Style>
+            </ContentPresenter.Style>
+
+        </ContentPresenter>
+        <!--<TreeView ItemsSource="{Binding Root}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type vms:Root}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Root" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type vms:HSplit}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="HSplit" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type vms:VSplit}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="VSplit" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type vms:Leaf}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Content}" />
+                        <Button Command="{Binding HSplit}" Content="HSplit" />
+                        <Button Command="{Binding VSplit}" Content="VSplit" />
+                        <Button Content="Close" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+
+        </TreeView>-->
+        <!--<FlowDocumentScrollViewer Grid.Column="1" Document="{Binding SelectedDataSource.Document}" />-->
     </Grid>
 </UserControl>
