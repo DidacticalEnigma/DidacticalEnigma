@@ -54,15 +54,6 @@
             <TabItem Header="Usage">
                 <enigma:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.CurrentTextBuffer.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Converter={x:Static vms:SelectionInfoToRequestConverter.Default}, Mode=OneWay}" />
             </TabItem>
-            <TabItem Header="Hiragana">
-                <enigma:KanaBoard DataContext="{Binding HiraganaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
-            </TabItem>
-            <TabItem Header="Kanji">
-                <enigma:KanjiRadicalLookupControl DataContext="{Binding KanjiLookupVM}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
-            </TabItem>
-            <TabItem Header="Katakana">
-                <enigma:KanaBoard DataContext="{Binding KatakanaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
-            </TabItem>
             <TabItem Header="Clipboard">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -90,6 +81,15 @@
                         <Button Command="{Binding SendToCurrent}" Content="Send to current" />
                     </UniformGrid>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Hiragana">
+                <enigma:KanaBoard DataContext="{Binding HiraganaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+            </TabItem>
+            <TabItem Header="Kanji">
+                <enigma:KanjiRadicalLookupControl DataContext="{Binding KanjiLookupVM}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+            </TabItem>
+            <TabItem Header="Katakana">
+                <enigma:KanaBoard DataContext="{Binding KatakanaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
             <TabItem Header="About">
                 <TextBox IsReadOnly="True" Text="{Binding AboutText, Mode=OneWay}" />
