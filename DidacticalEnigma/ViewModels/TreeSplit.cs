@@ -59,6 +59,7 @@ namespace DidacticalEnigma.ViewModels
     public class Leaf : Element
     {
         private readonly Func<object> factory;
+        private readonly Action<object> onClose;
         private object content;
 
         public object Content
@@ -139,7 +140,7 @@ namespace DidacticalEnigma.ViewModels
         {
             var previousParent = Parent;
             split.First = this;
-            split.Second = new Leaf(factory);
+            split.Second = new Leaf(factory, onClose);
             switch (previousParent)
             {
                 case Root root:
@@ -170,22 +171,24 @@ namespace DidacticalEnigma.ViewModels
 
         public ICommand Close { get; }
 
-        public Leaf(Func<object> factory)
+        public Leaf(Func<object> factory, Action<object> onClose)
         {
             Content = factory();
             this.factory = factory;
+            this.onClose = onClose;
 
             HSplit = new RelayCommand(() =>
             {
-                Split(new HSplit(() => new Leaf(this.factory)));
+                Split(new HSplit(() => new Leaf(this.factory, this.onClose)));
             });
             VSplit = new RelayCommand(() =>
             {
-                Split(new VSplit(() => new Leaf(factory)));
+                Split(new VSplit(() => new Leaf(this.factory, this.onClose)));
             });
             Close = new RelayCommand(() =>
             {
                 DoClose();
+                this.onClose(Content);
             });
         }
     }

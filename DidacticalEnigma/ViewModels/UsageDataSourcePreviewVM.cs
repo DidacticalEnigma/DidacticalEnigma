@@ -206,7 +206,12 @@ namespace DidacticalEnigma.ViewModels
             DataSources.Add(new DataSourceVM(typeof(JMDictDataSource), dataSourcePath));
             DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath));
 
-            Func<Element> fac = () => new Leaf(() => new DataSourcePreviewVM(this));
+            Func<Element> fac = () => new Leaf(
+                () => new DataSourcePreviewVM(this),
+                o =>
+                {
+                    ((DataSourcePreviewVM)o).SelectedDataSource.IsUsed = false;
+                });
             Root = new Root(fac);
             // being lazy
             (Root.Tree as Leaf).VSplit.Execute(null);
