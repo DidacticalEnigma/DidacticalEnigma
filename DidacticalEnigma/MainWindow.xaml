@@ -39,7 +39,7 @@
                         <TextBox
                             Grid.Column="2"
                             AcceptsReturn="True"
-                            FontSize="18"
+                            FontSize="24"
                             Text="{Binding RawOutput, UpdateSourceTrigger=PropertyChanged}"
                             TextWrapping="Wrap"
                             VerticalScrollBarVisibility="Auto" />
@@ -71,7 +71,7 @@
                         <TextBox
                             Grid.Column="2"
                             AcceptsReturn="True"
-                            FontSize="18"
+                            FontSize="24"
                             Text="{Binding ClipboardTextBuffer.RawOutput, UpdateSourceTrigger=PropertyChanged}"
                             TextWrapping="Wrap"
                             VerticalScrollBarVisibility="Auto" />

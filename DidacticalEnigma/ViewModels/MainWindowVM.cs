@@ -178,6 +178,11 @@ namespace DidacticalEnigma
             KanjiLookupVM = new KanjiRadicalLookupControlVM(lang);
             hook = new ClipboardHook();
             hook.ClipboardChanged += SetContent;
+            PlaceInClipboard = new RelayCommand((p) =>
+            {
+                var codePoint = (CodePoint)p;
+                Clipboard.SetText(codePoint.ToString());
+            });
             SendToCurrent = new RelayCommand(() =>
             {
                 if (CurrentTextBuffer == null)
