@@ -15,6 +15,6 @@ namespace DidacticalEnigma.Models
 
         }
 
-        public NullSimilarKana Instance { get; } = new NullSimilarKana();
+        public static NullSimilarKana Instance { get; } = new NullSimilarKana();
     }
 }

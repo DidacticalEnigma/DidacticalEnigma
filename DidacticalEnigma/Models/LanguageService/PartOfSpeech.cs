@@ -1,4 +1,4 @@
-﻿namespace DidacticalEnigma.Utils
+﻿namespace DidacticalEnigma.Models
 {
     public enum PartOfSpeech
     {

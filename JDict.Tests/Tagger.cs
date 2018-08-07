@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using DidacticalEnigma.Models.LanguageService;
 
 namespace JDict.Tests
 {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DidacticalEnigma.Models;
 using NMeCab;
 
 namespace DidacticalEnigma.Utils
@@ -41,40 +42,40 @@ namespace DidacticalEnigma.Utils
             switch(s)
             {
                 case "名詞":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Noun;
+                    return DidacticalEnigma.Models.PartOfSpeech.Noun;
                 case "助詞":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Particle;
+                    return DidacticalEnigma.Models.PartOfSpeech.Particle;
                 case "動詞":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Verb;
+                    return DidacticalEnigma.Models.PartOfSpeech.Verb;
                 case "助動詞":
-                    return DidacticalEnigma.Utils.PartOfSpeech.AuxiliaryVerb;
+                    return DidacticalEnigma.Models.PartOfSpeech.AuxiliaryVerb;
                 case "記号":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Symbol;
+                    return DidacticalEnigma.Models.PartOfSpeech.Symbol;
                 case "副詞":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Adverb;
+                    return DidacticalEnigma.Models.PartOfSpeech.Adverb;
                 case "形容詞":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Adjective;
+                    return DidacticalEnigma.Models.PartOfSpeech.Adjective;
                 case "接続詞":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Conjunction;
+                    return DidacticalEnigma.Models.PartOfSpeech.Conjunction;
                 case "連体詞":
                     // TOFIX: name
-                    return DidacticalEnigma.Utils.PartOfSpeech.PreNounAdjectivalAdjective;
+                    return DidacticalEnigma.Models.PartOfSpeech.PreNounAdjectivalAdjective;
                 case "フィラー":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Filler;
+                    return DidacticalEnigma.Models.PartOfSpeech.Filler;
                 case "感動詞":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Interjection;
+                    return DidacticalEnigma.Models.PartOfSpeech.Interjection;
                 case "接頭詞":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Prefix;
+                    return DidacticalEnigma.Models.PartOfSpeech.Prefix;
                 case "その他":
-                    return DidacticalEnigma.Utils.PartOfSpeech.Other;
+                    return DidacticalEnigma.Models.PartOfSpeech.Other;
                 default:
-                    return DidacticalEnigma.Utils.PartOfSpeech.Unknown;
+                    return DidacticalEnigma.Models.PartOfSpeech.Unknown;
             }
         }
 
         public string OriginalForm { get; }
 
-        public DidacticalEnigma.Utils.PartOfSpeech PartOfSpeech { get; }
+        public DidacticalEnigma.Models.PartOfSpeech PartOfSpeech { get; }
 
         public IEnumerable<string> PartOfSpeechSections { get; }
 

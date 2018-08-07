@@ -159,53 +159,53 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ClipboardHook.cs" />
-    <Compile Include="JapaneseTextPreview.xaml.cs">
+    <Compile Include="Utils\ClipboardHook.cs" />
+    <Compile Include="Views\JapaneseTextPreview.xaml.cs">
       <DependentUpon>JapaneseTextPreview.xaml</DependentUpon>
     </Compile>
-    <Compile Include="KanaBoard.xaml.cs">
+    <Compile Include="Views\KanaBoard.xaml.cs">
       <DependentUpon>KanaBoard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="KanjiRadicalLookupControl.xaml.cs">
+    <Compile Include="Views\KanjiRadicalLookupControl.xaml.cs">
       <DependentUpon>KanjiRadicalLookupControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\AsyncDataSource.cs" />
-    <Compile Include="Models\Audio.cs" />
-    <Compile Include="Models\CharacterDataSource.cs" />
-    <Compile Include="Models\DataSourceDescriptor.cs" />
-    <Compile Include="Models\Hiragana.cs" />
-    <Compile Include="Models\IDataSource.cs" />
-    <Compile Include="Models\ImageParagraph.cs" />
-    <Compile Include="Models\ISimilarKana.cs" />
-    <Compile Include="Models\JMDictDataSource.cs" />
-    <Compile Include="Models\Kana.cs" />
-    <Compile Include="Models\Kanji.cs" />
-    <Compile Include="Models\Katakana.cs" />
-    <Compile Include="Models\LanguageService.cs" />
-    <Compile Include="Models\NullSimilarKana.cs" />
-    <Compile Include="Models\Paragraph.cs" />
-    <Compile Include="Models\Request.cs" />
-    <Compile Include="Models\RichFormatting.cs" />
-    <Compile Include="Models\TanakaCorpusDataSource.cs" />
-    <Compile Include="Models\Text.cs" />
-    <Compile Include="Models\TextParagraph.cs" />
-    <Compile Include="Models\UpdateResult.cs" />
-    <Compile Include="Models\VideoParagraph.cs" />
-    <Compile Include="UsageDataSourcePreview.xaml.cs">
+    <Compile Include="Models\DataSources\AsyncDataSource.cs" />
+    <Compile Include="Models\Formatting\Audio.cs" />
+    <Compile Include="Models\DataSources\CharacterDataSource.cs" />
+    <Compile Include="Models\DataSources\DataSourceDescriptor.cs" />
+    <Compile Include="Models\LanguageService\Hiragana.cs" />
+    <Compile Include="Models\DataSources\IDataSource.cs" />
+    <Compile Include="Models\Formatting\ImageParagraph.cs" />
+    <Compile Include="Models\LanguageService\ISimilarKana.cs" />
+    <Compile Include="Models\DataSources\JMDictDataSource.cs" />
+    <Compile Include="Models\LanguageService\Kana.cs" />
+    <Compile Include="Models\LanguageService\Kanji.cs" />
+    <Compile Include="Models\LanguageService\Katakana.cs" />
+    <Compile Include="Models\LanguageService\LanguageService.cs" />
+    <Compile Include="Models\LanguageService\NullSimilarKana.cs" />
+    <Compile Include="Models\Formatting\Paragraph.cs" />
+    <Compile Include="Models\DataSources\Request.cs" />
+    <Compile Include="Models\Formatting\RichFormatting.cs" />
+    <Compile Include="Models\DataSources\TanakaCorpusDataSource.cs" />
+    <Compile Include="Models\Formatting\Text.cs" />
+    <Compile Include="Models\Formatting\TextParagraph.cs" />
+    <Compile Include="Models\DataSources\UpdateResult.cs" />
+    <Compile Include="Models\Formatting\VideoParagraph.cs" />
+    <Compile Include="Views\UsageDataSourcePreview.xaml.cs">
       <DependentUpon>UsageDataSourcePreview.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\DualDictionary.cs" />
     <Compile Include="Utils\EnumerableExt.cs" />
     <Compile Include="Utils\GridEx.cs" />
     <Compile Include="Utils\MeCabEntry.cs" />
-    <Compile Include="Utils\NMeCabExt.cs" />
-    <Compile Include="Utils\PartOfSpeech.cs" />
+    <Compile Include="Models\LanguageService\NMeCabExt.cs" />
+    <Compile Include="Models\LanguageService\PartOfSpeech.cs" />
     <Compile Include="Utils\TrivialTemplateSelector.cs" />
-    <Compile Include="ViewModels\BooleanNegationConverter.cs" />
-    <Compile Include="ViewModels\BooleanToBrushConverter.cs" />
-    <Compile Include="ViewModels\BooleanToVisibilityConverter.cs" />
-    <Compile Include="ViewModels\CodePointToLongStringConverter.cs" />
-    <Compile Include="Models\ILanguageService.cs" />
+    <Compile Include="Converters\BooleanNegationConverter.cs" />
+    <Compile Include="Converters\BooleanToBrushConverter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\CodePointToLongStringConverter.cs" />
+    <Compile Include="Models\LanguageService\ILanguageService.cs" />
     <Compile Include="ViewModels\DataSourcePreviewVM.cs" />
     <Compile Include="ViewModels\DataSourceVM.cs" />
     <Compile Include="ViewModels\Element.cs" />
@@ -216,13 +216,13 @@
     <Compile Include="ViewModels\LineVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\CodePointVM.cs" />
-    <Compile Include="Models\KanaProperties.cs" />
-    <Compile Include="Models\EasilyConfusedKana.cs" />
-    <Compile Include="Models\WordInfo.cs" />
-    <Compile Include="ViewModels\NullabilityToBooleanConverter.cs" />
-    <Compile Include="ViewModels\PartOfSpeechToColorConverter.cs" />
+    <Compile Include="Models\LanguageService\KanaProperties.cs" />
+    <Compile Include="Models\LanguageService\EasilyConfusedKana.cs" />
+    <Compile Include="Models\LanguageService\WordInfo.cs" />
+    <Compile Include="Converters\NullabilityToBooleanConverter.cs" />
+    <Compile Include="Converters\PartOfSpeechToColorConverter.cs" />
     <Compile Include="ViewModels\Root.cs" />
-    <Compile Include="ViewModels\SelectionInfoToRequestConverter.cs" />
+    <Compile Include="Converters\SelectionInfoToRequestConverter.cs" />
     <Compile Include="ViewModels\SelectionInfoVM.cs" />
     <Compile Include="ViewModels\TextBufferVM.cs" />
     <Compile Include="ViewModels\Split.cs" />
@@ -232,23 +232,23 @@
     <Compile Include="ViewModels\WordVM.cs" />
     <Compile Include="Utils\ObservableBatchCollection.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
-    <Compile Include="SimpleFlowDocument.cs" />
+    <Compile Include="Utils\SimpleFlowDocument.cs" />
     <Compile Include="Utils\StringExt.cs" />
     <Compile Include="Utils\UnionFindNode.cs" />
-    <Compile Include="VirtualizingTilePanel.cs" />
-    <Page Include="JapaneseTextPreview.xaml">
+    <Compile Include="Utils\VirtualizingTilePanel.cs" />
+    <Page Include="Views\JapaneseTextPreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="KanaBoard.xaml">
+    <Page Include="Views\KanaBoard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="KanjiRadicalLookupControl.xaml">
+    <Page Include="Views\KanjiRadicalLookupControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -256,17 +256,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UsageDataSourcePreview.xaml">
+    <Page Include="Views\UsageDataSourcePreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\CodePoint.cs" />
+    <Compile Include="Models\LanguageService\CodePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -354,6 +354,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NMeCab.0.06.4\build\NMeCab.targets" Condition="Exists('..\packages\NMeCab.0.06.4\build\NMeCab.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

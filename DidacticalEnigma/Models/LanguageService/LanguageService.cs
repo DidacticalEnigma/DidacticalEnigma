@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DidacticalEnigma.Models;
+using DidacticalEnigma.Models.LanguageService;
 using DidacticalEnigma.Utils;
 using JDict;
 using NMeCab;
