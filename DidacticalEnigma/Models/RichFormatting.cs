@@ -7,54 +7,6 @@ using System.Windows.Documents;
 
 namespace DidacticalEnigma.Models
 {
-    public abstract class Paragraph
-    {
-
-    }
-
-    public sealed class Text
-    {
-        public Text(string content, bool emphasis = false)
-        {
-            Content = content;
-            Emphasis = emphasis;
-        }
-
-        public string Content { get; }
-        public bool Emphasis { get; }
-    }
-
-    public class TextParagraph : Paragraph
-    {
-        public ICollection<Text> Content { get; }
-
-        public TextParagraph()
-            : this(Enumerable.Empty<Text>())
-        {
-
-        }
-
-        public TextParagraph(IEnumerable<Text> content)
-        {
-            Content = new List<Text>(content);
-        }
-    }
-
-    public class ImageParagraph : Paragraph
-    {
-
-    }
-
-    public class VideoParagraph : Paragraph
-    {
-
-    }
-
-    public class Audio : Paragraph
-    {
-
-    }
-
     public class RichFormatting
     {
         public ICollection<Paragraph> Paragraphs { get; }

@@ -85,49 +85,4 @@ namespace DidacticalEnigma.Models
             return !(point1 == point2);
         }
     }
-    
-    public class Kanji : CodePoint
-    {
-        internal Kanji(int s) :
-            base(s)
-        {
-            
-        }
-
-        public override string ToDescriptionString()
-        {
-            var info = UnicodeInfo.GetCharInfo(codePoint);
-            return base.ToLongString() + "\n" +
-                "Kun: " + info.JapaneseKunReading + "\n" +
-                "On: " + info.JapaneseOnReading + "\n" +
-                info.Definition + "\n";
-        }
-    }
-
-    public abstract class Kana : CodePoint
-    {
-        internal Kana(int s) :
-            base(s)
-        {
-
-        }
-    }
-
-    public class Hiragana : Kana
-    {
-        internal Hiragana(int s) :
-            base(s)
-        {
-
-        }
-    }
-
-    public class Katakana : Kana
-    {
-        internal Katakana(int s) :
-            base(s)
-        {
-
-        }
-    }
 }
