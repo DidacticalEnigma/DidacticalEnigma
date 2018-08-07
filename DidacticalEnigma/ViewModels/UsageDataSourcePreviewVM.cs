@@ -210,7 +210,9 @@ namespace DidacticalEnigma.ViewModels
                 () => new DataSourcePreviewVM(this),
                 o =>
                 {
-                    ((DataSourcePreviewVM)o).SelectedDataSource.IsUsed = false;
+                    var dataSource = ((DataSourcePreviewVM)o).SelectedDataSource;
+                    if(dataSource != null)
+                        dataSource.IsUsed = false;
                 });
             Root = new Root(fac);
             // being lazy
