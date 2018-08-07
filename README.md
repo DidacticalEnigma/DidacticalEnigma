@@ -6,7 +6,13 @@ This tool's goal is to assist in translation from Japanese to English.
 Interface
 ---------
 
-![UI](Docs/1.png)
+![UI](Docs/1.gif)
+
+![UI](Docs/2.gif)
+
+![UI](Docs/3.gif)
+
+![UI](Docs/4.gif)
 
 Data sources
 ------------
