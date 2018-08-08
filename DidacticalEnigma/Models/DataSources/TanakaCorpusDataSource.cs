@@ -26,7 +26,7 @@ namespace DidacticalEnigma.Models
             {
                 var rich = new RichFormatting();
                 var sentences = tanaka.SearchByJapaneseText(request.QueryText);
-                foreach (var sentence in sentences.Take(20))
+                foreach (var sentence in sentences.Take(100).OrderBy(s => s.JapaneseSentence.Length).Take(20))
                 {
                     var paragraph = new TextParagraph();
                     foreach (var part in HighlightWords(sentence.JapaneseSentence, request.QueryText))

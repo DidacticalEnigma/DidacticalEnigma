@@ -39,13 +39,23 @@
                             Lines="{Binding Lines}"
                             SelectionInfo="{Binding SelectionInfo, Mode=OneWayToSource}" />
                         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
-                        <TextBox
-                            Grid.Column="2"
-                            AcceptsReturn="True"
-                            FontSize="24"
-                            Text="{Binding RawOutput, UpdateSourceTrigger=PropertyChanged}"
-                            TextWrapping="Wrap"
-                            VerticalScrollBarVisibility="Auto" />
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBox
+                                Grid.Row="0"
+                                AcceptsReturn="True"
+                                FontSize="24"
+                                Text="{Binding RawOutput, UpdateSourceTrigger=PropertyChanged}"
+                                TextWrapping="Wrap"
+                                VerticalScrollBarVisibility="Auto" />
+                            <Button
+                                Grid.Row="1"
+                                Command="{Binding IssueMeCabSplit}"
+                                Content="MeCab" />
+                        </Grid>
                     </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>

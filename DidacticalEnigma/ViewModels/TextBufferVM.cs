@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DidacticalEnigma.Models;
@@ -22,8 +23,8 @@ namespace DidacticalEnigma
                 if (rawOutput == value)
                     return;
                 rawOutput = value;
+                SetAnnotations(rawOutput);
                 OnPropertyChanged();
-                SetAnnotations(value);
             }
         }
 
@@ -80,6 +81,8 @@ namespace DidacticalEnigma
             }
         }
 
+        public RelayCommand IssueMeCabSplit { get; }
+
         public RelayCommand InsertTextAtCaret { get; }
 
         public string Name { get; }
@@ -88,9 +91,25 @@ namespace DidacticalEnigma
         {
             Lines.Clear();
             Lines.AddRange(
+                unannotatedOutput
+                    .Split(new []{"\r\n", "\n", "\r"}, StringSplitOptions.None)
+                    .Select(rawSentence => rawSentence.Split(' '))
+                    .Select(sentence => new LineVM(sentence.Select(word => new WordVM(new WordInfo(word, ""), lang)))));
+            rawOutput = string.Join(
+                "\n",
+                Lines.Select(
+                    line => string.Join(
+                        " ",
+                        line.Words.Select(word => word.StringForm))));
+        }
+
+        private void SetAnnotationsMeCab(string unannotatedOutput)
+        {
+            Lines.Clear();
+            Lines.AddRange(
                 lang.BreakIntoSentences(unannotatedOutput)
                     .Select(sentence => new LineVM(sentence.Select(word => new WordVM(word, lang)))));
-            RawOutput = string.Join(
+            rawOutput = string.Join(
                 "\n",
                 Lines.Select(
                     line => string.Join(
@@ -114,6 +133,11 @@ namespace DidacticalEnigma
                 var inputStr = s.ToString();
                 // TODO: insert at caret, not at the end of the string
                 RawOutput += inputStr;
+            });
+            IssueMeCabSplit = new RelayCommand(() =>
+            {
+                SetAnnotationsMeCab(RawOutput);
+                OnPropertyChanged(nameof(RawOutput));
             });
         }
     }
