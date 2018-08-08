@@ -47,7 +47,7 @@ namespace DidacticalEnigma
             set { SetValue(SelectionInfoProperty, value); }
         }
 
-        /// <summary>Identifies the <see cref="SelectedCharacter"/> dependency property.</summary>
+        /// <summary>Identifies the <see cref="SelectionInfo"/> dependency property.</summary>
         public static readonly DependencyProperty SelectionInfoProperty =
             DependencyProperty.Register(
                 nameof(SelectionInfo),
@@ -68,7 +68,7 @@ namespace DidacticalEnigma
 
             CodePointVM codePointVM = null;
             WordVM wordVM = null;
-            string text = null;
+            string text = string.Join("", Lines.SelectMany(line => line.Words.Select(word => word.StringForm)));
 
             var clickedPoint = e.GetPosition(null);
             var clickedLetter =

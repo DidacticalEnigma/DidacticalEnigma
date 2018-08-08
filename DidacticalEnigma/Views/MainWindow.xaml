@@ -34,7 +34,10 @@
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <enigma:JapaneseTextPreview Grid.Column="0" SelectionInfo="{Binding SelectionInfo, Mode=OneWayToSource}" />
+                        <enigma:JapaneseTextPreview
+                            Grid.Column="0"
+                            Lines="{Binding Lines}"
+                            SelectionInfo="{Binding SelectionInfo, Mode=OneWayToSource}" />
                         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
                         <TextBox
                             Grid.Column="2"
