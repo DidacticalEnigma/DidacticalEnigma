@@ -130,7 +130,7 @@ namespace DidacticalEnigma
 
         public IEnumerable<CodePoint> LookupRadicals(Kanji kanji)
         {
-            return kradfile.LookupRadicals(kanji.ToString()).Select(cp => CodePoint.FromString(cp, 0));
+            return kradfile.LookupRadicals(kanji.ToString())?.Select(cp => CodePoint.FromString(cp));
         }
 
         public IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals)
