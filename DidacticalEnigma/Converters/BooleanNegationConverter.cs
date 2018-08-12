@@ -15,9 +15,7 @@ namespace DidacticalEnigma.ViewModels
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-                return null;
-            var v = (bool)value;
+            var v = (bool?) value;
             return !v;
         }
 

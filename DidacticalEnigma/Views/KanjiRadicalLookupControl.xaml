@@ -5,7 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:DidacticalEnigma"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DataContext="{d:DesignInstance Type=local:KanjiRadicalLookupControl,
+    xmlns:viewModels="clr-namespace:DidacticalEnigma.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewModels:KanjiRadicalLookupControlVM,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -20,9 +21,23 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <CheckBox IsChecked="{Binding HideNonMatchingRadicals}">
-                <TextBlock Text="Hide non-matching radicals" />
-            </CheckBox>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Click="ResetOnClick" Content="Reset" />
+                <CheckBox Grid.Column="1" IsChecked="{Binding HideNonMatchingRadicals}">
+                    <TextBlock Text="Hide non-matching radicals" />
+                </CheckBox>
+                <TextBlock
+                    Grid.Column="2"
+                    HorizontalAlignment="Left"
+                    Text="Search: " />
+                <TextBox Grid.Column="3" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
             <ListView
                 x:Name="RadicalSelector"
                 Grid.Row="1"
@@ -50,6 +65,7 @@
                         <TextBlock
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
+                            Background="{Binding Highlighted, Converter={x:Static local:BooleanToBrushConverter.Default}}"
                             Focusable="{Binding Enabled}"
                             FontSize="24"
                             Text="{Binding Name}" />

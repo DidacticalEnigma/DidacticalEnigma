@@ -10,7 +10,7 @@ namespace DidacticalEnigma
     [ValueConversion(typeof(bool), typeof(SolidColorBrush))]
     public class BooleanToBrushConverter : IValueConverter
     {
-        public static readonly BooleanToVisibilityConverter Default = new BooleanToVisibilityConverter();
+        public static readonly BooleanToBrushConverter Default = new BooleanToBrushConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

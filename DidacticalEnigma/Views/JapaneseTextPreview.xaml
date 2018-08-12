@@ -41,7 +41,7 @@
                                                 <TextBlock
                                                     ContextMenuService.IsEnabled="{Binding HasSimilar}"
                                                     FontSize="24"
-                                                    Foreground="{Binding DataContext.WordInfo.EstimatedPartOfSpeech, Converter={x:Static enigma:PartOfSpeechToColorConverter.Default}, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}"
+                                                    Foreground="{Binding DataContext.WordInfo.EstimatedPartOfSpeech, Converter={x:Static enigma:PartOfSpeechToBrushConverter.Default}, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}"
                                                     Text="{Binding StringForm}"
                                                     ToolTipService.InitialShowDelay="0"
                                                     ToolTipService.IsEnabled="{Binding HasSimilar}"

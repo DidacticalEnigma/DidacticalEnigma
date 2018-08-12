@@ -43,5 +43,12 @@ namespace DidacticalEnigma
         /// <summary>Identifies the <see cref="KeyClickCommand"/> dependency property.</summary>
         public static readonly DependencyProperty KeyClickCommandProperty =
             DependencyProperty.Register("KeyClickCommand", typeof(ICommand), typeof(KanjiRadicalLookupControl), new PropertyMetadata(null));
+
+        private void ResetOnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = (KanjiRadicalLookupControlVM)DataContext;
+            RadicalSelector.SelectedItems.Clear();
+            vm.SelectRadicals(Enumerable.Empty<RadicalVM>().Select(r => r.CodePoint));
+        }
     }
 }

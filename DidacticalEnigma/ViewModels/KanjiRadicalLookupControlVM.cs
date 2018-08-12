@@ -22,8 +22,6 @@ namespace DidacticalEnigma.ViewModels
             // dumb workaround for the name showing with the same color as disabled
             public string Name => CodePoint.ToString() == "｜" ? "|" : CodePoint.ToString();
 
-            private bool enabled;
-
             public Visibility Visible
             {
                 get
@@ -36,6 +34,22 @@ namespace DidacticalEnigma.ViewModels
                 }
             }
 
+            private bool selected;
+            public bool Selected
+            {
+                get => selected;
+                set
+                {
+                    if (selected == value)
+                        return;
+
+                    selected = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Visible));
+                }
+            }
+
+            private bool enabled;
             public bool Enabled
             {
                 get => enabled;
@@ -50,6 +64,8 @@ namespace DidacticalEnigma.ViewModels
                 }
             }
 
+            public bool Highlighted => CodePoint.ToString() == lookupVm.SearchText?.Trim();
+
             private readonly KanjiRadicalLookupControlVM lookupVm;
 
             public RadicalVM(CodePoint codePoint, bool enabled, KanjiRadicalLookupControlVM lookupVm)
@@ -62,6 +78,11 @@ namespace DidacticalEnigma.ViewModels
                     if (args.PropertyName == nameof(HideNonMatchingRadicals))
                     {
                         OnPropertyChanged(nameof(Visible));
+                    }
+
+                    if (args.PropertyName == nameof(SearchText))
+                    {
+                        OnPropertyChanged(nameof(Highlighted));
                     }
                 };
             }
@@ -109,6 +130,20 @@ namespace DidacticalEnigma.ViewModels
                 if (hideNonMatchingRadicals == value)
                     return;
                 hideNonMatchingRadicals = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string searchText;
+
+        public string SearchText
+        {
+            get => searchText;
+            set
+            {
+                if (searchText == value)
+                    return;
+                searchText = value;
                 OnPropertyChanged();
             }
         }

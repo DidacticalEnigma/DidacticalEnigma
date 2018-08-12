@@ -22,7 +22,7 @@ namespace DidacticalEnigma.ViewModels
             return new Request(
                 selectionInfo.Character.StringForm,
                 selectionInfo.Word.StringForm,
-                selectionInfo.Text,
+                selectionInfo.Word.StringForm,
                 selectionInfo.Word.WordInfo.EstimatedPartOfSpeech);
         }
 

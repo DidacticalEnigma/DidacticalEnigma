@@ -8,9 +8,9 @@ using DidacticalEnigma.Models;
 namespace DidacticalEnigma
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(SolidColorBrush))]
-    public class PartOfSpeechToColorConverter : IValueConverter
+    public class PartOfSpeechToBrushConverter : IValueConverter
     {
-        public static readonly PartOfSpeechToColorConverter Default = new PartOfSpeechToColorConverter();
+        public static readonly PartOfSpeechToBrushConverter Default = new PartOfSpeechToBrushConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
