@@ -23,7 +23,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <ContentPresenter
@@ -110,7 +110,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <ContentPresenter Grid.Column="1" Content="{Binding Root}">
+        <ContentPresenter Grid.Column="0" Content="{Binding Root}">
             <ContentPresenter.Style>
                 <Style TargetType="ContentPresenter">
                     <Setter Property="ContentTemplateSelector" Value="{StaticResource RecursiveTree}" />

@@ -17,10 +17,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="4*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="5" />
             <RowDefinition Height="5*" />
         </Grid.RowDefinitions>
-        <TabControl ItemsSource="{Binding TextBuffers}" SelectedItem="{Binding CurrentTextBuffer}">
+        <TabControl
+            Grid.Row="0"
+            ItemsSource="{Binding TextBuffers}"
+            SelectedItem="{Binding CurrentTextBuffer}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" />
@@ -31,7 +34,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <enigma:JapaneseTextPreview
@@ -60,6 +63,7 @@
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
+        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
         <TabControl Grid.Row="2" SelectedIndex="1">
             <TabItem Header="Project">
                 <TextBlock Text="To be implemented" />

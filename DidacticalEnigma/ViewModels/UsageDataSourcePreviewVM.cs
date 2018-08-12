@@ -47,6 +47,7 @@ namespace DidacticalEnigma.ViewModels
             DataSources.Add(new DataSourceVM(new CharacterDataSource(lang)));
             DataSources.Add(new DataSourceVM(typeof(JMDictDataSource), dataSourcePath));
             DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath));
+            DataSources.Add(new DataSourceVM(typeof(CharacterStrokeOrderDataSource), dataSourcePath));
 
             Func<Element> fac = () => new Leaf(
                 () => new DataSourcePreviewVM(this),

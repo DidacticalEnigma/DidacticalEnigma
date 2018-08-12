@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using DidacticalEnigma.Models.Formatting;
 
 namespace DidacticalEnigma.Models
 {
@@ -22,7 +24,7 @@ namespace DidacticalEnigma.Models
             Paragraphs = new List<Paragraph>(paragraphs);
         }
 
-        public virtual FlowDocument Render()
+        public virtual FlowDocument Render(IFontResolver fontResolver)
         {
             var flow = new FlowDocument();
             foreach(var paragraph in Paragraphs)
@@ -35,13 +37,39 @@ namespace DidacticalEnigma.Models
                             foreach(var c in text.Content)
                             {
                                 Inline i;
-                                if(c.Emphasis)
+                                var r = new Run(c.Content);
+                                switch (c.FontSize)
                                 {
-                                    i = new Bold(new Run(c.Content));
+                                    case FontSize.ExtraSmall:
+                                        break;
+                                    case FontSize.Small:
+                                        break;
+                                    case FontSize.Normal:
+                                        // do nothing
+                                        break;
+                                    case FontSize.Large:
+                                        break;
+                                    case FontSize.ExtraLarge:
+                                        break;
+                                    case FontSize.Humonguous:
+                                        r.FontSize = 120;
+                                        break;
+                                    default:
+                                        throw new InvalidOperationException("not a valid enum value");
+                                }
+
+                                if (fontResolver.Resolve(c.FontName) is System.Windows.Media.FontFamily f)
+                                {
+                                    r.FontFamily = f;
+                                }
+
+                                if (c.Emphasis)
+                                {
+                                    i = new Bold(r);
                                 }
                                 else
                                 {
-                                    i = new Run(c.Content);
+                                    i = r;
                                 }
                                 p.Inlines.Add(i);
                             }

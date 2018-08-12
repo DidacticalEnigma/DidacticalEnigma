@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using DidacticalEnigma.Models;
+using DidacticalEnigma.Models.Formatting;
 
 namespace DidacticalEnigma.ViewModels
 {
     public class DataSourceVM : INotifyPropertyChanged, IDisposable
     {
         private AsyncDataSource dataSource;
+
+        private IFontResolver fontResolver = new DefaultFontResolver();
 
         private RichFormatting formattedResult;
         public RichFormatting FormattedResult
@@ -31,7 +34,7 @@ namespace DidacticalEnigma.ViewModels
 
         private FlowDocument emptyDocument = new FlowDocument(new System.Windows.Documents.Paragraph(new Run("nothing found")));
 
-        public FlowDocument Document => FormattedResult?.Render() ?? emptyDocument;
+        public FlowDocument Document => FormattedResult?.Render(fontResolver) ?? emptyDocument;
 
         public DataSourceDescriptor Descriptor => dataSource.Descriptor;
 
