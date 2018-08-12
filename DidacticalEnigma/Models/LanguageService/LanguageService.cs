@@ -138,9 +138,25 @@ namespace DidacticalEnigma
             return radkfile.LookupMatching(radicals.Select(r => r.ToString())).OrderBy(r => kanjidict.Lookup(r).StrokeCount).Select(cp => CodePoint.FromString(cp, 0));
         }
 
-        public IEnumerable<CodePoint> AllRadicals()
+        public IEnumerable<Radical> AllRadicals()
         {
-            return radkfile.Radicals.Select(rad => CodePoint.FromInt(rad.CodePoint));
+            return radkfile.Radicals
+                .Select(rad => CodePoint.FromInt(rad.CodePoint))
+                .Select(cp => new Radical(cp, kanjidict.Lookup(cp.ToString())?.StrokeCount ?? 1))
+                .OrderBy(r => r.StrokeCount);
         }
+    }
+
+    public class Radical
+    {
+        public Radical(CodePoint cp, int strokeCount)
+        {
+            CodePoint = cp;
+            StrokeCount = strokeCount;
+        }
+
+        public CodePoint CodePoint { get; }
+
+        public int StrokeCount { get; }
     }
 }

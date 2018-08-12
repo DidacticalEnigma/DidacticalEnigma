@@ -19,6 +19,8 @@ namespace DidacticalEnigma.ViewModels
         {
             public CodePoint CodePoint { get; }
 
+            public int StrokeCount { get; }
+
             // dumb workaround for the name showing with the same color as disabled
             public string Name => CodePoint.ToString() == "｜" ? "|" : CodePoint.ToString();
 
@@ -68,9 +70,10 @@ namespace DidacticalEnigma.ViewModels
 
             private readonly KanjiRadicalLookupControlVM lookupVm;
 
-            public RadicalVM(CodePoint codePoint, bool enabled, KanjiRadicalLookupControlVM lookupVm)
+            public RadicalVM(Radical radical, bool enabled, KanjiRadicalLookupControlVM lookupVm)
             {
-                CodePoint = codePoint;
+                CodePoint = radical.CodePoint;
+                StrokeCount = radical.StrokeCount;
                 Enabled = enabled;
                 this.lookupVm = lookupVm;
                 this.lookupVm.PropertyChanged += (sender, args) =>

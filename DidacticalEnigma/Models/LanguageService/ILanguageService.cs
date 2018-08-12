@@ -10,7 +10,7 @@ namespace DidacticalEnigma
 
         IEnumerable<CodePoint> LookupRadicals(Kanji kanji);
 
-        IEnumerable<CodePoint> AllRadicals();
+        IEnumerable<Radical> AllRadicals();
 
         string LookupRomaji(Kana kana);
 
