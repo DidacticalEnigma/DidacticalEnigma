@@ -32,7 +32,7 @@ namespace DidacticalEnigma.Models.Formatting
         public DefaultFontResolver()
         {
             var kanjiFontFileName = "KanjiStrokeOrders_v4.002.ttf";
-            var kanjiFontFamily = "KanjiStrokeOrders";
+            var kanjiFontFamily = "./#KanjiStrokeOrders";
             cache["kanji"] = new FontFamily(new Uri(Path.Combine(baseDirectory, kanjiFontFileName)), kanjiFontFamily);
         }
     }
