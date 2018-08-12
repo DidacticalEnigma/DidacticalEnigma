@@ -22,12 +22,8 @@ namespace DidacticalEnigma.Models
             return new AsyncEnumerable<RichFormatting>(async yield =>
             {
                 var ch = request.Character;
-                var cp = CodePoint.FromString(ch);
                 var rich = new RichFormatting();
-                if (cp is Kanji || cp is Kana)
-                {
-                    rich.Paragraphs.Add(new TextParagraph(new[] { new Text(ch, fontName: "kanji", fontSize: FontSize.Humonguous) }));
-                }
+                rich.Paragraphs.Add(new TextParagraph(new[] { new Text(ch, fontName: "kanji", fontSize: FontSize.Humonguous) }));
                 await yield.ReturnAsync(rich);
             });
         }
