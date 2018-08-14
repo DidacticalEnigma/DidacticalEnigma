@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Markup;
 using System.Windows.Threading;
 using DidacticalEnigma.Models.DataSources;
+using DidacticalEnigma.Models.Formatting;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -45,12 +46,13 @@ namespace DidacticalEnigma.ViewModels
 
         public UsageDataSourcePreviewVM(ILanguageService lang, string dataSourcePath)
         {
-            DataSources.Add(new DataSourceVM(new CharacterDataSource(lang)));
-            DataSources.Add(new DataSourceVM(typeof(JMDictDataSource), dataSourcePath));
-            DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath));
-            DataSources.Add(new DataSourceVM(typeof(CharacterStrokeOrderDataSource), dataSourcePath));
-            DataSources.Add(new DataSourceVM(typeof(JESCDataSource), dataSourcePath));
-            DataSources.Add(new DataSourceVM(typeof(BasicExpressionCorpusDataSource), dataSourcePath));
+            var fontResolver = new DefaultFontResolver();
+            DataSources.Add(new DataSourceVM(new CharacterDataSource(lang), fontResolver));
+            DataSources.Add(new DataSourceVM(typeof(JMDictDataSource), dataSourcePath, fontResolver));
+            DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath, fontResolver));
+            DataSources.Add(new DataSourceVM(typeof(CharacterStrokeOrderDataSource), dataSourcePath, fontResolver));
+            DataSources.Add(new DataSourceVM(typeof(JESCDataSource), dataSourcePath, fontResolver));
+            DataSources.Add(new DataSourceVM(typeof(BasicExpressionCorpusDataSource), dataSourcePath, fontResolver));
 
             Func<Element> fac = () => new Leaf(
                 () => new DataSourcePreviewVM(this),

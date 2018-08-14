@@ -14,7 +14,7 @@ namespace DidacticalEnigma.ViewModels
     {
         private AsyncDataSource dataSource;
 
-        private IFontResolver fontResolver = new DefaultFontResolver();
+        private readonly IFontResolver fontResolver;
 
         private RichFormatting formattedResult;
         public RichFormatting FormattedResult
@@ -79,19 +79,23 @@ namespace DidacticalEnigma.ViewModels
 
         public async Task Search(Request request)
         {
+            if (!IsUsed)
+                return;
             IsProcessing = true;
             FormattedResult = await dataSource.Answer(request).FirstOrDefaultAsync();
             IsProcessing = false;
         }
 
-        public DataSourceVM(Type type, string path)
+        public DataSourceVM(Type type, string path, IFontResolver fontResolver)
         {
+            this.fontResolver = fontResolver;
             dataSource = new AsyncDataSource(
                 () => Task.Run(() => (IDataSource)Activator.CreateInstance(type, path)), type);
         }
 
-        public DataSourceVM(IDataSource dataSource)
+        public DataSourceVM(IDataSource dataSource, IFontResolver fontResolver)
         {
+            this.fontResolver = fontResolver;
             this.dataSource = new AsyncDataSource(
                 () => Task.FromResult(dataSource), dataSource.GetType());
         }

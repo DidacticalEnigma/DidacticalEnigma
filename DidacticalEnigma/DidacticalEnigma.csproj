@@ -304,6 +304,9 @@
     <None Include="dic\ipadic\matrix.bin" />
     <None Include="dic\ipadic\sys.dic" />
     <None Include="dic\ipadic\unk.dic" />
+    <None Include="dic\JEC_basic_sentence_v1-2.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="dic\jesc_raw\en">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
