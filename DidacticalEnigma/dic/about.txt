@@ -1,13 +1,3 @@
-﻿This program's goal is to assist in translation.
-
-This program uses and relies on:
-- NMeCab project:
-    https://osdn.net/projects/nmecab
-- JMdict project:
-    http://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project
-- KRADFILE/RADKFILE:
-    http://www.edrdg.org/krad/kradinf.html
-- Resources available from the following wikipedia pages:
-    https://en.wiktionary.org/wiki/Appendix:Easily_confused_Japanese_kana
-    https://en.wikipedia.org/wiki/Hiragana
-    https://en.wikipedia.org/wiki/Katakana
+version https://git-lfs.github.com/spec/v1
+oid sha256:0f56d9f02d09de1e64ef2951bb73857c1914856f39a85218e537e42bb23fedc1
+size 524
