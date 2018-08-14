@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DidacticalEnigma.Utils;
 
 namespace DidacticalEnigma
 {
@@ -12,8 +13,8 @@ namespace DidacticalEnigma
         {
             for (int i = 0; i < s.Length; ++i)
             {
-                yield return char.ConvertToUtf32(s, i);
-                if (char.IsHighSurrogate(s, i))
+                yield return Char.ConvertToUtf32(s, i);
+                if (Char.IsHighSurrogate(s, i))
                     i++;
             }
         }
@@ -21,6 +22,11 @@ namespace DidacticalEnigma
         public static string SubstringFromTo(this string s, int start, int end)
         {
             return s.Substring(start, end - start);
+        }
+
+        public static IEnumerable<(string text, bool highlight)> HighlightWords(string input, string word)
+        {
+            return input.Split(new string[] { word }, StringSplitOptions.None).Select(part => (part, false)).Intersperse((word, true));
         }
     }
 }

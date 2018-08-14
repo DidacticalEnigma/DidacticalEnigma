@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using System.Unicode;
 using DidacticalEnigma.ViewModels;
 
 namespace DidacticalEnigma
@@ -36,7 +37,7 @@ namespace DidacticalEnigma
         {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             {
-                
+
             }
             var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml"));
             var kradfile = new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);

@@ -6,27 +6,31 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DidacticalEnigma.Utils;
 using JDict;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Models.DataSources
 {
-    public class TanakaCorpusDataSource : IDataSource
+    public class JESCDataSource : IDataSource
     {
-        private Tanaka tanaka;
+        private readonly JESC jesc;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
-            "Tanaka Corpus",
-            "These sentences are from Tanaka Corpus",
-            new Uri("http://www.edrdg.org/wiki/index.php/Tanaka_Corpus"));
+            "Japanese-English Subtitle Corpus",
+            "This data sources uses sentences from JESC Corpus",
+            new Uri("https://nlp.stanford.edu/projects/jesc/"));
+
+        public void Dispose()
+        {
+            
+        }
 
         public IAsyncEnumerable<RichFormatting> Answer(Request request)
         {
             return new AsyncEnumerable<RichFormatting>(async yield =>
             {
                 var rich = new RichFormatting();
-                var sentences = tanaka.SearchByJapaneseText(request.QueryText);
-                foreach (var sentence in sentences.Take(100).OrderBy(s => s.JapaneseSentence.Length).Take(20))
+                var sentences = jesc.SearchByJapaneseText(request.QueryText);
+                foreach (var sentence in sentences.Take(100).OrderByDescending(s => s.JapaneseSentence.Length).Take(20))
                 {
                     var paragraph = new TextParagraph();
                     foreach (var part in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))
@@ -43,19 +47,14 @@ namespace DidacticalEnigma.Models
             });
         }
 
-        public void Dispose()
-        {
-
-        }
-
         public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
         {
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public TanakaCorpusDataSource(string dataDirectory)
+        public JESCDataSource(string dataDirectory)
         {
-            this.tanaka = new Tanaka(Path.Combine(dataDirectory, "examples.utf"), Encoding.UTF8);
+            this.jesc = new JESC(Path.Combine(dataDirectory, "jesc_raw"), Encoding.UTF8);
         }
     }
 }

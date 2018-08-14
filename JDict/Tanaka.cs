@@ -9,19 +9,6 @@ namespace JDict
 {
     public class Tanaka
     {
-        public class Sentence
-        {
-            public string JapaneseSentence { get; }
-
-            public string EnglishSentence { get; }
-
-            public Sentence(string japaneseSentence, string englishSentence)
-            {
-                JapaneseSentence = japaneseSentence;
-                EnglishSentence = englishSentence;
-            }
-        }
-
         private static Sentence SentenceFromLine(string line)
         {
             var components = line.Split('\t');

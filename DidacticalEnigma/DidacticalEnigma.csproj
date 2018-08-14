@@ -161,6 +161,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToColorConverter.cs" />
     <Compile Include="Models\DataSources\CharacterStrokeOrderDataSource.cs" />
+    <Compile Include="Models\DataSources\JESCDataSource.cs" />
     <Compile Include="Models\Formatting\FontSize.cs" />
     <Compile Include="Models\Formatting\IFontResolver.cs" />
     <Compile Include="Utils\ClipboardHook.cs" />
@@ -302,6 +303,12 @@
     <None Include="dic\ipadic\matrix.bin" />
     <None Include="dic\ipadic\sys.dic" />
     <None Include="dic\ipadic\unk.dic" />
+    <None Include="dic\jesc_raw\en">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="dic\jesc_raw\ja">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="dic\JMdict_e">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

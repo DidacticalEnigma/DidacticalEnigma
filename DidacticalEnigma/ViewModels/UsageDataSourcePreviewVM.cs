@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using DidacticalEnigma.Models.DataSources;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -48,6 +49,7 @@ namespace DidacticalEnigma.ViewModels
             DataSources.Add(new DataSourceVM(typeof(JMDictDataSource), dataSourcePath));
             DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath));
             DataSources.Add(new DataSourceVM(typeof(CharacterStrokeOrderDataSource), dataSourcePath));
+            DataSources.Add(new DataSourceVM(typeof(JESCDataSource), dataSourcePath));
 
             Func<Element> fac = () => new Leaf(
                 () => new DataSourcePreviewVM(this),
