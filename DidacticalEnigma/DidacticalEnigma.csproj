@@ -160,6 +160,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToColorConverter.cs" />
+    <Compile Include="Models\DataSources\BasicExpressionCorpusDataSource.cs" />
     <Compile Include="Models\DataSources\CharacterStrokeOrderDataSource.cs" />
     <Compile Include="Models\DataSources\JESCDataSource.cs" />
     <Compile Include="Models\Formatting\FontSize.cs" />
