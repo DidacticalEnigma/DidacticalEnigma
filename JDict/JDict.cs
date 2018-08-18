@@ -33,11 +33,10 @@ namespace JDict
                 var entries = ((JdicRoot)serializer.Deserialize(xmlReader)).Entries
                     .SelectMany(e =>
                     {
-                        var mainkanjiElement = e.KanjiElements?.FirstOrDefault();
-                        return Enumerable.Repeat(mainkanjiElement, mainkanjiElement != null ? 1 : 0)
-                            ?.Select(k => new KeyValuePair<string, JdicEntry>(k.Key, e))
-                            ?.Concat(e.ReadingElements.Select(r => new KeyValuePair<string, JdicEntry>(r.Reb, e)))
-                            ?? Enumerable.Empty<KeyValuePair<string, JdicEntry>>();
+                        var kanjiElements = e.KanjiElements ?? Enumerable.Empty<KanjiElement>();
+                        return kanjiElements
+                            .Select(k => new KeyValuePair<string, JdicEntry>(k.Key, e))
+                            .Concat(e.ReadingElements.Select(r => new KeyValuePair<string, JdicEntry>(r.Reb, e)));
                     });
                 foreach (var kvp in entries)
                 {
