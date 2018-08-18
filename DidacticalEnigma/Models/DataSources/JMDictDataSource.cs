@@ -24,15 +24,13 @@ namespace DidacticalEnigma.Models
             {
                 var entry = jdict.Lookup(request.Word.Trim());
                 var rich = new RichFormatting();
-                if (entry == null)
-                {
-                    return;
-                }
 
-                TextParagraph p;
-                p = new TextParagraph();
-                p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
-                rich.Paragraphs.Add(p);
+                if (entry != null)
+                {
+                    var p = new TextParagraph();
+                    p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
+                    rich.Paragraphs.Add(p);
+                }
 
                 if (request.NotInflected != null && request.NotInflected != request.Word)
                 {
@@ -44,7 +42,7 @@ namespace DidacticalEnigma.Models
                             new Text("The entries below are a result of lookup on the base form: "),
                             new Text(request.NotInflected, emphasis: true)
                         }));
-                        p = new TextParagraph();
+                        var p = new TextParagraph();
                         p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
                         rich.Paragraphs.Add(p);
                     }
