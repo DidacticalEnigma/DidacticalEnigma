@@ -48,6 +48,7 @@ namespace DidacticalEnigma.Models
                                         // do nothing
                                         break;
                                     case FontSize.Large:
+                                        r.FontSize = 24;
                                         break;
                                     case FontSize.ExtraLarge:
                                         break;

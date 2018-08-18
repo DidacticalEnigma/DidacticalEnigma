@@ -166,6 +166,7 @@
     <Compile Include="Models\Formatting\FontSize.cs" />
     <Compile Include="Models\Formatting\IFontResolver.cs" />
     <Compile Include="Utils\ClipboardHook.cs" />
+    <Compile Include="Models\DataSources\PartialWordLookupJMDictDataSource.cs" />
     <Compile Include="Views\JapaneseTextPreview.xaml.cs">
       <DependentUpon>JapaneseTextPreview.xaml</DependentUpon>
     </Compile>

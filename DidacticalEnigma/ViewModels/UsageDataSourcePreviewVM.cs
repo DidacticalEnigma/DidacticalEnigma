@@ -1,15 +1,18 @@
 ﻿using DidacticalEnigma.Models;
 using System;
+using System.Collections.Async;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 using System.Windows.Threading;
 using DidacticalEnigma.Models.DataSources;
 using DidacticalEnigma.Models.Formatting;
+using JDict;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -44,15 +47,16 @@ namespace DidacticalEnigma.ViewModels
             return Task.WhenAll(tasks);
         }
 
-        public UsageDataSourcePreviewVM(ILanguageService lang, string dataSourcePath)
+        public UsageDataSourcePreviewVM(ILanguageService lang, string dataSourcePath, JMDict jmdict)
         {
             var fontResolver = new DefaultFontResolver();
             DataSources.Add(new DataSourceVM(new CharacterDataSource(lang), fontResolver));
-            DataSources.Add(new DataSourceVM(typeof(JMDictDataSource), dataSourcePath, fontResolver));
+            DataSources.Add(new DataSourceVM(new JMDictDataSource(jmdict), fontResolver));
             DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath, fontResolver));
             DataSources.Add(new DataSourceVM(typeof(CharacterStrokeOrderDataSource), dataSourcePath, fontResolver));
             DataSources.Add(new DataSourceVM(typeof(JESCDataSource), dataSourcePath, fontResolver));
             DataSources.Add(new DataSourceVM(typeof(BasicExpressionCorpusDataSource), dataSourcePath, fontResolver));
+            DataSources.Add(new DataSourceVM(new PartialWordLookupJMDictDataSource(jmdict), fontResolver));
 
             Func<Element> fac = () => new Leaf(
                 () => new DataSourcePreviewVM(this),

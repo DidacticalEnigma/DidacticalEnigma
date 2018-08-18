@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
@@ -59,6 +60,14 @@ namespace JDict
         {
             root.TryGetValue(v, out var entry);
             return entry;
+        }
+
+        public IEnumerable<JMDictEntry> PartialWordLookup(string v)
+        {
+            var regex = new Regex("^" + Regex.Escape(v).Replace(@"/\\", ".") + "$");
+            return root
+                .Where(kvp => regex.IsMatch(kvp.Key))
+                .SelectMany(kvp => kvp.Value);
         }
 
         private JMDict Init(string path)
