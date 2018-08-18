@@ -12,12 +12,15 @@ namespace DidacticalEnigma.Models
 
         public PartOfSpeech PartOfSpeech { get; }
 
-        public Request(string character, string word, string queryText, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown)
+        public string NotInflected { get; }
+
+        public Request(string character, string word, string queryText, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null)
         {
             Character = character;
             Word = word;
             QueryText = queryText;
             PartOfSpeech = partOfSpeech;
+            NotInflected = notInflected;
         }
     }
 }

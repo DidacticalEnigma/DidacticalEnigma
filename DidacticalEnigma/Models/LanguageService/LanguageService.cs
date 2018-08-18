@@ -24,7 +24,8 @@ namespace DidacticalEnigma
                         .Select(word => new WordInfo(
                             word.OriginalForm,
                             LookupWord(word.OriginalForm).DictionaryDefinition,
-                            word.PartOfSpeech));
+                            word.PartOfSpeech,
+                            word.Reading));
                 });
         }
 

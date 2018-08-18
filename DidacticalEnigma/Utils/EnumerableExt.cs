@@ -8,6 +8,11 @@ namespace DidacticalEnigma.Utils
 {
     static class EnumerableExt
     {
+        public static IEnumerable<T> OfSingle<T>(T element)
+        {
+            yield return element;
+        }
+
         public static IEnumerable<IEnumerable<T>> ChunkBy<T>(this IEnumerable<T> input, int n)
         {
             var list = new List<T>();

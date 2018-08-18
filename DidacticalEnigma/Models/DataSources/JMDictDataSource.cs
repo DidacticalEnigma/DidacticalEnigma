@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DidacticalEnigma.Utils;
 using JDict;
 
 namespace DidacticalEnigma.Models
@@ -22,12 +23,33 @@ namespace DidacticalEnigma.Models
             return new AsyncEnumerable<RichFormatting>(async yield =>
             {
                 var entry = jdict.Lookup(request.Word.Trim());
-                if (entry == null)
-                    return;
                 var rich = new RichFormatting();
-                var p = new TextParagraph();
+                if (entry == null)
+                {
+                    return;
+                }
+
+                TextParagraph p;
+                p = new TextParagraph();
                 p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
                 rich.Paragraphs.Add(p);
+
+                if (request.NotInflected != null && request.NotInflected != request.Word)
+                {
+                    entry = jdict.Lookup(request.NotInflected);
+                    if (entry != null)
+                    {
+                        rich.Paragraphs.Add(new TextParagraph(new[]
+                        {
+                            new Text("The entries below are a result of lookup on the base form: "),
+                            new Text(request.NotInflected, emphasis: true)
+                        }));
+                        p = new TextParagraph();
+                        p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
+                        rich.Paragraphs.Add(p);
+                    }
+                }
+
                 await yield.ReturnAsync(rich);
             });
         }

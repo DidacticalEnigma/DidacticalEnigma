@@ -23,7 +23,8 @@ namespace DidacticalEnigma.ViewModels
                 selectionInfo.Character.StringForm,
                 selectionInfo.Word.StringForm,
                 selectionInfo.Word.StringForm,
-                selectionInfo.Word.WordInfo.EstimatedPartOfSpeech);
+                selectionInfo.Word.WordInfo.EstimatedPartOfSpeech,
+                selectionInfo.Word.WordInfo.NotInflected);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
