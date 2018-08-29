@@ -8,6 +8,7 @@ namespace DidacticalEnigma.Models
 
         public string AcknowledgementText { get; }
 
+        // can be null
         public Uri DataSourceUrl { get; }
 
         public DataSourceDescriptor(string name, string acknowledgementText, Uri dataSourceUrl)

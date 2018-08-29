@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -23,7 +24,15 @@ namespace DidacticalEnigma
 
         private void TimerCallback(object sender, EventArgs e)
         {
-            RaiseClipboardChanged(Clipboard.GetText());
+            try
+            {
+                RaiseClipboardChanged(Clipboard.GetText());
+            }
+            catch (COMException)
+            {
+                // trying to silence "data in clipboard is invalid" exception
+                // we simply won't update our clipboard in that case
+            }
         }
 
         public void Dispose()

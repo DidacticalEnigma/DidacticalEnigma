@@ -48,6 +48,9 @@ namespace DidacticalEnigma.Models
                     }
                 }
 
+                if (rich.Paragraphs.Count == 0)
+                    return;
+
                 await yield.ReturnAsync(rich);
             });
         }
