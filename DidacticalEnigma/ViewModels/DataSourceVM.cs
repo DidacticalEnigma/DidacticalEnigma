@@ -79,7 +79,7 @@ namespace DidacticalEnigma.ViewModels
 
         public async Task Search(Request request)
         {
-            if (!IsUsed)
+            if (!IsUsed || request == null)
                 return;
             IsProcessing = true;
             FormattedResult = await dataSource.Answer(request).FirstOrDefaultAsync();
