@@ -37,10 +37,31 @@
                             <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <enigma:JapaneseTextPreview
-                            Grid.Column="0"
-                            Lines="{Binding Lines}"
-                            SelectionInfo="{Binding SelectionInfo, Mode=OneWayToSource}" />
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <enigma:JapaneseTextPreview
+                                Grid.Row="0"
+                                Lines="{Binding Lines}"
+                                SelectionInfo="{Binding SelectionInfo, Mode=OneWayToSource}" />
+                            <Grid Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="SearchBox" Grid.Column="0" />
+                                <Button
+                                    Grid.Column="1"
+                                    Command="{Binding DataContext.SearchWeb, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
+                                    CommandParameter="{Binding Text, ElementName=SearchBox}"
+                                    Content="Search Web" />
+                            </Grid>
+                        </Grid>
                         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
                         <Grid Grid.Column="2">
                             <Grid.RowDefinitions>

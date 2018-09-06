@@ -31,5 +31,16 @@ namespace DidacticalEnigma.ViewModels
             Word = word;
             Text = text;
         }
+
+        public Request GetRequest()
+        {
+            var selectionInfo = this;
+            return new Request(
+                selectionInfo.Character.StringForm,
+                selectionInfo.Word.StringForm,
+                selectionInfo.Word.StringForm,
+                selectionInfo.Word.WordInfo.EstimatedPartOfSpeech,
+                selectionInfo.Word.WordInfo.NotInflected);
+        }
     }
 }

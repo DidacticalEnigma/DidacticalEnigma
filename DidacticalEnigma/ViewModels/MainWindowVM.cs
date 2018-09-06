@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using System.Net;
 using System.Unicode;
 using DidacticalEnigma.ViewModels;
 
@@ -82,6 +83,21 @@ namespace DidacticalEnigma
             {
                 TextBuffers[0].RawOutput = ClipboardTextBuffer.RawOutput;
             });
+            SearchWeb = new RelayCommand(query =>
+            {
+                if(CurrentTextBuffer == null)
+                    return;
+                string url = "https://duckduckgo.com/?q=";
+                LaunchWebBrowserAt(url + WebUtility.UrlEncode("\"" + CurrentTextBuffer.SelectionInfo.GetRequest().QueryText + "\" " + (string)query));
+            });
+        }
+
+        private static void LaunchWebBrowserAt(string url)
+        {
+            using (Process.Start(url))
+            {
+
+            }
         }
 
         private void SetContent(object sender, string e)
@@ -112,7 +128,10 @@ namespace DidacticalEnigma
         public RelayCommand PlaceInClipboard { get; }
 
         public RelayCommand SendToScratchpad { get; }
+
         public RelayCommand SendToCurrent { get; }
+
+        public RelayCommand SearchWeb { get; }
 
         private IEnumerable<string> SplitWords(string input)
         {
