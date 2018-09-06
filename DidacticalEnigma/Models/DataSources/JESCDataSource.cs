@@ -15,6 +15,7 @@ namespace DidacticalEnigma.Models.DataSources
         private readonly JESC jesc;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
+            new Guid("C296FA4B-6EE5-4138-A628-69F056489ACA"),
             "Japanese-English Subtitle Corpus",
             "This data sources uses sentences from JESC Corpus",
             new Uri("https://nlp.stanford.edu/projects/jesc/"));

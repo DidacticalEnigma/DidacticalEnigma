@@ -11,6 +11,7 @@ namespace DidacticalEnigma.Models
         private ILanguageService lang;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
+            new Guid("9EAF9B28-6ABC-40B1-86D1-14967E0FA4DA"),
             "Character Information",
             "The data JMdict by Electronic Dictionary Research and Development Group",
             new Uri("http://www.edrdg.org/jmdict/j_jmdict.html"));

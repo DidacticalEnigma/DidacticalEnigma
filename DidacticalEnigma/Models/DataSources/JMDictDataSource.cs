@@ -14,6 +14,7 @@ namespace DidacticalEnigma.Models
         private readonly JMDict jdict;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
+            new Guid("ED1B840C-B2A8-4018-87B0-D5FC64A1ABC8"),
             "JMDict",
             "The data JMdict by Electronic Dictionary Research and Development Group",
             new Uri("http://www.edrdg.org/jmdict/j_jmdict.html"));

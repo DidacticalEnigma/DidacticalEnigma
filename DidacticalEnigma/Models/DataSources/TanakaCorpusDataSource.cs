@@ -16,6 +16,7 @@ namespace DidacticalEnigma.Models
         private Tanaka tanaka;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
+            new Guid("E034C3A3-FF93-40EA-A77C-EB071F53CE48"),
             "Tanaka Corpus",
             "These sentences are from Tanaka Corpus",
             new Uri("http://www.edrdg.org/wiki/index.php/Tanaka_Corpus"));

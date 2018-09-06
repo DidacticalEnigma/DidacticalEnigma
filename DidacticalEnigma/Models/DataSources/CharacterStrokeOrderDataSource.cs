@@ -13,6 +13,7 @@ namespace DidacticalEnigma.Models
         }
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
+            new Guid("E0B9D0E5-BE75-4D1E-9F19-7795FD602836"),
             "Stroke Order Info",
             "Provides the stroke order information from the Kanji stroke order font",
             new Uri("http://www.nihilist.org.uk/"));

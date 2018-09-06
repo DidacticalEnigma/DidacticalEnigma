@@ -12,6 +12,7 @@ namespace DidacticalEnigma.Models.DataSources
         private readonly JMDict jmdict;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
+            new Guid("1C91B1EE-FD02-413F-B007-58FEF2B998FB"),
             "Partial word search (JMDict)",
             "The data JMdict by Electronic Dictionary Research and Development Group",
             new Uri("http://www.edrdg.org/jmdict/j_jmdict.html"));

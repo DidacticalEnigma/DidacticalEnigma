@@ -14,9 +14,10 @@ namespace DidacticalEnigma.Models.DataSources
         private readonly string path;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
+            new Guid("AF9401B8-958E-4F31-8673-9B64C8A5F2CD"),
             "Custom notes",
             "The information in this source is provided by you, dear user.",
-            new Uri("https://nlp.stanford.edu/projects/jesc/"));
+            null);
 
         public void Dispose()
         {
