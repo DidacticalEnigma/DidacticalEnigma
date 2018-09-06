@@ -90,6 +90,28 @@ namespace DidacticalEnigma
                 string url = "https://duckduckgo.com/?q=";
                 LaunchWebBrowserAt(url + WebUtility.UrlEncode("\"" + CurrentTextBuffer.SelectionInfo.GetRequest().QueryText + "\" " + (string)query));
             });
+            SwitchToTab = new RelayCommand(tab =>
+            {
+                switch((string)tab)
+                {
+                    case "project":
+                        TabIndex = 0;
+                        break;
+                    case "usage1":
+                        TabIndex = 1;
+                        break;
+                    case "hiragana":
+                        TabIndex = 3;
+                        break;
+                    case "kanji":
+                        TabIndex = 4;
+                        break;
+                    case "katakana":
+                        TabIndex = 5;
+                        break;;
+
+                }
+            });
         }
 
         private static void LaunchWebBrowserAt(string url)
@@ -132,6 +154,22 @@ namespace DidacticalEnigma
         public RelayCommand SendToCurrent { get; }
 
         public RelayCommand SearchWeb { get; }
+
+        public RelayCommand SwitchToTab { get; }
+
+        private int tabIndex = 1;
+
+        public int TabIndex
+        {
+            get => tabIndex;
+            set
+            {
+                if (value == tabIndex)
+                    return;
+                tabIndex = value;
+                OnPropertyChanged();
+            }
+        }
 
         private IEnumerable<string> SplitWords(string input)
         {

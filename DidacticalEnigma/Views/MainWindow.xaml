@@ -14,6 +14,33 @@
     <Window.DataContext>
         <enigma:MainWindowVM />
     </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding
+            Key="D1"
+            Command="{Binding SwitchToTab}"
+            CommandParameter="project"
+            Modifiers="Control" />
+        <KeyBinding
+            Key="D2"
+            Command="{Binding SwitchToTab}"
+            CommandParameter="usage1"
+            Modifiers="Control" />
+        <KeyBinding
+            Key="F1"
+            Command="{Binding SwitchToTab}"
+            CommandParameter="hiragana"
+            Modifiers="Control" />
+        <KeyBinding
+            Key="F2"
+            Command="{Binding SwitchToTab}"
+            CommandParameter="kanji"
+            Modifiers="Control" />
+        <KeyBinding
+            Key="F3"
+            Command="{Binding SwitchToTab}"
+            CommandParameter="katakana"
+            Modifiers="Control" />
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="4*" />
@@ -85,7 +112,7 @@
             </TabControl.ContentTemplate>
         </TabControl>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
-        <TabControl Grid.Row="2" SelectedIndex="1">
+        <TabControl Grid.Row="2" SelectedIndex="{Binding TabIndex}">
             <TabItem Header="Project">
                 <TextBlock Text="To be implemented" />
             </TabItem>
