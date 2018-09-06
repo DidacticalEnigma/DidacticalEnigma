@@ -68,7 +68,7 @@ namespace DidacticalEnigma.ViewModels
             Width = x == 0 ? y : y + 1;
             Height = 5;
 
-            var contents = Kana.OrderBy(k => k.X * Width + k.Y).ToList();
+            var contents = Kana.OrderBy(k => k.X * Width + -k.Y).ToList();
             Kana.Clear();
             Kana.AddRange(contents);
         }
