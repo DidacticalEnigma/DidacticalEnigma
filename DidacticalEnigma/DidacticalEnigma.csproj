@@ -160,16 +160,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToColorConverter.cs" />
-    <Compile Include="Models\DataSources\BasicExpressionCorpusDataSource.cs" />
-    <Compile Include="Models\DataSources\CharacterStrokeOrderDataSource.cs" />
-    <Compile Include="Models\DataSources\CustomNotesDataSource.cs" />
-    <Compile Include="Models\DataSources\JESCDataSource.cs" />
-    <Compile Include="Models\DataSources\JMDictGreedyDataSource.cs" />
-    <Compile Include="Models\Formatting\FontSize.cs" />
-    <Compile Include="Models\Formatting\IFontResolver.cs" />
-    <Compile Include="Models\SearchEngine.cs" />
+    <Compile Include="Models\LanguageService.cs" />
+    <Compile Include="Models\MeCab.cs" />
     <Compile Include="Utils\ClipboardHook.cs" />
-    <Compile Include="Models\DataSources\PartialWordLookupJMDictDataSource.cs" />
+    <Compile Include="ViewModels\FlowDocumentRichFormattingRenderer.cs" />
+    <Compile Include="ViewModels\IFontResolver.cs" />
     <Compile Include="Views\JapaneseTextPreview.xaml.cs">
       <DependentUpon>JapaneseTextPreview.xaml</DependentUpon>
     </Compile>
@@ -179,43 +174,15 @@
     <Compile Include="Views\KanjiRadicalLookupControl.xaml.cs">
       <DependentUpon>KanjiRadicalLookupControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\DataSources\AsyncDataSource.cs" />
-    <Compile Include="Models\Formatting\Audio.cs" />
-    <Compile Include="Models\DataSources\CharacterDataSource.cs" />
-    <Compile Include="Models\DataSources\DataSourceDescriptor.cs" />
-    <Compile Include="Models\LanguageService\Hiragana.cs" />
-    <Compile Include="Models\DataSources\IDataSource.cs" />
-    <Compile Include="Models\Formatting\ImageParagraph.cs" />
-    <Compile Include="Models\LanguageService\ISimilarKana.cs" />
-    <Compile Include="Models\DataSources\JMDictDataSource.cs" />
-    <Compile Include="Models\LanguageService\Kana.cs" />
-    <Compile Include="Models\LanguageService\Kanji.cs" />
-    <Compile Include="Models\LanguageService\Katakana.cs" />
-    <Compile Include="Models\LanguageService\LanguageService.cs" />
-    <Compile Include="Models\LanguageService\NullSimilarKana.cs" />
-    <Compile Include="Models\Formatting\Paragraph.cs" />
-    <Compile Include="Models\DataSources\Request.cs" />
-    <Compile Include="Models\Formatting\RichFormatting.cs" />
-    <Compile Include="Models\DataSources\TanakaCorpusDataSource.cs" />
-    <Compile Include="Models\Formatting\Text.cs" />
-    <Compile Include="Models\Formatting\TextParagraph.cs" />
-    <Compile Include="Models\DataSources\UpdateResult.cs" />
-    <Compile Include="Models\Formatting\VideoParagraph.cs" />
     <Compile Include="Views\UsageDataSourcePreview.xaml.cs">
       <DependentUpon>UsageDataSourcePreview.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\DualDictionary.cs" />
-    <Compile Include="Utils\EnumerableExt.cs" />
     <Compile Include="Utils\GridEx.cs" />
-    <Compile Include="Utils\MeCabEntry.cs" />
-    <Compile Include="Models\LanguageService\NMeCabExt.cs" />
-    <Compile Include="Models\LanguageService\PartOfSpeech.cs" />
     <Compile Include="Utils\TrivialTemplateSelector.cs" />
     <Compile Include="Converters\BooleanNegationConverter.cs" />
     <Compile Include="Converters\BooleanToBrushConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\CodePointToLongStringConverter.cs" />
-    <Compile Include="Models\LanguageService\ILanguageService.cs" />
     <Compile Include="ViewModels\DataSourcePreviewVM.cs" />
     <Compile Include="ViewModels\DataSourceVM.cs" />
     <Compile Include="ViewModels\Element.cs" />
@@ -226,9 +193,6 @@
     <Compile Include="ViewModels\LineVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\CodePointVM.cs" />
-    <Compile Include="Models\LanguageService\KanaProperties.cs" />
-    <Compile Include="Models\LanguageService\EasilyConfusedKana.cs" />
-    <Compile Include="Models\LanguageService\WordInfo.cs" />
     <Compile Include="Converters\NullabilityToBooleanConverter.cs" />
     <Compile Include="Converters\PartOfSpeechToBrushConverter.cs" />
     <Compile Include="ViewModels\Root.cs" />
@@ -240,11 +204,7 @@
     <Compile Include="ViewModels\UsageDataSourcePreviewVM.cs" />
     <Compile Include="ViewModels\VSplit.cs" />
     <Compile Include="ViewModels\WordVM.cs" />
-    <Compile Include="Utils\ObservableBatchCollection.cs" />
-    <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\SimpleFlowDocument.cs" />
-    <Compile Include="Utils\StringExt.cs" />
-    <Compile Include="Utils\UnionFindNode.cs" />
     <Compile Include="Utils\VirtualizingTilePanel.cs" />
     <Page Include="Views\JapaneseTextPreview.xaml">
       <SubType>Designer</SubType>
@@ -276,7 +236,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\LanguageService\CodePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -345,6 +304,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DidacticalEnigma.Core\DidacticalEnigma.Core.csproj">
+      <Project>{72613547-03d0-4cde-ae3e-946451e99726}</Project>
+      <Name>DidacticalEnigma.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JDict\JDict.csproj">
       <Project>{82e18376-40e8-4f9d-bc46-e166354bccb3}</Project>
       <Name>JDict</Name>
@@ -390,6 +353,7 @@
     <Analyzer Include="..\packages\WpfAnalyzers.2.1.5.0\analyzers\dotnet\cs\WpfAnalyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\WpfAnalyzers.2.1.5.0\analyzers\dotnet\cs\WpfAnalyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NMeCab.0.06.4\build\NMeCab.targets" Condition="Exists('..\packages\NMeCab.0.06.4\build\NMeCab.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

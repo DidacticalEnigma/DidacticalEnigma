@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DidacticalEnigma.Utils
 {
-    static class EnumerableExt
+    public static class EnumerableExt
     {
         public static IEnumerable<T> OfSingle<T>(T element)
         {

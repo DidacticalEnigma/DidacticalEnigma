@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Net;
 using System.Unicode;
+using DidacticalEnigma.Models.LanguageService;
 using DidacticalEnigma.ViewModels;
 
 namespace DidacticalEnigma
@@ -49,10 +50,10 @@ namespace DidacticalEnigma
                 Path.Combine(baseDir, @"dic\kana_related.txt"),
                 Encoding.UTF8);
             lang = new LanguageService(
-                new MeCabParam
+                new MeCab(new MeCabParam
                 {
                     DicDir = Path.Combine(baseDir, @"dic\ipadic"),
-                },
+                }),
                 EasilyConfusedKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
                 kradfile,
                 radkfile,

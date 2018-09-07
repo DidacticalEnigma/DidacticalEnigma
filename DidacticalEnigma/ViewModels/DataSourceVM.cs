@@ -34,7 +34,16 @@ namespace DidacticalEnigma.ViewModels
 
         private FlowDocument emptyDocument = new FlowDocument(new System.Windows.Documents.Paragraph(new Run("nothing found")));
 
-        public FlowDocument Document => FormattedResult?.Render(fontResolver) ?? emptyDocument;
+        public FlowDocument Document
+        {
+            get
+            {
+                if (FormattedResult == null)
+                    return emptyDocument;
+                else
+                    return FlowDocumentRichFormattingRenderer.Render(fontResolver, FormattedResult);
+            }
+        }
 
         public DataSourceDescriptor Descriptor => dataSource.Descriptor;
 

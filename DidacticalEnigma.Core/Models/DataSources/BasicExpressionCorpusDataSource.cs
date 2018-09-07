@@ -10,7 +10,7 @@ using JDict;
 
 namespace DidacticalEnigma.Models.DataSources
 {
-    class BasicExpressionCorpusDataSource : IDataSource
+    public class BasicExpressionCorpusDataSource : IDataSource
     {
         private readonly BasicExpressionsCorpus be;
 

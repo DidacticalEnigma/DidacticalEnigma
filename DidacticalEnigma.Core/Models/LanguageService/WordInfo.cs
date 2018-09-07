@@ -19,7 +19,7 @@ namespace DidacticalEnigma.Models
         public WordInfo(string word, string dictionaryEntry, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null)
         {
             RawWord = word;
-            CodePoints = new ObservableBatchCollection<CodePoint>(
+            CodePoints = new List<CodePoint>(
                 word.AsCodePoints().Select(cp => CodePoint.FromInt(cp)));
             DictionaryDefinition = dictionaryEntry;
             EstimatedPartOfSpeech = partOfSpeech;

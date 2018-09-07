@@ -72,9 +72,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DidacticalEnigma\DidacticalEnigma.csproj">
-      <Project>{ba5b8792-eaf8-4a87-b58e-225290fd14a0}</Project>
-      <Name>DidacticalEnigma</Name>
+    <ProjectReference Include="..\DidacticalEnigma.Core\DidacticalEnigma.Core.csproj">
+      <Project>{72613547-03d0-4cde-ae3e-946451e99726}</Project>
+      <Name>DidacticalEnigma.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\JDict\JDict.csproj">
       <Project>{82e18376-40e8-4f9d-bc46-e166354bccb3}</Project>

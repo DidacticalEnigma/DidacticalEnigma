@@ -1,33 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using DidacticalEnigma.Models;
 using DidacticalEnigma.Models.Formatting;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.ViewModels
 {
-    public class RichFormatting
+    static class FlowDocumentRichFormattingRenderer
     {
-        public ICollection<Paragraph> Paragraphs { get; }
-
-        public RichFormatting()
-            : this(Enumerable.Empty<Paragraph>())
-        {
-
-        }
-
-        public RichFormatting(IEnumerable<Paragraph> paragraphs)
-        {
-            Paragraphs = new List<Paragraph>(paragraphs);
-        }
-
-        public virtual FlowDocument Render(IFontResolver fontResolver)
+        public static FlowDocument Render(IFontResolver fontResolver, RichFormatting document)
         {
             var flow = new FlowDocument();
-            foreach(var paragraph in Paragraphs)
+            foreach(var paragraph in document.Paragraphs)
             {
                 switch(paragraph)
                 {
@@ -38,33 +25,33 @@ namespace DidacticalEnigma.Models
                             {
                                 Inline i;
                                 var r = new Run(c.Content);
-                                switch (c.FontSize)
+                                switch(c.FontSize)
                                 {
                                     case FontSize.ExtraSmall:
-                                        break;
+                                    break;
                                     case FontSize.Small:
-                                        break;
+                                    break;
                                     case FontSize.Normal:
-                                        // do nothing
-                                        break;
+                                    // do nothing
+                                    break;
                                     case FontSize.Large:
-                                        r.FontSize = 24;
-                                        break;
+                                    r.FontSize = 24;
+                                    break;
                                     case FontSize.ExtraLarge:
-                                        break;
+                                    break;
                                     case FontSize.Humonguous:
-                                        r.FontSize = 120;
-                                        break;
+                                    r.FontSize = 120;
+                                    break;
                                     default:
-                                        throw new InvalidOperationException("not a valid enum value");
+                                    throw new InvalidOperationException("not a valid enum value");
                                 }
 
-                                if (fontResolver.Resolve(c.FontName) is System.Windows.Media.FontFamily f)
+                                if(fontResolver.Resolve(c.FontName) is System.Windows.Media.FontFamily f)
                                 {
                                     r.FontFamily = f;
                                 }
 
-                                if (c.Emphasis)
+                                if(c.Emphasis)
                                 {
                                     i = new Bold(r);
                                 }

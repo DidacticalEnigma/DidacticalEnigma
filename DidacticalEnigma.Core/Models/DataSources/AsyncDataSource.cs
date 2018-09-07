@@ -6,13 +6,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 
 namespace DidacticalEnigma.Models
 {
     // asynchronously initializing wrapper over a IDataSource
     // not implementing the IDataSource because it purposefully violates the contract
-    class AsyncDataSource
+    public class AsyncDataSource
     {
         private readonly Task<IDataSource> dataSource;
 

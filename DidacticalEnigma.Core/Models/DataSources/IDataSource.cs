@@ -2,7 +2,6 @@
 using System.Collections.Async;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 
 namespace DidacticalEnigma.Models
 {

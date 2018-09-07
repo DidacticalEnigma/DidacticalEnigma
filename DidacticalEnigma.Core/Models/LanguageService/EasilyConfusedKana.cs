@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DidacticalEnigma.Models
 {
-    class EasilyConfusedKana : ISimilarKana
+    public class EasilyConfusedKana : ISimilarKana
     {
         private Dictionary<CodePoint, List<CodePoint>> similarityGroups;
 

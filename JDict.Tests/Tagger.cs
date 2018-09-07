@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using DidacticalEnigma.Models.LanguageService;
 
 namespace JDict.Tests
 {
@@ -36,28 +35,6 @@ namespace JDict.Tests
         public void TearDown()
         {
             tagger.Dispose();
-        }
-
-        [Ignore("takes too long to run")]
-        [Test]
-        public void Tanaka()
-        {
-            var tanaka = new Tanaka(Path.Combine(baseDir, @"dic\examples.utf"), Encoding.UTF8);
-            var sentences = tanaka.AllSentences()
-                .Select(s => s.JapaneseSentence)
-                .Select(s => tagger.ParseToEntries(s).ToList());
-            var partsOfSpeech = new HashSet<string>();
-            foreach (var sentence in sentences)
-            {
-                Assert.AreEqual(sentence.First().Stat, MeCabNodeStat.Bos);
-                Assert.AreEqual(sentence.Last().Stat, MeCabNodeStat.Eos);
-                foreach (var word in sentence)
-                {
-                    
-                }
-            }
-            var ss = string.Join("\n", partsOfSpeech);
-            ;
         }
 
         public static string AssemblyDirectory

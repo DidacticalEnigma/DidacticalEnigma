@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Unicode;
+using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Models;
 using DidacticalEnigma.Models.LanguageService;
 using DidacticalEnigma.Utils;
@@ -19,7 +20,7 @@ namespace DidacticalEnigma
             return input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
                 .Select(line =>
                 {
-                    return mecab.ParseToEntries(line)
+                    return meCab.ParseToEntries(line)
                         .Where(a => a.IsRegular)
                         .Select(word => new WordInfo(
                             word.OriginalForm,
@@ -31,7 +32,7 @@ namespace DidacticalEnigma
 
         public void Dispose()
         {
-            mecab.Dispose();
+            meCab.Dispose();
         }
 
         public string LookupRomaji(Kana kana)
@@ -62,7 +63,7 @@ namespace DidacticalEnigma
             return new WordInfo(word, "");
         }
 
-        private readonly MeCabTagger mecab;
+        private readonly IMeCab meCab;
 
         private readonly EasilyConfusedKana confused;
 
@@ -75,18 +76,14 @@ namespace DidacticalEnigma
         private readonly KanaProperties kanaProperties;
 
         public LanguageService(
-            MeCabParam mecabParam,
+            IMeCab meCab,
             EasilyConfusedKana similar,
             Kradfile kradfile,
             Radkfile radkfile,
             KanjiDict kanjiDict,
             KanaProperties kanaProperties)
         {
-            mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
-            mecabParam.OutputFormatType = "wakati";
-            mecabParam.AllMorphs = false;
-            mecabParam.Partial = true;
-            this.mecab = MeCabTagger.Create(mecabParam);
+            this.meCab = meCab;
             this.confused = similar;
             this.kradfile = kradfile;
             this.radkfile = radkfile;
@@ -147,18 +144,5 @@ namespace DidacticalEnigma
                 .Select(p => new Radical(p.codePoint, p.strokeCount))
                 .OrderBy(r => r.StrokeCount);
         }
-    }
-
-    public class Radical
-    {
-        public Radical(CodePoint cp, int strokeCount)
-        {
-            CodePoint = cp;
-            StrokeCount = strokeCount;
-        }
-
-        public CodePoint CodePoint { get; }
-
-        public int StrokeCount { get; }
     }
 }
