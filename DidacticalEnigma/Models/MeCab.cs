@@ -7,7 +7,7 @@ using NMeCab;
 
 [assembly: InternalsVisibleTo("JDict.Tests")]
 
-namespace DidacticalEnigma.Models.LanguageService
+namespace DidacticalEnigma.Models
 {
     public class MeCab : IMeCab
     {

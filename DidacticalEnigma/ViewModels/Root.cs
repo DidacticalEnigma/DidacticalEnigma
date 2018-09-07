@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DidacticalEnigma.Core.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

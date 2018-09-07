@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Converters
 {
     // , ConverterParameter={x:Static Brushes.Yellow}
     [ValueConversion(typeof(bool), typeof(SolidColorBrush))]

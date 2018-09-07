@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Converters
 { 
     [ValueConversion(typeof(bool), typeof(Color))]
     public class BooleanToColorConverter : IValueConverter

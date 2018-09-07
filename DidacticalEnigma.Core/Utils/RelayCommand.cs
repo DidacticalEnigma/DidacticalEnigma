@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Core.Utils
 {
     public class RelayCommand : ICommand
     {

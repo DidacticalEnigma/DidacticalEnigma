@@ -5,8 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using DidacticalEnigma.Core.Models.DataSources;
+using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Models;
-using DidacticalEnigma.Models.Formatting;
 
 namespace DidacticalEnigma.ViewModels
 {

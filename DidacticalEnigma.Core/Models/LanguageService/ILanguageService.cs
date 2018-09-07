@@ -1,8 +1,7 @@
-﻿using DidacticalEnigma.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public interface ILanguageService : IDisposable
     {

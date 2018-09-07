@@ -1,4 +1,4 @@
-﻿namespace DidacticalEnigma.Models
+﻿namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public enum PartOfSpeech
     {

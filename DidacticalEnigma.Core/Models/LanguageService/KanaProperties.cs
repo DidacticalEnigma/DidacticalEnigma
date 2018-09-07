@@ -1,10 +1,10 @@
-﻿using DidacticalEnigma.Utils;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DidacticalEnigma.Core.Utils;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class KanaProperties : ISimilarKana
     {

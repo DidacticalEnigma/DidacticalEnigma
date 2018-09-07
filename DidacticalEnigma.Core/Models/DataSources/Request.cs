@@ -1,6 +1,6 @@
-﻿using DidacticalEnigma.Utils;
+﻿using DidacticalEnigma.Core.Models.LanguageService;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class Request
     {

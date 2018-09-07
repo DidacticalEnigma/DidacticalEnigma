@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Async;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DidacticalEnigma.Core.Models.Formatting;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.DataSources
 {
     // asynchronously initializing wrapper over a IDataSource
     // not implementing the IDataSource because it purposefully violates the contract

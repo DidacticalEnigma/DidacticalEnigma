@@ -1,14 +1,10 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Media;
 
-namespace DidacticalEnigma.Models.Formatting
+namespace DidacticalEnigma.ViewModels
 {
     public interface IFontResolver
     {

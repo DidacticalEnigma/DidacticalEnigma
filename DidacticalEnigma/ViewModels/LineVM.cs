@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using DidacticalEnigma.Core.Utils;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.ViewModels
 {
     public class LineVM
     {

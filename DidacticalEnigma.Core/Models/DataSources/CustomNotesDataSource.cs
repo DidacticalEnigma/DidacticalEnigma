@@ -5,9 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DidacticalEnigma.Utils;
+using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Core.Utils;
 
-namespace DidacticalEnigma.Models.DataSources
+namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class CustomNotesDataSource : IDataSource
     {

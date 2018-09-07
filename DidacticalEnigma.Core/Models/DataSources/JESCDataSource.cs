@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Async;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Core.Utils;
 using JDict;
 
-namespace DidacticalEnigma.Models.DataSources
+namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class JESCDataSource : IDataSource
     {

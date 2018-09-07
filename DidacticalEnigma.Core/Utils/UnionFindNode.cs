@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Core.Utils
 {
-    using System;
-
     /// <summary>
     /// A UnionFindNode represents a set of nodes that it is a member of.
     /// 

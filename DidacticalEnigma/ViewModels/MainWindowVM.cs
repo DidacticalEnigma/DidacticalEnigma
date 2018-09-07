@@ -1,23 +1,20 @@
-﻿using NMeCab;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using JDict;
-using System.Text;
-using System.Collections.ObjectModel;
-using DidacticalEnigma.Models;
+﻿using System;
 using System.Collections.Generic;
-using System.Windows.Input;
-using System.Windows;
-using System;
-using System.IO;
-using System.Security.Cryptography;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Net;
-using System.Unicode;
-using DidacticalEnigma.Models.LanguageService;
-using DidacticalEnigma.ViewModels;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Windows;
+using DidacticalEnigma.Core.Models;
+using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Core.Utils;
+using DidacticalEnigma.Models;
+using DidacticalEnigma.Utils;
+using JDict;
+using NMeCab;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.ViewModels
 {
     public class MainWindowVM : INotifyPropertyChanged, IDisposable
     {

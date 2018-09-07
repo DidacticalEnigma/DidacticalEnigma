@@ -1,8 +1,8 @@
-﻿using DidacticalEnigma.Utils;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using DidacticalEnigma.Core.Utils;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class WordInfo
     {

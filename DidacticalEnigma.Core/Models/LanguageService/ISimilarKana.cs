@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.LanguageService
 {
     interface ISimilarKana
     {

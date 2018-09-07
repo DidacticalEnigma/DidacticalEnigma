@@ -1,6 +1,6 @@
 ﻿using System.Unicode;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class Kanji : CodePoint
     {

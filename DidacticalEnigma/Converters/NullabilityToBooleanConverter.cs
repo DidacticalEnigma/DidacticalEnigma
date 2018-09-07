@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Converters
 {
     [ValueConversion(typeof(object), typeof(bool))]
     public class NullabilityToBooleanConverter : IValueConverter

@@ -10,8 +10,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 using System.Windows.Threading;
-using DidacticalEnigma.Models.DataSources;
-using DidacticalEnigma.Models.Formatting;
+using DidacticalEnigma.Core.Models.DataSources;
+using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Core.Utils;
 using JDict;
 
 namespace DidacticalEnigma.ViewModels

@@ -1,5 +1,4 @@
-﻿using DidacticalEnigma.Utils;
-using NMeCab;
+﻿using NMeCab;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

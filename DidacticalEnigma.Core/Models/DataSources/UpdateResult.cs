@@ -1,4 +1,4 @@
-﻿namespace DidacticalEnigma.Models
+﻿namespace DidacticalEnigma.Core.Models.DataSources
 {
     public enum UpdateResult
     {

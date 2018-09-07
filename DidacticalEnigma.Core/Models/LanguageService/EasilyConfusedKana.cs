@@ -3,11 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Text;
-using System.Threading.Tasks;
+using DidacticalEnigma.Core.Utils;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class EasilyConfusedKana : ISimilarKana
     {

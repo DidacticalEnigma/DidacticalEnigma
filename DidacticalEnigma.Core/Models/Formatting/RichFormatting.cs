@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.Formatting
 {
     public class RichFormatting
     {

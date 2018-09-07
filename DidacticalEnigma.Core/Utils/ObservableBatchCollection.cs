@@ -21,14 +21,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 // ReSharper disable StaticMemberInGenericType
-namespace DidacticalEnigma
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+
+namespace DidacticalEnigma.Core.Utils
+{
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> with support for AddRange and RemoveRange
     /// </summary>

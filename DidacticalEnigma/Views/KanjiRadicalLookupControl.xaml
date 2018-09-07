@@ -1,11 +1,14 @@
 ﻿<UserControl
-    x:Class="DidacticalEnigma.KanjiRadicalLookupControl"
+    x:Class="DidacticalEnigma.Views.KanjiRadicalLookupControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:DidacticalEnigma"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:DidacticalEnigma.ViewModels"
+    xmlns:converters="clr-namespace:DidacticalEnigma.Converters"
+    xmlns:utils="clr-namespace:DidacticalEnigma.Utils"
+    xmlns:views="clr-namespace:DidacticalEnigma.Views"
     d:DataContext="{d:DesignInstance Type=viewModels:KanjiRadicalLookupControlVM,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
@@ -68,7 +71,7 @@
                                 Grid.Column="0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Background="{Binding Highlighted, Converter={x:Static local:BooleanToBrushConverter.Default}}"
+                                Background="{Binding Highlighted, Converter={x:Static converters:BooleanToBrushConverter.Default}}"
                                 Focusable="{Binding Enabled}"
                                 FontSize="24"
                                 Text="{Binding Name}" />
@@ -99,7 +102,7 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <local:VirtualizingTilePanel
+                    <utils:VirtualizingTilePanel
                         CanHorizontallyScroll="False"
                         CanVerticallyScroll="True"
                         ItemHeight="{Binding Height}"
@@ -111,7 +114,7 @@
                     <Button
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Command="{Binding KeyClickCommand, RelativeSource={RelativeSource AncestorType={x:Type local:KanjiRadicalLookupControl}, Mode=FindAncestor}}"
+                        Command="{Binding KeyClickCommand, RelativeSource={RelativeSource AncestorType={x:Type views:KanjiRadicalLookupControl}, Mode=FindAncestor}}"
                         CommandParameter="{Binding .}"
                         Content="{Binding .}"
                         FontSize="24" />

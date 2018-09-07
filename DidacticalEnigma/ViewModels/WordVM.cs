@@ -1,10 +1,12 @@
-﻿using JDict;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Core.Utils;
+using DidacticalEnigma.Models;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.ViewModels
 {
 
     public class WordVM : INotifyPropertyChanged

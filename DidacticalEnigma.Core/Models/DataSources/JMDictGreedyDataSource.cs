@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Async;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DidacticalEnigma.Utils;
+using DidacticalEnigma.Core.Models.Formatting;
 using JDict;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class JMDictGreedyDataSource : IDataSource
     {

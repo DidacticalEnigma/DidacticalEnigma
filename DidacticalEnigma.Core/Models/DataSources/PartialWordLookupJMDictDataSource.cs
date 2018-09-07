@@ -3,9 +3,10 @@ using System.Collections.Async;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DidacticalEnigma.Core.Models.Formatting;
 using JDict;
 
-namespace DidacticalEnigma.Models.DataSources
+namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class PartialWordLookupJMDictDataSource : IDataSource
     {

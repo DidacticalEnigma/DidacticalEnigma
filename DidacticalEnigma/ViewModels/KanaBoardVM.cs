@@ -7,6 +7,8 @@ using System.Text;
 using DidacticalEnigma.Utils;
 using System.Windows.Input;
 using System.Windows;
+using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Core.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

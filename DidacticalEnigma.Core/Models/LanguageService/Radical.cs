@@ -1,6 +1,4 @@
-﻿using DidacticalEnigma.Models;
-
-namespace DidacticalEnigma
+﻿namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class Radical
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class DataSourceDescriptor
     {

@@ -1,9 +1,10 @@
-﻿using DidacticalEnigma.Models;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Models;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Converters
 {
     [ValueConversion(typeof(CodePoint), typeof(string))]
     public class CodePointToLongStringConverter : IValueConverter

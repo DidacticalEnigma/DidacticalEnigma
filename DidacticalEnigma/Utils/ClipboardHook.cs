@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Utils
 {
     // Not actually a clipboard hook
     // This does polling every now and then instead

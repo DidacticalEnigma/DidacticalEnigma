@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Utils
 {
     public class TrivialTemplateSelector : DataTemplateSelector
     {

@@ -1,13 +1,11 @@
-﻿using DidacticalEnigma.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
+using DidacticalEnigma.Core.Models.DataSources;
+using DidacticalEnigma.Models;
+using DidacticalEnigma.ViewModels;
 
-namespace DidacticalEnigma.ViewModels
+namespace DidacticalEnigma.Converters
 {
     [ValueConversion(typeof(SelectionInfoVM), typeof(Request))]
     class SelectionInfoToRequestConverter : IValueConverter

@@ -3,8 +3,10 @@ using System.Collections.Async;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Core.Models.LanguageService;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class CharacterDataSource : IDataSource
     {

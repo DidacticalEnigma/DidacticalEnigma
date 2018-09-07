@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DidacticalEnigma.Utils;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Core.Utils
 {
     public static class StringExt
     {

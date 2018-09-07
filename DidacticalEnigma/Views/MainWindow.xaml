@@ -1,5 +1,5 @@
 ﻿<Window
-    x:Class="DidacticalEnigma.MainWindow"
+    x:Class="DidacticalEnigma.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,12 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:DidacticalEnigma.Models"
     xmlns:vms="clr-namespace:DidacticalEnigma.ViewModels"
+    xmlns:views="clr-namespace:DidacticalEnigma.Views"
+    xmlns:converters="clr-namespace:DidacticalEnigma.Converters"
     Title="Didactical Enigma"
     Width="960"
     Height="900"
     mc:Ignorable="d">
     <Window.DataContext>
-        <enigma:MainWindowVM />
+        <vms:MainWindowVM />
     </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding
@@ -69,7 +71,7 @@
                                 <RowDefinition />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <enigma:JapaneseTextPreview
+                            <views:JapaneseTextPreview
                                 Grid.Row="0"
                                 Lines="{Binding Lines}"
                                 SelectionInfo="{Binding SelectionInfo, Mode=OneWayToSource}" />
@@ -119,7 +121,7 @@
                 <TextBlock Text="To be implemented" />
             </TabItem>
             <TabItem Header="Usage">
-                <enigma:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.CurrentTextBuffer.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Converter={x:Static vms:SelectionInfoToRequestConverter.Default}, Mode=OneWay}" />
+                <views:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.CurrentTextBuffer.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Converter={x:Static converters:SelectionInfoToRequestConverter.Default}, Mode=OneWay}" />
             </TabItem>
             <TabItem Header="Clipboard">
                 <Grid>
@@ -133,7 +135,7 @@
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <enigma:JapaneseTextPreview Grid.Column="0" SelectionInfo="{Binding ClipboardTextBuffer.SelectionInfo, Mode=OneWayToSource}" />
+                        <views:JapaneseTextPreview Grid.Column="0" SelectionInfo="{Binding ClipboardTextBuffer.SelectionInfo, Mode=OneWayToSource}" />
                         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
                         <TextBox
                             Grid.Column="2"
@@ -150,13 +152,13 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Hiragana">
-                <enigma:KanaBoard DataContext="{Binding HiraganaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+                <views:KanaBoard DataContext="{Binding HiraganaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
             <TabItem Header="Kanji">
-                <enigma:KanjiRadicalLookupControl DataContext="{Binding KanjiLookupVM}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+                <views:KanjiRadicalLookupControl DataContext="{Binding KanjiLookupVM}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
             <TabItem Header="Katakana">
-                <enigma:KanaBoard DataContext="{Binding KatakanaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+                <views:KanaBoard DataContext="{Binding KatakanaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
             <TabItem Header="About">
                 <TextBox IsReadOnly="True" Text="{Binding AboutText, Mode=OneWay}" />

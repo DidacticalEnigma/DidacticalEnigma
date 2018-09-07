@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Utils
 {
     class DualDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
     {

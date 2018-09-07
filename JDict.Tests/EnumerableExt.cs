@@ -20,7 +20,7 @@ namespace JDict.Tests
                 new int[] { 2 }
             };
             var expected = new[] { 1, 2, -1, 5, 6, -1, 2 };
-            var actual = DidacticalEnigma.Utils.EnumerableExt.IntersperseSequencesWith(input, -1).ToList();
+            var actual = DidacticalEnigma.Core.Utils.EnumerableExt.IntersperseSequencesWith(input, -1).ToList();
             CollectionAssert.AreEqual(
                 expected,
                 actual);
@@ -32,7 +32,7 @@ namespace JDict.Tests
             };
             CollectionAssert.AreEqual(
                 new[] { 1 },
-                DidacticalEnigma.Utils.EnumerableExt.IntersperseSequencesWith(input, -1).ToList());
+                DidacticalEnigma.Core.Utils.EnumerableExt.IntersperseSequencesWith(input, -1).ToList());
         }
     }
 }

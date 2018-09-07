@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Unicode;
-using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Models;
-using DidacticalEnigma.Utils;
+using DidacticalEnigma.Core.Utils;
 using JDict;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class LanguageService : ILanguageService
     {

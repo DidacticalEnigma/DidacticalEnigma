@@ -1,22 +1,10 @@
-﻿using DidacticalEnigma.Models;
-using DidacticalEnigma.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static DidacticalEnigma.ViewModels.KanjiRadicalLookupControlVM;
+using DidacticalEnigma.ViewModels;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Views
 {
     /// <summary>
     /// Interaction logic for KanjiRadicalLookupControl.xaml
@@ -31,7 +19,7 @@ namespace DidacticalEnigma
         private void ListView_Selected(object sender, RoutedEventArgs e)
         {
             var vm = (KanjiRadicalLookupControlVM)DataContext;
-            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<RadicalVM>().Select(r => r.CodePoint));
+            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint));
         }
 
         public ICommand KeyClickCommand
@@ -48,7 +36,7 @@ namespace DidacticalEnigma
         {
             var vm = (KanjiRadicalLookupControlVM)DataContext;
             RadicalSelector.SelectedItems.Clear();
-            vm.SelectRadicals(Enumerable.Empty<RadicalVM>().Select(r => r.CodePoint));
+            vm.SelectRadicals(Enumerable.Empty<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint));
         }
     }
 }

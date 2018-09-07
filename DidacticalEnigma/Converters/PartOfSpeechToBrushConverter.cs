@@ -1,11 +1,11 @@
-﻿using DidacticalEnigma.Utils;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
+using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Models;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.Converters
 {
     [ValueConversion(typeof(PartOfSpeech), typeof(SolidColorBrush))]
     public class PartOfSpeechToBrushConverter : IValueConverter

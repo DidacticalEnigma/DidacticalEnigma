@@ -2,10 +2,11 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Core.Utils;
 using DidacticalEnigma.Models;
-using DidacticalEnigma.ViewModels;
 
-namespace DidacticalEnigma
+namespace DidacticalEnigma.ViewModels
 {
     public class TextBufferVM : INotifyPropertyChanged
     {
