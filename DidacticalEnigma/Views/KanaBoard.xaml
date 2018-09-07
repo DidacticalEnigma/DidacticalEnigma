@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:DidacticalEnigma"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:utils="clr-namespace:DidacticalEnigma.Utils"
+    xmlns:views="clr-namespace:DidacticalEnigma.Views"
     xmlns:vms="clr-namespace:DidacticalEnigma.ViewModels"
     d:DataContext="{d:DesignInstance Type=vms:KanaBoardVM,
                                      IsDesignTimeCreatable=False}"
@@ -21,7 +22,7 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Button
-                    Command="{Binding KeyClickCommand, RelativeSource={RelativeSource AncestorType=local:KanaBoard, Mode=FindAncestor}, Mode=OneWay}"
+                    Command="{Binding KeyClickCommand, RelativeSource={RelativeSource AncestorType=views:KanaBoard, Mode=FindAncestor}, Mode=OneWay}"
                     CommandParameter="{Binding Kana}"
                     Content="{Binding Kana}"
                     FontSize="24"
