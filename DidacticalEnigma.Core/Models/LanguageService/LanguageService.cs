@@ -4,14 +4,12 @@ using System.Linq;
 using System.Unicode;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Models;
-using DidacticalEnigma.Models.LanguageService;
 using DidacticalEnigma.Utils;
 using JDict;
-using NMeCab;
 
 namespace DidacticalEnigma
 {
-    class LanguageService : ILanguageService
+    public class LanguageService : ILanguageService
     {
         public IEnumerable<IEnumerable<WordInfo>> BreakIntoSentences(string input)
         {

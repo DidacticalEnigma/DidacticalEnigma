@@ -160,7 +160,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToColorConverter.cs" />
-    <Compile Include="Models\LanguageService.cs" />
     <Compile Include="Models\MeCab.cs" />
     <Compile Include="Utils\ClipboardHook.cs" />
     <Compile Include="ViewModels\FlowDocumentRichFormattingRenderer.cs" />
