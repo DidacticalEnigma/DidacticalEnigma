@@ -143,8 +143,8 @@ namespace DidacticalEnigma
         public IEnumerable<Radical> AllRadicals()
         {
             return radkfile.Radicals
-                .Select(rad => CodePoint.FromInt(rad.CodePoint))
-                .Select(cp => new Radical(cp, kanjidict.Lookup(cp.ToString())?.StrokeCount ?? 1))
+                .Select(rad => (codePoint: CodePoint.FromInt(rad.CodePoint), strokeCount: rad.StrokeCount))
+                .Select(p => new Radical(p.codePoint, p.strokeCount))
                 .OrderBy(r => r.StrokeCount);
         }
     }
