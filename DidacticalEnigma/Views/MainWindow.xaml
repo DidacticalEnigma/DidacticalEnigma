@@ -81,11 +81,13 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBox x:Name="SearchBox" Grid.Column="0" />
+                                <ComboBox
+                                    Grid.Column="0"
+                                    ItemsSource="{Binding DataContext.SearchEngines, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
+                                    SelectedIndex="{Binding DataContext.SearchEngineIndex, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
                                 <Button
                                     Grid.Column="1"
                                     Command="{Binding DataContext.SearchWeb, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
-                                    CommandParameter="{Binding Text, ElementName=SearchBox}"
                                     Content="Search Web" />
                             </Grid>
                         </Grid>

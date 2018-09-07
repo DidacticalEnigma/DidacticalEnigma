@@ -87,8 +87,10 @@ namespace DidacticalEnigma
             {
                 if(CurrentTextBuffer == null)
                     return;
-                string url = "https://duckduckgo.com/?q=";
-                LaunchWebBrowserAt(url + WebUtility.UrlEncode("\"" + CurrentTextBuffer.SelectionInfo.GetRequest().QueryText + "\" " + (string)query));
+                if (SearchEngineIndex == -1)
+                    return;
+
+                LaunchWebBrowserAt(SearchEngines[SearchEngineIndex].BuildSearch(CurrentTextBuffer.SelectionInfo.GetRequest().QueryText));
             });
             SwitchToTab = new RelayCommand(tab =>
             {
@@ -130,7 +132,43 @@ namespace DidacticalEnigma
         public ObservableBatchCollection<TextBufferVM> TextBuffers { get; } = new ObservableBatchCollection<TextBufferVM>();
 
         private TextBufferVM currentTextBuffer;
+
         private readonly JMDict jmdict;
+
+        private int searchEngineIndex = -1;
+
+        public int SearchEngineIndex
+        {
+            get => searchEngineIndex;
+            set
+            {
+                if (searchEngineIndex == value)
+                    return;
+                searchEngineIndex = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableBatchCollection<SearchEngine> SearchEngines { get; } = new ObservableBatchCollection<SearchEngine>
+        {
+            new SearchEngine("https://duckduckgo.com/?q=", "site:japanese.stackexchange.com", literal: true, comment: "Search Japanese Stack Exchange"),
+            new SearchEngine("https://duckduckgo.com/?q=", "site:maggiesensei.com", literal: true, comment: "Search Maggie Sensei website"),
+            new SearchEngine("https://duckduckgo.com/?q=", "site:www.japanesewithanime.com", literal: true, comment: "Search Japanese with Anime blog"),
+            new SearchEngine("https://duckduckgo.com/?q=", "とは", literal: true, comment: "What is...?"),
+            new SearchEngine("https://duckduckgo.com/?q=", "意味", literal: true, comment: "Meaning...?"),
+            new SearchEngine("https://duckduckgo.com/?q=", "英語", literal: true, comment: "English...?"),
+            new SearchEngine(
+                "http://www.nihongoresources.com/dictionaries/universal.html?type=sfx&query=",
+                null,
+                literal: false,
+                comment: "nihongoresources.com SFX search"),
+            new SearchEngine(
+                "http://thejadednetwork.com/sfx/search/?submitSearch=Search+SFX&x=&keyword=",
+                null,
+                literal: false,
+                comment: "The JADED Network SFX search"),
+
+        };
 
         public TextBufferVM CurrentTextBuffer
         {
