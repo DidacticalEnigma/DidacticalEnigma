@@ -19,6 +19,19 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
+        private double size;
+        public double Size
+        {
+            get => size;
+            set
+            {
+                if(value == size)
+                    return;
+
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

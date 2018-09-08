@@ -35,6 +35,22 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
+        private double splitDimensions;
+        public double SplitDimensions
+        {
+            get => splitDimensions;
+            set
+            {
+                if(!(0.0 <= value && value <= 1.0))
+                    throw new ArgumentException("must be between 0 and 1");
+
+                if (value == splitDimensions)
+                    return;
+
+                OnPropertyChanged();
+            }
+        }
+
         public IReadOnlyList<Element> Children => children;
 
         private readonly Func<Element> factory;

@@ -34,7 +34,7 @@ namespace DidacticalEnigma.Models
         {
             MeCabEntry FromNode(MeCabNode n)
             {
-                return new MeCabEntry(n.Surface, n.Feature, !(n.Stat == MeCabNodeStat.Eos || n.Stat == MeCabNodeStat.Bos));
+                return new MeCabEntry(n.Surface, () => n.Feature, !(n.Stat == MeCabNodeStat.Eos || n.Stat == MeCabNodeStat.Bos));
             }
 
             return ParseToNodes(tagger, text).Select(FromNode);

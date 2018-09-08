@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
@@ -7,13 +8,13 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     {
         public bool IsRegular { get; }
 
-        public MeCabEntry(string originalForm, string feature, bool isRegular)
+        public MeCabEntry(string originalForm, Func<string> feature, bool isRegular)
         {
             OriginalForm = originalForm;
             IsRegular = isRegular;
             if(!IsRegular)
                 return;
-            var features = feature.Split(',');
+            var features = feature().Split(',');
             PartOfSpeech = PartOfSpeechFromString(OrNull(features, 0));
             ConjugatedForm = OrNull(features, 4);
             Inflection = OrNull(features, 5);
