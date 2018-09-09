@@ -51,6 +51,7 @@ namespace VerbConjugator
                 return ReplaceEnd(verb, "ぶ", "ばせる");
             if(verb.EndsWith("む"))
                 return ReplaceEnd(verb, "む", "ませる");
+            return "sorry, unimplemented";
             if(verb.EndsWith("る") && IsConsonantStem(verb))
                 return ReplaceEnd(verb, "る", "らせる");
             if(verb.EndsWith("いる"))
@@ -98,6 +99,43 @@ namespace VerbConjugator
                 return ReplaceEnd(verb, "ぶ", "ばない");
             if(verb.EndsWith("む"))
                 return ReplaceEnd(verb, "む", "まない");
+            return "sorry, unimplemented";
+            if(verb.EndsWith("る") && IsConsonantStem(verb))
+                return ReplaceEnd(verb, "る", "らない");
+            if(verb.EndsWith("いる"))
+                return ReplaceEnd(verb, "いる", "いない");
+            if(verb.EndsWith("える"))
+                return ReplaceEnd(verb, "える", "えない");
+            throw new ArgumentException(nameof(verb));
+        }
+
+        private string TeForm(string verb)
+        {
+            if(verb == "くる")
+                return "こない";
+            if(verb == "する")
+                return "して";
+            if(verb == "だ")
+                return "でわない";
+            if(verb.EndsWith("ます"))
+                return ReplaceEnd(verb, "ます", "ません");
+            if(verb.EndsWith("う"))
+                return ReplaceEnd(verb, "う", "わない");
+            if(verb.EndsWith("く"))
+                return ReplaceEnd(verb, "く", "かない");
+            if(verb.EndsWith("ぐ"))
+                return ReplaceEnd(verb, "ぐ", "がない");
+            if(verb.EndsWith("す"))
+                return ReplaceEnd(verb, "す", "さない");
+            if(verb.EndsWith("つ"))
+                return ReplaceEnd(verb, "つ", "たない");
+            if(verb.EndsWith("ぬ"))
+                return ReplaceEnd(verb, "ぬ", "なない");
+            if(verb.EndsWith("ぶ"))
+                return ReplaceEnd(verb, "ぶ", "ばない");
+            if(verb.EndsWith("む"))
+                return ReplaceEnd(verb, "む", "まない");
+            return "sorry, unimplemented";
             if(verb.EndsWith("る") && IsConsonantStem(verb))
                 return ReplaceEnd(verb, "る", "らない");
             if(verb.EndsWith("いる"))
@@ -112,7 +150,8 @@ namespace VerbConjugator
             verb = Normalize(verb);
             return new Conjugation(
                 Negative(verb),
-                Causative(verb));
+                Causative(verb),
+                TeForm(verb));
         }
     }
 
@@ -150,10 +189,11 @@ namespace VerbConjugator
 
         public string Causative { get; }
 
-        public Conjugation(string negativePlain, string causative)
+        public Conjugation(string negativePlain, string causative, string teForm)
         {
             NegativePlain = negativePlain;
             Causative = causative;
+            TeForm = teForm;
         }
     }
 }
