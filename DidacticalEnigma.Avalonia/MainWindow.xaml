@@ -1,0 +1,119 @@
+﻿<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="DidacticalEnigma.Avalonia">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="5*" />
+        </Grid.RowDefinitions>
+        <TabControl
+            Grid.Row="0"
+            Items="{Binding TextBuffers}"
+            SelectedItem="{Binding CurrentTextBuffer}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Lines="{Binding Lines}"
+                                SelectionInfo="{Binding SelectionInfo, Mode=OneWayToSource}" />
+                            <Grid Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox
+                                    Grid.Column="0"
+                                    ItemsSource="{Binding DataContext.SearchEngines, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
+                                    SelectedIndex="{Binding DataContext.SearchEngineIndex, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+                                <Button
+                                    Grid.Column="1"
+                                    Command="{Binding DataContext.SearchWeb, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
+                                    Content="Search Web" />
+                            </Grid>
+                        </Grid>
+                        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBox
+                                Grid.Row="0"
+                                AcceptsReturn="True"
+                                FontSize="24"
+                                Text="{Binding RawOutput, UpdateSourceTrigger=PropertyChanged}"
+                                TextWrapping="Wrap"
+                                VerticalScrollBarVisibility="Auto" />
+                            <Button
+                                Grid.Row="1"
+                                Command="{Binding IssueMeCabSplit}"
+                                Content="MeCab" />
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
+        <TabControl Grid.Row="2" SelectedIndex="{Binding TabIndex}">
+            <TabItem Header="Project">
+                <TextBlock Text="To be implemented" />
+            </TabItem>
+            <TabItem Header="Usage" />
+            <TabItem Header="Clipboard">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" />
+                        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
+                        <TextBox
+                            Grid.Column="2"
+                            AcceptsReturn="True"
+                            FontSize="24"
+                            Text="{Binding ClipboardTextBuffer.RawOutput, UpdateSourceTrigger=PropertyChanged}"
+                            TextWrapping="Wrap"
+                            VerticalScrollBarVisibility="Auto" />
+                    </Grid>
+                    <UniformGrid Grid.Row="1" Columns="2">
+                        <Button Command="{Binding SendToScratchpad}" Content="Send to scratchpad" />
+                        <Button Command="{Binding SendToCurrent}" Content="Send to current" />
+                    </UniformGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Hiragana" />
+            <TabItem Header="Kanji" />
+            <TabItem Header="Katakana" />
+            <TabItem Header="About">
+                <TextBox IsReadOnly="True" Text="{Binding AboutText, Mode=OneWay}" />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

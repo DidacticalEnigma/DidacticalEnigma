@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncEnumerator" Version="2.2.1" />
-    <PackageReference Include="LibJpConjSharp" Version="0.5.0" />
+    <PackageReference Include="LibJpConjSharp" Version="0.5.6" />
     <PackageReference Include="UnicodeInformation" Version="2.2.1" />
   </ItemGroup>
 
