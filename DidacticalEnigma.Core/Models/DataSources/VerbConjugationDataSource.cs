@@ -73,47 +73,40 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
                 var edictType = GetEdictType(entry).Value;
                 var reading = entry.Readings.First();
-                rich.Paragraphs.Add(
-                    new TextParagraph(
-                        EnumerableExt.OfSingle(
-                            new Text($"Plain form: {reading}", emphasis: false))));
-                PrintForm("Present", CForm.Present);
-                PrintForm("Present", CForm.Past);
-                PrintForm("Potential", CForm.Potential);
-                PrintForm("Te form", CForm.TeForm);
-                PrintForm("Imperative", CForm.Imperative);
-                PrintForm("Volitional", CForm.Volitional);
+                rich.Paragraphs.Add(new TextParagraph(new []
+                {
+                    Form("=", CForm.Present),
+                    Form("<", CForm.Past),
+                    Form("?", CForm.Potential),
+                    Form("Te", CForm.TeForm),
+                    Form("!", CForm.Imperative),
+                    Form(":D", CForm.Volitional),
+                }));
+
+                rich.Paragraphs.Add(new TextParagraph(EnumerableExt.OfSingle(new Text(
+@"= - Present
+< - Past
+? - Potential
+Te - Te Form
+! - Imperative
+:D - Volitional
+~ - Negative form of any of those
+@ - Polite form
+"))));
 
                 await yield.ReturnAsync(rich);
                 return;
 
-                void PrintForm(string name, CForm form)
+                Text Form(string name, CForm form)
                 {
-                    rich.Paragraphs.Add(
-                        new TextParagraph(
-                            EnumerableExt.OfSingle(
-                                new Text($"Plain {name}: {JpConj.Conjugate(reading, edictType, form, Politeness.Plain, Polarity.Affirmative).Replace("|", "")}"))));
-                    rich.Paragraphs.Add(
-                        new TextParagraph(
-                            EnumerableExt.OfSingle(
-                                new Text($"Negative Plain {name}: {JpConj.Conjugate(reading, edictType, form, Politeness.Plain, Polarity.Negative).Replace("|", "")}"))));
+                    return new Text(
+                        $"{name}: {JpConj.Conjugate(reading, edictType, form, Politeness.Plain, Polarity.Affirmative).Replace("|", "")}\n~{name}: {JpConj.Conjugate(reading, edictType, form, Politeness.Plain, Polarity.Negative).Replace("|", "")}\n");
                 }
             });
 
             EdictType? GetEdictType(JMDictEntry entry)
             {
-                var sense = entry.Senses.FirstOrDefault(s =>
-                {
-                    try
-                    {
-                        var et = EdictTypeUtils.FromDescription(s.PartOfSpeech.Split('/')[0]);
-                        return true;
-                    }
-                    catch(Exception exception)
-                    {
-                        return false;
-                    }
-                });
+                var sense = entry.Senses.FirstOrDefault(s => EdictTypeUtils.FromDescriptionOrNull(s.PartOfSpeech.Split('/')[0]) != null);
                 if(sense == null)
                     return null;
                 return EdictTypeUtils.FromDescription(sense.PartOfSpeech.Split('/')[0]);

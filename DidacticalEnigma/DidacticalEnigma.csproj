@@ -179,7 +179,6 @@
     <Compile Include="Utils\ClipboardHook.cs" />
     <Compile Include="ViewModels\FlowDocumentRichFormattingRenderer.cs" />
     <Compile Include="ViewModels\IFontResolver.cs" />
-    <Compile Include="ViewModels\SplitState.cs" />
     <Compile Include="Views\JapaneseTextPreview.xaml.cs">
       <DependentUpon>JapaneseTextPreview.xaml</DependentUpon>
     </Compile>
