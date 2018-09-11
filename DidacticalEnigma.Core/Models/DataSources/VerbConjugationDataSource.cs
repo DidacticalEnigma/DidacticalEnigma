@@ -72,12 +72,12 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 }
 
                 var edictType = GetEdictType(entry).Value;
-                var reading = entry.Readings.First();
                 rich.Paragraphs.Add(new TextParagraph(new []
                 {
                     Form("=", CForm.Present),
                     Form("<", CForm.Past),
                     Form("?", CForm.Potential),
+                    Form("->", CForm.Causative),
                     Form("Te", CForm.TeForm),
                     Form("!", CForm.Imperative),
                     Form(":D", CForm.Volitional),
@@ -87,6 +87,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 @"= - Present
 < - Past
 ? - Potential
+-> - Causative
 Te - Te Form
 ! - Imperative
 :D - Volitional
@@ -100,7 +101,7 @@ Te - Te Form
                 Text Form(string name, CForm form)
                 {
                     return new Text(
-                        $"{name}: {JpConj.Conjugate(reading, edictType, form, Politeness.Plain, Polarity.Affirmative).Replace("|", "")}\n~{name}: {JpConj.Conjugate(reading, edictType, form, Politeness.Plain, Polarity.Negative).Replace("|", "")}\n");
+                        $"{name}: {JpConj.Conjugate(verb, edictType, form, Politeness.Plain, Polarity.Affirmative).Replace("|", "")}\n~{name}: {JpConj.Conjugate(verb, edictType, form, Politeness.Plain, Polarity.Negative).Replace("|", "")}\n");
                 }
             });
 
