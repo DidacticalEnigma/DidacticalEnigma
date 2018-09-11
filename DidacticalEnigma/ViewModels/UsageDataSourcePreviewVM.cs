@@ -48,7 +48,11 @@ namespace DidacticalEnigma.ViewModels
             return Task.WhenAll(tasks);
         }
 
-        public UsageDataSourcePreviewVM(ILanguageService lang, string dataSourcePath, JMDict jmdict)
+        public UsageDataSourcePreviewVM(
+            ILanguageService lang,
+            string dataSourcePath,
+            JMDict jmdict,
+            FrequencyList frequencyList)
         {
             var fontResolver = new DefaultFontResolver();
             DataSources.Add(new DataSourceVM(new CharacterDataSource(lang), fontResolver));
@@ -57,7 +61,7 @@ namespace DidacticalEnigma.ViewModels
             DataSources.Add(new DataSourceVM(typeof(CharacterStrokeOrderDataSource), dataSourcePath, fontResolver));
             DataSources.Add(new DataSourceVM(typeof(JESCDataSource), dataSourcePath, fontResolver));
             DataSources.Add(new DataSourceVM(typeof(BasicExpressionCorpusDataSource), dataSourcePath, fontResolver));
-            DataSources.Add(new DataSourceVM(new PartialWordLookupJMDictDataSource(jmdict), fontResolver));
+            DataSources.Add(new DataSourceVM(new PartialWordLookupJMDictDataSource(jmdict, frequencyList), fontResolver));
             DataSources.Add(new DataSourceVM(typeof(CustomNotesDataSource), dataSourcePath, fontResolver));
             DataSources.Add(new DataSourceVM(new VerbConjugationDataSource(jmdict), fontResolver));
 

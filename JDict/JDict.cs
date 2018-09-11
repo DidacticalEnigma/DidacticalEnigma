@@ -62,12 +62,12 @@ namespace JDict
             return entry;
         }
 
-        public IEnumerable<JMDictEntry> PartialWordLookup(string v)
+        public IEnumerable<(JMDictEntry entry, string match)> PartialWordLookup(string v)
         {
             var regex = new Regex("^" + Regex.Escape(v).Replace(@"/\\", ".") + "$");
             return root
                 .Where(kvp => regex.IsMatch(kvp.Key))
-                .SelectMany(kvp => kvp.Value);
+                .SelectMany(kvp => kvp.Value.Select(entry => (entry, kvp.Key)));
         }
 
         private JMDict Init(string path)

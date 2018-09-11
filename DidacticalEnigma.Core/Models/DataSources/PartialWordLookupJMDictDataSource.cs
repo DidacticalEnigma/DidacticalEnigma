@@ -11,6 +11,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
     public class PartialWordLookupJMDictDataSource : IDataSource
     {
         private readonly JMDict jmdict;
+        private readonly FrequencyList list;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
             new Guid("1C91B1EE-FD02-413F-B007-58FEF2B998FB"),
@@ -18,9 +19,10 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "The data JMdict by Electronic Dictionary Research and Development Group",
             new Uri("http://www.edrdg.org/jmdict/j_jmdict.html"));
 
-        public PartialWordLookupJMDictDataSource(JMDict jmdict)
+        public PartialWordLookupJMDictDataSource(JMDict jmdict, FrequencyList list)
         {
             this.jmdict = jmdict;
+            this.list = list;
         }
 
         public void Dispose()
@@ -35,7 +37,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 var entry = jmdict.PartialWordLookup(request.Word.Trim());
                 var rich = new RichFormatting();
                 var p = new TextParagraph();
-                p.Content.Add(new Text(string.Join("\n", entry.SelectMany(e => e.Kanji.Select(kanji => kanji.ToString()))), fontSize: FontSize.Large));
+                p.Content.Add(new Text(string.Join("\n", entry.Select(e => e.match).OrderByDescending(m => list.RateFrequency(m)).Distinct()), fontSize: FontSize.Large));
                 rich.Paragraphs.Add(p);
                 await yield.ReturnAsync(rich);
             });

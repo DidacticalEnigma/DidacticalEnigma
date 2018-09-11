@@ -36,7 +36,7 @@ namespace DidacticalEnigma.ViewModels
         {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             {
-
+                
             }
             var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml"));
             var kradfile = new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
@@ -59,7 +59,8 @@ namespace DidacticalEnigma.ViewModels
             HiraganaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\hiragana_romaji.txt"), Encoding.UTF8, lang);
             KatakanaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\katakana_romaji.txt"), Encoding.UTF8, lang);
             this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e"));
-            UsageDataSourceVM = new UsageDataSourcePreviewVM(lang, Path.Combine(baseDir, "dic"), jmdict);
+            var wordFrequency = new FrequencyList(Path.Combine(baseDir, @"dic\word_form_frequency_list.txt"), Encoding.UTF8);
+            UsageDataSourceVM = new UsageDataSourcePreviewVM(lang, Path.Combine(baseDir, "dic"), jmdict, wordFrequency);
             TextBuffers.Add(new TextBufferVM("Scratchpad", lang));
             TextBuffers.Add(new TextBufferVM("Main", lang));
             ClipboardTextBuffer = new TextBufferVM("Clipboard", lang);
