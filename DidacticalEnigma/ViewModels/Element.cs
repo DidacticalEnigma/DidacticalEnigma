@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -19,8 +20,8 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private double size;
-        public double Size
+        private GridLength size = new GridLength(1.0, GridUnitType.Star);
+        public GridLength Size
         {
             get => size;
             set
