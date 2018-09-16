@@ -41,7 +41,8 @@ namespace DidacticalEnigma.ViewModels
                 selectionInfo.Word.StringForm,
                 selectionInfo.Word.StringForm,
                 selectionInfo.Word.WordInfo.EstimatedPartOfSpeech,
-                selectionInfo.Word.WordInfo.NotInflected);
+                selectionInfo.Word.WordInfo.NotInflected, 
+                selectionInfo.Word.SubsequentWords?.Invoke().Select(w => w.StringForm));
         }
     }
 }

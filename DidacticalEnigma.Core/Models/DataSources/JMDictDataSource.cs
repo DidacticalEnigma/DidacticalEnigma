@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Async;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,8 +26,29 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 var entry = jdict.Lookup(request.Word.Trim());
                 var rich = new RichFormatting();
 
+                var (greedyEntry, greedyWord) = GreedyLookup(request);
+                if(greedyEntry != null && greedyWord != request.Word)
+                {
+                    rich.Paragraphs.Add(new TextParagraph(new[]
+                    {
+                        new Text("The entries below are a result of the greedy lookup: "),
+                        new Text(greedyWord, emphasis: true)
+                    }));
+                    var p = new TextParagraph();
+                    p.Content.Add(new Text(string.Join("\n\n", greedyEntry.Select(e => e.ToString()))));
+                    rich.Paragraphs.Add(p);
+                }
+
                 if (entry != null)
                 {
+                    if (greedyEntry != null && greedyWord != request.Word)
+                    {
+                        rich.Paragraphs.Add(new TextParagraph(new[]
+                        {
+                            new Text("The entries below are a result of the regular lookup: "),
+                            new Text(request.Word, emphasis: true)
+                        }));
+                    }
                     var p = new TextParagraph();
                     p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
                     rich.Paragraphs.Add(p);
@@ -53,6 +75,36 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
                 await yield.ReturnAsync(rich);
             });
+        }
+
+        private (IEnumerable<JMDictEntry> entry, string word) GreedyLookup(Request request, int backOffCountStart = 5)
+        {
+            if (request.SubsequentWords == null)
+                return (null, null);
+
+            int backOffCount = backOffCountStart;
+            IEnumerable<JMDictEntry> found = null;
+            string foundWord = null;
+            string concatenatedWord = "";
+            foreach (var word in request.SubsequentWords)
+            {
+                concatenatedWord += word;
+                var newEntry = jdict.Lookup(concatenatedWord);
+                if (newEntry == null)
+                {
+                    backOffCount--;
+                    if (backOffCount == 0)
+                        break;
+                }
+                else
+                {
+                    found = newEntry;
+                    foundWord = concatenatedWord;
+                    backOffCount = backOffCountStart;
+                }
+            }
+
+            return (found, foundWord);
         }
 
         public void Dispose()

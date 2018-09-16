@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -88,6 +89,34 @@ namespace DidacticalEnigma.ViewModels
 
         public string Name { get; }
 
+        private void AddIteration()
+        {
+            for (int i = 0; i < Lines.Count; ++i)
+            {
+                for (int j = 0; j < Lines[i].Words.Count; ++j)
+                {
+                    int startI = i;
+                    int startJ = j;
+                    Lines[i].Words[j].SubsequentWords = () => Iterate(startI, startJ);
+                }
+            }
+
+            IEnumerable<WordVM> Iterate(int startI, int startJ)
+            {
+                for(int j = startJ; j < Lines[startI].Words.Count; ++j)
+                {
+                    yield return Lines[startI].Words[j];
+                }
+                for(int i = startI+1; i < Lines.Count; ++i)
+                {
+                    for(int j = 0; j < Lines[i].Words.Count; ++j)
+                    {
+                        yield return Lines[i].Words[j];
+                    }
+                }
+            }
+        }
+
         private void SetAnnotations(string unannotatedOutput)
         {
             Lines.Clear();
@@ -96,6 +125,7 @@ namespace DidacticalEnigma.ViewModels
                     .Split(new []{"\r\n", "\n", "\r"}, StringSplitOptions.None)
                     .Select(rawSentence => rawSentence.Split(new[]{" ", "　"}, StringSplitOptions.None))
                     .Select(sentence => new LineVM(sentence.Select(word => new WordVM(new WordInfo(word, ""), lang)))));
+            AddIteration();
             rawOutput = string.Join(
                 "\n",
                 Lines.Select(
@@ -110,6 +140,7 @@ namespace DidacticalEnigma.ViewModels
             Lines.AddRange(
                 lang.BreakIntoSentences(unannotatedOutput)
                     .Select(sentence => new LineVM(sentence.Select(word => new WordVM(word, lang)))));
+            AddIteration();
             rawOutput = string.Join(
                 "\n",
                 Lines.Select(

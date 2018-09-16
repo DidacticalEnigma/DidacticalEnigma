@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -19,6 +20,8 @@ namespace DidacticalEnigma.ViewModels
 
         private readonly ObservableBatchCollection<CodePointVM> codePoints = new ObservableBatchCollection<CodePointVM>();
         public IEnumerable<CodePointVM> CodePoints => codePoints;
+
+        public Func<IEnumerable<WordVM>> SubsequentWords { get; set; }
 
         public WordVM(WordInfo wordInfo, ILanguageService lang)
         {

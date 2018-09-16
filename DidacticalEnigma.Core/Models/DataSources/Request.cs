@@ -1,4 +1,5 @@
-﻿using DidacticalEnigma.Core.Models.LanguageService;
+﻿using System.Collections.Generic;
+using DidacticalEnigma.Core.Models.LanguageService;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -14,13 +15,16 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         public string NotInflected { get; }
 
-        public Request(string character, string word, string queryText, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null)
+        public IEnumerable<string> SubsequentWords { get; }
+
+        public Request(string character, string word, string queryText, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null, IEnumerable<string> subsequenentWords = null)
         {
             Character = character;
             Word = word;
             QueryText = queryText;
             PartOfSpeech = partOfSpeech;
             NotInflected = notInflected;
+            SubsequentWords = subsequenentWords;
         }
     }
 }
