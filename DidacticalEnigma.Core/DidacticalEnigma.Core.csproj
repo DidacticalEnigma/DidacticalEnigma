@@ -7,11 +7,18 @@
   <ItemGroup>
     <PackageReference Include="AsyncEnumerator" Version="2.2.1" />
     <PackageReference Include="LibJpConjSharp" Version="0.5.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="UnicodeInformation" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\JDict\JDict.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
