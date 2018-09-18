@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
@@ -56,6 +57,13 @@ namespace JDict
             return this;
         }
 
+        private async Task<JMDict> InitAsync(Stream stream)
+        {
+            // TODO: not a lazy way
+            await Task.Run(() => Init(stream));
+            return this;
+        }
+
         public IEnumerable<JMDictEntry> Lookup(string v)
         {
             root.TryGetValue(v, out var entry);
@@ -65,9 +73,22 @@ namespace JDict
         public IEnumerable<(JMDictEntry entry, string match)> PartialWordLookup(string v)
         {
             var regex = new Regex("^" + Regex.Escape(v).Replace(@"/\\", ".") + "$");
+            return WordLookupByPredicate(word => regex.IsMatch(word));
+        }
+
+        public IEnumerable<(JMDictEntry entry, string match)> WordLookupByPredicate(Func<string, bool> matcher)
+        {
             return root
-                .Where(kvp => regex.IsMatch(kvp.Key))
+                .Where(kvp => matcher(kvp.Key))
                 .SelectMany(kvp => kvp.Value.Select(entry => (entry, kvp.Key)));
+        }
+
+        private async Task<JMDict> InitAsync(string path)
+        {
+            using(var file = File.OpenRead(path))
+            {
+                return await InitAsync(file);
+            }
         }
 
         private JMDict Init(string path)
@@ -91,6 +112,16 @@ namespace JDict
         public static JMDict Create(Stream stream)
         {
             return new JMDict().Init(stream);
+        }
+
+        public static async Task<JMDict> CreateAsync(string path)
+        {
+            return await new JMDict().InitAsync(path);
+        }
+
+        public static async Task<JMDict> CreateAsync(Stream stream)
+        {
+            return await new JMDict().InitAsync(stream);
         }
 
         public void Dispose()
