@@ -14,7 +14,7 @@ namespace JDict.Tests
     {
         private MeCabTagger tagger;
 
-        public static readonly string baseDir = @"C:\Users\IEUser\Desktop\DidacticalEnigma\DidacticalEnigma\";
+        public static readonly string baseDir = @"D:\DidacticalEnigma\DidacticalEnigma\";
 
         [SetUp]
         public void SetUp()
@@ -28,6 +28,33 @@ namespace JDict.Tests
             mecabParam.OutputFormatType = "lattice";
             mecabParam.AllMorphs = false;
             mecabParam.Partial = true;
+        }
+
+        [Explicit]
+        [Test]
+        public void Tanaka()
+        {
+            var tanaka = new Tanaka(Path.Combine(baseDir, @"dic\examples.utf"), Encoding.UTF8);
+            var meCab = new MeCab(new MeCabParam
+            {
+                DicDir = Path.Combine(baseDir, @"dic\ipadic"),
+            });
+            var sentences = tanaka.AllSentences()
+                .Select(s => s.JapaneseSentence)
+                .Select(s => meCab.ParseToEntries(s).Where(e => e.IsRegular).ToList());
+            var features = new HashSet<string>();
+            foreach(var sentence in sentences)
+            {
+                foreach(var word in sentence)
+                {
+                    foreach (var s in word.PartOfSpeechSections)
+                    {
+                        features.Add(s);
+                    }
+                }
+            }
+            var ss = string.Join("\n", features);
+            ;
         }
 
         [TearDown]

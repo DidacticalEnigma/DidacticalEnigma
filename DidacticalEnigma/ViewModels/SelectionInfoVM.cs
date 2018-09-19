@@ -38,10 +38,8 @@ namespace DidacticalEnigma.ViewModels
             var selectionInfo = this;
             return new Request(
                 selectionInfo.Character.StringForm,
+                selectionInfo.Word.WordInfo,
                 selectionInfo.Word.StringForm,
-                selectionInfo.Word.StringForm,
-                selectionInfo.Word.WordInfo.EstimatedPartOfSpeech,
-                selectionInfo.Word.WordInfo.NotInflected, 
                 selectionInfo.Word.SubsequentWords?.Invoke().Select(w => w.StringForm));
         }
     }

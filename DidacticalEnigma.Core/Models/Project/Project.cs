@@ -216,8 +216,38 @@ namespace DidacticalEnigma.Core.Models.Project
         private IDictionary<string, JToken> additionalData;
     }
 
-    public class TranslatorNote
+    public class TranslatorNote : IEquatable<TranslatorNote>
     {
+        public bool Equals(TranslatorNote other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return string.Equals(Text, other.Text);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((TranslatorNote) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Text != null ? Text.GetHashCode() : 0);
+        }
+
+        public static bool operator ==(TranslatorNote left, TranslatorNote right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(TranslatorNote left, TranslatorNote right)
+        {
+            return !Equals(left, right);
+        }
+
         public string Text { get; }
 
         public TranslatorNote(string text)
@@ -231,8 +261,41 @@ namespace DidacticalEnigma.Core.Models.Project
         }
     }
 
-    public class GlossNote : TranslatorNote
+    public class GlossNote : TranslatorNote, IEquatable<GlossNote>
     {
+        public bool Equals(GlossNote other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return base.Equals(other) && string.Equals(Foreign, other.Foreign);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((GlossNote) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode() * 397) ^ (Foreign != null ? Foreign.GetHashCode() : 0);
+            }
+        }
+
+        public static bool operator ==(GlossNote left, GlossNote right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(GlossNote left, GlossNote right)
+        {
+            return !Equals(left, right);
+        }
+
         public string Foreign { get; }
 
         public GlossNote(string foreign, string text) :

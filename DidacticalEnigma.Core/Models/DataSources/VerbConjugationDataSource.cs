@@ -42,7 +42,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                             EnumerableExt.OfSingle(
                                 new Text("The program estimates this word is not a verb. The results below may be garbage.", emphasis: false))));
 
-                var verb = request.NotInflected ?? request.Word;
+                var verb = request.NotInflected ?? request.Word.RawWord;
                 var entries = jdict.Lookup(verb);
                 if (entries == null)
                 {
@@ -105,12 +105,12 @@ Te - Te Form
                 }
             });
 
-            EdictType? GetEdictType(JMDictEntry entry)
+            LibJpConjSharp.EdictType? GetEdictType(JMDictEntry entry)
             {
-                var sense = entry.Senses.FirstOrDefault(s => EdictTypeUtils.FromDescriptionOrNull(s.PartOfSpeech.Split('/')[0]) != null);
+                var sense = entry.Senses.FirstOrDefault(s => LibJpConjSharp.EdictTypeUtils.FromDescriptionOrNull(s.PartOfSpeech.Split('/')[0]) != null);
                 if(sense == null)
                     return null;
-                return EdictTypeUtils.FromDescription(sense.PartOfSpeech.Split('/')[0]);
+                return LibJpConjSharp.EdictTypeUtils.FromDescription(sense.PartOfSpeech.Split('/')[0]);
             }
         }
 

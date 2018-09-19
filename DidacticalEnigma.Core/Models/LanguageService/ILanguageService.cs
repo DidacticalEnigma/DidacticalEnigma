@@ -19,8 +19,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         CodePoint LookupCharacter(string s, int position = 0);
 
-        WordInfo LookupWord(string word);
-
         IEnumerable<IEnumerable<WordInfo>> BreakIntoSentences(string input);
     }
 

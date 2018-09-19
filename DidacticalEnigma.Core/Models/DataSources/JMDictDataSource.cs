@@ -23,11 +23,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
         {
             return new AsyncEnumerable<RichFormatting>(async yield =>
             {
-                var entry = jdict.Lookup(request.Word.Trim());
+                var entry = jdict.Lookup(request.Word.RawWord.Trim());
                 var rich = new RichFormatting();
 
                 var (greedyEntry, greedyWord) = GreedyLookup(request);
-                if(greedyEntry != null && greedyWord != request.Word)
+                if(greedyEntry != null && greedyWord != request.Word.RawWord)
                 {
                     rich.Paragraphs.Add(new TextParagraph(new[]
                     {
@@ -41,12 +41,12 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
                 if (entry != null)
                 {
-                    if (greedyEntry != null && greedyWord != request.Word)
+                    if (greedyEntry != null && greedyWord != request.Word.RawWord)
                     {
                         rich.Paragraphs.Add(new TextParagraph(new[]
                         {
                             new Text("The entries below are a result of the regular lookup: "),
-                            new Text(request.Word, emphasis: true)
+                            new Text(request.Word.RawWord, emphasis: true)
                         }));
                     }
                     var p = new TextParagraph();
@@ -54,7 +54,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                     rich.Paragraphs.Add(p);
                 }
 
-                if (request.NotInflected != null && request.NotInflected != request.Word)
+                if (request.NotInflected != null && request.NotInflected != request.Word.RawWord)
                 {
                     entry = jdict.Lookup(request.NotInflected);
                     if (entry != null)

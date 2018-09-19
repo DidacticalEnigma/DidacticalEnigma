@@ -7,7 +7,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
     {
         public string Character { get; }
 
-        public string Word { get; }
+        public WordInfo Word { get; }
 
         public string QueryText { get; }
 
@@ -17,14 +17,14 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         public IEnumerable<string> SubsequentWords { get; }
 
-        public Request(string character, string word, string queryText, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null, IEnumerable<string> subsequenentWords = null)
+        public Request(string character, WordInfo word, string queryText, IEnumerable<string> subsequentWords = null)
         {
             Character = character;
             Word = word;
             QueryText = queryText;
-            PartOfSpeech = partOfSpeech;
-            NotInflected = notInflected;
-            SubsequentWords = subsequenentWords;
+            PartOfSpeech = Word.EstimatedPartOfSpeech;
+            NotInflected = Word.NotInflected;
+            SubsequentWords = subsequentWords;
         }
     }
 }

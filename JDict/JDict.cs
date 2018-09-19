@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -43,18 +45,34 @@ namespace JDict
                 foreach (var kvp in entries)
                 {
                     var xmlEntry = kvp.Value;
-                    if (!root.ContainsKey(kvp.Key))
+                    if(!root.ContainsKey(kvp.Key))
                         root[kvp.Key] = new List<JMDictEntry>();
                     root[kvp.Key].Add(new JMDictEntry(
                         xmlEntry.Number,
                         xmlEntry.ReadingElements.Select(r => r.Reb),
                         xmlEntry.KanjiElements?.Select(k => k.Key) ?? Enumerable.Empty<string>(),
-                        xmlEntry.Senses.Select(s => new JMDictSense(
-                            string.Join("/", s.PartOfSpeech ?? Enumerable.Empty<string>()),
-                            string.Join("/", s.Glosses.Select(g => g.Text.Trim()))))));
+                        CreateSense(xmlEntry)));
                 }
             }
             return this;
+        }
+
+        private IEnumerable<JMDictSense> CreateSense(JdicEntry xmlEntry)
+        {
+            var sense = new List<JMDictSense>();
+            string[] previousPartOfSpeech = null;
+            foreach (var s in xmlEntry.Senses)
+            {
+                var partOfSpeech = s.PartOfSpeech ?? previousPartOfSpeech;
+                var partOfSpeechString = s.PartOfSpeech != null ? string.Join("/", s.PartOfSpeech) : "";
+                sense.Add(new JMDictSense(
+                    EdictTypeUtils.FromDescriptionOrNull(partOfSpeech?.FirstOrDefault(pos => EdictTypeUtils.FromDescriptionOrNull(pos) != null) ?? ""),
+                    partOfSpeechString,
+                    string.Join("/", s.Glosses.Select(g => g.Text.Trim()))));
+                previousPartOfSpeech = partOfSpeech;
+            }
+
+            return sense;
         }
 
         private async Task<JMDict> InitAsync(Stream stream)
@@ -138,8 +156,6 @@ namespace JDict
 
         public IEnumerable<string> Kanji { get; }
 
-        public IEnumerable<string> PartOfSpeech { get; }
-
         public IEnumerable<JMDictSense> Senses { get; }
 
         public override string ToString()
@@ -193,12 +209,15 @@ namespace JDict
 
     public class JMDictSense
     {
+        public EdictType? Type { get; }
+
         public string PartOfSpeech { get; }
 
         public string Description { get; }
 
-        public JMDictSense(string pos, string text)
+        public JMDictSense(EdictType? type, string pos, string text)
         {
+            Type = type;
             PartOfSpeech = pos;
             Description = text;
         }
@@ -207,5 +226,162 @@ namespace JDict
         {
             return PartOfSpeech + "\n" + Description;
         }
+    }
+
+    public static class EdictTypeUtils
+    {
+        public static EdictType FromDescription(string description)
+        {
+            return mapping[description];
+        }
+
+        public static EdictType? FromDescriptionOrNull(string description)
+        {
+            if(mapping.TryGetValue(description, out var value))
+            {
+                return value;
+            }
+
+            return null;
+        }
+
+        public static bool IsVerb(this EdictType type)
+        {
+            return (int)type < (int)EdictType.n;
+        }
+
+        public static bool IsNoun(this EdictType type)
+        {
+            return (int)type < 256 && (int)type >= (int)EdictType.n;
+        }
+
+        // https://stackoverflow.com/questions/2650080/how-to-get-c-sharp-enum-description-from-value
+        private static string GetEnumDescription(Enum value)
+        {
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute[] attributes =
+                (DescriptionAttribute[])fi.GetCustomAttributes(
+                    typeof(DescriptionAttribute),
+                    false);
+
+            if(attributes != null &&
+               attributes.Length > 0)
+                return attributes[0].Description;
+            else
+                return value.ToString();
+        }
+
+        private static readonly Dictionary<string, EdictType> mapping = Enum.GetValues(typeof(EdictType))
+            .Cast<EdictType>()
+            .ToDictionary(e => GetEnumDescription(e), e => e);
+    }
+
+    // Make sure to synchronize these constants with the values at LibJpConjSharp project
+    public enum EdictType
+    {
+        [Description("This means no type at all, it is used to return the radical as it is")]
+        v0 = 0,
+
+        [Description("Ichidan verb")]
+        v1 = 1,
+
+        [Description("Nidan verb with 'u' ending (archaic)")]
+        v2a_s = 2,
+
+        [Description("Yodan verb with `hu/fu' ending (archaic)")]
+        v4h = 3,
+
+        [Description("Yodan verb with `ru' ending (archaic)")]
+        v4r = 4,
+
+        [Description("Godan verb (not completely classified)")]
+        v5 = 5,
+
+        [Description("Godan verb - -aru special class")]
+        v5aru = 6,
+
+        [Description("Godan verb with `bu' ending")]
+        v5b = 7,
+
+        [Description("Godan verb with `gu' ending")]
+        v5g = 8,
+
+        [Description("Godan verb with `ku' ending")]
+        v5k = 9,
+
+        [Description("Godan verb - Iku/Yuku special class")]
+        v5k_s = 10,
+
+        [Description("Godan verb with `mu' ending")]
+        v5m = 11,
+
+        [Description("Godan verb with `nu' ending")]
+        v5n = 12,
+
+        [Description("Godan verb with `ru' ending")]
+        v5r = 13,
+
+        [Description("Godan verb with `ru' ending (irregular verb)")]
+        v5r_i = 14,
+
+        [Description("Godan verb with `su' ending")]
+        v5s = 15,
+
+        [Description("Godan verb with `tsu' ending")]
+        v5t = 16,
+
+        [Description("Godan verb with `u' ending")]
+        v5u = 17,
+
+        [Description("Godan verb with `u' ending (special class)")]
+        v5u_s = 18,
+
+        [Description("Godan verb - uru old class verb (old form of Eru)")]
+        v5uru = 19,
+
+        [Description("Godan verb with `zu' ending")]
+        v5z = 20,
+
+        [Description("Ichidan verb - zuru verb - (alternative form of -jiru verbs)")]
+        vz = 21,
+
+        [Description("kuru verb - special class")]
+        vk = 22,
+
+        [Description("irregular nu verb")]
+        vn = 23,
+
+        [Description("noun or participle which takes the aux. verb suru")]
+        vs = 24,
+
+        [Description("su verb - precursor to the modern suru")]
+        vs_c = 25,
+
+        [Description("suru verb - irregular")]
+        vs_i = 26,
+
+        [Description("suru verb - special class")]
+        vs_s = 27,
+
+        // Ichidan verb - kureru special class
+
+        [Description("noun (common) (futsuumeishi)")]
+        n = 128,
+
+        [Description("adverbial noun (fukushitekimeishi)")]
+        n_adv = 129,
+
+        [Description("noun, used as a suffix")]
+        n_suf = 130,
+
+        [Description("noun, used as a prefix")]
+        n_pref = 131,
+
+        [Description("noun (temporal) (jisoumeishi)")]
+        n_t = 132,
+
+        [Description("particle")]
+        prt = 256
     }
 }

@@ -34,7 +34,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
         {
             return new AsyncEnumerable<RichFormatting>(async yield =>
             {
-                var entry = jmdict.PartialWordLookup(request.Word.Trim());
+                var entry = jmdict.PartialWordLookup(request.Word.RawWord.Trim());
                 var rich = new RichFormatting();
                 var p = new TextParagraph();
                 p.Content.Add(new Text(string.Join("\n", entry.Select(e => e.match).OrderByDescending(m => list.RateFrequency(m)).Distinct()), fontSize: FontSize.Large));

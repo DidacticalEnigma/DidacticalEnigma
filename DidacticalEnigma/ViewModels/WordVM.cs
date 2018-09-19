@@ -12,8 +12,6 @@ namespace DidacticalEnigma.ViewModels
 
     public class WordVM : INotifyPropertyChanged
     {
-        public string DictionaryStringBlurb => WordInfo.DictionaryDefinition;
-
         public WordInfo WordInfo { get; }
 
         public string StringForm { get; }

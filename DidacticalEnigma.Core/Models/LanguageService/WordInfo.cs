@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DidacticalEnigma.Core.Utils;
+using JDict;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class WordInfo
     {
-        public string DictionaryDefinition { get; }
-
         public PartOfSpeech EstimatedPartOfSpeech { get; }
 
         public string NotInflected { get; }
@@ -16,14 +15,19 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<CodePoint> CodePoints { get; }
 
-        public WordInfo(string word, string dictionaryEntry, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null)
+        public bool? Independent { get; }
+
+        public EdictType? Type { get; }
+
+        public WordInfo(string word, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null, bool? isIndependent = null, EdictType? type = null)
         {
             RawWord = word;
             CodePoints = new List<CodePoint>(
                 word.AsCodePoints().Select(cp => CodePoint.FromInt(cp)));
-            DictionaryDefinition = dictionaryEntry;
             EstimatedPartOfSpeech = partOfSpeech;
             NotInflected = notInflected;
+            Independent = isIndependent;
+            Type = type;
         }
     }
 }

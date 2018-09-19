@@ -19,9 +19,10 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         .Where(a => a.IsRegular)
                         .Select(word => new WordInfo(
                             word.OriginalForm,
-                            LookupWord(word.OriginalForm).DictionaryDefinition,
                             word.PartOfSpeech,
-                            word.Reading));
+                            word.Reading,
+                            word.IsIndependent,
+                            word.Type));
                 });
         }
 
@@ -43,19 +44,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public CodePoint LookupCharacter(int codePoint)
         {
             return CodePoint.FromInt(codePoint);
-        }
-
-        public WordInfo LookupWord(string word)
-        {
-            //var entry = dictionary.Lookup(word.Trim());
-            //return new WordInfo(word, entry?.ToString());
-            /*var entry = jdict.Lookup(word.Trim());
-            string joined = null;
-            if (entry != null)
-            {
-                joined = string.Join("\n\n", entry.Select(e => e.ToString()));
-            }*/
-            return new WordInfo(word, "");
         }
 
         private readonly IMeCab meCab;

@@ -124,7 +124,7 @@ namespace DidacticalEnigma.ViewModels
                 unannotatedOutput
                     .Split(new []{"\r\n", "\n", "\r"}, StringSplitOptions.None)
                     .Select(rawSentence => rawSentence.Split(new[]{" ", "　"}, StringSplitOptions.None))
-                    .Select(sentence => new LineVM(sentence.Select(word => new WordVM(new WordInfo(word, ""), lang)))));
+                    .Select(sentence => new LineVM(sentence.Select(word => new WordVM(new WordInfo(word), lang)))));
             AddIteration();
             rawOutput = string.Join(
                 "\n",
