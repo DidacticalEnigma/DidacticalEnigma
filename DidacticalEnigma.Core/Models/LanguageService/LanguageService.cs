@@ -22,7 +22,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                             word.PartOfSpeech,
                             word.Reading,
                             word.IsIndependent,
-                            word.Type));
+                            word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? EdictType.pn : word.Type));
                 });
         }
 

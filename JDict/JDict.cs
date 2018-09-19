@@ -382,6 +382,12 @@ namespace JDict
         n_t = 132,
 
         [Description("particle")]
-        prt = 256
+        prt = 256,
+
+        [Description("pronoun")]
+        pn,
+
+        [Description("pre-noun adjectival (rentaishi)")]
+        adj_pn
     }
 }

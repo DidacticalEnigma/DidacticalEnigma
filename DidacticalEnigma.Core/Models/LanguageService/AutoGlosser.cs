@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Project;
+using DidacticalEnigma.Core.Utils;
 using JDict;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
@@ -12,6 +14,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         private readonly ILanguageService lang;
         private readonly JMDict dict;
 
+        private static readonly IReadOnlyDictionary<PartOfSpeech, EdictType> mapping = new Dictionary<PartOfSpeech, EdictType>
+        {
+            { PartOfSpeech.PreNounAdjectivalAdjective, EdictType.adj_pn }
+        };
+
         public IEnumerable<GlossNote> Gloss(string inputText)
         {
             var words = lang.BreakIntoSentences(inputText)
@@ -20,11 +27,38 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
             var glosses = new List<GlossNote>();
 
-            foreach(var word in words)
+            for(int i = 0; i < words.Count; i++)
             {
-                if (word.EstimatedPartOfSpeech == PartOfSpeech.Particle)
+                var word = words[i];
+                var greedySelection = words.Skip(i).Select(w => w.RawWord).Greedy(s =>
                 {
-                    var lookup = dict.Lookup(word.NotInflected);
+                    var w = string.Join("", s);
+                    return dict.Lookup(w) != null;
+                }).ToList();
+                var lookup = dict.Lookup(word.NotInflected);
+                
+                if (word.RawWord == word.NotInflected && greedySelection.Count > 1)
+                {
+                    var greedyWord = string.Join("", greedySelection);
+                    var greedyEntries = dict.Lookup(greedyWord);
+
+                    var splitGreedyWord = string.Join(" ", lang.BreakIntoSentences(greedyWord).SelectMany(x => x).Select(x => x.RawWord));
+                    glosses.Add(CreateGloss(new WordInfo(splitGreedyWord), "{0}", greedyEntries));
+
+                    i += greedySelection.Count - 1; // -1 because iteration will result in one extra increase
+                    continue;
+                }
+                else if (mapping.TryGetValue(word.EstimatedPartOfSpeech, out var edictType))
+                {
+                    var description = lookup
+                        ?.SelectMany(entry => entry.Senses)
+                        .FirstOrDefault(s => s.Type == edictType)
+                        ?.Description;
+                    description = description ?? lookup?.SelectMany(entry => entry.Senses).First().Description;
+                    glosses.Add(new GlossNote(word.RawWord, description));
+                }
+                else if (word.EstimatedPartOfSpeech == PartOfSpeech.Particle)
+                {
                     var description = lookup
                         ?.SelectMany(entry => entry.Senses)
                         .First(s => s.Type == EdictType.prt)
@@ -33,12 +67,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 }
                 else if (word.Type == EdictType.vs_i)
                 {
-                    glosses.Add(new GlossNote(
-                        word.RawWord,
-                        ("suru, " + (dict.Lookup(word.NotInflected).FirstOrDefault()?.Senses.First().Description) + ", verbalizing suffix" +
-                         (word.RawWord != word.NotInflected ? " + inflections" : "")).Trim()));
+                    glosses.Add(CreateGloss(word, "suru, {0}, verbalizing suffix", lookup));
                 }
-                else if (word.Independent == false || word.EstimatedPartOfSpeech == PartOfSpeech.AuxiliaryVerb)
+                else if (word.Independent == false)
                 {
                     var l = glosses.Last();
                     glosses.RemoveAt(glosses.Count - 1);
@@ -48,13 +79,25 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 }
                 else
                 {
-                    glosses.Add(new GlossNote(
-                        word.RawWord,
-                        ((dict.Lookup(word.NotInflected).FirstOrDefault()?.Senses.First().Description) +
-                         (word.RawWord != word.NotInflected ? " + inflections" : "")).Trim()));
+                    glosses.Add(CreateGloss(word, "{0}", lookup));
                 }
             };
             return glosses;
+        }
+
+        private GlossNote CreateGloss(WordInfo foreign, string format, IEnumerable<JMDictEntry> notInflected)
+        {
+            string senseString = "";
+            if(notInflected != null)
+            {
+                JMDictSense sense = notInflected.SelectMany(e => e.Senses).FirstOrDefault(e => e.Type != null && e.Type == foreign.Type);
+                sense = sense ?? notInflected.SelectMany(e => e.Senses).First();
+                senseString = sense.Description;
+            }
+
+            return new GlossNote(
+                foreign.RawWord,
+                (string.Format(format, senseString) + (foreign.RawWord != foreign.NotInflected && foreign.NotInflected != null ? " + inflections" : "")).Trim());
         }
 
         public AutoGlosser(ILanguageService lang, JMDict dict)

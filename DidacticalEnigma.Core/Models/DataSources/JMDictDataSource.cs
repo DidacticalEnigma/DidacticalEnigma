@@ -82,29 +82,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             if (request.SubsequentWords == null)
                 return (null, null);
 
-            int backOffCount = backOffCountStart;
-            IEnumerable<JMDictEntry> found = null;
-            string foundWord = null;
-            string concatenatedWord = "";
-            foreach (var word in request.SubsequentWords)
-            {
-                concatenatedWord += word;
-                var newEntry = jdict.Lookup(concatenatedWord);
-                if (newEntry == null)
-                {
-                    backOffCount--;
-                    if (backOffCount == 0)
-                        break;
-                }
-                else
-                {
-                    found = newEntry;
-                    foundWord = concatenatedWord;
-                    backOffCount = backOffCountStart;
-                }
-            }
-
-            return (found, foundWord);
+            return jdict.GreedyLookup(request.SubsequentWords, backOffCountStart);
         }
 
         public void Dispose()

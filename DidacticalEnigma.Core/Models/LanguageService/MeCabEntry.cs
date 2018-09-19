@@ -41,122 +41,122 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             switch(s)
             {
                 case "五段・ラ行":
-                    return null;
+                return null;
                 case "特殊・マス":
-                    return null;
+                return null;
                 case "特殊・タ":
-                    return null;
+                return null;
                 case "一段":
-                    return null;
+                return null;
                 case "サ変・スル":
-                    return EdictType.vs_i;
+                return EdictType.vs_i;
                 case "特殊・ナイ":
-                    return null;
+                return null;
                 case "五段・サ行":
-                    return null;
+                return null;
                 case "形容詞・アウオ段":
-                    return null;
+                return null;
                 case "五段・カ行イ音便":
-                    return null;
+                return null;
                 case "五段・ワ行促音便":
-                    return null;
+                return null;
                 case "特殊・ダ":
-                    return null;
+                return null;
                 case "五段・バ行":
-                    return null;
+                return null;
                 case "カ変・クル":
-                    return null;
+                return null;
                 case "不変化型":
-                    return null;
+                return null;
                 case "五段・タ行":
-                    return null;
+                return null;
                 case "五段・マ行":
-                    return null;
+                return null;
                 case "五段・カ行促音便":
-                    return null;
+                return null;
                 case "特殊・デス":
-                    return null;
+                return null;
                 case "カ変・来ル":
-                    return null;
+                return null;
                 case "五段・ラ行特殊":
-                    return null;
+                return null;
                 case "特殊・タイ":
-                    return null;
+                return null;
                 case "形容詞・イ段":
-                    return null;
+                return null;
                 case "文語・ベシ":
-                    return null;
+                return null;
                 case "五段・ラ行アル":
-                    return null;
+                return null;
                 case "形容詞・イイ":
-                    return null;
+                return null;
                 case "五段・カ行促音便ユク":
-                    return null;
+                return null;
                 case "一段・クレル":
-                    return null;
+                return null;
                 case "五段・ガ行":
-                    return null;
+                return null;
                 case "下二・タ行":
-                    return null;
+                return null;
                 case "特殊・ヌ":
-                    return null;
+                return null;
                 case "文語・ナリ":
-                    return null;
+                return null;
                 case "五段・ナ行":
-                    return null;
+                return null;
                 case "サ変・－スル":
-                    return null;
+                return null;
                 case "文語・キ":
-                    return null;
+                return null;
                 case "一段・得ル":
-                    return null;
+                return null;
                 case "文語・リ":
-                    return null;
+                return null;
                 case "サ変・－ズル":
-                    return null;
+                return null;
                 case "特殊・ヤ":
-                    return null;
+                return null;
                 case "文語・ル":
-                    return null;
+                return null;
                 case "特殊・ジャ":
-                    return null;
+                return null;
                 case "文語・ゴトシ":
-                    return null;
+                return null;
                 case "ラ変":
-                    return null;
+                return null;
                 case "四段・ハ行":
-                    return null;
+                return null;
                 case "下二・カ行":
-                    return null;
+                return null;
                 case "上二・ダ行":
-                    return null;
+                return null;
                 case "下二・ガ行":
-                    return null;
+                return null;
                 case "四段・バ行":
-                    return null;
+                return null;
                 case "下二・マ行":
-                    return null;
+                return null;
                 case "五段・ワ行ウ音便":
-                    return null;
+                return null;
                 case "下二・ダ行":
-                    return null;
+                return null;
                 default:
-                    return null;
+                return null;
             }
         }
 
         private static bool? IsIndependentFromSections(IEnumerable<string> sections)
         {
-            foreach (var s in sections)
+            foreach(var s in sections)
             {
-                switch (s)
+                switch(s)
                 {
                     case "非自立":
-                        return false;
+                    return false;
                     case "自立":
-                        return true;
+                    return true;
                     default:
-                        continue;
+                    continue;
                 }
             }
 
@@ -207,6 +207,110 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<string> PartOfSpeechSections { get; }
 
+        public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo =>
+            PartOfSpeechSections.Select(PartOfSpeechInfoFromString);
+
+        private PartOfSpeechInfo PartOfSpeechInfoFromString(string arg)
+        {
+            switch(arg)
+            {
+                case "一般":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "係助詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "数":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "接尾":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "助数詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "格助詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "自立":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "句点":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "助詞類接続":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "副詞化":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "接続助詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "サ変接続":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "副助詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "非自立":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "終助詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "代名詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Pronoun;
+                case "並立助詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "括弧開":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "括弧閉":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "引用":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "助動詞語幹":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "固有名詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "人名":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "名":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "連体化":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "形容動詞語幹":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "副詞可能":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "読点":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "副助詞／並立助詞／終助詞":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "組織":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "ナイ形容詞語幹":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "地域":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "連語":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "名詞接続":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "姓":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "国":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "特殊":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "数接続":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "アルファベット":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "空白":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "間投":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "形容詞接続":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "接続詞的":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "動詞接続":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "動詞非自立的":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                case "引用文字列":
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+                default:
+                return DidacticalEnigma.Core.Models.LanguageService.PartOfSpeechInfo.Unknown;
+            }
+        }
+
         public string ConjugatedForm { get; }
 
         public string Inflection { get; }
@@ -216,5 +320,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public string Pronunciation { get; }
 
         public bool? IsIndependent { get; }
+    }
+
+    public enum PartOfSpeechInfo
+    {
+        Unknown,
+        Pronoun,
     }
 }
