@@ -17,6 +17,8 @@ namespace DidacticalEnigma.ViewModels
 
         private readonly IFontResolver fontResolver;
 
+        private long id = 0;
+
         private RichFormatting formattedResult;
         public RichFormatting FormattedResult
         {
@@ -87,12 +89,19 @@ namespace DidacticalEnigma.ViewModels
 
         public bool HasFound => FormattedResult != null;
 
-        public async Task Search(Request request)
+        public async Task Search(Request request, long id)
         {
             if (!IsUsed || request == null)
                 return;
+            this.id = id;
             IsProcessing = true;
-            FormattedResult = await dataSource.Answer(request).FirstOrDefaultAsync();
+            var result = await dataSource.Answer(request).FirstOrDefaultAsync();
+            if (this.id > id)
+            {
+                return;
+            }
+
+            FormattedResult = result;
             IsProcessing = false;
         }
 

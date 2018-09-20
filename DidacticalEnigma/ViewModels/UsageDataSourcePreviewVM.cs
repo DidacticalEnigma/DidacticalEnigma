@@ -38,12 +38,15 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
+        private long id = 0;
+
         public Task Search(Request req)
         {
             var tasks = new List<Task>();
+            var id = Interlocked.Increment(ref this.id);
             foreach(var dataSource in DataSources)
             {
-                tasks.Add(dataSource.Search(req));
+                tasks.Add(dataSource.Search(req, id));
             }
             return Task.WhenAll(tasks);
         }
