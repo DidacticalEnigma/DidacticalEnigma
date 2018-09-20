@@ -391,6 +391,9 @@ namespace JDict
         adj_pn,
 
         [Description("auxiliary verb")]
-        aux_v
+        aux_v,
+
+        [Description("copula")]
+        cop_da,
     }
 }

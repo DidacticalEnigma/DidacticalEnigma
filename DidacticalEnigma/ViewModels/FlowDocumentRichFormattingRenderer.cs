@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Documents;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Models;
@@ -14,6 +15,7 @@ namespace DidacticalEnigma.ViewModels
         public static FlowDocument Render(IFontResolver fontResolver, RichFormatting document)
         {
             var flow = new FlowDocument();
+            flow.TextAlignment = TextAlignment.Left;
             foreach(var paragraph in document.Paragraphs)
             {
                 switch(paragraph)

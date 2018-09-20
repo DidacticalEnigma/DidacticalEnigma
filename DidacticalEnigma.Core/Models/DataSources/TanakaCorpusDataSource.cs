@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
 using JDict;
 
@@ -57,6 +58,45 @@ namespace DidacticalEnigma.Core.Models.DataSources
         public TanakaCorpusDataSource(string dataDirectory)
         {
             this.tanaka = new Tanaka(Path.Combine(dataDirectory, "examples.utf"), Encoding.UTF8);
+        }
+    }
+
+    public class AutoGlosserDataSource : IDataSource
+    {
+        private readonly AutoGlosser autoglosser;
+
+        public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
+            new Guid("76EAA6CD-2FD7-4691-9B07-E9FE907F89E9"),
+            "AutoGlosser",
+            "NOTE: This functionality is completely untested and may result in horribly broken glosses",
+            null);
+
+        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        {
+            return new AsyncEnumerable<RichFormatting>(async yield =>
+            {
+                var rich = new RichFormatting();
+                var glosses = autoglosser.Gloss(request.AllText());
+                rich.Paragraphs.Add(new TextParagraph(EnumerableExt.OfSingle(new Text(Descriptor.AcknowledgementText))));
+                var s = string.Join("\n", glosses.Select(gloss => $"- {gloss}"));
+                rich.Paragraphs.Add(new TextParagraph(EnumerableExt.OfSingle(new Text(s))));
+                await yield.ReturnAsync(rich).ConfigureAwait(false);
+            });
+        }
+
+        public void Dispose()
+        {
+
+        }
+
+        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
+        {
+            return Task.FromResult(UpdateResult.NotSupported);
+        }
+
+        public AutoGlosserDataSource(ILanguageService lang, JMDict jdict)
+        {
+            this.autoglosser = new AutoGlosser(lang, jdict);
         }
     }
 }

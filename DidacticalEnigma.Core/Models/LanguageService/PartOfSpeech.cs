@@ -11,7 +11,7 @@
         Adverb,
         Adjective,
         Conjunction,
-        PreNounAdjectivalAdjective,
+        PreNounAdjectival,
         Filler,
         Interjection,
         Prefix,

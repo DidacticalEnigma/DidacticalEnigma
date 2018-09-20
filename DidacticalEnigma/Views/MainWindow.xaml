@@ -42,6 +42,7 @@
             Command="{Binding SwitchToTab}"
             CommandParameter="katakana"
             Modifiers="Control" />
+        <KeyBinding Key="F5" Command="{Binding DataSourceForceRefresh}" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>

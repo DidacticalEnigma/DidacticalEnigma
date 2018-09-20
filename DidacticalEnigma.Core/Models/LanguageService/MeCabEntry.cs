@@ -61,7 +61,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 case "五段・ワ行促音便":
                 return null;
                 case "特殊・ダ":
-                return null;
+                return EdictType.cop_da;
                 case "五段・バ行":
                 return null;
                 case "カ変・クル":
@@ -184,8 +184,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 case "接続詞":
                 return PartOfSpeech.Conjunction;
                 case "連体詞":
-                // TOFIX: name
-                return PartOfSpeech.PreNounAdjectivalAdjective;
+                return PartOfSpeech.PreNounAdjectival;
                 case "フィラー":
                 return PartOfSpeech.Filler;
                 case "感動詞":
@@ -326,5 +325,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     {
         Unknown,
         Pronoun,
+        CopulaDa,
     }
 }

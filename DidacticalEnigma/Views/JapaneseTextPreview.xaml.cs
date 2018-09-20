@@ -87,9 +87,14 @@ namespace DidacticalEnigma.Views
                 previousClickedLetter = clickedLetter;
                 codePointVM = (CodePointVM)clickedLetter.DataContext;
                 SetCurrentValue(SelectionInfoProperty, SelectionInfo == null
-                    ? new SelectionInfoVM(codePointVM, wordVM, text)
+                    ? new SelectionInfoVM(codePointVM, wordVM, text, AllText)
                     : SelectionInfo.Clone(codePointVM, wordVM, text));
             }
+        }
+
+        private string AllText()
+        {
+            return string.Join("\n", Lines.Select(l => string.Join(" ", l.Words.Select(w => w.StringForm))));
         }
 
         private static T FindAncestor<T>(DependencyObject current)

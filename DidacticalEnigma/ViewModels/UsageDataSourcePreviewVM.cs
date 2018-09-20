@@ -64,6 +64,7 @@ namespace DidacticalEnigma.ViewModels
             DataSources.Add(new DataSourceVM(new PartialWordLookupJMDictDataSource(jmdict, frequencyList), fontResolver));
             DataSources.Add(new DataSourceVM(typeof(CustomNotesDataSource), dataSourcePath, fontResolver));
             DataSources.Add(new DataSourceVM(new VerbConjugationDataSource(jmdict), fontResolver));
+            DataSources.Add(new DataSourceVM(new AutoGlosserDataSource(lang, jmdict), fontResolver));
 
             Func<Element> fac = () => new Leaf(
                 () => new DataSourcePreviewVM(this),

@@ -19,7 +19,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public EdictType? Type { get; }
 
-        public WordInfo(string word, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null, bool? isIndependent = null, EdictType? type = null)
+        public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo { get; }
+
+        public WordInfo(string word, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null, bool? isIndependent = null, EdictType? type = null, IEnumerable<PartOfSpeechInfo> posInfo = null)
         {
             RawWord = word;
             CodePoints = new List<CodePoint>(
@@ -28,6 +30,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             NotInflected = notInflected;
             Independent = isIndependent;
             Type = type;
+            this.PartOfSpeechInfo = posInfo?.ToList() ?? Enumerable.Empty<PartOfSpeechInfo>();
         }
     }
 }

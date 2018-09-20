@@ -113,6 +113,10 @@ namespace DidacticalEnigma.ViewModels
 
                 }
             });
+            DataSourceForceRefresh = new RelayCommand(() =>
+            {
+                UsageDataSourceVM.Search(UsageDataSourceVM.Request);
+            });
         }
 
         private static void LaunchWebBrowserAt(string url)
@@ -193,6 +197,8 @@ namespace DidacticalEnigma.ViewModels
         public RelayCommand SearchWeb { get; }
 
         public RelayCommand SwitchToTab { get; }
+
+        public RelayCommand DataSourceForceRefresh { get; }
 
         private int tabIndex = 1;
 

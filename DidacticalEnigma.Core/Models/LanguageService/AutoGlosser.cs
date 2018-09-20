@@ -16,7 +16,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private static readonly IReadOnlyDictionary<PartOfSpeech, EdictType> mapping = new Dictionary<PartOfSpeech, EdictType>
         {
-            { PartOfSpeech.PreNounAdjectivalAdjective, EdictType.adj_pn },
+            { PartOfSpeech.PreNounAdjectival, EdictType.adj_pn },
             { PartOfSpeech.AuxiliaryVerb, EdictType.aux_v }
         };
 
@@ -47,7 +47,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 {
                     glosses.Add(CreateGloss(word, "suru, {0}", lookup));
                 }
-                if(word.Type == EdictType.vs_i)
+                if (word.Type == EdictType.vs_i)
                 {
                     glosses.Add(CreateGloss(word, "suru, {0}, verbalizing suffix", lookup));
                 }
@@ -57,7 +57,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         ?.SelectMany(entry => entry.Senses)
                         .FirstOrDefault(s => s.Type != null && s.Type == edictType)
                         ?.Description;
-                    if(description == null && greedySelection.Count > 1)
+                    if((description == null || word.Type == EdictType.cop_da) && greedySelection.Count > 1)
                     {
                         var greedyWord = string.Join("", greedySelection);
                         var greedyEntries = dict.Lookup(greedyWord);
@@ -68,7 +68,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         i += greedySelection.Count - 1; // -1 because iteration will result in one extra increase
                         continue;
                     }
-                    description = description ?? lookup?.SelectMany(entry => entry.Senses).First().Description;
+                    description = description ?? lookup?.SelectMany(entry => entry.Senses).FirstOrDefault()?.Description ?? "";
                     glosses.Add(new GlossNote(word.RawWord, description));
                 }
                 else if (word.EstimatedPartOfSpeech == PartOfSpeech.Particle)
