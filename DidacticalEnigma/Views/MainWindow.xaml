@@ -13,9 +13,6 @@
     Width="960"
     Height="900"
     mc:Ignorable="d">
-    <Window.DataContext>
-        <vms:MainWindowVM />
-    </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding
             Key="D1"

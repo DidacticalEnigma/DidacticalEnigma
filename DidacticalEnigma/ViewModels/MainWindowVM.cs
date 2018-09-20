@@ -32,35 +32,12 @@ namespace DidacticalEnigma.ViewModels
 
         public KanaBoardVM KatakanaBoard { get; }
 
-        public MainWindowVM()
+        public MainWindowVM(ILanguageService lang, JMDict dict, FrequencyList frequencyList, string baseDir)
         {
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            {
-                
-            }
-            var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml"));
-            var kradfile = new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
-            var radkfile = new Radkfile(Path.Combine(baseDir, @"dic\radkfile1_plus_2_utf8"), Encoding.UTF8);
-            var kanaProperties = new KanaProperties(
-                Path.Combine(baseDir, @"dic\hiragana_romaji.txt"),
-                Path.Combine(baseDir, @"dic\katakana_romaji.txt"),
-                Path.Combine(baseDir, @"dic\kana_related.txt"),
-                Encoding.UTF8);
-            lang = new LanguageService(
-                new MeCab(new MeCabParam
-                {
-                    DicDir = Path.Combine(baseDir, @"dic\ipadic"),
-                }),
-                EasilyConfusedKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
-                kradfile,
-                radkfile,
-                kanjidict,
-                kanaProperties);
+            this.lang = lang;
             HiraganaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\hiragana_romaji.txt"), Encoding.UTF8, lang);
             KatakanaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\katakana_romaji.txt"), Encoding.UTF8, lang);
-            this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e"));
-            var wordFrequency = new FrequencyList(Path.Combine(baseDir, @"dic\word_form_frequency_list.txt"), Encoding.UTF8);
-            UsageDataSourceVM = new UsageDataSourcePreviewVM(lang, Path.Combine(baseDir, "dic"), jmdict, wordFrequency);
+            UsageDataSourceVM = new UsageDataSourcePreviewVM(lang, Path.Combine(baseDir, "dic"), dict, frequencyList);
             TextBuffers.Add(new TextBufferVM("Scratchpad", lang));
             TextBuffers.Add(new TextBufferVM("Main", lang));
             ClipboardTextBuffer = new TextBufferVM("Clipboard", lang);
@@ -74,7 +51,7 @@ namespace DidacticalEnigma.ViewModels
             });
             SendToCurrent = new RelayCommand(() =>
             {
-                if (CurrentTextBuffer == null)
+                if(CurrentTextBuffer == null)
                     return;
                 CurrentTextBuffer.RawOutput = ClipboardTextBuffer.RawOutput;
             });
@@ -86,7 +63,7 @@ namespace DidacticalEnigma.ViewModels
             {
                 if(CurrentTextBuffer == null)
                     return;
-                if (SearchEngineIndex == -1)
+                if(SearchEngineIndex == -1)
                     return;
 
                 LaunchWebBrowserAt(SearchEngines[SearchEngineIndex].BuildSearch(CurrentTextBuffer.SelectionInfo.GetRequest().QueryText));
@@ -96,20 +73,21 @@ namespace DidacticalEnigma.ViewModels
                 switch((string)tab)
                 {
                     case "project":
-                        TabIndex = 0;
-                        break;
+                    TabIndex = 0;
+                    break;
                     case "usage1":
-                        TabIndex = 1;
-                        break;
+                    TabIndex = 1;
+                    break;
                     case "hiragana":
-                        TabIndex = 3;
-                        break;
+                    TabIndex = 3;
+                    break;
                     case "kanji":
-                        TabIndex = 4;
-                        break;
+                    TabIndex = 4;
+                    break;
                     case "katakana":
-                        TabIndex = 5;
-                        break;;
+                    TabIndex = 5;
+                    break;
+                    ;
 
                 }
             });
@@ -135,8 +113,6 @@ namespace DidacticalEnigma.ViewModels
         public ObservableBatchCollection<TextBufferVM> TextBuffers { get; } = new ObservableBatchCollection<TextBufferVM>();
 
         private TextBufferVM currentTextBuffer;
-
-        private readonly JMDict jmdict;
 
         private int searchEngineIndex = -1;
 
@@ -248,8 +224,6 @@ namespace DidacticalEnigma.ViewModels
         public void Dispose()
         {
             UsageDataSourceVM.Dispose();
-            lang.Dispose();
-            jmdict.Dispose();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
