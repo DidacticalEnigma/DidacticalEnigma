@@ -388,6 +388,9 @@ namespace JDict
         pn,
 
         [Description("pre-noun adjectival (rentaishi)")]
-        adj_pn
+        adj_pn,
+
+        [Description("auxiliary verb")]
+        aux_v
     }
 }

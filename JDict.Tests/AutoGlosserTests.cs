@@ -58,14 +58,52 @@ namespace JDict.Tests
                 new GlossNote("歌声", "singing voice/(sound of) singing"),
                 new GlossNote("録音", "(audio) recording"),
                 new GlossNote("し て た ん だ", "suru, to do/to carry out/to perform, verbalizing suffix + inflections")
-            })
+            }),
+            new TestCaseData("理由を話して\nもらえるかしら?", new[]
+            {
+                new GlossNote("理由", "reason/pretext/motive"),
+                new GlossNote("を", "Particle を - indicates direct object of action"),
+                new GlossNote("話して", "to talk/to speak/to converse/to chat + inflections"),
+                new GlossNote("もらえる", "could you (give me)"),
+                new GlossNote("かしら", "Particle かしら - I wonder")
+            }),
+            new TestCaseData("強引な理由だけれど\nこれを納得させれば\nもう探されないはずよ", new[]
+            {
+                new GlossNote("強引", "overbearing/coercive/pushy/forcible/high-handed"),
+                new GlossNote("な", ""),
+                new GlossNote("理由", "reason/pretext/motive"),
+                new GlossNote("だ", ""),
+                new GlossNote("けれど", "Particle けれど - but/however/although"),
+                new GlossNote("これ", "this person "),
+                new GlossNote("を", "indicates subject of causative expression"),
+                new GlossNote("納得させれば", "consent/assent/agreement/understanding/comprehension/grasp in causative (to cause/to force/to let) and conditional"),
+                new GlossNote("もう", "already/yet/by now/(not) anymore"),
+                new GlossNote("探さ れ", "to search (for something desired, needed)/to look for, in potential form"),
+                new GlossNote("ない", "not"),
+                new GlossNote("はず", "expectation that something took place, will take place or was in some state/it should be so/bound to be/expected to be/must be"),
+                new GlossNote("よ", "Sentence ender that gives a “you know” feeling, often when relaying new information."),
+            }),
+            new TestCaseData("男の子が喜ぶのを\nわかってやってる\nんだろうけど", new[]
+            {
+                new GlossNote("男の子", "boy/male child/baby boy"),
+                new GlossNote("が", "Particle が - indicates sentence subject (occasionally object)"),
+                new GlossNote("喜ぶ", "to be delighted/to be glad/to be pleased"),
+                new GlossNote("の", "nominalizer"),
+                new GlossNote("を", "Particle を - indicates direct object of action"),
+                new GlossNote("わかっ て", "to understand/to comprehend/to grasp/to see/to get/to follow in -te form"),
+                new GlossNote("やっ", ""),
+                new GlossNote("てる", "to be ...-ing/to have been ...-ing"),
+                new GlossNote("ん", "short for の"),
+                new GlossNote("だろ う", ""),
+                new GlossNote("けど", "Particle けど - but/however/although"),
+            }),
         };
 
         [TestCaseSource(nameof(TestCases))]
         public void Basic(string input, IEnumerable<GlossNote> expected)
         {
             var notes = glosser.Gloss(input).ToList();
-            var r = string.Join("\n", notes.Select(x => x.ToString()));
+            Console.WriteLine(string.Join("\n", notes.Select(x => x.ToString())));
             CollectionAssert.AreEqual(expected, notes);
             //var notes = glosser.Gloss("それは問題ね");
         }

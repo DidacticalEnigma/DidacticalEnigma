@@ -16,7 +16,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private static readonly IReadOnlyDictionary<PartOfSpeech, EdictType> mapping = new Dictionary<PartOfSpeech, EdictType>
         {
-            { PartOfSpeech.PreNounAdjectivalAdjective, EdictType.adj_pn }
+            { PartOfSpeech.PreNounAdjectivalAdjective, EdictType.adj_pn },
+            { PartOfSpeech.AuxiliaryVerb, EdictType.aux_v }
         };
 
         public IEnumerable<GlossNote> Gloss(string inputText)
@@ -35,25 +36,38 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     var w = string.Join("", s);
                     return dict.Lookup(w) != null;
                 }).ToList();
-                var lookup = dict.Lookup(word.NotInflected);
-                
-                if (word.RawWord == word.NotInflected && greedySelection.Count > 1)
+                var lookup = dict.Lookup(word.NotInflected ?? word.RawWord);
+
+                if (!word.RawWord.Any(c => c != '.' && c != '!' && c != '?'))
                 {
-                    var greedyWord = string.Join("", greedySelection);
-                    var greedyEntries = dict.Lookup(greedyWord);
-
-                    var splitGreedyWord = string.Join(" ", lang.BreakIntoSentences(greedyWord).SelectMany(x => x).Select(x => x.RawWord));
-                    glosses.Add(CreateGloss(new WordInfo(splitGreedyWord), "{0}", greedyEntries));
-
-                    i += greedySelection.Count - 1; // -1 because iteration will result in one extra increase
+                    // skip punctuation
                     continue;
+                }
+                if (word.Type == EdictType.vs_s)
+                {
+                    glosses.Add(CreateGloss(word, "suru, {0}", lookup));
+                }
+                if(word.Type == EdictType.vs_i)
+                {
+                    glosses.Add(CreateGloss(word, "suru, {0}, verbalizing suffix", lookup));
                 }
                 else if (mapping.TryGetValue(word.EstimatedPartOfSpeech, out var edictType))
                 {
                     var description = lookup
                         ?.SelectMany(entry => entry.Senses)
-                        .FirstOrDefault(s => s.Type == edictType)
+                        .FirstOrDefault(s => s.Type != null && s.Type == edictType)
                         ?.Description;
+                    if(description == null && greedySelection.Count > 1)
+                    {
+                        var greedyWord = string.Join("", greedySelection);
+                        var greedyEntries = dict.Lookup(greedyWord);
+
+                        var splitGreedyWord = string.Join(" ", lang.BreakIntoSentences(greedyWord).SelectMany(x => x).Select(x => x.RawWord));
+                        glosses.Add(CreateGloss(new WordInfo(splitGreedyWord), "{0}", greedyEntries));
+
+                        i += greedySelection.Count - 1; // -1 because iteration will result in one extra increase
+                        continue;
+                    }
                     description = description ?? lookup?.SelectMany(entry => entry.Senses).First().Description;
                     glosses.Add(new GlossNote(word.RawWord, description));
                 }
@@ -64,10 +78,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         .First(s => s.Type == EdictType.prt)
                         .Description;
                     glosses.Add(new GlossNote(word.RawWord, "Particle " + word.NotInflected + " - " + description));
-                }
-                else if (word.Type == EdictType.vs_i)
-                {
-                    glosses.Add(CreateGloss(word, "suru, {0}, verbalizing suffix", lookup));
                 }
                 else if (word.Independent == false)
                 {
