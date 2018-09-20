@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Async;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -76,11 +77,13 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return new AsyncEnumerable<RichFormatting>(async yield =>
             {
                 var rich = new RichFormatting();
-                var glosses = autoglosser.Gloss(request.AllText());
-                rich.Paragraphs.Add(new TextParagraph(EnumerableExt.OfSingle(new Text(Descriptor.AcknowledgementText))));
+                var text = request.AllText();
+                var glosses = autoglosser.Gloss(text);
+                rich.Paragraphs.Add(
+                    new TextParagraph(EnumerableExt.OfSingle(new Text(Descriptor.AcknowledgementText))));
                 var s = string.Join("\n", glosses.Select(gloss => $"- {gloss}"));
                 rich.Paragraphs.Add(new TextParagraph(EnumerableExt.OfSingle(new Text(s))));
-                await yield.ReturnAsync(rich).ConfigureAwait(false);
+                await yield.ReturnAsync(rich);
             });
         }
 

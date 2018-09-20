@@ -30,7 +30,14 @@ namespace DidacticalEnigma.Views
                 nameof(Lines),
                 typeof(IReadOnlyList<LineVM>),
                 typeof(JapaneseTextPreview),
-                new PropertyMetadata(null));
+                new PropertyMetadata(null, OnLinesPropertyChanged));
+
+        private static void OnLinesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var self = (JapaneseTextPreview)d;
+            var newValue = (IReadOnlyList<LineVM>)e.NewValue;
+            self.lines = newValue;
+        }
 
         public SelectionInfoVM SelectionInfo
         {
@@ -46,6 +53,7 @@ namespace DidacticalEnigma.Views
                 typeof(JapaneseTextPreview),
                 new PropertyMetadata(null));
 
+        private IReadOnlyList<LineVM> lines;
 
         private StackPanel previousClickedWord = null;
 
@@ -94,7 +102,7 @@ namespace DidacticalEnigma.Views
 
         private string AllText()
         {
-            return string.Join("\n", Lines.Select(l => string.Join(" ", l.Words.Select(w => w.StringForm))));
+            return string.Join("\n", lines.Select(l => string.Join(" ", l.Words.Select(w => w.StringForm))));
         }
 
         private static T FindAncestor<T>(DependencyObject current)

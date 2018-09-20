@@ -36,7 +36,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     var w = string.Join("", s);
                     return dict.Lookup(w) != null;
                 }).ToList();
-                var lookup = dict.Lookup(word.NotInflected ?? word.RawWord);
+                var lookup = dict.Lookup(word.NotInflected ?? word.RawWord)?.ToList();
 
                 if (!word.RawWord.Any(c => c != '.' && c != '!' && c != '?'))
                 {
@@ -75,9 +75,16 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 {
                     var description = lookup
                         ?.SelectMany(entry => entry.Senses)
-                        .First(s => s.Type == EdictType.prt)
-                        .Description;
-                    glosses.Add(new GlossNote(word.RawWord, "Particle " + word.NotInflected + " - " + description));
+                        .FirstOrDefault(s => s.Type == EdictType.prt)
+                        ?.Description;
+                    if (description != null)
+                    {
+                        glosses.Add(new GlossNote(word.RawWord, "Particle " + word.NotInflected + " - " + description));
+                    }
+                    else
+                    {
+                        glosses.Add(CreateGloss(word, "{0}", lookup));
+                    }
                 }
                 else if (word.Independent == false)
                 {
