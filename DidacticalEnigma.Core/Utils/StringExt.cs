@@ -25,5 +25,30 @@ namespace DidacticalEnigma.Core.Utils
         {
             return input.Split(new string[] { word }, StringSplitOptions.None).Select(part => (part, false)).Intersperse((word, true));
         }
+
+        public static string FromCodePoints(IEnumerable<int> codePoints)
+        {
+            var list = new List<char>();
+            foreach(var codePoint in codePoints)
+            {
+                int utf32 = codePoint;
+                if((utf32 < 0 || utf32 > 0x10ffff) || (utf32 >= 0x00d800 && utf32 <= 0x00dfff))
+                {
+                    throw new ArgumentException(nameof(codePoints));
+                }
+
+                if(utf32 < 0x10000)
+                {
+                    list.Add((char)codePoint);
+                }
+                else
+                {
+                    utf32 -= 0x10000;
+                    list.Add((char)((utf32 / 0x400) + '\ud800'));
+                    list.Add((char)((utf32 % 0x400) + '\udc00'));
+                }
+            }
+            return new string(list.ToArray());
+        }
     }
 }
