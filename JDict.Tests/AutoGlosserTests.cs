@@ -118,6 +118,7 @@ namespace JDict.Tests
             var kanaProperties = new KanaProperties(
                 Path.Combine(baseDir, @"dic\hiragana_romaji.txt"),
                 Path.Combine(baseDir, @"dic\katakana_romaji.txt"),
+                Path.Combine(baseDir, @"dic\hiragana_katakana.txt"),
                 Path.Combine(baseDir, @"dic\kana_related.txt"),
                 Encoding.UTF8);
             this.lang = new LanguageService(
