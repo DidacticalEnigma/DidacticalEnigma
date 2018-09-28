@@ -6,6 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncEnumerator" Version="2.2.1" />
+    <PackageReference Include="Gu.Analyzers" Version="1.2.18.1-dev">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Optional" Version="4.0.0" />
   </ItemGroup>
 
