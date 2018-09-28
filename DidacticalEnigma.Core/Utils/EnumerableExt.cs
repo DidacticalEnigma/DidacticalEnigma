@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Optional;
 
 namespace DidacticalEnigma.Core.Utils
 {
@@ -114,6 +115,11 @@ namespace DidacticalEnigma.Core.Utils
         public static bool IsIntersectionNonEmpty<T>(this ISet<T> set, IEnumerable<T> otherSet)
         {
             return otherSet.Any(element => set.Contains(element));
+        }
+
+        public static Option<V> Lookup<K, V>(this IReadOnlyDictionary<K, V> dict, K key)
+        {
+            return dict.TryGetValue(key, out var value) ? value.Some() : value.None();
         }
     }
 }
