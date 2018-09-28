@@ -97,6 +97,11 @@ namespace JDict.Tests
                 new GlossNote("だろ う", ""),
                 new GlossNote("けど", "Particle けど - but/however/although"),
             }),
+            new TestCaseData("手加減する", new[]
+            {
+                new GlossNote("手加減", "going easy on someone/making allowances/using discretion/taking various circumstances into account"),
+                new GlossNote("する", "suru, to do/to carry out/to perform, verbalizing suffix"),
+            }),
         };
 
         [TestCaseSource(nameof(TestCases))]
