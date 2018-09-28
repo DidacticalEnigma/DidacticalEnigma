@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using Optional;
+using Optional.Collections;
 
 namespace JDict
 {
@@ -11,10 +14,9 @@ namespace JDict
 
         // returns decomposition of a kanji into radicals
         // returns null when not a kanji
-        public IEnumerable<string> LookupRadicals(string kanji)
+        public Option<IEnumerable<string>> LookupRadicals(string kanji)
         {
-            entries.TryGetValue(kanji, out var entry);
-            return entry;
+            return entries.GetValueOrNone(kanji);
         }
 
         public IEnumerable<KeyValuePair<string, IEnumerable<string>>> AllRadicals()

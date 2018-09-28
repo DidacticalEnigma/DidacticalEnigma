@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
+using Optional;
+using Optional.Collections;
 
 namespace JDict
 {
@@ -66,7 +68,7 @@ namespace JDict
                 var partOfSpeech = s.PartOfSpeech ?? previousPartOfSpeech;
                 var partOfSpeechString = s.PartOfSpeech != null ? string.Join("/", s.PartOfSpeech) : "";
                 sense.Add(new JMDictSense(
-                    EdictTypeUtils.FromDescriptionOrNull(partOfSpeech?.FirstOrDefault(pos => EdictTypeUtils.FromDescriptionOrNull(pos) != null) ?? ""),
+                    EdictTypeUtils.FromDescription(partOfSpeech?.FirstOrNone(pos => EdictTypeUtils.FromDescription(pos).HasValue).ValueOr("")),
                     partOfSpeechString,
                     string.Join("/", s.Glosses.Select(g => g.Text.Trim()))));
                 previousPartOfSpeech = partOfSpeech;
@@ -209,13 +211,13 @@ namespace JDict
 
     public class JMDictSense
     {
-        public EdictType? Type { get; }
+        public Option<EdictType> Type { get; }
 
         public string PartOfSpeech { get; }
 
         public string Description { get; }
 
-        public JMDictSense(EdictType? type, string pos, string text)
+        public JMDictSense(Option<EdictType> type, string pos, string text)
         {
             Type = type;
             PartOfSpeech = pos;
@@ -230,19 +232,9 @@ namespace JDict
 
     public static class EdictTypeUtils
     {
-        public static EdictType FromDescription(string description)
+        public static Option<EdictType> FromDescription(string description)
         {
-            return mapping[description];
-        }
-
-        public static EdictType? FromDescriptionOrNull(string description)
-        {
-            if(mapping.TryGetValue(description, out var value))
-            {
-                return value;
-            }
-
-            return null;
+            return mapping.GetValueOrNone(description);
         }
 
         public static bool IsVerb(this EdictType type)

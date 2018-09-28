@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
@@ -7,7 +8,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     {
         IEnumerable<CodePoint> LookupRelatedCharacters(CodePoint point);
 
-        IEnumerable<CodePoint> LookupRadicals(Kanji kanji);
+        Option<IEnumerable<CodePoint>> LookupRadicals(Kanji kanji);
 
         IEnumerable<Radical> AllRadicals();
 

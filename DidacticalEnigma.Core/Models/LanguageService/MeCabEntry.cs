@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JDict;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
@@ -36,112 +37,112 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             }
         }
 
-        private static EdictType? TypeFromString(string s)
+        private static Option<EdictType> TypeFromString(string s)
         {
-            switch(s)
+            switch (s)
             {
                 case "五段・ラ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "特殊・マス":
-                return null;
+                    return Option.None<EdictType>();
                 case "特殊・タ":
-                return null;
+                    return Option.None<EdictType>();
                 case "一段":
-                return null;
+                    return Option.None<EdictType>();
                 case "サ変・スル":
-                return EdictType.vs_i;
+                    return Option.Some(EdictType.vs_i);
                 case "特殊・ナイ":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・サ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "形容詞・アウオ段":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・カ行イ音便":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・ワ行促音便":
-                return null;
+                    return Option.None<EdictType>();
                 case "特殊・ダ":
-                return EdictType.cop_da;
+                    return Option.Some(EdictType.cop_da);
                 case "五段・バ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "カ変・クル":
-                return null;
+                    return Option.None<EdictType>();
                 case "不変化型":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・タ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・マ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・カ行促音便":
-                return null;
+                    return Option.None<EdictType>();
                 case "特殊・デス":
-                return null;
+                    return Option.None<EdictType>();
                 case "カ変・来ル":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・ラ行特殊":
-                return null;
+                    return Option.None<EdictType>();
                 case "特殊・タイ":
-                return null;
+                    return Option.None<EdictType>();
                 case "形容詞・イ段":
-                return null;
+                    return Option.None<EdictType>();
                 case "文語・ベシ":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・ラ行アル":
-                return null;
+                    return Option.None<EdictType>();
                 case "形容詞・イイ":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・カ行促音便ユク":
-                return null;
+                    return Option.None<EdictType>();
                 case "一段・クレル":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・ガ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "下二・タ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "特殊・ヌ":
-                return null;
+                    return Option.None<EdictType>();
                 case "文語・ナリ":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・ナ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "サ変・－スル":
-                return null;
+                    return Option.None<EdictType>();
                 case "文語・キ":
-                return null;
+                    return Option.None<EdictType>();
                 case "一段・得ル":
-                return null;
+                    return Option.None<EdictType>();
                 case "文語・リ":
-                return null;
+                    return Option.None<EdictType>();
                 case "サ変・－ズル":
-                return null;
+                    return Option.None<EdictType>();
                 case "特殊・ヤ":
-                return null;
+                    return Option.None<EdictType>();
                 case "文語・ル":
-                return null;
+                    return Option.None<EdictType>();
                 case "特殊・ジャ":
-                return null;
+                    return Option.None<EdictType>();
                 case "文語・ゴトシ":
-                return null;
+                    return Option.None<EdictType>();
                 case "ラ変":
-                return null;
+                    return Option.None<EdictType>();
                 case "四段・ハ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "下二・カ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "上二・ダ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "下二・ガ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "四段・バ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "下二・マ行":
-                return null;
+                    return Option.None<EdictType>();
                 case "五段・ワ行ウ音便":
-                return null;
+                    return Option.None<EdictType>();
                 case "下二・ダ行":
-                return null;
+                    return Option.None<EdictType>();
                 default:
-                return null;
+                    return Option.None<EdictType>();
             }
         }
 
@@ -198,7 +199,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             }
         }
 
-        public EdictType? Type { get; }
+        public Option<EdictType> Type { get; }
 
         public string OriginalForm { get; }
 

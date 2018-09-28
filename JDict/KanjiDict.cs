@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
+using Optional;
+using Optional.Collections;
 
 namespace JDict
 {
@@ -35,10 +37,9 @@ namespace JDict
             return this;
         }
 
-        public KanjiEntry Lookup(string v)
+        public Option<KanjiEntry> Lookup(string v)
         {
-            root.TryGetValue(v, out var entry);
-            return entry;
+            return root.GetValueOrNone(v);
         }
 
         private KanjiDict Init(string path)

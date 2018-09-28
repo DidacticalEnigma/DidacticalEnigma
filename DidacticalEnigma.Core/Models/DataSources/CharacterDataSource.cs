@@ -26,7 +26,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             var rich = new RichFormatting();
             var p = new TextParagraph();
 
-            var radicals = cp is Kanji k ? lang.LookupRadicals(k) : Enumerable.Empty<CodePoint>();
+            var radicals = cp is Kanji k
+                ? lang.LookupRadicals(k).ValueOr(Enumerable.Empty<CodePoint>())
+                : Enumerable.Empty<CodePoint>();
             var romaji = cp is Kana kana ? lang.LookupRomaji(kana) : null;
             var text = cp.ToDescriptionString() + "\n" +
                        (romaji != null ? romaji + "\n" : "") +

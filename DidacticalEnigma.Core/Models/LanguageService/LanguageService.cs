@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DidacticalEnigma.Core.Utils;
 using JDict;
+using Optional;
+using Optional.Unsafe;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
@@ -22,7 +24,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                             word.PartOfSpeech,
                             word.Reading,
                             word.IsIndependent,
-                            word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? EdictType.pn : word.Type,
+                            word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictType.pn) : word.Type,
                             word.PartOfSpeechInfo));
                 });
         }
@@ -111,14 +113,20 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 null as CodePoint);
         }
 
-        public IEnumerable<CodePoint> LookupRadicals(Kanji kanji)
+        public Option<IEnumerable<CodePoint>> LookupRadicals(Kanji kanji)
         {
-            return kradfile.LookupRadicals(kanji.ToString())?.Select(cp => CodePoint.FromString(cp));
+            return kradfile
+                .LookupRadicals(kanji.ToString())
+                .Map(radicals => radicals.Select(cp => CodePoint.FromString(cp)));
         }
 
         public IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals)
         {
-            return radkfile.LookupMatching(radicals.Select(r => r.ToString())).OrderBy(r => kanjidict.Lookup(r).StrokeCount).Select(cp => CodePoint.FromString(cp, 0));
+            return radkfile.LookupMatching(radicals.Select(r => r.ToString()))
+                .OrderBy(r => kanjidict.Lookup(r)
+                    .Map(e => e.StrokeCount)
+                    .ValueOr(int.MaxValue))
+                .Select(cp => CodePoint.FromString(cp));
         }
 
         public IEnumerable<Radical> AllRadicals()

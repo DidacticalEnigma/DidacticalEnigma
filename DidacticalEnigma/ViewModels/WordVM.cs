@@ -31,7 +31,9 @@ namespace DidacticalEnigma.ViewModels
                 var vm = new CodePointVM(
                     cp,
                     lang.LookupRelatedCharacters(cp),
-                    cp is Kanji k ? lang.LookupRadicals(k) : Enumerable.Empty<CodePoint>(),
+                    cp is Kanji k
+                        ? lang.LookupRadicals(k).ValueOr(Enumerable.Empty<CodePoint>())
+                        : Enumerable.Empty<CodePoint>(),
                     cp is Kana kana ? lang.LookupRomaji(kana) : null);
                 return vm;
             }));

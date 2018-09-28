@@ -36,7 +36,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         continue;
 
                     var concreteRadicals = new HashSet<CodePoint>(concreteChar is Kanji k
-                        ? lang.LookupRadicals(k)
+                        ? lang.LookupRadicals(k).ValueOr(Enumerable.Empty<CodePoint>())
                         : Enumerable.Empty<CodePoint>());
                     if (placeholder.Radicals.All(templateRadical =>
                         concreteRadicals.Contains(templateRadical.CodePoint)))
