@@ -35,6 +35,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Gu.Inject, Version=0.1.0.0, Culture=neutral, PublicKeyToken=84247aff6de990f8, processorArchitecture=MSIL">
       <HintPath>..\packages\Gu.Inject.0.1.0-dev\lib\net452\Gu.Inject.dll</HintPath>
@@ -183,6 +186,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Program.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Gu.Analyzers.1.2.18.1-dev\analyzers\dotnet\cs\Gu.Analyzers.dll" />
+    <Analyzer Include="..\packages\Gu.Analyzers.1.2.18.1-dev\analyzers\dotnet\cs\Gu.Roslyn.AnalyzerExtensions.dll" />
+    <Analyzer Include="..\packages\Gu.Analyzers.1.2.18.1-dev\analyzers\dotnet\cs\Gu.Roslyn.CodeFixExtensions.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

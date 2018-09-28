@@ -255,7 +255,7 @@ namespace JDict
             DescriptionAttribute[] attributes =
                 (DescriptionAttribute[])fi.GetCustomAttributes(
                     typeof(DescriptionAttribute),
-                    false);
+                    inherit: false);
 
             if(attributes != null &&
                attributes.Length > 0)
