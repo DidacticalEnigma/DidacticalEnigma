@@ -74,8 +74,10 @@ namespace DidacticalEnigma.ViewModels
                 o =>
                 {
                     var dataSource = ((DataSourcePreviewVM)o).SelectedDataSource;
-                    if(dataSource != null)
+                    if (dataSource != null)
+                    {
                         dataSource.IsUsed = false;
+                    }
                 });
             Root = new Root(fac);
             // being lazy

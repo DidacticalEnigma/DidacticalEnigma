@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Utils;
 using JDict;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -23,30 +24,29 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         public void Dispose()
         {
-            
+
         }
 
-        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request)
         {
-            return new AsyncEnumerable<RichFormatting>(async yield =>
+            var rich = new RichFormatting();
+            var sentences = jesc.SearchByJapaneseText(request.QueryText);
+            foreach (var sentence in sentences.Take(100).OrderByDescending(s => s.JapaneseSentence.Length).Take(20))
             {
-                var rich = new RichFormatting();
-                var sentences = jesc.SearchByJapaneseText(request.QueryText);
-                foreach (var sentence in sentences.Take(100).OrderByDescending(s => s.JapaneseSentence.Length).Take(20))
+                var paragraph = new TextParagraph();
+                foreach (var part in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))
                 {
-                    var paragraph = new TextParagraph();
-                    foreach (var part in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))
-                    {
-                        paragraph.Content.Add(new Text(part.text, part.highlight));
-                    }
-                    paragraph.Content.Add(new Text(sentence.EnglishSentence));
-                    rich.Paragraphs.Add(paragraph);
-                };
-                if (rich.Paragraphs.Count != 0)
-                {
-                    await yield.ReturnAsync(rich).ConfigureAwait(false);
+                    paragraph.Content.Add(new Text(part.text, part.highlight));
                 }
-            });
+                paragraph.Content.Add(new Text(sentence.EnglishSentence));
+                rich.Paragraphs.Add(paragraph);
+            };
+            if (rich.Paragraphs.Count != 0)
+            {
+                return Task.FromResult(Option.Some(rich));
+            }
+
+            return Task.FromResult(Option.None<RichFormatting>());
         }
 
         public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))

@@ -3,6 +3,7 @@ using System.Collections.Async;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -19,15 +20,12 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "Provides the stroke order information from the Kanji stroke order font",
             new Uri("http://www.nihilist.org.uk/"));
 
-        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request)
         {
-            return new AsyncEnumerable<RichFormatting>(async yield =>
-            {
-                var ch = request.Character;
-                var rich = new RichFormatting();
-                rich.Paragraphs.Add(new TextParagraph(new[] { new Text(ch, fontName: "kanji", fontSize: FontSize.Humonguous) }));
-                await yield.ReturnAsync(rich);
-            });
+            var ch = request.Character;
+            var rich = new RichFormatting();
+            rich.Paragraphs.Add(new TextParagraph(new[] { new Text(ch, fontName: "kanji", fontSize: FontSize.Humonguous) }));
+            return Task.FromResult(Option.Some(rich));
         }
 
         public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))

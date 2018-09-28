@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncEnumerator" Version="2.2.1" />
+    <PackageReference Include="Optional" Version="4.0.0" />
   </ItemGroup>
 
 </Project>

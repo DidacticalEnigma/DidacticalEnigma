@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
 using JDict;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -30,17 +31,14 @@ namespace DidacticalEnigma.Core.Models.DataSources
             
         }
 
-        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request)
         {
-            return new AsyncEnumerable<RichFormatting>(async yield =>
-            {
-                var entry = jmdict.PartialWordLookup(request.Word.RawWord.Trim());
-                var rich = new RichFormatting();
-                var p = new TextParagraph();
-                p.Content.Add(new Text(string.Join("\n", entry.Select(e => e.match).OrderByDescending(m => list.RateFrequency(m)).Distinct()), fontSize: FontSize.Large));
-                rich.Paragraphs.Add(p);
-                await yield.ReturnAsync(rich);
-            });
+            var entry = jmdict.PartialWordLookup(request.Word.RawWord.Trim());
+            var rich = new RichFormatting();
+            var p = new TextParagraph();
+            p.Content.Add(new Text(string.Join("\n", entry.Select(e => e.match).OrderByDescending(m => list.RateFrequency(m)).Distinct()), fontSize: FontSize.Large));
+            rich.Paragraphs.Add(p);
+            return Task.FromResult(Option.Some(rich));
         }
 
         public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))

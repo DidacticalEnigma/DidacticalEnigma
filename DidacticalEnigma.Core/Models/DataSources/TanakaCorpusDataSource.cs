@@ -10,6 +10,7 @@ using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
 using JDict;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -23,27 +24,26 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "These sentences are from Tanaka Corpus",
             new Uri("http://www.edrdg.org/wiki/index.php/Tanaka_Corpus"));
 
-        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request)
         {
-            return new AsyncEnumerable<RichFormatting>(async yield =>
+            var rich = new RichFormatting();
+            var sentences = tanaka.SearchByJapaneseText(request.QueryText);
+            foreach (var sentence in sentences.Take(100).OrderBy(s => s.JapaneseSentence.Length).Take(20))
             {
-                var rich = new RichFormatting();
-                var sentences = tanaka.SearchByJapaneseText(request.QueryText);
-                foreach (var sentence in sentences.Take(100).OrderBy(s => s.JapaneseSentence.Length).Take(20))
+                var paragraph = new TextParagraph();
+                foreach (var part in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))
                 {
-                    var paragraph = new TextParagraph();
-                    foreach (var part in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))
-                    {
-                        paragraph.Content.Add(new Text(part.text, part.highlight));
-                    }
-                    paragraph.Content.Add(new Text(sentence.EnglishSentence));
-                    rich.Paragraphs.Add(paragraph);
-                };
-                if (rich.Paragraphs.Count != 0)
-                {
-                    await yield.ReturnAsync(rich).ConfigureAwait(false);
+                    paragraph.Content.Add(new Text(part.text, part.highlight));
                 }
-            });
+                paragraph.Content.Add(new Text(sentence.EnglishSentence));
+                rich.Paragraphs.Add(paragraph);
+            };
+            if (rich.Paragraphs.Count != 0)
+            {
+                return Task.FromResult(Option.Some(rich));
+            }
+
+            return Task.FromResult(Option.None<RichFormatting>());
         }
 
         public void Dispose()
@@ -72,19 +72,16 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "NOTE: This functionality is completely untested and may result in horribly broken glosses",
             null);
 
-        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request)
         {
-            return new AsyncEnumerable<RichFormatting>(async yield =>
-            {
-                var rich = new RichFormatting();
-                var text = request.AllText();
-                var glosses = autoglosser.Gloss(text);
-                rich.Paragraphs.Add(
-                    new TextParagraph(EnumerableExt.OfSingle(new Text(Descriptor.AcknowledgementText))));
-                var s = string.Join("\n", glosses.Select(gloss => $"- {gloss}"));
-                rich.Paragraphs.Add(new TextParagraph(EnumerableExt.OfSingle(new Text(s))));
-                await yield.ReturnAsync(rich);
-            });
+            var rich = new RichFormatting();
+            var text = request.AllText();
+            var glosses = autoglosser.Gloss(text);
+            rich.Paragraphs.Add(
+                new TextParagraph(EnumerableExt.OfSingle(new Text(Descriptor.AcknowledgementText))));
+            var s = string.Join("\n", glosses.Select(gloss => $"- {gloss}"));
+            rich.Paragraphs.Add(new TextParagraph(EnumerableExt.OfSingle(new Text(s))));
+            return Task.FromResult(Option.Some(rich));
         }
 
         public void Dispose()

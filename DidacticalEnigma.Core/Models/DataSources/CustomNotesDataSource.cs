@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Utils;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -25,50 +26,49 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
-        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        public async Task<Option<RichFormatting>> Answer(Request request)
         {
-            return new AsyncEnumerable<RichFormatting>(async yield =>
+            try
             {
-                try
+                var rich = new RichFormatting();
+                var paragraphs = ReadParagraphs(path);
+                if (paragraphs != null)
                 {
-                    var rich = new RichFormatting();
-                    var paragraphs = ReadParagraphs(path);
-                    if(paragraphs != null)
+                    await paragraphs.Where(paragraph => paragraph.Contains(request.QueryText)).ForEachAsync(paragraph =>
                     {
-                        await paragraphs.Where(paragraph => paragraph.Contains(request.QueryText)).ForEachAsync(paragraph =>
-                        {
-                            var text = new TextParagraph(
-                                StringExt.HighlightWords(paragraph, request.QueryText)
-                                    .Select(p => new Text(p.text, emphasis: p.highlight)));
-                            rich.Paragraphs.Add(text);
-                        });
-                        await yield.ReturnAsync(rich);
-                    }
+                        var text = new TextParagraph(
+                            StringExt.HighlightWords(paragraph, request.QueryText)
+                                .Select(p => new Text(p.text, emphasis: p.highlight)));
+                        rich.Paragraphs.Add(text);
+                    });
+                    return Option.Some(rich);
                 }
-                catch(FileNotFoundException)
-                {
-                    var text = "This data source looks for a custom_notes.txt file in the data directory. Currently no such file exists.";
-                    var rich = new RichFormatting(
-                        EnumerableExt.OfSingle(
-                            new TextParagraph(
-                                EnumerableExt.OfSingle(
-                                    new Text(text)))));
-                    await yield.ReturnAsync(rich);
-                }
-            });
+            }
+            catch (FileNotFoundException)
+            {
+                var text = "This data source looks for a custom_notes.txt file in the data directory. Currently no such file exists.";
+                var rich = new RichFormatting(
+                    EnumerableExt.OfSingle(
+                        new TextParagraph(
+                            EnumerableExt.OfSingle(
+                                new Text(text)))));
+                return Option.Some(rich);
+            }
+
+            return Option.None<RichFormatting>();
         }
 
         public IAsyncEnumerable<string> ReadParagraphs(string path)
         {
             return new AsyncEnumerable<string>(async yield =>
             {
-                using(var reader = new StreamReader(path))
+                using (var reader = new StreamReader(path))
                 {
                     var sb = new StringBuilder();
                     string line;
-                    while((line = await reader.ReadLineAsync()) != null)
+                    while ((line = await reader.ReadLineAsync()) != null)
                     {
-                        if(line == "" && sb.Length != 0)
+                        if (line == "" && sb.Length != 0)
                         {
                             await yield.ReturnAsync(sb.ToString());
                             sb.Clear();

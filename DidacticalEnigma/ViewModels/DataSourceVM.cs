@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Documents;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Core.Utils;
 using DidacticalEnigma.Models;
 
 namespace DidacticalEnigma.ViewModels
@@ -14,6 +15,8 @@ namespace DidacticalEnigma.ViewModels
     public class DataSourceVM : INotifyPropertyChanged, IDisposable
     {
         private AsyncDataSource dataSource;
+
+        private Request lastRequest;
 
         private readonly IFontResolver fontResolver;
 
@@ -35,18 +38,12 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private FlowDocument emptyDocument = new FlowDocument(new System.Windows.Documents.Paragraph(new Run("nothing found")));
+        private static readonly RichFormatting emptyDocument = new RichFormatting(
+            EnumerableExt.OfSingle(
+                new TextParagraph(
+                    EnumerableExt.OfSingle(new Text("nothing found")))));
 
-        public FlowDocument Document
-        {
-            get
-            {
-                if (FormattedResult == null)
-                    return emptyDocument;
-                else
-                    return FlowDocumentRichFormattingRenderer.Render(fontResolver, FormattedResult);
-            }
-        }
+        public FlowDocument Document => FlowDocumentRichFormattingRenderer.Render(fontResolver, FormattedResult);
 
         public DataSourceDescriptor Descriptor => dataSource.Descriptor;
 
@@ -73,6 +70,11 @@ namespace DidacticalEnigma.ViewModels
                 if (isUsed == value)
                     return;
                 isUsed = value;
+                if (value)
+                {
+                    //Search(lastRequest, id);
+                }
+
                 OnPropertyChanged();
             }
         }
@@ -91,18 +93,26 @@ namespace DidacticalEnigma.ViewModels
 
         public async Task Search(Request request, long id)
         {
-            if (!IsUsed || request == null)
-                return;
-            this.id = id;
-            IsProcessing = true;
-            var result = await dataSource.Answer(request).FirstOrDefaultAsync();
-            if (this.id > id)
+            try
             {
-                return;
-            }
+                if (!IsUsed || request == null)
+                    return;
+                this.id = id;
+                IsProcessing = true;
+                var result = await dataSource.Answer(request);
+                if (this.id > id)
+                {
+                    return;
+                }
 
-            FormattedResult = result;
-            IsProcessing = false;
+                FormattedResult = result.ValueOr(emptyDocument);
+                IsProcessing = false;
+            }
+            finally
+            {
+                if(request != null)
+                    lastRequest = request;
+            }
         }
 
         public DataSourceVM(Type type, string path, IFontResolver fontResolver)

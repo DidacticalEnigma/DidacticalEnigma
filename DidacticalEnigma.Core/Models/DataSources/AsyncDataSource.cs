@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -39,17 +40,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
-        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        public async Task<Option<RichFormatting>> Answer(Request request)
         {
-            return new AsyncEnumerable<RichFormatting>(async yield =>
-            {
-                var dataSource = await this.dataSource.ConfigureAwait(false);
-                var results = dataSource.Answer(request);
-                await results.ForEachAsync(async result =>
-                {
-                    await yield.ReturnAsync(result).ConfigureAwait(false);
-                }, yield.CancellationToken).ConfigureAwait(false);
-            });
+            var dataSource = await this.dataSource.ConfigureAwait(false);
+            var result = await dataSource.Answer(request);
+            return result;
         }
 
         public async void Dispose()

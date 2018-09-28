@@ -8,6 +8,7 @@
     <PackageReference Include="AsyncEnumerator" Version="2.2.1" />
     <PackageReference Include="LibJpConjSharp" Version="0.5.7" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Optional" Version="4.0.0" />
     <PackageReference Include="UnicodeInformation" Version="2.2.1" />
   </ItemGroup>
 

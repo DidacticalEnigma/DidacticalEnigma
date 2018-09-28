@@ -38,7 +38,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 }).ToList();
                 var lookup = dict.Lookup(word.NotInflected ?? word.RawWord)?.ToList();
 
-                if (!word.RawWord.Any(c => c != '.' && c != '!' && c != '?'))
+                if (word.RawWord.All(c => ".!?？！⁉、".IndexOf(c) != -1))
                 {
                     // skip punctuation
                     continue;

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.LanguageService;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -18,25 +19,22 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "The data JMdict by Electronic Dictionary Research and Development Group",
             new Uri("http://www.edrdg.org/jmdict/j_jmdict.html"));
 
-        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request)
         {
-            return new AsyncEnumerable<RichFormatting>(async yield =>
-            {
-                var ch = request.Character;
-                var cp = CodePoint.FromString(ch);
-                var rich = new RichFormatting();
-                var p = new TextParagraph();
+            var ch = request.Character;
+            var cp = CodePoint.FromString(ch);
+            var rich = new RichFormatting();
+            var p = new TextParagraph();
 
-                var radicals = cp is Kanji k ? lang.LookupRadicals(k) : Enumerable.Empty<CodePoint>();
-                var romaji = cp is Kana kana ? lang.LookupRomaji(kana) : null;
-                var text = cp.ToDescriptionString() + "\n" +
-                           (romaji != null ? romaji + "\n" : "") +
-                           string.Join(" ; ", radicals);
+            var radicals = cp is Kanji k ? lang.LookupRadicals(k) : Enumerable.Empty<CodePoint>();
+            var romaji = cp is Kana kana ? lang.LookupRomaji(kana) : null;
+            var text = cp.ToDescriptionString() + "\n" +
+                       (romaji != null ? romaji + "\n" : "") +
+                       string.Join(" ; ", radicals);
 
-                p.Content.Add(new Text(text));
-                rich.Paragraphs.Add(p);
-                await yield.ReturnAsync(rich);
-            });
+            p.Content.Add(new Text(text));
+            rich.Paragraphs.Add(p);
+            return Task.FromResult(Option.Some(rich));
         }
 
         public void Dispose()

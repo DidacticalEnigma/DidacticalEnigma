@@ -11,6 +11,7 @@ using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
 using JDict;
 using LibJpConjSharp;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -31,59 +32,55 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
-        public IAsyncEnumerable<RichFormatting> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request)
         {
-            return new AsyncEnumerable<RichFormatting>(async yield =>
+            var rich = new RichFormatting();
+            if(!(request.PartOfSpeech == PartOfSpeech.Verb || request.PartOfSpeech == PartOfSpeech.Unknown))
+                rich.Paragraphs.Add(
+                    new TextParagraph(
+                        EnumerableExt.OfSingle(
+                            new Text("The program estimates this word is not a verb. The results below may be garbage.", emphasis: false))));
+
+            var verb = request.NotInflected ?? request.Word.RawWord;
+            var entries = jdict.Lookup(verb);
+            if (entries == null)
             {
-                var rich = new RichFormatting();
-                if(!(request.PartOfSpeech == PartOfSpeech.Verb || request.PartOfSpeech == PartOfSpeech.Unknown))
-                    rich.Paragraphs.Add(
-                        new TextParagraph(
-                            EnumerableExt.OfSingle(
-                                new Text("The program estimates this word is not a verb. The results below may be garbage.", emphasis: false))));
+                rich.Paragraphs.Add(
+                    new TextParagraph(
+                        EnumerableExt.OfSingle(
+                            new Text("No word found.", emphasis: false))));
+                return Task.FromResult(Option.Some(rich));
+            }
 
-                var verb = request.NotInflected ?? request.Word.RawWord;
-                var entries = jdict.Lookup(verb);
-                if (entries == null)
-                {
-                    rich.Paragraphs.Add(
-                        new TextParagraph(
-                            EnumerableExt.OfSingle(
-                                new Text("No word found.", emphasis: false))));
-                    await yield.ReturnAsync(rich);
-                    return;
-                }
+            var entry = entries.FirstOrDefault(e =>
+            {
+                if(!e.Readings.Any())
+                    return false;
+                var et = GetEdictType(e);
+                return et != null;
+            });
+            if (entry == null)
+            {
+                rich.Paragraphs.Add(
+                    new TextParagraph(
+                        EnumerableExt.OfSingle(
+                            new Text("No verb found.", emphasis: false))));
+                return Task.FromResult(Option.Some(rich));
+            }
 
-                var entry = entries.FirstOrDefault(e =>
-                {
-                    if(!e.Readings.Any())
-                        return false;
-                    var et = GetEdictType(e);
-                    return et != null;
-                });
-                if (entry == null)
-                {
-                    rich.Paragraphs.Add(
-                        new TextParagraph(
-                            EnumerableExt.OfSingle(
-                                new Text("No verb found.", emphasis: false))));
-                    await yield.ReturnAsync(rich);
-                    return;
-                }
+            var edictType = GetEdictType(entry).Value;
+            rich.Paragraphs.Add(new TextParagraph(new []
+            {
+                Form("=", CForm.Present),
+                Form("<", CForm.Past),
+                Form("?", CForm.Potential),
+                Form("->", CForm.Causative),
+                Form("Te", CForm.TeForm),
+                Form("!", CForm.Imperative),
+                Form(":D", CForm.Volitional),
+            }));
 
-                var edictType = GetEdictType(entry).Value;
-                rich.Paragraphs.Add(new TextParagraph(new []
-                {
-                    Form("=", CForm.Present),
-                    Form("<", CForm.Past),
-                    Form("?", CForm.Potential),
-                    Form("->", CForm.Causative),
-                    Form("Te", CForm.TeForm),
-                    Form("!", CForm.Imperative),
-                    Form(":D", CForm.Volitional),
-                }));
-
-                rich.Paragraphs.Add(new TextParagraph(EnumerableExt.OfSingle(new Text(
+            rich.Paragraphs.Add(new TextParagraph(EnumerableExt.OfSingle(new Text(
 @"= - Present
 < - Past
 ? - Potential
@@ -95,23 +92,21 @@ Te - Te Form
 @ - Polite form
 "))));
 
-                await yield.ReturnAsync(rich);
-                return;
+            return Task.FromResult(Option.Some(rich));
 
-                Text Form(string name, CForm form)
-                {
-                    return new Text(
-                        $"{name}: {JpConj.Conjugate(verb, edictType, form, Politeness.Plain, Polarity.Affirmative).Replace("|", "")}\n~{name}: {JpConj.Conjugate(verb, edictType, form, Politeness.Plain, Polarity.Negative).Replace("|", "")}\n");
-                }
-            });
-
-            LibJpConjSharp.EdictType? GetEdictType(JMDictEntry entry)
+            Text Form(string name, CForm form)
             {
-                var sense = entry.Senses.FirstOrDefault(s => LibJpConjSharp.EdictTypeUtils.FromDescriptionOrNull(s.PartOfSpeech.Split('/')[0]) != null);
-                if(sense == null)
-                    return null;
-                return LibJpConjSharp.EdictTypeUtils.FromDescription(sense.PartOfSpeech.Split('/')[0]);
+                return new Text(
+                    $"{name}: {JpConj.Conjugate(verb, edictType, form, Politeness.Plain, Polarity.Affirmative).Replace("|", "")}\n~{name}: {JpConj.Conjugate(verb, edictType, form, Politeness.Plain, Polarity.Negative).Replace("|", "")}\n");
             }
+        }
+
+        private LibJpConjSharp.EdictType? GetEdictType(JMDictEntry entry)
+        {
+            var sense = entry.Senses.FirstOrDefault(s => LibJpConjSharp.EdictTypeUtils.FromDescriptionOrNull(s.PartOfSpeech.Split('/')[0]) != null);
+            if (sense == null)
+                return null;
+            return LibJpConjSharp.EdictTypeUtils.FromDescription(sense.PartOfSpeech.Split('/')[0]);
         }
 
         public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
