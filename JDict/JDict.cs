@@ -23,7 +23,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
-        private static readonly int Version = 1;
+        private static readonly int Version = 2;
 
         private LiteDatabase db;
 
@@ -167,28 +167,19 @@ namespace JDict
                 ?.Select(e => e.To(s => s.To()));
         }
 
-        public IEnumerable<(JMDictEntry entry, string match)> PartialWordLookup(string v)
+        public IEnumerable<string> PartialWordLookup(string v)
         {
             var regex = new Regex("^" + Regex.Escape(v).Replace(@"/\\", ".") + "$");
             return WordLookupByPredicate(word => regex.IsMatch(word));
         }
 
-        public IEnumerable<(JMDictEntry entry, string match)> WordLookupByPredicate(Func<string, bool> matcher)
+        public IEnumerable<string> WordLookupByPredicate(Func<string, bool> matcher)
         {
-            var matches = kvps
+            return kvps
                 .FindAll()
                 .Where(kvp => matcher(kvp.LookupKey))
                 .Select(kvp => kvp.LookupKey)
                 .ToList();
-
-            return kvps
-                .IncludeAll()
-                .Find(kvp => matches.Contains(kvp.LookupKey))
-                .SelectMany(kvp =>
-                {
-                    var mapping = SimpleMap(kvp);
-                    return mapping.Value.Select(entry => (entry, mapping.Key));
-                });
         }
 
         private KeyValuePair<string, IEnumerable<JMDictEntry>> SimpleMap(DbDictEntryKeyValue kvp)
@@ -394,16 +385,16 @@ namespace JDict
         {
             return new JMDictSense(
                 Type?.Some() ?? Option.None<EdictType>(),
-                Description,
-                PartOfSpeech);
+                PartOfSpeech,
+                Description);
         }
 
         public static DbSense From(JMDictSense sense, int id = 0)
         {
             return new DbSense
             {
-                Description = sense.Description,
                 Id = id,
+                Description = sense.Description,
                 PartOfSpeech = sense.PartOfSpeech,
                 Type = sense.Type.ToNullable()
             };

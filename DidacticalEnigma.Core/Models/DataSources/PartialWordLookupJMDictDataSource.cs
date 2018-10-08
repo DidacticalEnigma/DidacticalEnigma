@@ -36,7 +36,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             var entry = jmdict.PartialWordLookup(request.Word.RawWord.Trim());
             var rich = new RichFormatting();
             var p = new TextParagraph();
-            p.Content.Add(new Text(string.Join("\n", entry.Select(e => e.match).OrderByDescending(m => list.RateFrequency(m)).Distinct()), fontSize: FontSize.Large));
+            p.Content.Add(new Text(string.Join("\n", entry.OrderByDescending(m => list.RateFrequency(m)).Distinct()), fontSize: FontSize.Large));
             rich.Paragraphs.Add(p);
             return Task.FromResult(Option.Some(rich));
         }
