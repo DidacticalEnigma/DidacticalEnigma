@@ -80,7 +80,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 {
                     if(verbTypes.Count > 1)
                         rich.Paragraphs.Add(new TextParagraph(
-                            EnumerableExt.OfSingle(new Text(verb + ": " + verbType.ToString()))));
+                            EnumerableExt.OfSingle(new Text(verb + ": " + LibJpConjSharp.EdictTypeUtils.ToLongString(verbType)))));
                     rich.Paragraphs.Add(new TextParagraph(new[]
                     {
                         Form("=", CForm.Present, verbType),

@@ -49,7 +49,7 @@ namespace DidacticalEnigma
             kernel.BindFactory(() => JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml")));
             kernel.BindFactory(() => new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8));
             kernel.BindFactory(() => new Radkfile(Path.Combine(baseDir, @"dic\radkfile1_plus_2_utf8"), Encoding.UTF8));
-            kernel.BindFactory(() => JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e")));
+            kernel.BindFactory(() => JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e"), Path.Combine(baseDir, "dic", "JMdict_e.cache")));
             kernel.BindFactory(() =>
                 new FrequencyList(Path.Combine(baseDir, @"dic\word_form_frequency_list.txt"), Encoding.UTF8));
             kernel.BindFactory(() => new KanaProperties(

@@ -10,6 +10,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="LiteDB" Version="4.1.4" />
     <PackageReference Include="Optional" Version="4.0.0" />
   </ItemGroup>
 

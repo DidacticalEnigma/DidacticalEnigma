@@ -141,7 +141,7 @@ namespace JDict.Tests
                 radkfile,
                 kanjidict,
                 kanaProperties);
-            this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e"));
+            this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e"), Path.Combine(baseDir, "dic", "JMdict_e.cache"));
             glosser = new AutoGlosser(lang, jmdict);
         }
 
