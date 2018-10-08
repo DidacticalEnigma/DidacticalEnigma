@@ -114,7 +114,7 @@ namespace DidacticalEnigma.Core.Models.Project
                 Path = path;
                 try
                 {
-                    Translations = JsonConvert.DeserializeObject<List<Translation>>(System.IO.File.ReadAllText(Path, Encoding.UTF8));
+                    Translations = JsonConvert.DeserializeObject<List<Translation>>(System.IO.File.ReadAllText(path, Encoding.UTF8));
                 }
                 catch (FileNotFoundException)
                 {
@@ -163,7 +163,7 @@ namespace DidacticalEnigma.Core.Models.Project
         public string OriginalText
         {
             get => originalText;
-            set => originalText = value ?? throw new ArgumentNullException(nameof(originalText));
+            set => originalText = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         // Can be null

@@ -106,7 +106,7 @@ namespace DidacticalEnigma.Utils
             var currentX = layoutInfo.FirstRealizedItemLeft;
             var currentY = layoutInfo.FirstRealizedLineTop;
 
-            using (_itemsGenerator.StartAt(generatorStartPosition, GeneratorDirection.Forward, true))
+            using (_itemsGenerator.StartAt(generatorStartPosition, GeneratorDirection.Forward, allowStartAtRealizedItem: true))
             {
                 for (var itemIndex = layoutInfo.FirstRealizedItemIndex; itemIndex <= layoutInfo.LastRealizedItemIndex; itemIndex++, visualIndex++)
                 {

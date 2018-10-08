@@ -29,7 +29,7 @@ namespace DidacticalEnigma.Core.Models
         {
             UrlRoot = urlRoot ?? throw new ArgumentNullException(nameof(urlRoot));
             AdditionalText = additionalText;
-            Comment = comment ?? (!string.IsNullOrEmpty(AdditionalText) ? AdditionalText : new Uri(UrlRoot).Host);
+            Comment = comment ?? (!string.IsNullOrEmpty(additionalText) ? additionalText : new Uri(UrlRoot).Host);
             Literal = literal;
         }
 
