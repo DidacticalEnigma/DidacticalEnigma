@@ -13,6 +13,7 @@
         Title="Didactical Enigma" 
         SizeToContent="WidthAndHeight" 
         Topmost="True" >
+    <Border BorderThickness="1" BorderBrush="Black">
     <Grid>
         <Grid.RowDefinitions>
 
@@ -27,4 +28,5 @@
         </TextBlock>
         <TextBlock Text="Loading..." Grid.Row="1" HorizontalAlignment="Center" FontSize="20"></TextBlock>
     </Grid>
+    </Border>
 </Window>
