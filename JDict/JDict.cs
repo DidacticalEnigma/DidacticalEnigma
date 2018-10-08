@@ -25,8 +25,6 @@ namespace JDict
 
         private static readonly int Version = 1;
 
-        private Dictionary<string, List<JMDictEntry>> root = new Dictionary<string, List<JMDictEntry>>();
-
         private LiteDatabase db;
 
         private LiteCollection<DbDictEntryKeyValue> kvps;
@@ -49,7 +47,7 @@ namespace JDict
                 (versionInfo.OriginalFileSize != -1 && stream.CanSeek && stream.Length != versionInfo.OriginalFileSize) ||
                 versionInfo.DbVersion != Version)
             {
-                root = ReadFromXml(stream);
+                var root = ReadFromXml(stream);
                 FillDatabase(root);
             }
 
@@ -162,8 +160,11 @@ namespace JDict
 
         public IEnumerable<JMDictEntry> Lookup(string v)
         {
-            root.TryGetValue(v, out var entry);
-            return entry;
+            return kvps
+                .IncludeAll()
+                .FindOne(kvp => kvp.LookupKey == v)
+                ?.Values
+                ?.Select(e => e.To(s => s.To()));
         }
 
         public IEnumerable<(JMDictEntry entry, string match)> PartialWordLookup(string v)
@@ -174,9 +175,25 @@ namespace JDict
 
         public IEnumerable<(JMDictEntry entry, string match)> WordLookupByPredicate(Func<string, bool> matcher)
         {
-            return root
-                .Where(kvp => matcher(kvp.Key))
-                .SelectMany(kvp => kvp.Value.Select(entry => (entry, kvp.Key)));
+            var matches = kvps
+                .FindAll()
+                .Where(kvp => matcher(kvp.LookupKey))
+                .Select(kvp => kvp.LookupKey)
+                .ToList();
+
+            return kvps
+                .IncludeAll()
+                .Find(kvp => matches.Contains(kvp.LookupKey))
+                .SelectMany(kvp =>
+                {
+                    var mapping = SimpleMap(kvp);
+                    return mapping.Value.Select(entry => (entry, mapping.Key));
+                });
+        }
+
+        private KeyValuePair<string, IEnumerable<JMDictEntry>> SimpleMap(DbDictEntryKeyValue kvp)
+        {
+            return kvp.To(e => e.To(en => en.To()));
         }
 
         private async Task<JMDict> InitAsync(string path, LiteDatabase cache)
