@@ -202,6 +202,9 @@
     <Compile Include="Views\KanjiRadicalLookupControl.xaml.cs">
       <DependentUpon>KanjiRadicalLookupControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SplashScreen.xaml.cs">
+      <DependentUpon>SplashScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UsageDataSourcePreview.xaml.cs">
       <DependentUpon>UsageDataSourcePreview.xaml</DependentUpon>
     </Compile>
@@ -258,6 +261,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\SplashScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\UsageDataSourcePreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

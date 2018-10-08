@@ -5,6 +5,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using DidacticalEnigma.Core.Models.LanguageService;
@@ -14,6 +15,7 @@ using DidacticalEnigma.Views;
 using Gu.Inject;
 using JDict;
 using NMeCab;
+using SplashScreen = DidacticalEnigma.Views.SplashScreen;
 
 namespace DidacticalEnigma
 {
@@ -26,6 +28,8 @@ namespace DidacticalEnigma
 
         public App()
         {
+            var splash = new SplashScreen();
+            splash.Show();
             Configure();
             Startup += (sender, args) =>
             {
@@ -35,6 +39,7 @@ namespace DidacticalEnigma
                     DataContext = vm
                 };
                 window.Show();
+                splash.Close();
             };
             Exit += (sender, args) =>
             {
