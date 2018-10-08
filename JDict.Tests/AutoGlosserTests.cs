@@ -102,6 +102,11 @@ namespace JDict.Tests
                 new GlossNote("手加減", "going easy on someone/making allowances/using discretion/taking various circumstances into account"),
                 new GlossNote("する", "suru, to do/to carry out/to perform, verbalizing suffix"),
             }),
+            new TestCaseData("貴様ら", new[]
+            {
+                new GlossNote("貴様", "you/you bastard/you son of a bitch"),
+                new GlossNote("ら", "pluralizing suffix")
+            }),
         };
 
         [TestCaseSource(nameof(TestCases))]

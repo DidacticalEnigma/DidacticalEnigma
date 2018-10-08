@@ -22,7 +22,7 @@ namespace DidacticalEnigma.ViewModels
 
         private long id = 0;
 
-        private RichFormatting formattedResult;
+        private RichFormatting formattedResult = emptyDocument;
         public RichFormatting FormattedResult
         {
             get => formattedResult;

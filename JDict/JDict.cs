@@ -338,7 +338,7 @@ namespace JDict
         [Description("Ichidan verb - zuru verb - (alternative form of -jiru verbs)")]
         vz = 21,
 
-        [Description("kuru verb - special class")]
+        [Description("Kuru verb - special class")]
         vk = 22,
 
         [Description("irregular nu verb")]
