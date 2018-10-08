@@ -70,6 +70,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
@@ -81,8 +82,11 @@
                                 Grid.Column="1"
                                 Command="{Binding VSplit}"
                                 Content="V" />
-                            <ComboBox
+                            <Button
                                 Grid.Column="2"
+                                Content="{Binding Content.SelectedDataSource.IsProcessing, Converter={x:Static converters:BooleanToLoadingTextConverter.Default}}" />
+                            <ComboBox
+                                Grid.Column="3"
                                 ItemsSource="{Binding Content.Parent.DataSources}"
                                 SelectedIndex="{Binding Content.SelectedDataSourceIndex}"
                                 SelectedItem="{Binding Content.SelectedDataSource}">
@@ -93,7 +97,7 @@
                                 </ComboBox.ItemContainerStyle>
                             </ComboBox>
                             <Button
-                                Grid.Column="3"
+                                Grid.Column="4"
                                 Command="{Binding Close}"
                                 Content="X" />
                         </Grid>
