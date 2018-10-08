@@ -66,7 +66,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 case "五段・バ行":
                     return Option.None<EdictType>();
                 case "カ変・クル":
-                    return Option.None<EdictType>();
+                    return Option.Some(EdictType.vk);
                 case "不変化型":
                     return Option.None<EdictType>();
                 case "五段・タ行":

@@ -44,6 +44,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                         EnumerableExt.OfSingle(
                             new Text("The program estimates this word is not a verb. The results below may be garbage.", emphasis: false))));
 
+            
             var verb = request.NotInflected ?? request.Word.RawWord;
             var entries = jdict.Lookup(verb);
             if (entries == null)
@@ -63,6 +64,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             })
                 .OfNonNone()
                 .Distinct()
+                .OrderByDescending(e => Option.Some((int)e) == request.Word.Type.Map(t => (int)t) ? 1 : 0)
                 .ToList();
             if (verbTypes.Count == 0)
             {
@@ -76,8 +78,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             {
                 foreach (var verbType in verbTypes)
                 {
-                    rich.Paragraphs.Add(new TextParagraph(
-                        EnumerableExt.OfSingle(new Text(verb + ": " + verbType.ToString()))));
+                    if(verbTypes.Count > 1)
+                        rich.Paragraphs.Add(new TextParagraph(
+                            EnumerableExt.OfSingle(new Text(verb + ": " + verbType.ToString()))));
                     rich.Paragraphs.Add(new TextParagraph(new[]
                     {
                         Form("=", CForm.Present, verbType),
