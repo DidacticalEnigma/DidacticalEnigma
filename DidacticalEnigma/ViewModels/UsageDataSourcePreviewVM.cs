@@ -55,7 +55,8 @@ namespace DidacticalEnigma.ViewModels
             ILanguageService lang,
             string dataSourcePath,
             JMDict jmdict,
-            FrequencyList frequencyList)
+            FrequencyList frequencyList,
+            Jnedict jnamedict)
         {
             var fontResolver = new DefaultFontResolver();
             DataSources.Add(new DataSourceVM(new CharacterDataSource(lang), fontResolver));
@@ -68,6 +69,7 @@ namespace DidacticalEnigma.ViewModels
             DataSources.Add(new DataSourceVM(typeof(CustomNotesDataSource), dataSourcePath, fontResolver));
             DataSources.Add(new DataSourceVM(new VerbConjugationDataSource(jmdict), fontResolver));
             DataSources.Add(new DataSourceVM(new AutoGlosserDataSource(lang, jmdict), fontResolver));
+            DataSources.Add(new DataSourceVM(new JNeDictDataSource(jnamedict), fontResolver));
 
             Func<Element> fac = () => new Leaf(
                 () => new DataSourcePreviewVM(this),

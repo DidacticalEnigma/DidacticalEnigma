@@ -16,7 +16,7 @@ using FileMode = System.IO.FileMode;
 
 namespace JDict
 {
-    class Jnedict : IDisposable
+    public class Jnedict : IDisposable
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JMNedictRoot));
 
