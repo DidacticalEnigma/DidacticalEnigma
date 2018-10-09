@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
+using JDict.Utils;
 using LiteDB;
 using Optional;
 using Optional.Collections;
@@ -247,68 +248,6 @@ namespace JDict
         }
     }
 
-    internal class DbDictVersion : IEquatable<DbDictVersion>
-    {
-        public long Id { get; set; }
-
-        public int DbVersion { get; set; }
-
-        public long OriginalFileSize { get; set; }
-
-        public byte[] OriginalFileHash { get; set; }
-
-        public bool Equals(DbDictVersion other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return DbVersion.Equals(other.DbVersion) &&
-                   OriginalFileSize == other.OriginalFileSize &&
-                   OriginalFileHash?.SequenceEqual(other.OriginalFileHash ?? Enumerable.Empty<byte>()) == true;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((DbDictVersion) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = DbVersion.GetHashCode();
-                hashCode = (hashCode * 397) ^ OriginalFileSize.GetHashCode();
-                hashCode = (hashCode * 397) ^ (OriginalFileHash != null ? Hash(OriginalFileHash) : 0);
-                return hashCode;
-            }
-
-            int Hash(byte[] h)
-            {
-                int x = 0;
-                unchecked
-                {   
-                    foreach (var b in h)
-                    {
-                        x = x * 33 + b;
-                    }
-                }
-                return x;
-            }
-        }
-
-        public static bool operator ==(DbDictVersion left, DbDictVersion right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(DbDictVersion left, DbDictVersion right)
-        {
-            return !Equals(left, right);
-        }
-    }
-
     internal class DbDictEntryKeyValue
     {
         public long Id { get; set; }
@@ -485,7 +424,7 @@ namespace JDict
     {
         public static Option<EdictType> FromDescription(string description)
         {
-            return mapping.GetValueOrNone(description);
+            return mapping.FromDescription(description);
         }
 
         public static bool IsVerb(this EdictType type)
@@ -498,26 +437,7 @@ namespace JDict
             return (int)type < 256 && (int)type >= (int)EdictType.n;
         }
 
-        // https://stackoverflow.com/questions/2650080/how-to-get-c-sharp-enum-description-from-value
-        private static string GetEnumDescription(Enum value)
-        {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
-
-            DescriptionAttribute[] attributes =
-                (DescriptionAttribute[])fi.GetCustomAttributes(
-                    typeof(DescriptionAttribute),
-                    inherit: false);
-
-            if(attributes != null &&
-               attributes.Length > 0)
-                return attributes[0].Description;
-            else
-                return value.ToString();
-        }
-
-        private static readonly Dictionary<string, EdictType> mapping = Enum.GetValues(typeof(EdictType))
-            .Cast<EdictType>()
-            .ToDictionary(e => GetEnumDescription(e), e => e);
+        private static EnumMapper<EdictType> mapping = new EnumMapper<EdictType>();
     }
 
     // Make sure to synchronize these constants with the values at LibJpConjSharp project

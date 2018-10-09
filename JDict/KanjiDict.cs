@@ -1,4 +1,5 @@
-﻿using JDict.Internal.XmlModels;
+﻿using System;
+using JDict.Internal.XmlModels;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -74,11 +75,13 @@ namespace JDict
 
         public int FrequencyRating { get; }
 
-        public KanjiEntry(KanjiCharacter ch)
+        internal KanjiEntry(KanjiCharacter ch)
         {
             Literal = ch.Literal;
             StrokeCount = ch.Misc.StrokeCount[0];
-            FrequencyRating = ch.Misc.FrequencyRating;
+            FrequencyRating = ch.Misc.FrequencyRating != 0
+                ? ch.Misc.FrequencyRating
+                : 100000;
         }
     }
 }
