@@ -17,6 +17,13 @@ namespace JDict.Utils
             return mapping.GetValueOrNone(description);
         }
 
+        public string ToLongString(T value)
+        {
+            return inverseMapping
+                .GetValueOrNone(value)
+                .ValueOr(() => value.ToString());
+        }
+
         // https://stackoverflow.com/questions/2650080/how-to-get-c-sharp-enum-description-from-value
         private static string GetEnumDescription(Enum value)
         {
@@ -34,8 +41,16 @@ namespace JDict.Utils
                 return value.ToString();
         }
 
-        private readonly Dictionary<string, T> mapping = Enum.GetValues(typeof(T))
-            .Cast<T>()
-            .ToDictionary(e => GetEnumDescription(e), e => e);
+        private readonly Dictionary<string, T> mapping;
+
+        private readonly Dictionary<T, string> inverseMapping;
+
+        public EnumMapper()
+        {
+            mapping = Enum.GetValues(typeof(T))
+                .Cast<T>()
+                .ToDictionary(e => GetEnumDescription(e), e => e);
+            inverseMapping = mapping.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+        }
     }
 }

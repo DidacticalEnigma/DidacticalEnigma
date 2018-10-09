@@ -11,6 +11,7 @@ using JDict.Internal.XmlModels;
 using JDict.Utils;
 using LiteDB;
 using Optional;
+using Optional.Collections;
 using FileMode = System.IO.FileMode;
 
 namespace JDict
@@ -23,6 +24,12 @@ namespace JDict
 
         private LiteCollection<DbDictVersion> version;
 
+        private LiteCollection<DbNeDictKeyValue> kvps;
+
+        private LiteCollection<DbNeEntry> entries;
+
+        private LiteCollection<DbNeTranslation> trans;
+
         private LiteDatabase db;
 
         public void Dispose()
@@ -33,10 +40,14 @@ namespace JDict
         private Jnedict Init(Stream stream, LiteDatabase cache)
         {
             db = cache;
+            kvps = db.GetCollection<DbNeDictKeyValue>("kvps");
+            entries = db.GetCollection<DbNeEntry>("entries");
+            trans = db.GetCollection<DbNeTranslation>("trans");
             version = cache.GetCollection<DbDictVersion>("version");
             var versionInfo = version.FindAll().FirstOrDefault();
             if (versionInfo == null ||
-                (versionInfo.OriginalFileSize != -1 && stream.CanSeek && stream.Length != versionInfo.OriginalFileSize) ||
+                (versionInfo.OriginalFileSize != -1 && stream.CanSeek &&
+                 stream.Length != versionInfo.OriginalFileSize) ||
                 versionInfo.DbVersion != Version)
             {
                 var root = ReadFromXml(stream);
@@ -48,7 +59,92 @@ namespace JDict
 
         private void FillDatabase(JMNedictRoot root)
         {
-            
+            kvps.Delete(_ => true);
+            entries.Delete(_ => true);
+            trans.Delete(_ => true);
+            version.Delete(_ => true);
+
+            kvps.EnsureIndex(x => x.LookupKey);
+
+            var transDict = root.Entries
+                .SelectMany(e => e.TranslationalEquivalents
+                    .Select(tr => (tr, new DbNeTranslation()
+                    {
+                        Type = (tr.Types ?? Array.Empty<string>())
+                            .Select(t => JnedictTypeUtils.FromDescription(t))
+                            .Values()
+                            .ToList(),
+                        Detail = (tr.Translation ?? Array.Empty<NeTranslation>())
+                            .Where(t => t.Lang == null || t.Lang == "eng")
+                            .Select(t => t.Text)
+                            .ToList()
+                    })))
+                .ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
+
+            {
+                int id = 2;
+                foreach (var t in transDict)
+                {
+                    t.Value.Id = id++;
+                }
+            }
+
+            var entriesDict = root.Entries
+                .Select((e, i) => (e, new DbNeEntry
+                {
+                    Id = i + 2,
+                    SequenceNumber = e.SequenceNumber,
+                    Kanji = (e.KanjiElements ?? Array.Empty<KanjiElement>())
+                        .Select(k => k.Key)
+                        .ToList(),
+                    Reading = (e.ReadingElements ?? Array.Empty<ReadingElement>())
+                        .Select(r => r.Reb)
+                        .ToList(),
+                    Translation = (e.TranslationalEquivalents ?? Array.Empty<NeTranslationalEquivalent>())
+                        .Select(t => transDict[t]).ToList()
+                }))
+                .ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
+
+            var kvpsDict = new Dictionary<string, List<DbNeEntry>>();
+            var kvpsEn = root.Entries
+                .SelectMany(e =>
+                    (e.KanjiElements?.Select(k => k.Key) ?? Enumerable.Empty<string>())
+                    .Concat(e.ReadingElements.Select(r => r.Reb))
+                    .Select(key => (key: key, value: e)));
+            foreach (var entry in kvpsEn)
+            {
+                if (!kvpsDict.ContainsKey(entry.key))
+                    kvpsDict[entry.key] = new List<DbNeEntry>();
+                kvpsDict[entry.key].Add(entriesDict[entry.value]);
+            }
+
+            trans.InsertBulk(transDict.Values);
+            entries.InsertBulk(entriesDict.Values);
+            kvps.InsertBulk(kvpsDict.Select(kvp => new DbNeDictKeyValue
+            {
+                LookupKey = kvp.Key,
+                Entries = kvp.Value
+            }));
+
+            version.Insert(new DbDictVersion
+            {
+                DbVersion = Version,
+                OriginalFileSize = -1,
+                OriginalFileHash = Array.Empty<byte>()
+            });
+        }
+
+        public IEnumerable<JnedictEntry> Lookup(string key)
+        {
+            return kvps
+                .IncludeAll()
+                .FindOne(kvp => kvp.LookupKey == key)
+                ?.Entries
+                ?.Select(e => new JnedictEntry(
+                    e.SequenceNumber,
+                    e.Kanji,
+                    e.Reading,
+                    e.Translation.Select(t => new JnedictTranslation(t.Type, t.Detail))));
         }
 
         private JMNedictRoot ReadFromXml(Stream stream)
@@ -129,11 +225,54 @@ namespace JDict
         }
     }
 
+    public class JnedictEntry
+    {
+        public long SequenceNumber { get; }
+
+        public IEnumerable<string> Kanji { get; }
+
+        public IEnumerable<string> Reading { get; }
+
+        public IEnumerable<JnedictTranslation> Translation { get; }
+
+        public JnedictEntry(
+            long sequenceNumber,
+            IEnumerable<string> kanji,
+            IEnumerable<string> reading,
+            IEnumerable<JnedictTranslation> translation)
+        {
+            SequenceNumber = sequenceNumber;
+            Kanji = kanji.ToList();
+            Reading = reading.ToList();
+            Translation = translation.ToList();
+        }
+    }
+
+    public class JnedictTranslation
+    {
+        public IEnumerable<JnedictType> Type { get; }
+
+        public IEnumerable<string> Translation { get; }
+
+        public JnedictTranslation(
+            IEnumerable<JnedictType> type,
+            IEnumerable<string> translation)
+        {
+            Type = type.ToList();
+            Translation = translation.ToList();
+        }
+    }
+
     public static class JnedictTypeUtils
     {
         public static Option<JnedictType> FromDescription(string description)
         {
             return mapping.FromDescription(description);
+        }
+
+        public static string ToLongString(this JnedictType value)
+        {
+            return mapping.ToLongString(value);
         }
 
         private static EnumMapper<JnedictType> mapping = new EnumMapper<JnedictType>();
@@ -179,5 +318,38 @@ namespace JDict
 
         [Description("old or irregular kana form")]
         ok,
+    }
+
+    internal class DbNeDictKeyValue
+    {
+        public long Id { get; set; }
+
+        public string LookupKey { get; set; }
+
+        [BsonRef("entries")]
+        public List<DbNeEntry> Entries { get; set; }
+    }
+
+    internal class DbNeEntry
+    {
+        public long Id { get; set; }
+
+        public long SequenceNumber { get; set; }
+
+        public List<string> Kanji { get; set; }
+
+        public List<string> Reading { get; set; }
+
+        [BsonRef("trans")]
+        public List<DbNeTranslation> Translation { get; set; }
+    }
+
+    internal class DbNeTranslation
+    {
+        public long Id { get; set; }
+
+        public List<JnedictType> Type { get; set; }
+
+        public List<string> Detail { get; set; }
     }
 }

@@ -136,8 +136,8 @@ namespace JDict
                     new KeyValuePair<string, IEnumerable<JMDictEntry>>(kvp.Key, kvp.Value),
                     e => entriesDict[e]));
 
-            senses.InsertBulk(sensesDict.Select(s => s.Value));
-            entries.InsertBulk(entriesDict.Select(e => e.Value));
+            senses.InsertBulk(sensesDict.Values);
+            entries.InsertBulk(entriesDict.Values);
             kvps.InsertBulk(kvpsDict.Select(kvp => DbDictEntryKeyValue.From(
                 new KeyValuePair<string, IEnumerable<JMDictEntry>>(kvp.Value.Key, kvp.Value.Value),
                 e => entriesDict[e])));
