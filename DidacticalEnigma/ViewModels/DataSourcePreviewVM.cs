@@ -18,7 +18,7 @@ namespace DidacticalEnigma.ViewModels
             SelectedDataSourceIndex = index;
             if(index != -1)
             {
-                SelectedDataSource = Parent.DataSources[index];
+                SelectedDataSource = parent.DataSources[index];
             }
         }
 

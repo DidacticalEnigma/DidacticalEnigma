@@ -125,7 +125,7 @@ Te - Te Form
             return senseType.Map(s => (LibJpConjSharp.EdictType)(int)s);
         }
 
-        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
+        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default)
         {
             return Task.FromResult(UpdateResult.NotSupported);
         }

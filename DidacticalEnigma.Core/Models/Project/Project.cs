@@ -11,7 +11,7 @@ namespace DidacticalEnigma.Core.Models.Project
     public class RWLazy<T> : IDisposable
         where T : IDisposable
     {
-        private T value = default(T);
+        private T value = default;
 
         private readonly Func<T> factory;
 
@@ -220,14 +220,14 @@ namespace DidacticalEnigma.Core.Models.Project
     {
         public bool Equals(TranslatorNote other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return string.Equals(Text, other.Text);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
             return Equals((TranslatorNote) obj);
@@ -265,14 +265,14 @@ namespace DidacticalEnigma.Core.Models.Project
     {
         public bool Equals(GlossNote other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return base.Equals(other) && string.Equals(Foreign, other.Foreign);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
             return Equals((GlossNote) obj);

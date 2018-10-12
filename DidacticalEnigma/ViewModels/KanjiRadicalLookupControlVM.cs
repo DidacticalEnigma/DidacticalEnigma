@@ -78,7 +78,7 @@ namespace DidacticalEnigma.ViewModels
                 StrokeCount = radical.StrokeCount;
                 Enabled = enabled;
                 this.lookupVm = lookupVm;
-                this.lookupVm.PropertyChanged += (sender, args) =>
+                lookupVm.PropertyChanged += (sender, args) =>
                 {
                     if (args.PropertyName == nameof(HideNonMatchingRadicals))
                     {
@@ -167,8 +167,10 @@ namespace DidacticalEnigma.ViewModels
         {
             this.service = service;
             Radicals.AddRange(service.AllRadicals().Select(r => new RadicalVM(r, enabled: true, this)));
-            var tb = new TextBlock();
-            tb.FontSize = 24;
+            var tb = new TextBlock
+            {
+                FontSize = 24
+            };
             foreach (var k in Radicals)
             {
                 tb.Measure(new System.Windows.Size(100, 100));

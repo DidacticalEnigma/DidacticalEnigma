@@ -20,7 +20,7 @@ namespace DidacticalEnigma.ViewModels
     {
         private readonly ClipboardHook hook;
 
-        private Func<string> aboutTextProvider;
+        private readonly Func<string> aboutTextProvider;
 
         public string AboutText => aboutTextProvider();
 
@@ -99,7 +99,7 @@ namespace DidacticalEnigma.ViewModels
             });
             DataSourceForceRefresh = new RelayCommand(() =>
             {
-                UsageDataSourceVM.Search(UsageDataSourceVM.Request);
+                usageDataSourceVm.Search(usageDataSourceVm.Request);
             });
         }
 

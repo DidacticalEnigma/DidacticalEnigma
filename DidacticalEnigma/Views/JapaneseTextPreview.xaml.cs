@@ -30,9 +30,9 @@ namespace DidacticalEnigma.Views
                 nameof(Lines),
                 typeof(IReadOnlyList<LineVM>),
                 typeof(JapaneseTextPreview),
-                new PropertyMetadata(null, OnLinesPropertyChanged));
+                new PropertyMetadata(null, OnLinesChanged));
 
-        private static void OnLinesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnLinesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var self = (JapaneseTextPreview)d;
             var newValue = (IReadOnlyList<LineVM>)e.NewValue;
@@ -114,8 +114,7 @@ namespace DidacticalEnigma.Views
             }
             do
             {
-                var ancestor = current as T;
-                if (ancestor != null)
+                if (current is T ancestor)
                 {
                     return ancestor;
                 }

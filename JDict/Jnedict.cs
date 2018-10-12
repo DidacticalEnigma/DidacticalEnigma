@@ -69,7 +69,7 @@ namespace JDict
 
             var transDict = root.Entries
                 .SelectMany(e => e.TranslationalEquivalents
-                    .Select(tr => (tr, new DbNeTranslation()
+                    .Select(tr => (xmlModel: tr, dbModel: new DbNeTranslation()
                     {
                         Type = (tr.Types ?? Array.Empty<string>())
                             .Select(t => JnedictTypeUtils.FromDescription(t))
@@ -80,10 +80,10 @@ namespace JDict
                             .Select(t => t.Text)
                             .ToList()
                     })))
-                .ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
+                .ToDictionary(kvp => kvp.xmlModel, kvp => kvp.dbModel);
 
             {
-                int id = 2;
+                int id = 1; // to not make it start from 0
                 foreach (var t in transDict)
                 {
                     t.Value.Id = id++;
@@ -91,9 +91,9 @@ namespace JDict
             }
 
             var entriesDict = root.Entries
-                .Select((e, i) => (e, new DbNeEntry
+                .Select((e, id) => (xmlModel: e, dbModel: new DbNeEntry
                 {
-                    Id = i + 2,
+                    Id = id + 1, // to not make it start from 0
                     SequenceNumber = e.SequenceNumber,
                     Kanji = (e.KanjiElements ?? Array.Empty<KanjiElement>())
                         .Select(k => k.Key)
@@ -104,19 +104,19 @@ namespace JDict
                     Translation = (e.TranslationalEquivalents ?? Array.Empty<NeTranslationalEquivalent>())
                         .Select(t => transDict[t]).ToList()
                 }))
-                .ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
+                .ToDictionary(kvp => kvp.xmlModel, kvp => kvp.dbModel);
 
             var kvpsDict = new Dictionary<string, List<DbNeEntry>>();
             var kvpsEn = root.Entries
                 .SelectMany(e =>
                     (e.KanjiElements?.Select(k => k.Key) ?? Enumerable.Empty<string>())
                     .Concat(e.ReadingElements.Select(r => r.Reb))
-                    .Select(key => (key: key, value: e)));
-            foreach (var entry in kvpsEn)
+                    .Select(k => (key: k, value: e)));
+            foreach (var (key, value) in kvpsEn)
             {
-                if (!kvpsDict.ContainsKey(entry.key))
-                    kvpsDict[entry.key] = new List<DbNeEntry>();
-                kvpsDict[entry.key].Add(entriesDict[entry.value]);
+                if (!kvpsDict.ContainsKey(key))
+                    kvpsDict[key] = new List<DbNeEntry>();
+                kvpsDict[key].Add(entriesDict[value]);
             }
 
             trans.InsertBulk(transDict.Values);

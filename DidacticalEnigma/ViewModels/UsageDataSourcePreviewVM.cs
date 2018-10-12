@@ -74,17 +74,16 @@ namespace DidacticalEnigma.ViewModels
             DataSources.Add(new DataSourceVM(new AutoGlosserDataSource(lang, jmdict), fontResolver));
             DataSources.Add(new DataSourceVM(new JNeDictDataSource(jnamedict), fontResolver));
 
-            Func<Element> fac = () => new Leaf(
-                () => new DataSourcePreviewVM(this),
-                o =>
+            Element Fac() => new Leaf(() => new DataSourcePreviewVM(this), o =>
+            {
+                var dataSource = ((DataSourcePreviewVM) o).SelectedDataSource;
+                if (dataSource != null)
                 {
-                    var dataSource = ((DataSourcePreviewVM)o).SelectedDataSource;
-                    if (dataSource != null)
-                    {
-                        dataSource.IsUsed = false;
-                    }
-                });
-            Root = new Root(fac);
+                    dataSource.IsUsed = false;
+                }
+            });
+
+            Root = new Root(Fac);
             // being lazy
             (Root.Tree as Leaf).VSplit.Execute(null);
             (((Root.Tree as Split).First as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 0;

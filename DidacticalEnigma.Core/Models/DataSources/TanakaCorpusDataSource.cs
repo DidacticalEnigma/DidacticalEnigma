@@ -31,9 +31,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             foreach (var sentence in sentences.Take(100).OrderBy(s => s.JapaneseSentence.Length).Take(20))
             {
                 var paragraph = new TextParagraph();
-                foreach (var part in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))
+                foreach (var (text, highlight) in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))
                 {
-                    paragraph.Content.Add(new Text(part.text, part.highlight));
+                    paragraph.Content.Add(new Text(text, highlight));
                 }
                 paragraph.Content.Add(new Text(sentence.EnglishSentence));
                 rich.Paragraphs.Add(paragraph);
@@ -51,7 +51,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
-        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
+        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default)
         {
             return Task.FromResult(UpdateResult.NotSupported);
         }
@@ -89,7 +89,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
-        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
+        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default)
         {
             return Task.FromResult(UpdateResult.NotSupported);
         }

@@ -23,9 +23,11 @@ namespace DidacticalEnigma.Utils
         private ItemsControl _itemsControl;
         private readonly Dictionary<UIElement, Rect> _childLayouts = new Dictionary<UIElement, Rect>();
 
+        /// <summary>Identifies the <see cref="ItemWidth"/> dependency property.</summary>
         public static readonly DependencyProperty ItemWidthProperty =
             DependencyProperty.Register("ItemWidth", typeof(double), typeof(VirtualizingTilePanel), new PropertyMetadata(1.0, HandleItemDimensionChanged));
 
+        /// <summary>Identifies the <see cref="ItemHeight"/> dependency property.</summary>
         public static readonly DependencyProperty ItemHeightProperty =
             DependencyProperty.Register("ItemHeight", typeof(double), typeof(VirtualizingTilePanel), new PropertyMetadata(1.0, HandleItemDimensionChanged));
 
@@ -35,6 +37,7 @@ namespace DidacticalEnigma.Utils
 
         private bool _isInMeasure;
 
+        [AttachedPropertyBrowsableForType(typeof(DependencyObject))]
         private static int GetVirtualItemIndex(DependencyObject obj)
         {
             return (int)obj.GetValue(VirtualItemIndexProperty);
@@ -110,9 +113,7 @@ namespace DidacticalEnigma.Utils
             {
                 for (var itemIndex = layoutInfo.FirstRealizedItemIndex; itemIndex <= layoutInfo.LastRealizedItemIndex; itemIndex++, visualIndex++)
                 {
-                    bool newlyRealized;
-
-                    var child = (UIElement)_itemsGenerator.GenerateNext(out newlyRealized);
+                    var child = (UIElement)_itemsGenerator.GenerateNext(out var newlyRealized);
                     SetVirtualItemIndex(child, itemIndex);
 
                     if (newlyRealized)
