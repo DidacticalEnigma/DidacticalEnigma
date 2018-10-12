@@ -166,7 +166,7 @@ namespace DidacticalEnigma.ViewModels
         public KanjiRadicalLookupControlVM(ILanguageService service)
         {
             this.service = service;
-            Radicals.AddRange(service.AllRadicals().Select(r => new RadicalVM(r, true, this)));
+            Radicals.AddRange(service.AllRadicals().Select(r => new RadicalVM(r, enabled: true, this)));
             var tb = new TextBlock();
             tb.FontSize = 24;
             foreach (var k in Radicals)

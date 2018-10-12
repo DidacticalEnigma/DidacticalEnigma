@@ -14,6 +14,9 @@ namespace JDict.Tests
     {
         private MeCabTagger tagger;
 
+        // FIX THIS PATH SO IT POINTS TO THE ACTUAL DIRECTORY YOUR DATA IS
+        // Various test runners put the executables in unrelated places,
+        // and also make the current directory unrelated.
         public static readonly string baseDir = @"D:\DidacticalEnigma-Data";
 
         [SetUp]

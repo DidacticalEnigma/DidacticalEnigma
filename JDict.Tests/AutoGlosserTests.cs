@@ -122,26 +122,26 @@ namespace JDict.Tests
         public void SetUp()
         {
             var baseDir = Tagger.baseDir;
-            var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml.gz"));
-            var kradfile = new JDict.Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
-            var radkfile = new Radkfile(Path.Combine(baseDir, @"dic\radkfile1_plus_2_utf8"), Encoding.UTF8);
+            var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"character\kanjidic2.xml.gz"));
+            var kradfile = new JDict.Kradfile(Path.Combine(baseDir, @"character\kradfile1_plus_2_utf8"), Encoding.UTF8);
+            var radkfile = new Radkfile(Path.Combine(baseDir, @"character\radkfile1_plus_2_utf8"), Encoding.UTF8);
             var kanaProperties = new KanaProperties(
-                Path.Combine(baseDir, @"dic\hiragana_romaji.txt"),
-                Path.Combine(baseDir, @"dic\katakana_romaji.txt"),
-                Path.Combine(baseDir, @"dic\hiragana_katakana.txt"),
-                Path.Combine(baseDir, @"dic\kana_related.txt"),
+                Path.Combine(baseDir, @"character\hiragana_romaji.txt"),
+                Path.Combine(baseDir, @"character\katakana_romaji.txt"),
+                Path.Combine(baseDir, @"character\hiragana_katakana.txt"),
+                Path.Combine(baseDir, @"character\kana_related.txt"),
                 Encoding.UTF8);
             this.lang = new LanguageService(
                 new MeCab(new MeCabParam
                 {
-                    DicDir = Path.Combine(baseDir, @"dic\ipadic"),
+                    DicDir = Path.Combine(baseDir, @"mecab\ipadic"),
                 }),
-                EasilyConfusedKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
+                EasilyConfusedKana.FromFile(Path.Combine(baseDir, @"character\confused.txt")),
                 kradfile,
                 radkfile,
                 kanjidict,
                 kanaProperties);
-            this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e.gz"), Path.Combine(baseDir, "dic", "JMdict_e.cache"));
+            this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dictionaries", "JMdict_e.gz"), Path.Combine(baseDir, "dictionaries", "JMdict_e.cache"));
             glosser = new AutoGlosser(lang, jmdict);
         }
 
