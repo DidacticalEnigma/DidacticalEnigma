@@ -16,7 +16,7 @@ namespace JDict.Tests
         [SetUp]
         public void SetUp()
         {
-            kradfile = new JDict.Kradfile(Path.Combine(Tagger.baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
+            kradfile = new JDict.Kradfile(Path.Combine(Tagger.baseDir, @"character\kradfile1_plus_2_utf8"), Encoding.UTF8);
         }
 
         [TearDown]

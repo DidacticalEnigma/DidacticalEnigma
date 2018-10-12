@@ -53,20 +53,23 @@ namespace DidacticalEnigma.ViewModels
 
         public UsageDataSourcePreviewVM(
             ILanguageService lang,
-            string dataSourcePath,
             JMDict jmdict,
             FrequencyList frequencyList,
-            Jnedict jnamedict)
+            Jnedict jnamedict,
+            Tanaka tanaka,
+            JESC jesc,
+            BasicExpressionsCorpus basicExpressions,
+            string customNotesPath)
         {
             var fontResolver = new DefaultFontResolver();
             DataSources.Add(new DataSourceVM(new CharacterDataSource(lang), fontResolver));
             DataSources.Add(new DataSourceVM(new JMDictDataSource(jmdict), fontResolver));
-            DataSources.Add(new DataSourceVM(typeof(TanakaCorpusDataSource), dataSourcePath, fontResolver));
-            DataSources.Add(new DataSourceVM(typeof(CharacterStrokeOrderDataSource), dataSourcePath, fontResolver));
-            DataSources.Add(new DataSourceVM(typeof(JESCDataSource), dataSourcePath, fontResolver));
-            DataSources.Add(new DataSourceVM(typeof(BasicExpressionCorpusDataSource), dataSourcePath, fontResolver));
+            DataSources.Add(new DataSourceVM(new TanakaCorpusDataSource(tanaka), fontResolver));
+            DataSources.Add(new DataSourceVM(new CharacterStrokeOrderDataSource(), fontResolver));
+            DataSources.Add(new DataSourceVM(new JESCDataSource(jesc), fontResolver));
+            DataSources.Add(new DataSourceVM(new BasicExpressionCorpusDataSource(basicExpressions), fontResolver));
             DataSources.Add(new DataSourceVM(new PartialWordLookupJMDictDataSource(jmdict, frequencyList), fontResolver));
-            DataSources.Add(new DataSourceVM(typeof(CustomNotesDataSource), dataSourcePath, fontResolver));
+            DataSources.Add(new DataSourceVM(new CustomNotesDataSource(customNotesPath), fontResolver));
             DataSources.Add(new DataSourceVM(new VerbConjugationDataSource(jmdict), fontResolver));
             DataSources.Add(new DataSourceVM(new AutoGlosserDataSource(lang, jmdict), fontResolver));
             DataSources.Add(new DataSourceVM(new JNeDictDataSource(jnamedict), fontResolver));

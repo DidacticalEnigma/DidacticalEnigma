@@ -2,6 +2,7 @@
 using JDict.Internal.XmlModels;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
@@ -46,8 +47,9 @@ namespace JDict
         private KanjiDict Init(string path)
         {
             using (var file = File.OpenRead(path))
+            using (var gzip = new GZipStream(file, CompressionMode.Decompress))
             {
-                return Init(file);
+                return Init(gzip);
             }
         }
 

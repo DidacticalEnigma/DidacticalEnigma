@@ -52,26 +52,30 @@ namespace DidacticalEnigma
         private void Configure()
         {
             var kernel = new Kernel();
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            kernel.BindFactory(() => JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml")));
-            kernel.BindFactory(() => new Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8));
-            kernel.BindFactory(() => new Radkfile(Path.Combine(baseDir, @"dic\radkfile1_plus_2_utf8"), Encoding.UTF8));
-            kernel.BindFactory(() => JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e"), Path.Combine(baseDir, "dic", "JMdict_e.cache")));
-            kernel.BindFactory(() => JDict.Jnedict.Create(Path.Combine(baseDir, "dic", "JMnedict.xml"), Path.Combine(baseDir, "dic", "JMnedict.xml.cache")));
+            // var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            var baseDir = @"D:\DidacticalEnigma-Data";
+            kernel.BindFactory(() => JDict.KanjiDict.Create(Path.Combine(baseDir, "character", "kanjidic2.xml.gz")));
+            kernel.BindFactory(() => new Kradfile(Path.Combine(baseDir, "character", "kradfile1_plus_2_utf8"), Encoding.UTF8));
+            kernel.BindFactory(() => new Radkfile(Path.Combine(baseDir, "character", "radkfile1_plus_2_utf8"), Encoding.UTF8));
+            kernel.BindFactory(() => JDict.JMDict.Create(Path.Combine(baseDir, "dictionaries", "JMdict_e.gz"), Path.Combine(baseDir, "dictionaries", "JMdict_e.cache")));
+            kernel.BindFactory(() => JDict.Jnedict.Create(Path.Combine(baseDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(baseDir, "dictionaries", "JMnedict.xml.cache")));
             kernel.BindFactory(() =>
-                new FrequencyList(Path.Combine(baseDir, @"dic\word_form_frequency_list.txt"), Encoding.UTF8));
+                new FrequencyList(Path.Combine(baseDir, "other", "word_form_frequency_list.txt"), Encoding.UTF8));
             kernel.BindFactory(() => new KanaProperties(
-                katakanaPath: Path.Combine(baseDir, @"dic\hiragana_romaji.txt"),
-                hiraganaPath: Path.Combine(baseDir, @"dic\katakana_romaji.txt"),
-                hiraganaKatakanaPath: Path.Combine(baseDir, @"dic\hiragana_katakana.txt"),
-                complexPath: Path.Combine(baseDir, @"dic\kana_related.txt"),
+                katakanaPath: Path.Combine(baseDir, "character", "hiragana_romaji.txt"),
+                hiraganaPath: Path.Combine(baseDir, "character", "katakana_romaji.txt"),
+                hiraganaKatakanaPath: Path.Combine(baseDir, "character", "hiragana_katakana.txt"),
+                complexPath: Path.Combine(baseDir, "character", "kana_related.txt"),
                 encoding: Encoding.UTF8));
+            kernel.BindFactory(() => new Tanaka(Path.Combine(baseDir, "corpora", "examples.utf.gz"), Encoding.UTF8));
+            kernel.BindFactory(() => new JESC(Path.Combine(baseDir, "corpora", "jesc_raw"), Encoding.UTF8));
+            kernel.BindFactory(() => new BasicExpressionsCorpus(Path.Combine(baseDir, "corpora", "JEC_basic_sentence_v1-2.csv"), Encoding.UTF8));
             kernel.BindFactory<ILanguageService>(get => new LanguageService(
                 new MeCab(new MeCabParam
                 {
-                    DicDir = Path.Combine(baseDir, @"dic\ipadic"),
+                    DicDir = Path.Combine(baseDir, "mecab", "ipadic"),
                 }),
-                EasilyConfusedKana.FromFile(Path.Combine(baseDir, @"dic\confused.txt")),
+                EasilyConfusedKana.FromFile(Path.Combine(baseDir, "character", "confused.txt")),
                 get.Get<Kradfile>(),
                 get.Get<Radkfile>(),
                 get.Get<KanjiDict>(),
@@ -81,7 +85,12 @@ namespace DidacticalEnigma
                 get.Get<JMDict>(),
                 get.Get<FrequencyList>(),
                 get.Get<Jnedict>(),
-                baseDir));
+                new KanaBoardVM(Path.Combine(baseDir, "character", "hiragana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
+                new KanaBoardVM(Path.Combine(baseDir, "character", "katakana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
+                get.Get<Tanaka>(),
+                get.Get<JESC>(),
+                get.Get<BasicExpressionsCorpus>(),
+                Path.Combine(baseDir, "custom", "custom_notes.txt")));
             Kernel = kernel;
         }
     }

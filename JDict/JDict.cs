@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -191,16 +192,18 @@ namespace JDict
         private async Task<JMDict> InitAsync(string path, LiteDatabase cache)
         {
             using (var file = File.OpenRead(path))
+            using (var gzip = new GZipStream(file, CompressionMode.Decompress))
             {
-                return await InitAsync(file, cache);
+                return await InitAsync(gzip, cache);
             }
         }
 
         private JMDict Init(string path, LiteDatabase cache)
         {
             using (var file = File.OpenRead(path))
+            using (var gzip = new GZipStream(file, CompressionMode.Decompress))
             {
-                return Init(file, cache);
+                return Init(gzip, cache);
             }
         }
 

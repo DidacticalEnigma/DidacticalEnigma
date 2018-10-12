@@ -54,9 +54,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public JESCDataSource(string dataDirectory)
+        public JESCDataSource(JESC jesc)
         {
-            this.jesc = new JESC(Path.Combine(dataDirectory, "jesc_raw"), Encoding.UTF8);
+            this.jesc = jesc;
         }
     }
 }

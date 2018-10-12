@@ -2,6 +2,7 @@
 using System.Collections.Async;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
@@ -54,24 +55,31 @@ namespace JDict
             this.path = path;
         }
 
+        private TextReader Reader()
+        {
+            return new StreamReader(
+                path,
+                encoding);
+        }
+
         public IEnumerable<Sentence> AllSentences()
         {
-            return Sentences(() => new StreamReader(path, encoding));
+            return Sentences(Reader);
         }
 
         public IAsyncEnumerable<Sentence> AllSentencesAsync()
         {
-            return SentencesAsync(() => new StreamReader(path, encoding));
+            return SentencesAsync(Reader);
         }
 
         public IEnumerable<Sentence> SearchByJapaneseText(string text)
         {
-            return Sentences(() => new StreamReader(path, encoding)).Where(x => x.JapaneseSentence.Contains(text));
+            return Sentences(Reader).Where(x => x.JapaneseSentence.Contains(text));
         }
 
         public IAsyncEnumerable<Sentence> SearchByJapaneseTextAsync(string text)
         {
-            return SentencesAsync(() => new StreamReader(path, encoding)).Where(x => x.JapaneseSentence.Contains(text));
+            return SentencesAsync(Reader).Where(x => x.JapaneseSentence.Contains(text));
         }
     }
 }

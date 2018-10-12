@@ -91,9 +91,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public CustomNotesDataSource(string dataDirectory)
+        public CustomNotesDataSource(string notesFilePath)
         {
-            this.path = Path.Combine(dataDirectory, "custom_notes.txt");
+            this.path = notesFilePath;
         }
     }
 }

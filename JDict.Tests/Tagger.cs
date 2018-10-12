@@ -14,14 +14,14 @@ namespace JDict.Tests
     {
         private MeCabTagger tagger;
 
-        public static readonly string baseDir = @"D:\DidacticalEnigma\DidacticalEnigma\";
+        public static readonly string baseDir = @"D:\DidacticalEnigma-Data";
 
         [SetUp]
         public void SetUp()
         {
             MeCabParam mecabParam = new MeCabParam
             {
-                DicDir = Path.Combine(baseDir, @"dic\ipadic"),
+                DicDir = Path.Combine(baseDir, @"mecab\ipadic"),
             };
             tagger = MeCabTagger.Create(mecabParam);
             mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
@@ -34,10 +34,10 @@ namespace JDict.Tests
         [Test]
         public void Tanaka()
         {
-            var tanaka = new Tanaka(Path.Combine(baseDir, @"dic\examples.utf"), Encoding.UTF8);
+            var tanaka = new Tanaka(Path.Combine(baseDir, @"corpora\examples.utf.gz"), Encoding.UTF8);
             var meCab = new MeCab(new MeCabParam
             {
-                DicDir = Path.Combine(baseDir, @"dic\ipadic"),
+                DicDir = Path.Combine(baseDir, @"mecab\ipadic"),
             });
             var sentences = tanaka.AllSentences()
                 .Select(s => s.JapaneseSentence)

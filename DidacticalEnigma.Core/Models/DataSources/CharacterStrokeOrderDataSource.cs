@@ -33,7 +33,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public CharacterStrokeOrderDataSource(string dataPath)
+        public CharacterStrokeOrderDataSource()
         {
 
         }

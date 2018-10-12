@@ -32,12 +32,30 @@ namespace DidacticalEnigma.ViewModels
 
         public KanaBoardVM KatakanaBoard { get; }
 
-        public MainWindowVM(ILanguageService lang, JMDict dict, FrequencyList frequencyList, Jnedict jnamedict, string baseDir)
+        public MainWindowVM(
+            ILanguageService lang,
+            JMDict dict,
+            FrequencyList frequencyList,
+            Jnedict jnamedict,
+            KanaBoardVM hiraganaBoard,
+            KanaBoardVM katakanaBoard,
+            Tanaka tanaka,
+            JESC jesc,
+            BasicExpressionsCorpus basicExpressions,
+            string customNotesPath)
         {
             this.lang = lang;
-            HiraganaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\hiragana_romaji.txt"), Encoding.UTF8, lang);
-            KatakanaBoard = new KanaBoardVM(Path.Combine(baseDir, @"dic\katakana_romaji.txt"), Encoding.UTF8, lang);
-            UsageDataSourceVM = new UsageDataSourcePreviewVM(lang, Path.Combine(baseDir, "dic"), dict, frequencyList, jnamedict);
+            HiraganaBoard = hiraganaBoard;
+            KatakanaBoard = katakanaBoard;
+            UsageDataSourceVM = new UsageDataSourcePreviewVM(
+                lang,
+                dict,
+                frequencyList,
+                jnamedict,
+                tanaka,
+                jesc,
+                basicExpressions,
+                customNotesPath);
             TextBuffers.Add(new TextBufferVM("Scratchpad", lang));
             TextBuffers.Add(new TextBufferVM("Main", lang));
             ClipboardTextBuffer = new TextBufferVM("Clipboard", lang);

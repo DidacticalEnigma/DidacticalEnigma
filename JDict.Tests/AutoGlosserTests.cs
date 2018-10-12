@@ -122,7 +122,7 @@ namespace JDict.Tests
         public void SetUp()
         {
             var baseDir = Tagger.baseDir;
-            var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml"));
+            var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"dic\kanjidic2.xml.gz"));
             var kradfile = new JDict.Kradfile(Path.Combine(baseDir, @"dic\kradfile1_plus_2_utf8"), Encoding.UTF8);
             var radkfile = new Radkfile(Path.Combine(baseDir, @"dic\radkfile1_plus_2_utf8"), Encoding.UTF8);
             var kanaProperties = new KanaProperties(
@@ -141,7 +141,7 @@ namespace JDict.Tests
                 radkfile,
                 kanjidict,
                 kanaProperties);
-            this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e"), Path.Combine(baseDir, "dic", "JMdict_e.cache"));
+            this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dic", "JMdict_e.gz"), Path.Combine(baseDir, "dic", "JMdict_e.cache"));
             glosser = new AutoGlosser(lang, jmdict);
         }
 

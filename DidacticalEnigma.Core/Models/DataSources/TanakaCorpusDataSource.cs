@@ -56,9 +56,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public TanakaCorpusDataSource(string dataDirectory)
+        public TanakaCorpusDataSource(Tanaka tanaka)
         {
-            this.tanaka = new Tanaka(Path.Combine(dataDirectory, "examples.utf"), Encoding.UTF8);
+            this.tanaka = tanaka;
         }
     }
 

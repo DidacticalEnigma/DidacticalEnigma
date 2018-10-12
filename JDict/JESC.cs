@@ -2,6 +2,7 @@
 using System.Collections.Async;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
@@ -57,28 +58,35 @@ namespace JDict
         public JESC(string path, Encoding encoding)
         {
             this.encoding = encoding;
-            this.pathJp = Path.Combine(path, "ja");
-            this.pathEn = Path.Combine(path, "en");
+            this.pathJp = Path.Combine(path, "ja.gz");
+            this.pathEn = Path.Combine(path, "en.gz");
+        }
+
+        private TextReader Reader(string path)
+        {
+            return new StreamReader(
+                new GZipStream(File.OpenRead(path), CompressionMode.Decompress),
+                encoding);
         }
 
         public IEnumerable<Sentence> AllSentences()
         {
-            return Sentences(path => new StreamReader(path, encoding));
+            return Sentences(Reader);
         }
 
         public IAsyncEnumerable<Sentence> AllSentencesAsync()
         {
-            return SentencesAsync(path => new StreamReader(path, encoding));
+            return SentencesAsync(Reader);
         }
 
         public IEnumerable<Sentence> SearchByJapaneseText(string text)
         {
-            return Sentences(path => new StreamReader(path, encoding)).Where(x => x.JapaneseSentence.Contains(text));
+            return Sentences(Reader).Where(x => x.JapaneseSentence.Contains(text));
         }
 
         public IAsyncEnumerable<Sentence> SearchByJapaneseTextAsync(string text)
         {
-            return SentencesAsync(path => new StreamReader(path, encoding)).Where(x => x.JapaneseSentence.Contains(text));
+            return SentencesAsync(Reader).Where(x => x.JapaneseSentence.Contains(text));
         }
     }
 }

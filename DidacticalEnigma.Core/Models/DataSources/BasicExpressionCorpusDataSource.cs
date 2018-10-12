@@ -54,9 +54,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public BasicExpressionCorpusDataSource(string dataDirectory)
+        public BasicExpressionCorpusDataSource(BasicExpressionsCorpus corpus)
         {
-            this.be = new BasicExpressionsCorpus(Path.Combine(dataDirectory, "JEC_basic_sentence_v1-2.csv"), Encoding.UTF8);
+            this.be = corpus;
         }
     }
 }
