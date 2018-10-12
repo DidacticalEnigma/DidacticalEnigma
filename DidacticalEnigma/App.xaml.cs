@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Models;
 using DidacticalEnigma.ViewModels;
@@ -30,6 +31,7 @@ namespace DidacticalEnigma
         {
             var splash = new SplashScreen();
             splash.Show();
+            Encoding.RegisterProvider(new Utf8EncodingProviderHack());
             Configure();
             Startup += (sender, args) =>
             {
