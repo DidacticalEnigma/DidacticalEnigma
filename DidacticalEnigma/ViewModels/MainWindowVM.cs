@@ -20,7 +20,9 @@ namespace DidacticalEnigma.ViewModels
     {
         private readonly ClipboardHook hook;
 
-        public string AboutText => File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"dic\about.txt"), Encoding.UTF8);
+        private Func<string> aboutTextProvider;
+
+        public string AboutText => aboutTextProvider();
 
         public UsageDataSourcePreviewVM UsageDataSourceVM { get; }
 
@@ -35,10 +37,12 @@ namespace DidacticalEnigma.ViewModels
             KanaBoardVM hiraganaBoard,
             KanaBoardVM katakanaBoard,
             UsageDataSourcePreviewVM usageDataSourceVm,
-            KanjiRadicalLookupControlVM kanjiLookupVm)
+            KanjiRadicalLookupControlVM kanjiLookupVm,
+            Func<string> aboutTextProvider)
         {
             HiraganaBoard = hiraganaBoard;
             KatakanaBoard = katakanaBoard;
+            this.aboutTextProvider = aboutTextProvider;
             UsageDataSourceVM = usageDataSourceVm;
             TextBuffers.Add(new TextBufferVM("Scratchpad", lang));
             TextBuffers.Add(new TextBufferVM("Main", lang));

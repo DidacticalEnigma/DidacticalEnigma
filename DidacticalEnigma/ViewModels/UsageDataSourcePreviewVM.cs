@@ -59,9 +59,9 @@ namespace DidacticalEnigma.ViewModels
             Tanaka tanaka,
             JESC jesc,
             BasicExpressionsCorpus basicExpressions,
-            string customNotesPath)
+            string customNotesPath,
+            IFontResolver fontResolver)
         {
-            var fontResolver = new DefaultFontResolver();
             DataSources.Add(new DataSourceVM(new CharacterDataSource(lang), fontResolver));
             DataSources.Add(new DataSourceVM(new JMDictDataSource(jmdict), fontResolver));
             DataSources.Add(new DataSourceVM(new TanakaCorpusDataSource(tanaka), fontResolver));

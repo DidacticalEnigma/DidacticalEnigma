@@ -13,8 +13,6 @@ namespace DidacticalEnigma.ViewModels
 
     class DefaultFontResolver : IFontResolver
     {
-        private readonly string baseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "dic\\KanjiStrokeOrders");
-
         private readonly Dictionary<string, FontFamily> cache = new Dictionary<string, FontFamily>();
 
         public FontFamily Resolve(string name)
@@ -25,7 +23,7 @@ namespace DidacticalEnigma.ViewModels
             return fontFamily;
         }
 
-        public DefaultFontResolver()
+        public DefaultFontResolver(string baseDirectory)
         {
             var kanjiFontFileName = Directory.EnumerateFiles(baseDirectory, "*.ttf").First();
             var kanjiFontFamily = "./#KanjiStrokeOrders";

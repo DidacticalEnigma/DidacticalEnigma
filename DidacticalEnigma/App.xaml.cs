@@ -70,6 +70,7 @@ namespace DidacticalEnigma
             kernel.BindFactory(() => new Tanaka(Path.Combine(dataDir, "corpora", "examples.utf.gz"), Encoding.UTF8));
             kernel.BindFactory(() => new JESC(Path.Combine(dataDir, "corpora", "jesc_raw"), Encoding.UTF8));
             kernel.BindFactory(() => new BasicExpressionsCorpus(Path.Combine(dataDir, "corpora", "JEC_basic_sentence_v1-2.csv"), Encoding.UTF8));
+            kernel.BindFactory<IFontResolver>(() => new DefaultFontResolver(Path.Combine(dataDir, "character", "KanjiStrokeOrders")));
             kernel.BindFactory<ILanguageService>(get => new LanguageService(
                 new MeCab(new MeCabParam
                 {
@@ -85,7 +86,8 @@ namespace DidacticalEnigma
                 new KanaBoardVM(Path.Combine(dataDir, "character", "hiragana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
                 new KanaBoardVM(Path.Combine(dataDir, "character", "katakana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
                 get.Get<UsageDataSourcePreviewVM>(),
-                get.Get<KanjiRadicalLookupControlVM>()));
+                get.Get<KanjiRadicalLookupControlVM>(),
+                () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(get.Get<ILanguageService>()));
             kernel.BindFactory(get => new UsageDataSourcePreviewVM(
                 get.Get<ILanguageService>(),
@@ -95,7 +97,8 @@ namespace DidacticalEnigma
                 get.Get<Tanaka>(),
                 get.Get<JESC>(),
                 get.Get<BasicExpressionsCorpus>(),
-                Path.Combine(dataDir, "custom", "custom_notes.txt")));
+                Path.Combine(dataDir, "custom", "custom_notes.txt"),
+                get.Get<IFontResolver>()));
             Kernel = kernel;
         }
     }
