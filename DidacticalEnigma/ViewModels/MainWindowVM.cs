@@ -18,8 +18,6 @@ namespace DidacticalEnigma.ViewModels
 {
     public class MainWindowVM : INotifyPropertyChanged, IDisposable
     {
-        private readonly ILanguageService lang;
-
         private readonly ClipboardHook hook;
 
         public string AboutText => File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"dic\about.txt"), Encoding.UTF8);
@@ -34,32 +32,18 @@ namespace DidacticalEnigma.ViewModels
 
         public MainWindowVM(
             ILanguageService lang,
-            JMDict dict,
-            FrequencyList frequencyList,
-            Jnedict jnamedict,
             KanaBoardVM hiraganaBoard,
             KanaBoardVM katakanaBoard,
-            Tanaka tanaka,
-            JESC jesc,
-            BasicExpressionsCorpus basicExpressions,
-            string customNotesPath)
+            UsageDataSourcePreviewVM usageDataSourceVm,
+            KanjiRadicalLookupControlVM kanjiLookupVm)
         {
-            this.lang = lang;
             HiraganaBoard = hiraganaBoard;
             KatakanaBoard = katakanaBoard;
-            UsageDataSourceVM = new UsageDataSourcePreviewVM(
-                lang,
-                dict,
-                frequencyList,
-                jnamedict,
-                tanaka,
-                jesc,
-                basicExpressions,
-                customNotesPath);
+            UsageDataSourceVM = usageDataSourceVm;
             TextBuffers.Add(new TextBufferVM("Scratchpad", lang));
             TextBuffers.Add(new TextBufferVM("Main", lang));
             ClipboardTextBuffer = new TextBufferVM("Clipboard", lang);
-            KanjiLookupVM = new KanjiRadicalLookupControlVM(lang);
+            KanjiLookupVM = kanjiLookupVm;
             hook = new ClipboardHook();
             hook.ClipboardChanged += SetContent;
             PlaceInClipboard = new RelayCommand((p) =>

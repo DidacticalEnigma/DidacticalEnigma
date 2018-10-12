@@ -82,11 +82,16 @@ namespace DidacticalEnigma
                 get.Get<KanaProperties>()));
             kernel.BindFactory(get => new MainWindowVM(
                 get.Get<ILanguageService>(),
+                new KanaBoardVM(Path.Combine(baseDir, "character", "hiragana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
+                new KanaBoardVM(Path.Combine(baseDir, "character", "katakana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
+                get.Get<UsageDataSourcePreviewVM>(),
+                get.Get<KanjiRadicalLookupControlVM>()));
+            kernel.BindFactory(get => new KanjiRadicalLookupControlVM(get.Get<ILanguageService>()));
+            kernel.BindFactory(get => new UsageDataSourcePreviewVM(
+                get.Get<ILanguageService>(),
                 get.Get<JMDict>(),
                 get.Get<FrequencyList>(),
                 get.Get<Jnedict>(),
-                new KanaBoardVM(Path.Combine(baseDir, "character", "hiragana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
-                new KanaBoardVM(Path.Combine(baseDir, "character", "katakana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
                 get.Get<Tanaka>(),
                 get.Get<JESC>(),
                 get.Get<BasicExpressionsCorpus>(),
