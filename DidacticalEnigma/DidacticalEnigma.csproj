@@ -191,7 +191,6 @@
     <Compile Include="Converters\BooleanToColorConverter.cs" />
     <Compile Include="Converters\BooleanToLoadingTextConverter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Models\MeCab.cs" />
     <Compile Include="Utils\ClipboardHook.cs" />
     <Compile Include="ViewModels\FlowDocumentRichFormattingRenderer.cs" />
     <Compile Include="ViewModels\IFontResolver.cs" />

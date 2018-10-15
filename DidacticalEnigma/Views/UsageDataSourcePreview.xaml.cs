@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using DidacticalEnigma.Core.Models.DataSources;
-using DidacticalEnigma.Models;
 using DidacticalEnigma.ViewModels;
 
 namespace DidacticalEnigma.Views

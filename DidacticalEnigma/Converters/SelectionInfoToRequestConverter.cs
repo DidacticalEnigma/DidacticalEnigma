@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows.Data;
 using DidacticalEnigma.Core.Models.DataSources;
-using DidacticalEnigma.Models;
 using DidacticalEnigma.ViewModels;
 
 namespace DidacticalEnigma.Converters

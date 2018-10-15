@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
-using DidacticalEnigma.Models;
 
 namespace DidacticalEnigma.ViewModels
 {

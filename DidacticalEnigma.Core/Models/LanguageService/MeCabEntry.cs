@@ -6,7 +6,7 @@ using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public class MeCabEntry
+    public class MeCabEntry : IMeCabEntry
     {
         public bool IsRegular { get; }
 

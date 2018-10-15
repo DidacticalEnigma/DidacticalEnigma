@@ -6,6 +6,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public interface IMeCab : IDisposable
     {
-        IEnumerable<MeCabEntry> ParseToEntries(string text);
+        IEnumerable<IMeCabEntry> ParseToEntries(string text);
     }
 }

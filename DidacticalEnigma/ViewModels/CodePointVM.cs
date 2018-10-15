@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Models;
 
 namespace DidacticalEnigma.ViewModels
 {

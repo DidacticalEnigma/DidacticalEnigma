@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Models;
 using DidacticalEnigma.ViewModels;
 using DidacticalEnigma.Views;
 using Gu.Inject;

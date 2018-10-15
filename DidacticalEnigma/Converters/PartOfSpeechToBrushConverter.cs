@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Models;
 
 namespace DidacticalEnigma.Converters
 {

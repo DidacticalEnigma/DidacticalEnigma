@@ -1,13 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Utils;
 using NMeCab;
 
-[assembly: InternalsVisibleTo("JDict.Tests")]
-
-namespace DidacticalEnigma.Models
+namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class MeCab : IMeCab
     {
@@ -30,7 +25,7 @@ namespace DidacticalEnigma.Models
             }
         }
 
-        public IEnumerable<MeCabEntry> ParseToEntries(string text)
+        public IEnumerable<IMeCabEntry> ParseToEntries(string text)
         {
             MeCabEntry FromNode(MeCabNode n)
             {

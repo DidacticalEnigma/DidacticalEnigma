@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
-using DidacticalEnigma.Models;
 using DidacticalEnigma.Utils;
-using JDict;
-using NMeCab;
 
 namespace DidacticalEnigma.ViewModels
 {

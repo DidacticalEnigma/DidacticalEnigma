@@ -1,12 +1,6 @@
-﻿using DidacticalEnigma.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text;
-using DidacticalEnigma.Utils;
-using System.Windows.Input;
-using System.Windows;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
 

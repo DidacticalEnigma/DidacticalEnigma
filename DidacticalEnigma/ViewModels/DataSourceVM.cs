@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Async;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using System.Windows.Documents;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Utils;
-using DidacticalEnigma.Models;
 
 namespace DidacticalEnigma.ViewModels
 {
