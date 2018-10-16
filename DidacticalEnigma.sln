@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDict.Tests", "JDict.Tests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.Core", "DidacticalEnigma.Core\DidacticalEnigma.Core.csproj", "{72613547-03D0-4CDE-AE3E-946451E99726}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.Avalonia", "DidacticalEnigma.Avalonia\DidacticalEnigma.Avalonia.csproj", "{EE231E09-1275-48D6-8F31-4812FA98664A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{72613547-03D0-4CDE-AE3E-946451E99726}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72613547-03D0-4CDE-AE3E-946451E99726}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72613547-03D0-4CDE-AE3E-946451E99726}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE231E09-1275-48D6-8F31-4812FA98664A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE231E09-1275-48D6-8F31-4812FA98664A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE231E09-1275-48D6-8F31-4812FA98664A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE231E09-1275-48D6-8F31-4812FA98664A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

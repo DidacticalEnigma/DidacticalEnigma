@@ -11,8 +11,8 @@ namespace DidacticalEnigma.Avalonia
             BuildAvaloniaApp().Start<MainWindow>();
         }
 
-        public static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>()
+        public static AppBuilder BuildAvaloniaApp() =>
+            AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToDebug();
     }

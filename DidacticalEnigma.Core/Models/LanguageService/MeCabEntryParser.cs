@@ -279,7 +279,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 // surname/family name
                 case "姓":
                     return PartOfSpeechInfo.Unknown;
-                    // country/state/region (???)
+                // country/state/region (???)
                 case "国":
                     return PartOfSpeechInfo.Unknown;
                 // special/particular/peculiar/unique
