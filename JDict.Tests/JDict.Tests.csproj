@@ -167,6 +167,7 @@
     <Compile Include="Kradfile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringExtTests.cs" />
     <Compile Include="Tagger.cs" />
   </ItemGroup>
   <ItemGroup>

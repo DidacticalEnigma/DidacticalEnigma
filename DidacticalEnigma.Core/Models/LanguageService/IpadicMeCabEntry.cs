@@ -27,8 +27,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             Reading = MeCabEntryParser.OrNull(features, 7);
             Pronunciation = MeCabEntryParser.OrNull(features, 8);
             PartOfSpeechSections = features
-                .Skip(1)
-                .Take(3)
+                .Take(4)
                 .Where(f => f != "*")
                 .ToList()
                 .AsReadOnly();

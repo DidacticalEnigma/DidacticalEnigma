@@ -15,6 +15,7 @@
         Filler,
         Interjection,
         Prefix,
-        Other
+        Other,
+        Pronoun
     }
 }

@@ -163,6 +163,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     return PartOfSpeech.Prefix;
                 case "その他":
                     return PartOfSpeech.Other;
+                case "代名詞":
+                    return PartOfSpeech.Pronoun;
                 default:
                     return PartOfSpeech.Unknown;
             }

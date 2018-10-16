@@ -82,9 +82,7 @@
                                 Grid.Column="1"
                                 Command="{Binding VSplit}"
                                 Content="V" />
-                            <Button
-                                Grid.Column="2"
-                                Content="{Binding Content.SelectedDataSource.IsProcessing, Converter={x:Static converters:BooleanToLoadingTextConverter.Default}}" />
+                            <Button Grid.Column="2" Content="{Binding Content.SelectedDataSource.IsProcessing, Converter={x:Static converters:BooleanToLoadingTextConverter.Default}}" />
                             <ComboBox
                                 Grid.Column="3"
                                 ItemsSource="{Binding Content.Parent.DataSources}"

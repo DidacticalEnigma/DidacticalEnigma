@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace DidacticalEnigma.Core.Utils
 {
@@ -49,6 +50,30 @@ namespace DidacticalEnigma.Core.Utils
                 }
             }
             return new string(list.ToArray());
+        }
+
+        public static IEnumerable<string> SplitWithQuotes(string input, char delimiter, char quote)
+        {
+            var sb = new StringBuilder();
+            bool isQuoted = false;
+            foreach (var c in input)
+            {
+                if (c == delimiter && !isQuoted)
+                {
+                    yield return sb.ToString();
+                    sb.Clear();
+                }
+                else if (c == quote)
+                {
+                    isQuoted = !isQuoted;
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+
+            yield return sb.ToString();
         }
     }
 }
