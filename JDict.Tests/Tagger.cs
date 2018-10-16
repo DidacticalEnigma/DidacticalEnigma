@@ -39,25 +39,32 @@ namespace JDict.Tests
         public void Tanaka()
         {
             var tanaka = new Tanaka(Path.Combine(baseDir, @"corpora\examples.utf.gz"), Encoding.UTF8);
-            var meCab = new MeCabIpadic(new MeCabParam
+            var meCab = new MeCabUnidic(new MeCabParam
             {
-                DicDir = Path.Combine(baseDir, @"mecab\ipadic"),
+                DicDir = Path.Combine(baseDir, @"mecab\unidic"),
             });
-            var sentences = tanaka.AllSentences()
-                .Select(s => s.JapaneseSentence)
-                .Select(s => meCab.ParseToEntries(s).Where(e => e.IsRegular).ToList());
+            var sentences = tanaka.AllSentences();
             var features = new HashSet<string>();
-            foreach(var sentence in sentences)
+            var sentencesFiltered = new HashSet<string>();
+            foreach(var rawSentence in sentences.Select(s => s.JapaneseSentence))
             {
-                foreach(var word in sentence)
+                var sentence = meCab.ParseToEntries(rawSentence)
+                    .Where(e => e.IsRegular)
+                    .ToList();
+                foreach (var word in sentence)
                 {
                     foreach (var s in word.PartOfSpeechSections)
                     {
-                        features.Add(s);
+                        var newElement = features.Add(s);
+                        if (newElement)
+                        {
+                            sentencesFiltered.Add(rawSentence);
+                        }
                     }
                 }
             }
-            var ss = string.Join("\n", features);
+            var ss = string.Join("\n", sentencesFiltered);
+            var xx = string.Join("\n", features);
             ;
         }
 

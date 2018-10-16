@@ -30,6 +30,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .Where(f => f != "*")
                 .ToList()
                 .AsReadOnly();
+            IsIndependent = MeCabEntryParser.IsIndependentFromSections(PartOfSpeechSections);
         }
 
         public string ConjugatedForm { get; }

@@ -174,97 +174,191 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             switch(arg)
             {
+                // general/universal/ordinary/average/common
                 case "一般":
                     return PartOfSpeechInfo.Unknown;
+                // binding particle (i.e. specifying an expression later in the sentence)/linking particle/connecting particle
                 case "係助詞":
                     return PartOfSpeechInfo.Unknown;
+                // number/amount
                 case "数":
                     return PartOfSpeechInfo.Unknown;
+                // suffix
                 case "接尾":
                     return PartOfSpeechInfo.Unknown;
+                // counters for various categories/counter suffix
                 case "助数詞":
                     return PartOfSpeechInfo.Unknown;
+                // case-marking particle
                 case "格助詞":
                     return PartOfSpeechInfo.Unknown;
+                // independence/self-reliance
                 case "自立":
                     return PartOfSpeechInfo.Unknown;
+                // period/full stop
                 case "句点":
                     return PartOfSpeechInfo.Unknown;
+                // (???)
                 case "助詞類接続":
                     return PartOfSpeechInfo.Unknown;
+                // adverb, action of making something/-ification
                 case "副詞化":
                     return PartOfSpeechInfo.Unknown;
+                // conjuctive particle
                 case "接続助詞":
                     return PartOfSpeechInfo.Unknown;
+                // (???)
                 case "サ変接続":
                     return PartOfSpeechInfo.Unknown;
+                // adverbial particle
                 case "副助詞":
                     return PartOfSpeechInfo.Unknown;
+                // not independent
                 case "非自立":
                     return PartOfSpeechInfo.Unknown;
+                // sentence-ending particle (yo, ne, kashi, etc.)
                 case "終助詞":
                     return PartOfSpeechInfo.Unknown;
+                // pronoun
                 case "代名詞":
                     return PartOfSpeechInfo.Pronoun;
+                // parallel marker (particle used to join two or more words, i.e. "to", "ya")
                 case "並立助詞":
                     return PartOfSpeechInfo.Unknown;
+                // open parentheses/brackets
                 case "括弧開":
                     return PartOfSpeechInfo.Unknown;
+                // close parentheses/brackets
                 case "括弧閉":
                     return PartOfSpeechInfo.Unknown;
+                // quotation/citation/reference
                 case "引用":
                     return PartOfSpeechInfo.Unknown;
+                // auxiliary verb's stem/root of a word (???)
                 case "助動詞語幹":
                     return PartOfSpeechInfo.Unknown;
+                // proper noun
                 case "固有名詞":
                     return PartOfSpeechInfo.Unknown;
+                // person's name
                 case "人名":
                     return PartOfSpeechInfo.Unknown;
+                // name
                 case "名":
                     return PartOfSpeechInfo.Unknown;
+                // pre-noun adjectival/adnominal adjective, action of making something/-ification
                 case "連体化":
                     return PartOfSpeechInfo.Unknown;
+                // adjectival noun (Japanese)/quasi-adjective/nominal adjective/na-, taru-, nari- and tari-adjective, stem/root of a word
                 case "形容動詞語幹":
                     return PartOfSpeechInfo.Unknown;
+                // adverb, MAYBE
                 case "副詞可能":
                     return PartOfSpeechInfo.Unknown;
+                // comma
                 case "読点":
                     return PartOfSpeechInfo.Unknown;
+                // adverbial particle OR parallel marker (particle used to join two or more words, i.e. "to", "ya") OR sentence-ending particle (yo, ne, kashi, etc.)
                 case "副助詞／並立助詞／終助詞":
                     return PartOfSpeechInfo.Unknown;
+                // (???)
                 case "組織":
                     return PartOfSpeechInfo.Unknown;
+                // (???)
                 case "ナイ形容詞語幹":
                     return PartOfSpeechInfo.Unknown;
+                // area/region
                 case "地域":
                     return PartOfSpeechInfo.Unknown;
+                // compound word/phrase/collocation
                 case "連語":
                     return PartOfSpeechInfo.Unknown;
+                // noun, connection (???)
                 case "名詞接続":
                     return PartOfSpeechInfo.Unknown;
+                // surname/family name
                 case "姓":
                     return PartOfSpeechInfo.Unknown;
+                    // country/state/region (???)
                 case "国":
                     return PartOfSpeechInfo.Unknown;
+                // special/particular/peculiar/unique
                 case "特殊":
                     return PartOfSpeechInfo.Unknown;
+                // number/amount, connection
                 case "数接続":
                     return PartOfSpeechInfo.Unknown;
+                // alphabet
                 case "アルファベット":
                     return PartOfSpeechInfo.Unknown;
+                // blank space/vacuum/space/null (NUL)
                 case "空白":
                     return PartOfSpeechInfo.Unknown;
+                // interjection
                 case "間投":
                     return PartOfSpeechInfo.Unknown;
+                // ???
                 case "形容詞接続":
                     return PartOfSpeechInfo.Unknown;
+                // conjunction, LIKE
                 case "接続詞的":
                     return PartOfSpeechInfo.Unknown;
+                // verb conjunction
                 case "動詞接続":
                     return PartOfSpeechInfo.Unknown;
+                // verb, not independent, LIKE
                 case "動詞非自立的":
                     return PartOfSpeechInfo.Unknown;
+                // quoted (character) string
                 case "引用文字列":
+                    return PartOfSpeechInfo.Unknown;
+                // place name (???)
+                case "地名":
+                    return PartOfSpeechInfo.Unknown;
+                // common noun
+                case "普通名詞":
+                    return PartOfSpeechInfo.Unknown;
+                // counters for various categories/counter suffix, MAYBE (???)
+                case "助数詞可能":
+                    return PartOfSpeechInfo.Unknown;
+                // numeral
+                case "数詞":
+                    return PartOfSpeechInfo.Unknown;
+                // noun, LIKE (???)
+                case "名詞的":
+                    return PartOfSpeechInfo.Unknown;
+                // not independent, MAYBE
+                case "非自立可能":
+                    return PartOfSpeechInfo.Unknown;
+                // irregular conjugation (inflection, declension) of s-stem verbs/conjugation of the verb "suru", MAYBE
+                case "サ変可能":
+                    return PartOfSpeechInfo.Unknown;
+                // 
+                case "準体助詞":
+                    return PartOfSpeechInfo.Unknown;
+                // (???)
+                case "形状詞可能":
+                    return PartOfSpeechInfo.Unknown;
+                // (???)
+                case "サ変形状詞可能":
+                    return PartOfSpeechInfo.Unknown;
+                // filler
+                case "フィラー":
+                    return PartOfSpeechInfo.Unknown;
+                // letter (of alphabet)/character
+                case "文字":
+                    return PartOfSpeechInfo.Unknown;
+                // i-adjective, LIKE
+                case "形容詞的":
+                    return PartOfSpeechInfo.Unknown;
+                // (???), LIKE
+                case "形状詞的":
+                    return PartOfSpeechInfo.Unknown;
+                // verb, LIKE
+                case "動詞的":
+                    return PartOfSpeechInfo.Unknown;
+                // (???)
+                case "タリ":
                     return PartOfSpeechInfo.Unknown;
                 default:
                     return PartOfSpeechInfo.Unknown;
