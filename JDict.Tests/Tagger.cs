@@ -39,7 +39,7 @@ namespace JDict.Tests
         public void Tanaka()
         {
             var tanaka = new Tanaka(Path.Combine(baseDir, @"corpora\examples.utf.gz"), Encoding.UTF8);
-            var meCab = new MeCab(new MeCabParam
+            var meCab = new MeCabIpadic(new MeCabParam
             {
                 DicDir = Path.Combine(baseDir, @"mecab\ipadic"),
             });

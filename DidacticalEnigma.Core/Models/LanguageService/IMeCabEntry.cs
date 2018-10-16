@@ -16,6 +16,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         IEnumerable<string> PartOfSpeechSections { get; }
         string Pronunciation { get; }
         string Reading { get; }
+        string NotInflected { get; }
         Option<EdictType> Type { get; }
     }
 }

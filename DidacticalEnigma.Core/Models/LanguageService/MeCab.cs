@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NMeCab;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public class MeCab : IMeCab
+    public abstract class MeCab<TMeCabEntry> : IMeCab<TMeCabEntry>
+        where TMeCabEntry : IMeCabEntry
     {
         private readonly MeCabTagger tagger;
 
@@ -17,23 +19,23 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             tagger = MeCabTagger.Create(mecabParam);
         }
 
-        public IEnumerable<MeCabNode> ParseToNodes(MeCabTagger tagger, string text)
+        public IEnumerable<TMeCabEntry> ParseToEntries(string text)
         {
-            for (var node = tagger.ParseToNode(text); node != null; node = node.Next)
+            TMeCabEntry FromNode(MeCabNode node)
             {
-                yield return node;
-            }
-        }
+                bool IsRegular(MeCabNode n) =>
+                    !(n.Stat == MeCabNodeStat.Eos || n.Stat == MeCabNodeStat.Bos);
 
-        public IEnumerable<IMeCabEntry> ParseToEntries(string text)
-        {
-            MeCabEntry FromNode(MeCabNode n)
-            {
-                return new MeCabEntry(n.Surface, () => n.Feature, !(n.Stat == MeCabNodeStat.Eos || n.Stat == MeCabNodeStat.Bos));
+                return ToEntry(
+                    node.Surface,
+                    node.SomeWhen(IsRegular)
+                        .Map(n => n.Feature));
             }
 
-            return ParseToNodes(tagger, text).Select(FromNode);
+            return tagger.ParseToNodes(text).Select(FromNode);
         }
+
+        protected abstract TMeCabEntry ToEntry(string surface, Option<string> features);
 
         public void Dispose()
         {

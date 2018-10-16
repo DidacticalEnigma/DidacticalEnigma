@@ -64,11 +64,12 @@ namespace DidacticalEnigma
             kernel.BindFactory(() => new JESC(Path.Combine(dataDir, "corpora", "jesc_raw"), Encoding.UTF8));
             kernel.BindFactory(() => new BasicExpressionsCorpus(Path.Combine(dataDir, "corpora", "JEC_basic_sentence_v1-2.csv"), Encoding.UTF8));
             kernel.BindFactory<IFontResolver>(() => new DefaultFontResolver(Path.Combine(dataDir, "character", "KanjiStrokeOrders")));
+            kernel.BindFactory<IMeCab<IMeCabEntry>>(() => new MeCabIpadic(new MeCabParam
+            {
+                DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
+            }));
             kernel.BindFactory<ILanguageService>(get => new LanguageService(
-                new MeCab(new MeCabParam
-                {
-                    DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
-                }),
+                get.Get<IMeCab<IMeCabEntry>>(),
                 EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")),
                 get.Get<Kradfile>(),
                 get.Get<Radkfile>(),

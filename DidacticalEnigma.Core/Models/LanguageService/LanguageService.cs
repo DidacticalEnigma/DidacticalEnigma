@@ -22,7 +22,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         .Select(word => new WordInfo(
                             word.OriginalForm,
                             word.PartOfSpeech,
-                            word.Reading,
+                            word.NotInflected,
                             word.IsIndependent,
                             word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictType.pn) : word.Type,
                             word.PartOfSpeechInfo));
@@ -49,7 +49,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return CodePoint.FromInt(codePoint);
         }
 
-        private readonly IMeCab meCab;
+        private readonly IMeCab<IMeCabEntry> meCab;
 
         private readonly EasilyConfusedKana confused;
 
@@ -62,7 +62,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         private readonly KanaProperties kanaProperties;
 
         public LanguageService(
-            IMeCab meCab,
+            IMeCab<IMeCabEntry> meCab,
             EasilyConfusedKana similar,
             Kradfile kradfile,
             Radkfile radkfile,

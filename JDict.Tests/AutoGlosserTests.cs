@@ -132,10 +132,10 @@ namespace JDict.Tests
                 Path.Combine(baseDir, @"character\kana_related.txt"),
                 Encoding.UTF8);
             this.lang = new LanguageService(
-                new MeCab(new MeCabParam
+                new MeCabIpadic(new MeCabParam
                 {
                     DicDir = Path.Combine(baseDir, @"mecab\ipadic"),
-                }),
+                }), 
                 EasilyConfusedKana.FromFile(Path.Combine(baseDir, @"character\confused.txt")),
                 kradfile,
                 radkfile,

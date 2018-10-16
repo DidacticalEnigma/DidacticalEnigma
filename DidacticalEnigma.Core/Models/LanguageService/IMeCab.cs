@@ -4,8 +4,9 @@ using System.Text;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public interface IMeCab : IDisposable
+    public interface IMeCab<out TMeCabEntry> : IDisposable
+        where TMeCabEntry : IMeCabEntry
     {
-        IEnumerable<IMeCabEntry> ParseToEntries(string text);
+        IEnumerable<TMeCabEntry> ParseToEntries(string text);
     }
 }
