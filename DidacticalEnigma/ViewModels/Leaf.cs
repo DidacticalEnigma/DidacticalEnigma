@@ -121,7 +121,7 @@ namespace DidacticalEnigma.ViewModels
 
         public Leaf(Func<object> factory, Action<object> onClose)
         {
-            Content = factory();
+            content = factory();
             this.factory = factory;
             this.onClose = onClose;
 
