@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
+using JDict;
+using Radical = DidacticalEnigma.Core.Models.LanguageService.Radical;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -97,28 +99,38 @@ namespace DidacticalEnigma.ViewModels
         }
 
         private readonly ILanguageService service;
+        private readonly KanjiDict kanjiDict;
 
         public void SelectRadicals(IEnumerable<CodePoint> codePoints)
         {
-            if(!codePoints.Any())
+            var codePointsList = codePoints.ToList();
+            if(!codePointsList.Any())
             {
                 foreach (var radical in Radicals)
                 {
                     radical.Enabled = true;
                 }
-                Kanji.Clear();
+                kanji.Clear();
                 return;
             }
 
-            var lookup = service.LookupByRadicals(codePoints);
-            Kanji.Clear();
-            Kanji.AddRange(lookup);
+            var lookup = service.LookupByRadicals(codePointsList).ToList();
+            kanji.Clear();
+            kanji.AddRange(lookup);
             var lookupHash = new HashSet<CodePoint>(lookup);
             foreach (var radical in Radicals)
             {
                 var kanjiForRadical = service.LookupByRadicals(Enumerable.Repeat(radical.CodePoint, 1));
                 radical.Enabled = lookupHash.IsIntersectionNonEmpty(kanjiForRadical);
             }
+
+            OrderKanji();
+        }
+
+        private void OrderKanji()
+        {
+            sortedKanji.Clear();
+            sortedKanji.AddRange(kanji.OrderBy(x => x, CurrentSortingCriterion.Comparer));
         }
 
         private bool hideNonMatchingRadicals = false;
@@ -155,14 +167,20 @@ namespace DidacticalEnigma.ViewModels
 
         public double Height { get; }
 
-        public ObservableBatchCollection<CodePoint> Kanji { get; } = new ObservableBatchCollection<CodePoint>();
+        private readonly ObservableBatchCollection<CodePoint> sortedKanji = new ObservableBatchCollection<CodePoint>();
+        public IEnumerable<CodePoint> SortedKanji => sortedKanji;
 
-        public ObservableBatchCollection<RadicalVM> Radicals { get; } = new ObservableBatchCollection<RadicalVM>();
+        private readonly ObservableBatchCollection<CodePoint> kanji = new ObservableBatchCollection<CodePoint>();
+        public IEnumerable<CodePoint> Kanji => kanji;
 
-        public KanjiRadicalLookupControlVM(ILanguageService service)
+        private readonly ObservableBatchCollection<RadicalVM> radicals = new ObservableBatchCollection<RadicalVM>();
+        public IEnumerable<RadicalVM> Radicals => radicals;
+
+        public KanjiRadicalLookupControlVM(ILanguageService service, KanjiDict kanjiDict)
         {
             this.service = service;
-            Radicals.AddRange(service.AllRadicals().Select(r => new RadicalVM(r, enabled: true, this)));
+            this.kanjiDict = kanjiDict;
+            radicals.AddRange(service.AllRadicals().Select(r => new RadicalVM(r, enabled: true, this)));
             var tb = new TextBlock
             {
                 FontSize = 24
@@ -182,6 +200,22 @@ namespace DidacticalEnigma.ViewModels
                 var codePoint = (CodePoint)p;
                 Clipboard.SetText(codePoint.ToString());
             });
+            sortingCriteria = new ObservableBatchCollection<SortingCriterion>
+            {
+                new SortingCriterion("Sort by stroke count", CompareBy(x => x.StrokeCount)),
+                new SortingCriterion("Sort by frequency", CompareBy(x => x.FrequencyRating))
+            };
+            currentSortingCriterion = sortingCriteria[0];
+        }
+
+        private IComparer<CodePoint> CompareBy<T>(Func<KanjiEntry, T> f)
+        {
+            return Comparer<CodePoint>.Create((l, r) =>
+            {
+                var left = kanjiDict.Lookup(l.ToString()).Map(f);
+                var right = kanjiDict.Lookup(r.ToString()).Map(f);
+                return left.CompareTo(right);
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -189,6 +223,42 @@ namespace DidacticalEnigma.ViewModels
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public class SortingCriterion
+        {
+            public string Description { get; }
+
+            public IComparer<CodePoint> Comparer { get; }
+
+            public SortingCriterion(string description, IComparer<CodePoint> comparer)
+            {
+                Description = description ?? throw new ArgumentNullException(nameof(description));
+                Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
+            }
+
+            public override string ToString()
+            {
+                return Description;
+            }
+        }
+
+        private readonly ObservableBatchCollection<SortingCriterion> sortingCriteria;
+        public IEnumerable<SortingCriterion> SortingCriteria => sortingCriteria;
+
+        private SortingCriterion currentSortingCriterion;
+        public SortingCriterion CurrentSortingCriterion
+        {
+            get => currentSortingCriterion;
+            set
+            {
+                if (currentSortingCriterion == value)
+                    return;
+
+                currentSortingCriterion = value;
+                OrderKanji();
+                OnPropertyChanged();
+            }
         }
     }
 }

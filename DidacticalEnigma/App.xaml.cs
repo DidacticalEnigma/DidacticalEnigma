@@ -82,7 +82,7 @@ namespace DidacticalEnigma
                 get.Get<UsageDataSourcePreviewVM>(),
                 get.Get<KanjiRadicalLookupControlVM>(),
                 () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)));
-            kernel.BindFactory(get => new KanjiRadicalLookupControlVM(get.Get<ILanguageService>()));
+            kernel.BindFactory(get => new KanjiRadicalLookupControlVM(get.Get<ILanguageService>(), get.Get<KanjiDict>()));
             kernel.BindFactory(get => new UsageDataSourcePreviewVM(
                 get.Get<ILanguageService>(),
                 get.Get<JMDict>(),
