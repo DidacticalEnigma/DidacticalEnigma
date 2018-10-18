@@ -22,7 +22,13 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo { get; }
 
-        public WordInfo(string word, PartOfSpeech partOfSpeech = PartOfSpeech.Unknown, string notInflected = null, bool? isIndependent = null, Option<EdictType> type = default(Option<EdictType>), IEnumerable<PartOfSpeechInfo> posInfo = null)
+        public WordInfo(
+            string word,
+            PartOfSpeech partOfSpeech = PartOfSpeech.Unknown,
+            string notInflected = null,
+            bool? isIndependent = null,
+            Option<EdictType> type = default,
+            IEnumerable<PartOfSpeechInfo> posInfo = null)
         {
             RawWord = word;
             CodePoints = new List<CodePoint>(

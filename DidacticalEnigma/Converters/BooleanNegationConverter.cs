@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace DidacticalEnigma.Converters
 {
-    [ValueConversion(typeof(bool), typeof(bool))]
+    [ValueConversion(typeof(bool?), typeof(bool?))]
     class BooleanNegationConverter : IValueConverter
     {
         public static readonly BooleanNegationConverter Default = new BooleanNegationConverter();

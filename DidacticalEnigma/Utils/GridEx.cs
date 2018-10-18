@@ -16,9 +16,9 @@ namespace DidacticalEnigma.Utils
             set { SetValue(RowsProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Rows.  This enables animation, styling, binding, etc...
+        /// <summary>Identifies the <see cref="Rows"/> dependency property.</summary>
         public static readonly DependencyProperty RowsProperty =
-            DependencyProperty.Register("Rows", typeof(int), typeof(GridEx), new PropertyMetadata(1, OnRowsChanged));
+            DependencyProperty.Register(nameof(Rows), typeof(int), typeof(GridEx), new PropertyMetadata(1, OnRowsChanged));
 
         private static void OnRowsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -36,9 +36,9 @@ namespace DidacticalEnigma.Utils
             set { SetValue(ColumnsProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Columns.  This enables animation, styling, binding, etc...
+        /// <summary>Identifies the <see cref="Columns"/> dependency property.</summary>
         public static readonly DependencyProperty ColumnsProperty =
-            DependencyProperty.Register("Columns", typeof(int), typeof(GridEx), new PropertyMetadata(1, OnColumnsChanged));
+            DependencyProperty.Register(nameof(Columns), typeof(int), typeof(GridEx), new PropertyMetadata(1, OnColumnsChanged));
 
         private static void OnColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

@@ -74,7 +74,7 @@ namespace DidacticalEnigma.ViewModels
             {
                 CodePoint = radical.CodePoint;
                 StrokeCount = radical.StrokeCount;
-                Enabled = enabled;
+                this.enabled = enabled;
                 this.lookupVm = lookupVm;
                 lookupVm.PropertyChanged += (sender, args) =>
                 {

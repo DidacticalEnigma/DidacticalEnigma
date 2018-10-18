@@ -74,6 +74,7 @@ namespace DidacticalEnigma.ViewModels
                 }
 
                 OnPropertyChanged();
+                this.OnPropertyChanged(nameof(this.Visible));
             }
         }
 

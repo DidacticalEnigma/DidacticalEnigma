@@ -22,7 +22,7 @@ namespace DidacticalEnigma.Views
 
         /// <summary>Identifies the <see cref="KeyClickCommand"/> dependency property.</summary>
         public static readonly DependencyProperty KeyClickCommandProperty =
-            DependencyProperty.Register("KeyClickCommand", typeof(ICommand), typeof(KanaBoard), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(KeyClickCommand), typeof(ICommand), typeof(KanaBoard), new PropertyMetadata(null));
 
 
     }
