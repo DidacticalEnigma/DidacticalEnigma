@@ -68,13 +68,15 @@ namespace DidacticalEnigma
             {
                 DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
             }));
+            kernel.BindFactory(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
             kernel.BindFactory<ILanguageService>(get => new LanguageService(
                 get.Get<IMeCab<IMeCabEntry>>(),
                 EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")),
                 get.Get<Kradfile>(),
                 get.Get<Radkfile>(),
                 get.Get<KanjiDict>(),
-                get.Get<KanaProperties>()));
+                get.Get<KanaProperties>(),
+                get.Get<RadicalRemapper>()));
             kernel.BindFactory(get => new MainWindowVM(
                 get.Get<ILanguageService>(),
                 new KanaBoardVM(Path.Combine(dataDir, "character", "hiragana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
@@ -82,7 +84,10 @@ namespace DidacticalEnigma
                 get.Get<UsageDataSourcePreviewVM>(),
                 get.Get<KanjiRadicalLookupControlVM>(),
                 () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)));
-            kernel.BindFactory(get => new KanjiRadicalLookupControlVM(get.Get<ILanguageService>(), get.Get<KanjiDict>()));
+            kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
+                get.Get<ILanguageService>(),
+                get.Get<KanjiDict>(),
+                get.Get<RadicalRemapper>()));
             kernel.BindFactory(get => new UsageDataSourcePreviewVM(
                 get.Get<ILanguageService>(),
                 get.Get<JMDict>(),

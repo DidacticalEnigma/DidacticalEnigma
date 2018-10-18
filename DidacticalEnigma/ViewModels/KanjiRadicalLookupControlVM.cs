@@ -66,7 +66,7 @@ namespace DidacticalEnigma.ViewModels
                 }
             }
 
-            public bool Highlighted => CodePoint.ToString() == lookupVm.SearchText?.Trim();
+            public bool Highlighted => lookupVm.remapper.Comparer.Equals(CodePoint.ToString(), lookupVm.SearchText?.Trim() ?? "");
 
             private readonly KanjiRadicalLookupControlVM lookupVm;
 
@@ -100,6 +100,7 @@ namespace DidacticalEnigma.ViewModels
 
         private readonly ILanguageService service;
         private readonly KanjiDict kanjiDict;
+        private readonly RadicalRemapper remapper;
 
         public void SelectRadicals(IEnumerable<CodePoint> codePoints)
         {
@@ -176,10 +177,11 @@ namespace DidacticalEnigma.ViewModels
         private readonly ObservableBatchCollection<RadicalVM> radicals = new ObservableBatchCollection<RadicalVM>();
         public IEnumerable<RadicalVM> Radicals => radicals;
 
-        public KanjiRadicalLookupControlVM(ILanguageService service, KanjiDict kanjiDict)
+        public KanjiRadicalLookupControlVM(ILanguageService service, KanjiDict kanjiDict, RadicalRemapper remapper)
         {
             this.service = service;
             this.kanjiDict = kanjiDict;
+            this.remapper = remapper;
             radicals.AddRange(service.AllRadicals().Select(r => new RadicalVM(r, enabled: true, this)));
             var tb = new TextBlock
             {

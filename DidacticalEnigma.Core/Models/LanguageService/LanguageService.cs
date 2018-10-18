@@ -61,13 +61,16 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private readonly KanaProperties kanaProperties;
 
+        private readonly RadicalRemapper remapper;
+
         public LanguageService(
             IMeCab<IMeCabEntry> meCab,
             EasilyConfusedKana similar,
             Kradfile kradfile,
             Radkfile radkfile,
             KanjiDict kanjiDict,
-            KanaProperties kanaProperties)
+            KanaProperties kanaProperties,
+            RadicalRemapper remapper)
         {
             this.meCab = meCab;
             this.confused = similar;
@@ -75,6 +78,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             this.radkfile = radkfile;
             this.kanjidict = kanjiDict;
             this.kanaProperties = kanaProperties;
+            this.remapper = remapper;
         }
 
         private IEnumerable<string> SplitWords(string input)
@@ -115,14 +119,14 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public Option<IEnumerable<CodePoint>> LookupRadicals(Kanji kanji)
         {
-            return kradfile
+            return remapper
                 .LookupRadicals(kanji.ToString())
                 .Map(radicals => radicals.Select(cp => CodePoint.FromString(cp)));
         }
 
         public IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals)
         {
-            return radkfile.LookupMatching(radicals.Select(r => r.ToString()))
+            return remapper.LookupKanji(radicals.Select(r => r.ToString()))
                 .OrderBy(r => kanjidict.Lookup(r)
                     .Map(e => e.StrokeCount)
                     .ValueOr(int.MaxValue))
@@ -131,7 +135,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<Radical> AllRadicals()
         {
-            return radkfile.Radicals
+            return remapper.Radicals
                 .Select(rad => (codePoint: CodePoint.FromInt(rad.CodePoint), strokeCount: rad.StrokeCount))
                 .Select(p => new Radical(p.codePoint, p.strokeCount))
                 .OrderBy(r => r.StrokeCount);

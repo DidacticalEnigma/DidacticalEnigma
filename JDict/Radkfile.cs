@@ -17,6 +17,11 @@ namespace JDict
             CodePoint = codePoint;
             StrokeCount = strokeCount;
         }
+
+        public override string ToString()
+        {
+            return char.ConvertFromUtf32(CodePoint);
+        }
     }
 
     public class Radkfile
@@ -61,7 +66,7 @@ namespace JDict
                     int radical = char.ConvertToUtf32(components[0].Trim(), 0);
                     int strokeCount = int.Parse(components[1]);
                     radicals.Add(new KeyValuePair<int, int>(strokeCount, radical));
-                    current = GetOrAdd(entries, radical, () => Tuple.Create(strokeCount, new List<int>())).Item2;
+                    current = GetOrAdd(entries, radical, _ => Tuple.Create(strokeCount, new List<int>())).Item2;
                 }
                 else
                 {
@@ -87,7 +92,7 @@ namespace JDict
             Init(reader);
         }
 
-        private static TValue GetOrAdd<TKey, TValue>(IDictionary<TKey, TValue> dict, TKey key, Func<TValue> Valuefactory)
+        private static TValue GetOrAdd<TKey, TValue>(IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> Valuefactory)
         {
             if(dict.TryGetValue(key, out var value))
             {
@@ -95,7 +100,7 @@ namespace JDict
             }
             else
             {
-                value = Valuefactory();
+                value = Valuefactory(key);
                 dict[key] = value;
                 return value;
             }

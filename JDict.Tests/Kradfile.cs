@@ -12,17 +12,19 @@ namespace JDict.Tests
     class Kradfile
     {
         private JDict.Kradfile kradfile;
+        private JDict.Radkfile radkfile;
 
         [SetUp]
         public void SetUp()
         {
             kradfile = new JDict.Kradfile(Path.Combine(Tagger.baseDir, @"character\kradfile1_plus_2_utf8"), Encoding.UTF8);
+            radkfile = new JDict.Radkfile(Path.Combine(Tagger.baseDir, @"character\radkfile1_plus_2_utf8"), Encoding.UTF8);
         }
 
         [TearDown]
         public void TearDown()
         {
-            
+
         }
 
         [Test]
@@ -30,7 +32,7 @@ namespace JDict.Tests
         {
             int min = int.MaxValue;
             int max = int.MinValue;
-            foreach(var kanjiToRadical in kradfile.AllRadicals())
+            foreach (var kanjiToRadical in kradfile.AllRadicals())
             {
                 var radical = kanjiToRadical.Key;
                 var count = kanjiToRadical.Value.Count();
