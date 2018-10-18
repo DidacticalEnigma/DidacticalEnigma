@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Windows.Input;
 using DidacticalEnigma.Core.Utils;
+using Newtonsoft.Json;
 
 namespace DidacticalEnigma.ViewModels
 {
-    public class Leaf : Element
+    public partial class Leaf : Element
     {
         private readonly Func<object> factory;
         private readonly Action<object> onClose;
         private object content;
 
+        [JsonConverter(typeof(DataSourceConverter))]
         public object Content
         {
             get => content;
@@ -113,10 +115,13 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
+        [JsonIgnore]
         public ICommand HSplit { get; }
 
+        [JsonIgnore]
         public ICommand VSplit { get; }
 
+        [JsonIgnore]
         public ICommand Close { get; }
 
         public Leaf(Func<object> factory, Action<object> onClose)
@@ -127,17 +132,19 @@ namespace DidacticalEnigma.ViewModels
 
             HSplit = new RelayCommand(() =>
             {
-                Split(new HSplit(() => new Leaf(this.factory, this.onClose)));
+                Split(new HSplit());
             });
             VSplit = new RelayCommand(() =>
             {
-                Split(new VSplit(() => new Leaf(this.factory, this.onClose)));
+                Split(new VSplit());
             });
             Close = new RelayCommand(() =>
             {
                 DoClose();
-                this.onClose(Content);
+                onClose(Content);
             });
         }
+
+        protected override string Type => "end";
     }
 }

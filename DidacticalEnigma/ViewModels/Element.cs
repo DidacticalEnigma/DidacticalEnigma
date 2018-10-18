@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Windows;
+using Newtonsoft.Json;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -8,6 +10,7 @@ namespace DidacticalEnigma.ViewModels
     {
         private Element parent;
 
+        [JsonIgnore]
         public Element Parent
         {
             get => parent;
@@ -20,18 +23,8 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private GridLength size = new GridLength(1.0, GridUnitType.Star);
-        public GridLength Size
-        {
-            get => size;
-            set
-            {
-                if(value == size)
-                    return;
-
-                OnPropertyChanged();
-            }
-        }
+        [JsonProperty]
+        protected abstract string Type { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

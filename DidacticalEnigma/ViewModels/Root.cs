@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using DidacticalEnigma.Core.Utils;
+using Newtonsoft.Json;
 
 namespace DidacticalEnigma.ViewModels
 {
     public class Root : Element, INotifyPropertyChanged
     {
-        private ObservableBatchCollection<Element> children;
+        private readonly ObservableBatchCollection<Element> children;
 
         public Element Tree
         {
@@ -22,6 +23,7 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
+        [JsonIgnore]
         public IReadOnlyList<Element> Children => children;
 
         public Root(Func<Element> factory)
@@ -32,5 +34,7 @@ namespace DidacticalEnigma.ViewModels
             };
             Tree = factory();
         }
+
+        protected override string Type => "root";
     }
 }

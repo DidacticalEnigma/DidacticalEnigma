@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
 using JDict;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -68,7 +71,7 @@ namespace DidacticalEnigma.ViewModels
             DataSources.Add(new DataSourceVM(new AutoGlosserDataSource(lang, jmdict), fontResolver));
             DataSources.Add(new DataSourceVM(new JNeDictDataSource(jnamedict), fontResolver));
 
-            Element Fac() => new Leaf(() => new DataSourcePreviewVM(this), o =>
+            Leaf Fac() => new Leaf(() => new DataSourcePreviewVM(this), o =>
             {
                 var dataSource = ((DataSourcePreviewVM) o).SelectedDataSource;
                 if (dataSource != null)
@@ -77,11 +80,20 @@ namespace DidacticalEnigma.ViewModels
                 }
             });
 
-            Root = new Root(Fac);
-            // being lazy
-            (Root.Tree as Leaf).VSplit.Execute(null);
-            (((Root.Tree as Split).First as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 0;
-            (((Root.Tree as Split).Second as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 1;
+            try
+            {
+                var root = JsonConvert.DeserializeObject<Root>(File.ReadAllText("view.config"),
+                    new ElementCreationConverter(Fac));
+                Root = root;
+            }
+            catch (FileNotFoundException)
+            {
+                Root = new Root(Fac);
+                // being lazy
+                (Root.Tree as Leaf).VSplit.Execute(null);
+                (((Root.Tree as Split).First as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 0;
+                (((Root.Tree as Split).Second as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 1;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -97,6 +109,7 @@ namespace DidacticalEnigma.ViewModels
             {
                 dataSource.Dispose();
             }
+            File.WriteAllText("view.config", JsonConvert.SerializeObject(Root));
         }
     }
 }

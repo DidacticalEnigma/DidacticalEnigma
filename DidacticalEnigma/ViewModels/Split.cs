@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using DidacticalEnigma.Core.Utils;
+using Newtonsoft.Json;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -35,31 +37,41 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private double splitDimensions;
-        public double SplitDimensions
+        private GridLength leftDimension = new GridLength(1, GridUnitType.Star);
+        public GridLength LeftDimension
         {
-            get => splitDimensions;
+            get => leftDimension;
             set
             {
-                if(!(0.0 <= value && value <= 1.0))
-                    throw new ArgumentException("must be between 0 and 1");
-
-                if (value == splitDimensions)
+                if (value == leftDimension)
                     return;
 
+                leftDimension = value;
                 OnPropertyChanged();
             }
         }
 
-        public IReadOnlyList<Element> Children => children;
+        private GridLength rightDimension = new GridLength(1, GridUnitType.Star);
+        public GridLength RightDimension
+        {
+            get => rightDimension;
+            set
+            {
+                if (value == rightDimension)
+                    return;
 
-        private readonly Func<Element> factory;
+                rightDimension = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [JsonIgnore]
+        public IReadOnlyList<Element> Children => children;
 
         private readonly ObservableBatchCollection<Element> children;
 
-        public Split(Func<Element> factory)
+        protected Split()
         {
-            this.factory = factory;
             children = new ObservableBatchCollection<Element>
             {
                 null,

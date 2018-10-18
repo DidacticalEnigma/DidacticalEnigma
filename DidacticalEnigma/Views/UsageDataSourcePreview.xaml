@@ -23,9 +23,9 @@
                 <DataTemplate DataType="{x:Type vms:VSplit}">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="{Binding LeftDimension, Mode=TwoWay}" />
                             <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="{Binding RightDimension, Mode=TwoWay}" />
                         </Grid.ColumnDefinitions>
                         <ContentPresenter
                             Grid.Column="0"
@@ -43,9 +43,9 @@
                 <DataTemplate DataType="{x:Type vms:HSplit}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="{Binding LeftDimension, Mode=TwoWay}" />
                             <RowDefinition Height="5" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="{Binding RightDimension, Mode=TwoWay}" />
                         </Grid.RowDefinitions>
                         <ContentPresenter
                             Grid.Row="0"
@@ -86,8 +86,7 @@
                             <ComboBox
                                 Grid.Column="3"
                                 ItemsSource="{Binding Content.Parent.DataSources}"
-                                SelectedIndex="{Binding Content.SelectedDataSourceIndex}"
-                                SelectedItem="{Binding Content.SelectedDataSource}">
+                                SelectedIndex="{Binding Content.SelectedDataSourceIndex}">
                                 <ComboBox.ItemContainerStyle>
                                     <Style TargetType="{x:Type ComboBoxItem}">
                                         <Setter Property="IsEnabled" Value="{Binding IsUsed, Converter={x:Static converters:BooleanNegationConverter.Default}}" />

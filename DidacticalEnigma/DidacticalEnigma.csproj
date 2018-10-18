@@ -192,6 +192,7 @@
     <Compile Include="Converters\BooleanToLoadingTextConverter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Utils\ClipboardHook.cs" />
+    <Compile Include="ViewModels\CreationConverter.cs" />
     <Compile Include="ViewModels\FlowDocumentRichFormattingRenderer.cs" />
     <Compile Include="ViewModels\IFontResolver.cs" />
     <Compile Include="ViewModels\TranslationVM.cs" />

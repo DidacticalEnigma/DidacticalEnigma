@@ -16,15 +16,13 @@ namespace DidacticalEnigma.ViewModels
         {
             Parent = parent;
             SelectedDataSourceIndex = index;
-            if(index != -1)
-            {
-                SelectedDataSource = parent.DataSources[index];
-            }
         }
 
         public UsageDataSourcePreviewVM Parent { get; }
 
         private int selectedDataSourceIndex = -1;
+        private DataSourceVM selectedDataSource;
+
         public int SelectedDataSourceIndex
         {
             get => selectedDataSourceIndex;
@@ -33,25 +31,31 @@ namespace DidacticalEnigma.ViewModels
                 if (selectedDataSourceIndex == value)
                     return;
 
+                var oldSource = SelectedDataSource;
                 selectedDataSourceIndex = value;
+                SelectedDataSource = value != -1
+                    ? Parent.DataSources[value]
+                    : null;
                 OnPropertyChanged();
+
+                SelectedDataSource.IsUsed = true;
+                if (oldSource != null)
+                    oldSource.IsUsed = false;
             }
         }
 
-        private DataSourceVM selectedDataSource = null;
         public DataSourceVM SelectedDataSource
         {
             get => selectedDataSource;
-            set
+            private set
             {
-                if (selectedDataSource == value)
+                if (ReferenceEquals(value, selectedDataSource))
+                {
                     return;
-                var oldSource = selectedDataSource;
+                }
+
                 selectedDataSource = value;
                 OnPropertyChanged();
-                value.IsUsed = true;
-                if(oldSource != null)
-                    oldSource.IsUsed = false;
             }
         }
     }
