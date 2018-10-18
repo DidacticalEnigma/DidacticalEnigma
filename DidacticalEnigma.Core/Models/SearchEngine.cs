@@ -33,9 +33,6 @@ namespace DidacticalEnigma.Core.Models
             Literal = literal;
         }
 
-        public override string ToString()
-        {
-            return Comment;
-        }
+        public override string ToString() => Comment;
     }
 }
