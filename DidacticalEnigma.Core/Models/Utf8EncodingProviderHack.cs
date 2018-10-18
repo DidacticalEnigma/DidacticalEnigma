@@ -8,16 +8,8 @@ namespace DidacticalEnigma.Core.Models
     // 
     public class Utf8EncodingProviderHack : EncodingProvider
     {
-        public override Encoding GetEncoding(string name)
-        {
-            if (name == "utf8")
-                return Encoding.UTF8;
-            return null;
-        }
+        public override Encoding GetEncoding(string name) => name == "utf8" ? Encoding.UTF8 : null;
 
-        public override Encoding GetEncoding(int codepage)
-        {
-            return null;
-        }
+        public override Encoding GetEncoding(int codepage) => null;
     }
 }
