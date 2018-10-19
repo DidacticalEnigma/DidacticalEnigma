@@ -75,6 +75,9 @@ namespace JDict.Internal.XmlModels
 
     public class KanjiMeaning
     {
+        [XmlAttribute("m_lang")]
+        public string Language { get; set; }
+
         [XmlText]
         public string Value { get; set; }
     }

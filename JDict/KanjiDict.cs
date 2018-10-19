@@ -81,6 +81,10 @@ namespace JDict
 
         public IEnumerable<string> OnReadings { get; }
 
+        public IEnumerable<string> NanoriReadings { get; }
+
+        public IEnumerable<string> Meanings { get; }
+
         internal KanjiEntry(KanjiCharacter ch)
         {
             Literal = ch.Literal;
@@ -91,6 +95,25 @@ namespace JDict
 
             KunReadings = GetReadings(ch, "ja_kun");
             OnReadings = GetReadings(ch, "ja_on");
+            Meanings = GetMeanings(ch, "en");
+            NanoriReadings = GetNanori(ch);
+
+            List<string> GetNanori(KanjiCharacter c)
+            {
+                return (c.ReadingsAndMeanings?.Nanori ?? Enumerable.Empty<KanjiNanori>())
+                    .Select(n => n.Value)
+                    .ToList();
+            }
+
+            List<string> GetMeanings(KanjiCharacter c, string lang)
+            {
+                return c.ReadingsAndMeanings?.Groups
+                    .FirstOrNone()
+                    .FlatMap(x => (x.Meanings?.Where(m => (m.Language ?? "en") == lang)).SomeNotNull())
+                    .ValueOr(Enumerable.Empty<KanjiMeaning>())
+                    .Select(reading => reading.Value)
+                    .ToList();
+            }
 
             List<string> GetReadings(KanjiCharacter c, string type)
             {
