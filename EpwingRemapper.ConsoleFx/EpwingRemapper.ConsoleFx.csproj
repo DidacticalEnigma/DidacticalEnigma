@@ -62,5 +62,9 @@
       <Name>EpwingRemapper.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Gu.Analyzers.1.3.0.0-dev\analyzers\dotnet\cs\Gu.Analyzers.dll" />
+    <Analyzer Include="..\packages\Gu.Analyzers.1.3.0.0-dev\analyzers\dotnet\cs\Gu.Roslyn.Extensions.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
