@@ -140,7 +140,8 @@ namespace JDict.Tests
                 kradfile,
                 radkfile,
                 kanjidict,
-                kanaProperties);
+                kanaProperties,
+                new RadicalRemapper(kradfile, radkfile));
             this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dictionaries", "JMdict_e.gz"), Path.Combine(baseDir, "dictionaries", "JMdict_e.cache"));
             glosser = new AutoGlosser(lang, jmdict);
         }

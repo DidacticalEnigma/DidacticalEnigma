@@ -155,6 +155,9 @@
             <TabItem Header="Katakana">
                 <views:KanaBoard DataContext="{Binding KatakanaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
+            <TabItem Header="Settings">
+                <TextBlock Text="To be implemented" />
+            </TabItem>
             <TabItem Header="About">
                 <TextBox IsReadOnly="True" Text="{Binding AboutText, Mode=OneWay}" />
             </TabItem>

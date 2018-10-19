@@ -104,28 +104,34 @@ namespace DidacticalEnigma.ViewModels
 
         public void SelectRadicals(IEnumerable<CodePoint> codePoints)
         {
-            var codePointsList = codePoints.ToList();
-            if(!codePointsList.Any())
+            try
             {
+                var codePointsList = codePoints.ToList();
+                if (!codePointsList.Any())
+                {
+                    foreach (var radical in Radicals)
+                    {
+                        radical.Enabled = true;
+                    }
+
+                    kanji.Clear();
+                    return;
+                }
+
+                var lookup = service.LookupByRadicals(codePointsList).ToList();
+                kanji.Clear();
+                kanji.AddRange(lookup);
+                var lookupHash = new HashSet<CodePoint>(lookup);
                 foreach (var radical in Radicals)
                 {
-                    radical.Enabled = true;
+                    var kanjiForRadical = service.LookupByRadicals(Enumerable.Repeat(radical.CodePoint, 1));
+                    radical.Enabled = lookupHash.IsIntersectionNonEmpty(kanjiForRadical);
                 }
-                kanji.Clear();
-                return;
             }
-
-            var lookup = service.LookupByRadicals(codePointsList).ToList();
-            kanji.Clear();
-            kanji.AddRange(lookup);
-            var lookupHash = new HashSet<CodePoint>(lookup);
-            foreach (var radical in Radicals)
+            finally
             {
-                var kanjiForRadical = service.LookupByRadicals(Enumerable.Repeat(radical.CodePoint, 1));
-                radical.Enabled = lookupHash.IsIntersectionNonEmpty(kanjiForRadical);
+                OrderKanji();
             }
-
-            OrderKanji();
         }
 
         private void OrderKanji()
