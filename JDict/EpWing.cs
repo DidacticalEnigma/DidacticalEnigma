@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 namespace JDict
@@ -12,7 +13,7 @@ namespace JDict
         {
             using (var reader = File.OpenText(path))
             {
-                Init(reader);
+                Init(reader, codeReplacer);
             }
         }
 
@@ -22,7 +23,7 @@ namespace JDict
 
         }
 
-        private void Init(TextReader rawReader)
+        private void Init(TextReader rawReader, Func<string, string> codeReplacer)
         {
             using (var reader = new JsonTextReader(rawReader))
             {
@@ -51,7 +52,7 @@ namespace JDict
                             {
                                 throw new InvalidDataException();
                             }
-                            ReadSubbooks(reader);
+                            ReadSubbooks(reader, codeReplacer);
                             break;
                         default:
                             reader.Skip();
@@ -61,19 +62,23 @@ namespace JDict
             }
         }
 
-        private void ReadSubbooks(JsonReader reader)
+        private void ReadSubbooks(JsonReader reader, Func<string, string> codeReplacer)
         {
             while (reader.Read())
             {
                 if (reader.TokenType == JsonToken.EndArray)
                     break;
-                if (reader.TokenType == JsonToken.StartObject)
-                    ReadSubbook(reader);
+                if (reader.TokenType != JsonToken.StartObject)
+                    throw new InvalidDataException();
+
+                ReadSubbook(reader, codeReplacer);
 
             }
         }
 
-        private void ReadSubbook(JsonReader reader)
+        private void ReadSubbook(
+            JsonReader reader,
+            Func<string, string> codeReplacer)
         {
             while (reader.Read())
             {
@@ -96,7 +101,7 @@ namespace JDict
                         {
                             throw new InvalidDataException();
                         }
-                        ReadEntries(reader, d);
+                        ReadEntries(reader, d, codeReplacer);
                         break;
                     default:
                         reader.Skip();
@@ -106,7 +111,10 @@ namespace JDict
             }
         }
 
-        private void ReadEntries(JsonReader reader, Dictionary<string, List<string>> d)
+        private void ReadEntries(
+            JsonReader reader,
+            Dictionary<string, List<string>> d,
+            Func<string, string> codeReplacer)
         {
             while (reader.Read())
             {
@@ -115,11 +123,14 @@ namespace JDict
                 if (reader.TokenType != JsonToken.StartObject)
                     throw new InvalidDataException();
 
-                ReadEntry(reader, d);
+                ReadEntry(reader, d, codeReplacer);
             }
         }
 
-        private void ReadEntry(JsonReader reader, Dictionary<string, List<string>> d)
+        private void ReadEntry(
+            JsonReader reader,
+            Dictionary<string, List<string>> d,
+            Func<string, string> codeReplacer)
         {
             string heading = null;
             string text = null;
@@ -137,17 +148,23 @@ namespace JDict
                     case "heading":
                         if (!reader.Read() || reader.TokenType != JsonToken.String)
                             throw new InvalidDataException();
-                        heading = (string) reader.Value;
+                        heading = (string)reader.Value;
                         break;
                     case "text":
                         if (!reader.Read() || reader.TokenType != JsonToken.String)
                             throw new InvalidDataException();
                         text = (string)reader.Value;
                         break;
+                    default:
+                        reader.Skip();
+                        break;
                 }
             }
             if(text == null || heading == null)
                 throw new InvalidDataException();
+
+            text = Remap(text, codeReplacer);
+            heading = Remap(text, codeReplacer);
 
             var entries = GetOrAdd(d, heading, () => new List<string>());
             entries.Add(text);
@@ -165,6 +182,13 @@ namespace JDict
                 dict[key] = value;
                 return value;
             }
+        }
+
+        private static readonly Regex remappingRegex = new Regex(@"(\{\{.*?\}\})");
+
+        private string Remap(string input, Func<string, string> remapper)
+        {
+            return remappingRegex.Replace(input, match => remapper(match.Value));
         }
 
         private readonly List<Dictionary<string, List<string>>> subbooks = new List<Dictionary<string, List<string>>>();
