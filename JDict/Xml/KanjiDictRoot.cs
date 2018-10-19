@@ -40,10 +40,28 @@ namespace JDict.Internal.XmlModels
         [XmlElement("misc")]
         public KanjiMisc Misc { get; set; }
 
-        // dic_number?, query_code?
+        // dic_number?
+
+        [XmlElement("query_code")]
+        public KanjiQueryCodes QueryCodes { get; set; }
 
         [XmlElement("reading_meaning")]
         public KanjiReadingMeaning ReadingsAndMeanings { get; set; }
+    }
+
+    public class KanjiQueryCodes
+    {
+        [XmlElement("q_code")]
+        public KanjiQueryCode[] Codes { get; set; }
+    }
+
+    public class KanjiQueryCode
+    {
+        [XmlAttribute("qc_type")]
+        public string Type { get; set; }
+
+        [XmlText]
+        public string Value { get; set; }
     }
 
     public class KanjiReadingMeaning
