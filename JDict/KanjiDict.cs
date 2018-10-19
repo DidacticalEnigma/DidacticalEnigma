@@ -77,6 +77,10 @@ namespace JDict
 
         public int FrequencyRating { get; }
 
+        public IEnumerable<string> KunReadings { get; }
+
+        public IEnumerable<string> OnReadings { get; }
+
         internal KanjiEntry(KanjiCharacter ch)
         {
             Literal = ch.Literal;
@@ -84,6 +88,19 @@ namespace JDict
             FrequencyRating = ch.Misc.FrequencyRating != 0
                 ? ch.Misc.FrequencyRating
                 : 100000;
+
+            KunReadings = GetReadings(ch, "ja_kun");
+            OnReadings = GetReadings(ch, "ja_on");
+
+            List<string> GetReadings(KanjiCharacter c, string type)
+            {
+                return c.ReadingsAndMeanings?.Groups
+                    .FirstOrNone()
+                    .FlatMap(x => (x.Readings?.Where(r => r.ReadingType == type)).SomeNotNull())
+                    .ValueOr(Enumerable.Empty<KanjiReading>())
+                    .Select(reading => reading.Value)
+                    .ToList();
+            }
         }
     }
 }

@@ -40,7 +40,49 @@ namespace JDict.Internal.XmlModels
         [XmlElement("misc")]
         public KanjiMisc Misc { get; set; }
 
-        // dic_number?, query_code?, reading_meaning
+        // dic_number?, query_code?
+
+        [XmlElement("reading_meaning")]
+        public KanjiReadingMeaning ReadingsAndMeanings { get; set; }
+    }
+
+    public class KanjiReadingMeaning
+    {
+        [XmlElement("rmgroup")]
+        public KanjiRmGroup[] Groups { get; set; }
+
+        [XmlElement("nanori")]
+        public KanjiNanori[] Nanori { get; set; }
+    }
+
+    public class KanjiRmGroup
+    {
+        [XmlElement("reading")]
+        public KanjiReading[] Readings { get; set; }
+
+        [XmlElement("meaning")]
+        public KanjiMeaning[] Meanings { get; set; }
+    }
+
+    public class KanjiReading
+    {
+        [XmlAttribute("r_type")]
+        public string ReadingType { get; set; }
+
+        [XmlText]
+        public string Value { get; set; }
+    }
+
+    public class KanjiMeaning
+    {
+        [XmlText]
+        public string Value { get; set; }
+    }
+
+    public class KanjiNanori
+    {
+        [XmlText]
+        public string Value { get; set; }
     }
 
     public class KanjiRadical
