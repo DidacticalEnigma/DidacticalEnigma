@@ -13,10 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.Core", "Di
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.Avalonia", "DidacticalEnigma.Avalonia\DidacticalEnigma.Avalonia.csproj", "{EE231E09-1275-48D6-8F31-4812FA98664A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpwingRemapper.Core", "EpwingRemapper.Core\EpwingRemapper.Core.csproj", "{C8FBF09B-2C43-4887-BBA0-8F89FB845CE6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpwingRemapper.ConsoleCore", "EpwingRemapper.ConsoleCore\EpwingRemapper.ConsoleCore.csproj", "{191B4C27-1E6A-473C-A1A6-930A9FFB9B65}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,14 +39,6 @@ Global
 		{EE231E09-1275-48D6-8F31-4812FA98664A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE231E09-1275-48D6-8F31-4812FA98664A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE231E09-1275-48D6-8F31-4812FA98664A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8FBF09B-2C43-4887-BBA0-8F89FB845CE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8FBF09B-2C43-4887-BBA0-8F89FB845CE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8FBF09B-2C43-4887-BBA0-8F89FB845CE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8FBF09B-2C43-4887-BBA0-8F89FB845CE6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{191B4C27-1E6A-473C-A1A6-930A9FFB9B65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{191B4C27-1E6A-473C-A1A6-930A9FFB9B65}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{191B4C27-1E6A-473C-A1A6-930A9FFB9B65}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{191B4C27-1E6A-473C-A1A6-930A9FFB9B65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
