@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JDict.Utils;
 using NUnit.Framework;
 
 namespace JDict.Tests
