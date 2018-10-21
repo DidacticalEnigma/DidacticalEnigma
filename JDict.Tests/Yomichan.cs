@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using JDict.Json;
@@ -13,7 +15,7 @@ namespace JDict.Tests
     class Yomichan
     {
         private string serialized =
-            @"[[""焚き木"",""たきぎ"",""n"","""",9,[""firewood"",""kindling"",""fuel""],1365010,""""],[""焚き木"",""たきぎ"",""n"","""",8,[""piece(s) of firewood""],1365010,""""]]";
+            @"[[""焚き木"",""たきぎ"",""n"","""",9,[""firewood"",""kindling"",""fuel""],1365010,""""],[""焚き木"",""たきぎ"",""n"","""",8,[""piece(s) of firewood""],1365010,""""],[""発行市場"","""","""","""",0,[""発行市場　〔株式などの〕 an ┏issue [investment] market; a primary market.\n""],157730,""""]]";
 
         private List<YomichanDictionaryEntry> deserialized = new List<YomichanDictionaryEntry>
         {
@@ -37,6 +39,17 @@ namespace JDict.Tests
                 Score = 8,
                 Glossary = new[] {"piece(s) of firewood"},
                 Sequence = 1365010,
+                TermTags = ""
+            },
+            new YomichanDictionaryEntry()
+            {
+                Expression = "発行市場",
+                Reading = "",
+                DefinitionTags = "",
+                Rules = "",
+                Score = 0,
+                Glossary = new []{"発行市場　〔株式などの〕 an ┏issue [investment] market; a primary market.\n"},
+                Sequence = 157730,
                 TermTags = ""
             }
         };
@@ -68,6 +81,30 @@ namespace JDict.Tests
             Assert.AreEqual(l.Sequence, r.Sequence);
             Assert.AreEqual(l.TermTags, r.TermTags);
             CollectionAssert.AreEqual(l.Glossary, r.Glossary);
+        }
+
+        [Test]
+        public void Dictionary()
+        {
+            var path = @"D:\a\xc\kenkyusha5.zip";
+            var cache = @"D:\a\xc\kenkyusha5.cache";
+            byte[] hash;
+            using (var file = File.OpenRead(path))
+            using (var sha = new SHA256Managed())
+            {
+                hash = sha.ComputeHash(file);
+            }
+            Assert.AreEqual(
+                "C12FE5AE242F299DB11DBC53FC05FDF44BEFC81303E92B19BCC5B4D758EF234C".ToUpperInvariant(),
+                BitConverter.ToString(hash).Replace("-", "").ToUpperInvariant());
+            using (var dict = new YomichanTermDictionary(path, cache))
+            {
+                var entries = dict.Lookup("発行市場");
+                var entry = entries.Single();
+                Assert.AreEqual(entry.Reading, "");
+                Assert.AreEqual(entry.Glossary.Single(),
+                    "発行市場　〔株式などの〕 an ┏issue [investment] market; a primary market.\n");
+            }
         }
     }
 }

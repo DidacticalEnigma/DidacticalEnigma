@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Async;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
@@ -10,19 +10,19 @@ using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
-    public class JMDictDataSource : IDataSource
+    public class EpwingDataSource : IDataSource
     {
-        private readonly JMDict jdict;
+        private readonly YomichanTermDictionary dict;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
-            new Guid("ED1B840C-B2A8-4018-87B0-D5FC64A1ABC8"),
-            "JMDict",
-            "The data JMdict by Electronic Dictionary Research and Development Group",
-            new Uri("http://www.edrdg.org/jmdict/j_jmdict.html"));
+            new Guid("0C0999F9-F361-46D3-8E24-BA3A7CA669E7"),
+            "Epwing",
+            "...",
+            null);
 
         public Task<Option<RichFormatting>> Answer(Request request)
         {
-            var entry = jdict.Lookup(request.Word.RawWord.Trim());
+            var entry = dict.Lookup(request.Word.RawWord.Trim());
             var rich = new RichFormatting();
 
             var (greedyEntry, greedyWord) = GreedyLookup(request);
@@ -55,7 +55,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
             if (request.NotInflected != null && request.NotInflected != request.Word.RawWord)
             {
-                entry = jdict.Lookup(request.NotInflected);
+                entry = dict.Lookup(request.NotInflected);
                 if (entry != null)
                 {
                     rich.Paragraphs.Add(new TextParagraph(new[]
@@ -75,12 +75,12 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(Option.Some(rich));
         }
 
-        private (IEnumerable<JMDictEntry> entry, string word) GreedyLookup(Request request, int backOffCountStart = 5)
+        private (IEnumerable<YomichanTermDictionary.Entry> entry, string word) GreedyLookup(Request request, int backOffCountStart = 5)
         {
             if (request.SubsequentWords == null)
                 return (null, null);
 
-            return DictUtils.GreedyLookup(s => jdict.Lookup(s), request.SubsequentWords, backOffCountStart);
+            return DictUtils.GreedyLookup(s => dict.Lookup(s), request.SubsequentWords, backOffCountStart);
         }
 
         public void Dispose()
@@ -93,9 +93,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public JMDictDataSource(JMDict jdict)
+        public EpwingDataSource(YomichanTermDictionary dict)
         {
-            this.jdict = jdict;
+            this.dict = dict;
         }
     }
 }

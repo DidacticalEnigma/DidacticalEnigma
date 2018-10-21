@@ -17,7 +17,7 @@ namespace JDict.Json
         public int Format { get; set; }
 
         [JsonProperty("revision")]
-        public int Revision { get; set; }
+        public string Revision { get; set; }
 
         [JsonProperty("sequenced")]
         public bool Sequenced { get; set; }
@@ -26,6 +26,8 @@ namespace JDict.Json
     [JsonConverter(typeof(YomichanDictionaryEntryConverter))]
     class YomichanDictionaryEntry
     {
+        public long Id { get; set; }
+
         public string Expression { get; set; }
 
         public string Reading { get; set; }
@@ -67,7 +69,6 @@ namespace JDict.Json
             bool hasExistingValue,
             JsonSerializer serializer)
         {
-
             var arr = serializer.Deserialize<JArray>(reader);
             var newValue = new YomichanDictionaryEntry
             {

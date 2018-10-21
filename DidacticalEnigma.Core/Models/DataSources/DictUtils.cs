@@ -1,20 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JDict;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
-    public static class JMDictUtils
+    public static class DictUtils
     {
-        public static (IEnumerable<JMDictEntry> entry, string word) GreedyLookup(this JMDict jmDict, IEnumerable<string> request, int backOffCountStart = 5)
+        public static (IEnumerable<T> entry, string word) GreedyLookup<T>(Func<string, IEnumerable<T>> lookup, IEnumerable<string> request, int backOffCountStart = 5)
         {
             int backOffCount = backOffCountStart;
-            IEnumerable<JMDictEntry> found = null;
+            IEnumerable<T> found = null;
             string foundWord = null;
             string concatenatedWord = "";
             foreach(var word in request)
             {
                 concatenatedWord += word;
-                var newEntry = jmDict.Lookup(concatenatedWord);
+                var newEntry = lookup(concatenatedWord);
                 if(newEntry == null)
                 {
                     backOffCount--;

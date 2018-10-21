@@ -57,7 +57,7 @@ namespace JDict.Utils
                 {
                     var si = new ProcessStartInfo(executable, $"x -o\"{tempDir}\" -- {path}")
                     {
-                        CreateNoWindow = false,
+                        CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true
                     };

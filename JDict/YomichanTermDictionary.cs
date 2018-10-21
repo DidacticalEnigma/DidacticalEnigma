@@ -1,30 +1,63 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JDict.Json;
 using JDict.Utils;
+using LiteDB;
 using Newtonsoft.Json;
+using FileMode = System.IO.FileMode;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace JDict
 {
     // provides the programmatic access to dictionary files produced by
     // https://github.com/FooSoft/yomichan-import
     // 
-    public class YomichanTermDictionary
+    public class YomichanTermDictionary : IDisposable
     {
+        private static readonly int Version = 2;
+
+        private static readonly BsonMapper mapper = new BsonMapper
+        {
+            TrimWhitespace = false,
+            EmptyStringToNull = false,
+            // I'm fine with this - I don't use typeless schemas
+            SerializeNullValues = false
+        };
+
+        private LiteDatabase db;
+
+        private LiteCollection<YomichanDictionaryEntry> entries;
+
+        private LiteCollection<DbDictVersion> version;
+
         private static readonly Regex termMatcher = new Regex(@"^term_bank_\d+.json$");
 
         public YomichanTermDictionary(string pathToZip, string cache)
         {
             using (var zip = new ZipFile(pathToZip))
             {
-                Init(zip);
+                Init(zip, File.Open(cache, FileMode.OpenOrCreate));
             }
         }
 
-        private void Init(IZipFile zip)
+        private void Init(IZipFile zip, Stream cacheFile)
+        {
+            db = new LiteDatabase(cacheFile, mapper);
+            entries = db.GetCollection<YomichanDictionaryEntry>("entries");
+            this.version = db.GetCollection<DbDictVersion>("version");
+            var versionInfo = version.FindAll().FirstOrDefault();
+            if (versionInfo == null ||
+                versionInfo.DbVersion != Version)
+            {
+                FillDatabase(zip);
+            }
+        }
+
+        private void FillDatabase(IZipFile zip)
         {
             var groups = zip.Files.ToLookup(f =>
             {
@@ -50,11 +83,51 @@ namespace JDict
             {
                 throw new InvalidDataException("unsupported format");
             }
+
+            this.version.Delete(_ => true);
+            this.entries.Delete(_ => true);
+            this.entries.EnsureIndex(e => e.Expression);
+            this.entries.EnsureIndex(e => e.Reading);
+
+            foreach (var filePath in dataFilePaths)
+            {
+                using (var dataFile = zip.OpenFile(filePath))
+                using (var reader = new StreamReader(dataFile))
+                using (var jsonReader = new JsonTextReader(reader))
+                {
+                    var entries = serializer.Deserialize<IEnumerable<YomichanDictionaryEntry>>(jsonReader);
+                    this.entries.InsertBulk(entries);
+                }
+            }
+
+            this.version.Insert(new DbDictVersion
+            {
+                DbVersion = Version,
+                OriginalFileSize = -1
+            });
         }
 
         public YomichanTermDictionary(IZipFile zipFile, string cache)
         {
-            Init(zipFile);
+            Init(zipFile, File.Open(cache, FileMode.OpenOrCreate));
+        }
+
+        public IEnumerable<Entry> Lookup(string key)
+        {
+            var l = entries.Find(entry => entry.Expression == key || entry.Reading == key)
+                .OrderBy(entry =>
+                {
+                    if (entry.Expression == key)
+                        return 0;
+                    if (entry.Reading == key)
+                        return 1;
+                    return 2;
+                })
+                .Select(entry => new Entry(entry.Expression, entry.Reading, entry.Glossary))
+                .ToList();
+            if (l.Count == 0)
+                return null;
+            return l;
         }
 
         private TOut With<TResource, TOut>(Func<TResource> resourceFactory, Func<TResource, TOut> resultFactory)
@@ -63,6 +136,32 @@ namespace JDict
             using (var resource = resourceFactory())
             {
                 return resultFactory(resource);
+            }
+        }
+
+        public void Dispose()
+        {
+            db.Dispose();
+        }
+
+        public class Entry
+        {
+            public Entry(string expression, string reading, IEnumerable<string> glossary)
+            {
+                Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+                Reading = reading;
+                Glossary = glossary?.ToList() ?? throw new ArgumentNullException(nameof(glossary));
+            }
+
+            public string Expression { get; }
+
+            public string Reading { get; }
+
+            public IEnumerable<string> Glossary { get; }
+
+            public override string ToString()
+            {
+                return Expression + "\n" + Reading + "\n" + string.Join("\n", Glossary) + "\n";
             }
         }
     }

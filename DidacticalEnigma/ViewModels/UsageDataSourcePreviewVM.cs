@@ -50,27 +50,9 @@ namespace DidacticalEnigma.ViewModels
 
         public UsageDataSourcePreviewVM(
             ILanguageService lang,
-            JMDict jmdict,
-            FrequencyList frequencyList,
-            Jnedict jnamedict,
-            Tanaka tanaka,
-            JESC jesc,
-            BasicExpressionsCorpus basicExpressions,
-            string customNotesPath,
-            IFontResolver fontResolver)
+            IEnumerable<DataSourceVM> dataSources)
         {
-            DataSources.Add(new DataSourceVM(new CharacterDataSource(lang), fontResolver));
-            DataSources.Add(new DataSourceVM(new JMDictDataSource(jmdict), fontResolver));
-            DataSources.Add(new DataSourceVM(new TanakaCorpusDataSource(tanaka), fontResolver));
-            DataSources.Add(new DataSourceVM(new CharacterStrokeOrderDataSource(), fontResolver));
-            DataSources.Add(new DataSourceVM(new JESCDataSource(jesc), fontResolver));
-            DataSources.Add(new DataSourceVM(new BasicExpressionCorpusDataSource(basicExpressions), fontResolver));
-            DataSources.Add(new DataSourceVM(new PartialWordLookupJMDictDataSource(jmdict, frequencyList), fontResolver));
-            DataSources.Add(new DataSourceVM(new CustomNotesDataSource(customNotesPath), fontResolver));
-            DataSources.Add(new DataSourceVM(new VerbConjugationDataSource(jmdict), fontResolver));
-            DataSources.Add(new DataSourceVM(new AutoGlosserDataSource(lang, jmdict), fontResolver));
-            DataSources.Add(new DataSourceVM(new JNeDictDataSource(jnamedict), fontResolver));
-
+            DataSources.AddRange(dataSources);
             Leaf Fac() => new Leaf(() => new DataSourcePreviewVM(this), o =>
             {
                 var dataSource = ((DataSourcePreviewVM) o).SelectedDataSource;

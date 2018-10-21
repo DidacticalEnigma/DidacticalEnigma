@@ -107,6 +107,14 @@ namespace JDict.Tests
                 new GlossNote("貴様", "you/you bastard/you son of a bitch"),
                 new GlossNote("ら", "pluralizing suffix")
             }),
+            // https://japanese.stackexchange.com/a/62312/31447
+            new TestCaseData("何もかも手にした気でいたんだ", new[]
+            {
+                new GlossNote("何もかも", "anything and everything/just about everything"),
+                new GlossNote("手 に し た", "to hold (in one's hand)/to take (into one's hand)/to own/to obtain + inflections"),
+                new GlossNote("気 で い た", ""),
+                new GlossNote("んだ", "")
+            }), 
         };
 
         [TestCaseSource(nameof(TestCases))]
