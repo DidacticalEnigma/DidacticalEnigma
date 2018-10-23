@@ -5,8 +5,8 @@ using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public abstract class MeCab<TMeCabEntry> : IMeCab<TMeCabEntry>
-        where TMeCabEntry : IMeCabEntry
+    public abstract class MeCab<TMeCabEntry> : IMorphologicalAnalyzer<TMeCabEntry>
+        where TMeCabEntry : IEntry
     {
         private readonly MeCabTagger tagger;
 

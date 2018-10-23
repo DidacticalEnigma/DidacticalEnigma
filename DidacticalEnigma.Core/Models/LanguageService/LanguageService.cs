@@ -17,7 +17,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
                 .Select(line =>
                 {
-                    return meCab.ParseToEntries(line)
+                    return morphologicalAnalyzer.ParseToEntries(line)
                         .Where(a => a.IsRegular)
                         .Select(word => new WordInfo(
                             word.OriginalForm,
@@ -31,7 +31,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public void Dispose()
         {
-            meCab.Dispose();
+            morphologicalAnalyzer.Dispose();
         }
 
         public string LookupRomaji(Kana kana)
@@ -49,7 +49,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return CodePoint.FromInt(codePoint);
         }
 
-        private readonly IMeCab<IMeCabEntry> meCab;
+        private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
 
         private readonly EasilyConfusedKana confused;
 
@@ -64,7 +64,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         private readonly RadicalRemapper remapper;
 
         public LanguageService(
-            IMeCab<IMeCabEntry> meCab,
+            IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer,
             EasilyConfusedKana similar,
             Kradfile kradfile,
             Radkfile radkfile,
@@ -72,7 +72,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             KanaProperties kanaProperties,
             RadicalRemapper remapper)
         {
-            this.meCab = meCab;
+            this.morphologicalAnalyzer = morphologicalAnalyzer;
             this.confused = similar;
             this.kradfile = kradfile;
             this.radkfile = radkfile;

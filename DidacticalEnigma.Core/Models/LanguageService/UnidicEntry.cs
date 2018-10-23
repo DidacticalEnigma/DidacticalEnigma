@@ -1,60 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DidacticalEnigma.Core.Utils;
 using JDict;
 using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public class IpadicMeCabEntry : IMeCabEntry
+    public class UnidicEntry : IEntry
     {
-        public bool IsRegular { get; }
-
-        public IpadicMeCabEntry(string originalForm, Option<string> feature)
+        public UnidicEntry(string originalForm, Option<string> feature)
         {
             OriginalForm = originalForm;
             IsRegular = feature.HasValue;
-            if(!IsRegular)
+            if (!IsRegular)
                 return;
+            
             var features = feature
-                .Map(f => f.Split(','))
+                .Map(f => StringExt.SplitWithQuotes(f, ',', '"').ToArray())
                 .ValueOr(Array.Empty<string>());
+
             PartOfSpeech = MeCabEntryParser.PartOfSpeechFromString(MeCabEntryParser.OrNull(features, 0));
-            ConjugatedForm = MeCabEntryParser.OrNull(features, 4);
+            ConjugatedForm = MeCabEntryParser.OrNull(features, 5);
+            NotInflected = MeCabEntryParser.OrNull(features, 7);
             Type = MeCabEntryParser.TypeFromString(ConjugatedForm);
-            Inflection = MeCabEntryParser.OrNull(features, 5);
-            NotInflected = MeCabEntryParser.OrNull(features, 6);
-            Reading = MeCabEntryParser.OrNull(features, 7);
-            Pronunciation = MeCabEntryParser.OrNull(features, 8);
             PartOfSpeechSections = features
-                .Take(4)
+                .Skip(1)
+                .Take(3)
                 .Where(f => f != "*")
                 .ToList()
                 .AsReadOnly();
             IsIndependent = MeCabEntryParser.IsIndependentFromSections(PartOfSpeechSections);
         }
 
-        public Option<EdictType> Type { get; }
-
+        public string ConjugatedForm { get; }
+        public string Inflection { get; }
+        public bool? IsIndependent { get; }
+        public bool IsRegular { get; }
         public string OriginalForm { get; }
-
         public PartOfSpeech PartOfSpeech { get; }
-
-        public IEnumerable<string> PartOfSpeechSections { get; }
-
         public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo =>
             PartOfSpeechSections.Select(MeCabEntryParser.PartOfSpeechInfoFromString);
-
-        public string ConjugatedForm { get; }
-
-        public string Inflection { get; }
-
-        public string Reading { get; }
-
-        public string NotInflected { get; }
-
+        public IEnumerable<string> PartOfSpeechSections { get; }
         public string Pronunciation { get; }
-
-        public bool? IsIndependent { get; }
+        public string Reading { get; }
+        public string NotInflected { get; }
+        public Option<EdictType> Type { get; }
     }
 }

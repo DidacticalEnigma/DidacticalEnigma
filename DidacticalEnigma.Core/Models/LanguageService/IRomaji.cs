@@ -12,7 +12,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
     public class ModifiedHepburn : IRomaji
     {
-        private readonly IMeCab<IMeCabEntry> mecab;
+        private readonly IMorphologicalAnalyzer<IEntry> mecab;
         private readonly KanaProperties props;
 
         public string ToRomaji(string input)
@@ -28,7 +28,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return string.Join("", word.Select(c => props.LookupRomaji(c.ToString())));
         }
 
-        public ModifiedHepburn(IMeCab<IMeCabEntry> mecab, KanaProperties props)
+        public ModifiedHepburn(IMorphologicalAnalyzer<IEntry> mecab, KanaProperties props)
         {
             this.mecab = mecab;
             this.props = props;

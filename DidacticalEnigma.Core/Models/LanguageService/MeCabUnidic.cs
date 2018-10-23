@@ -3,7 +3,7 @@ using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public class MeCabUnidic : MeCab<UnidicMeCabEntry>
+    public class MeCabUnidic : MeCab<UnidicEntry>
     {
         public MeCabUnidic(MeCabParam mecabParam) :
             base(mecabParam)
@@ -11,9 +11,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         }
 
-        protected override UnidicMeCabEntry ToEntry(string surface, Option<string> features)
+        protected override UnidicEntry ToEntry(string surface, Option<string> features)
         {
-            return new UnidicMeCabEntry(surface, features);
+            return new UnidicEntry(surface, features);
         }
     }
 }

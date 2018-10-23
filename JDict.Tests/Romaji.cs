@@ -13,7 +13,7 @@ namespace JDict.Tests
     [TestFixture]
     class Romaji
     {
-        private static IMeCab<IMeCabEntry> mecab;
+        private static IMorphologicalAnalyzer<IEntry> mecab;
 
         private static KanaProperties kanaProperties;
 

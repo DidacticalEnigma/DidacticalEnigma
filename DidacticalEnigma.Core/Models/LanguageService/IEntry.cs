@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JDict;
 using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public interface IMeCabEntry
+    public interface IEntry
     {
         string ConjugatedForm { get; }
         string Inflection { get; }
+        [Obsolete]
         bool? IsIndependent { get; }
         bool IsRegular { get; }
         string OriginalForm { get; }

@@ -62,12 +62,12 @@ namespace DidacticalEnigma.Core.Models.Project
 
         private class ProjectData
         {
-            public string Version { get; set; }
+            public string Version { get; }
 
             public IReadOnlyCollection<string> Files { get; set; }
 
             [JsonExtensionData]
-            private IDictionary<string, JToken> additionalData;
+            private readonly IDictionary<string, JToken> additionalData;
 
             public ProjectData(string version, IReadOnlyCollection<string> files)
             {
@@ -197,7 +197,7 @@ namespace DidacticalEnigma.Core.Models.Project
         }
 
         [JsonExtensionData]
-        private IDictionary<string, JToken> additionalData;
+        private readonly IDictionary<string, JToken> additionalData;
     }
 
     public class TranslatedText
@@ -213,7 +213,7 @@ namespace DidacticalEnigma.Core.Models.Project
         }
 
         [JsonExtensionData]
-        private IDictionary<string, JToken> additionalData;
+        private readonly IDictionary<string, JToken> additionalData;
     }
 
     public class TranslatorNote : IEquatable<TranslatorNote>
