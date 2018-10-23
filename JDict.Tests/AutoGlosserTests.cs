@@ -129,28 +129,23 @@ namespace JDict.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            var baseDir = Tagger.baseDir;
-            var kanjidict = JDict.KanjiDict.Create(Path.Combine(baseDir, @"character\kanjidic2.xml.gz"));
-            var kradfile = new JDict.Kradfile(Path.Combine(baseDir, @"character\kradfile1_plus_2_utf8"), Encoding.UTF8);
-            var radkfile = new Radkfile(Path.Combine(baseDir, @"character\radkfile1_plus_2_utf8"), Encoding.UTF8);
-            var kanaProperties = new KanaProperties(
-                Path.Combine(baseDir, @"character\hiragana_romaji.txt"),
-                Path.Combine(baseDir, @"character\katakana_romaji.txt"),
-                Path.Combine(baseDir, @"character\hiragana_katakana.txt"),
-                Path.Combine(baseDir, @"character\kana_related.txt"),
+            var kanjidict = JDict.KanjiDict.Create(TestDataPaths.KanjiDic);
+            var kradfile = new JDict.Kradfile(TestDataPaths.Kradfile, Encoding.UTF8);
+            var radkfile = new Radkfile(TestDataPaths.Radkfile, Encoding.UTF8);
+            var kanaProperties = new KanaProperties(TestDataPaths.HiraganaPath, TestDataPaths.KatakanaPath, TestDataPaths.HiraganaKatakanaPath, TestDataPaths.ComplexPath,
                 Encoding.UTF8);
             this.lang = new LanguageService(
                 new MeCabIpadic(new MeCabParam
                 {
-                    DicDir = Path.Combine(baseDir, @"mecab\ipadic"),
+                    DicDir = TestDataPaths.Ipadic,
                 }), 
-                EasilyConfusedKana.FromFile(Path.Combine(baseDir, @"character\confused.txt")),
+                EasilyConfusedKana.FromFile(TestDataPaths.EasilyConfused),
                 kradfile,
                 radkfile,
                 kanjidict,
                 kanaProperties,
                 new RadicalRemapper(kradfile, radkfile));
-            this.jmdict = JDict.JMDict.Create(Path.Combine(baseDir, "dictionaries", "JMdict_e.gz"), Path.Combine(baseDir, "dictionaries", "JMdict_e.cache"));
+            this.jmdict = JDict.JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
             glosser = new AutoGlosser(lang, jmdict);
         }
 

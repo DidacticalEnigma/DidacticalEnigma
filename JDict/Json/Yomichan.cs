@@ -23,6 +23,13 @@ namespace JDict.Json
         public bool Sequenced { get; set; }
     }
 
+    class YomichanDictionaryInfo : DbDictVersion
+    {
+        public string Title { get; set; }
+
+        public string Revision { get; set; }
+    }
+
     [JsonConverter(typeof(YomichanDictionaryEntryConverter))]
     class YomichanDictionaryEntry
     {

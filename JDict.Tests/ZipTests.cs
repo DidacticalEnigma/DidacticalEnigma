@@ -15,7 +15,7 @@ namespace JDict.Tests
         [Test]
         public void Test()
         {
-            using (var zip = new ZipFile(@"D:\a\xc\jmdict_english.zip"))
+            using (var zip = new ZipFile(TestDataPaths.Kenkyusha5))
             {
                 var l = zip.Files.ToList();
                 using (var file = zip.OpenFile(l[0]))

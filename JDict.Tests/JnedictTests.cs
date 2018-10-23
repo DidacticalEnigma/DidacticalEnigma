@@ -18,8 +18,7 @@ namespace JDict.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            var baseDir = Tagger.baseDir;
-            jnedict = JDict.Jnedict.Create(Path.Combine(baseDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(baseDir, "dictionaries", "JMnedict.xml.cache"));
+            jnedict = JDict.Jnedict.Create(TestDataPaths.JMnedict, TestDataPaths.JMnedictCache);
         }
 
         [OneTimeTearDown]

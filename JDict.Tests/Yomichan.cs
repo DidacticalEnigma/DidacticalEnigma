@@ -86,18 +86,16 @@ namespace JDict.Tests
         [Test]
         public void Dictionary()
         {
-            var path = @"D:\a\xc\kenkyusha5.zip";
-            var cache = @"D:\a\xc\kenkyusha5.cache";
             byte[] hash;
-            using (var file = File.OpenRead(path))
+            using (var file = File.OpenRead(TestDataPaths.Kenkyusha5))
             using (var sha = new SHA256Managed())
             {
                 hash = sha.ComputeHash(file);
             }
             Assert.AreEqual(
-                "C12FE5AE242F299DB11DBC53FC05FDF44BEFC81303E92B19BCC5B4D758EF234C".ToUpperInvariant(),
+                TestDataPaths.Kenkyusha5Hash.ToUpperInvariant(),
                 BitConverter.ToString(hash).Replace("-", "").ToUpperInvariant());
-            using (var dict = new YomichanTermDictionary(path, cache))
+            using (var dict = new YomichanTermDictionary(TestDataPaths.Kenkyusha5, TestDataPaths.Kenkyusha5 + ".cache"))
             {
                 var entries = dict.Lookup("発行市場");
                 var entry = entries.Single();

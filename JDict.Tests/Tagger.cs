@@ -15,17 +15,13 @@ namespace JDict.Tests
     {
         private MeCabTagger tagger;
 
-        // FIX THIS PATH SO IT POINTS TO THE ACTUAL DIRECTORY YOUR DATA IS
-        // Various test runners put the executables in unrelated places,
-        // and also make the current directory unrelated.
-        public static readonly string baseDir = @"D:\DidacticalEnigma-Data";
 
         [SetUp]
         public void SetUp()
         {
             MeCabParam mecabParam = new MeCabParam
             {
-                DicDir = Path.Combine(baseDir, @"mecab\ipadic"),
+                DicDir = TestDataPaths.Ipadic,
             };
             tagger = MeCabTagger.Create(mecabParam);
             mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
@@ -38,10 +34,10 @@ namespace JDict.Tests
         [Test]
         public void Tanaka()
         {
-            var tanaka = new Tanaka(Path.Combine(baseDir, @"corpora\examples.utf.gz"), Encoding.UTF8);
+            var tanaka = new Tanaka(TestDataPaths.Tanaka, Encoding.UTF8);
             var meCab = new MeCabUnidic(new MeCabParam
             {
-                DicDir = Path.Combine(baseDir, @"mecab\unidic"),
+                DicDir = TestDataPaths.Unidic,
             });
             var sentences = tanaka.AllSentences();
             var features = new HashSet<string>();

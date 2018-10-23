@@ -45,7 +45,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private DualDictionary<int, int> hiraganaKatakana;
 
-        public KanaProperties(string katakanaPath, string hiraganaPath, string hiraganaKatakanaPath, string complexPath, Encoding encoding)
+        public KanaProperties(string hiraganaPath, string katakanaPath, string hiraganaKatakanaPath, string complexPath, Encoding encoding)
         {
             ReadKanaFile(katakanaPath);
             ReadKanaFile(hiraganaPath);

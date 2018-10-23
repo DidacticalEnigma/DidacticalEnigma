@@ -18,7 +18,7 @@ namespace JDict
     // 
     public class YomichanTermDictionary : IDisposable
     {
-        private static readonly int Version = 2;
+        private static readonly int Version = 3;
 
         private static readonly BsonMapper mapper = new BsonMapper
         {
@@ -32,9 +32,11 @@ namespace JDict
 
         private LiteCollection<YomichanDictionaryEntry> entries;
 
-        private LiteCollection<DbDictVersion> version;
+        private LiteCollection<YomichanDictionaryInfo> version;
 
         private static readonly Regex termMatcher = new Regex(@"^term_bank_\d+.json$");
+
+        public string Revision { get; private set; }
 
         public YomichanTermDictionary(string pathToZip, string cache)
         {
@@ -48,12 +50,16 @@ namespace JDict
         {
             db = new LiteDatabase(cacheFile, mapper);
             entries = db.GetCollection<YomichanDictionaryEntry>("entries");
-            this.version = db.GetCollection<DbDictVersion>("version");
-            var versionInfo = version.FindAll().FirstOrDefault();
+            this.version = db.GetCollection<YomichanDictionaryInfo>("version");
+            var versionInfo = version.FindAll().SingleOrDefault();
             if (versionInfo == null ||
                 versionInfo.DbVersion != Version)
             {
                 FillDatabase(zip);
+            }
+            else
+            {
+                Revision = versionInfo.Title+"/"+versionInfo.Revision;
             }
         }
 
@@ -100,10 +106,12 @@ namespace JDict
                 }
             }
 
-            this.version.Insert(new DbDictVersion
+            this.version.Insert(new YomichanDictionaryInfo()
             {
                 DbVersion = Version,
-                OriginalFileSize = -1
+                OriginalFileSize = -1,
+                Revision = version.Revision,
+                Title = version.Title
             });
         }
 

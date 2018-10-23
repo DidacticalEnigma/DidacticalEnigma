@@ -65,8 +65,8 @@ namespace DidacticalEnigma
             kernel.BindFactory(() =>
                 new FrequencyList(Path.Combine(dataDir, "other", "word_form_frequency_list.txt"), Encoding.UTF8));
             kernel.BindFactory(() => new KanaProperties(
-                katakanaPath: Path.Combine(dataDir, "character", "hiragana_romaji.txt"),
-                hiraganaPath: Path.Combine(dataDir, "character", "katakana_romaji.txt"),
+                hiraganaPath: Path.Combine(dataDir, "character", "hiragana_romaji.txt"),
+                katakanaPath: Path.Combine(dataDir, "character", "katakana_romaji.txt"),
                 hiraganaKatakanaPath: Path.Combine(dataDir, "character", "hiragana_katakana.txt"),
                 complexPath: Path.Combine(dataDir, "character", "kana_related.txt"),
                 encoding: Encoding.UTF8));

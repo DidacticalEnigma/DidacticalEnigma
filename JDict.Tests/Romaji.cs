@@ -38,16 +38,16 @@ namespace JDict.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            var baseDir = Tagger.baseDir;
+            var baseDir = TestDataPaths.BaseDir;
             mecab = new MeCabIpadic(new MeCabParam
             {
-                DicDir = Path.Combine(baseDir, @"mecab\ipadic"),
+                DicDir = TestDataPaths.Ipadic,
             });
             kanaProperties = new KanaProperties(
-                Path.Combine(baseDir, @"character\hiragana_romaji.txt"),
-                Path.Combine(baseDir, @"character\katakana_romaji.txt"),
-                Path.Combine(baseDir, @"character\hiragana_katakana.txt"),
-                Path.Combine(baseDir, @"character\kana_related.txt"),
+                TestDataPaths.HiraganaPath,
+                TestDataPaths.KatakanaPath,
+                TestDataPaths.HiraganaKatakanaPath,
+                TestDataPaths.ComplexPath,
                 Encoding.UTF8);
         }
 
