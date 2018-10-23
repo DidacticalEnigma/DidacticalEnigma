@@ -132,7 +132,11 @@ namespace JDict.Tests
             var kanjidict = JDict.KanjiDict.Create(TestDataPaths.KanjiDic);
             var kradfile = new JDict.Kradfile(TestDataPaths.Kradfile, Encoding.UTF8);
             var radkfile = new Radkfile(TestDataPaths.Radkfile, Encoding.UTF8);
-            var kanaProperties = new KanaProperties(TestDataPaths.HiraganaPath, TestDataPaths.KatakanaPath, TestDataPaths.HiraganaKatakanaPath, TestDataPaths.ComplexPath,
+            var kanaProperties = new KanaProperties(
+                TestDataPaths.Hiragana,
+                TestDataPaths.Katakana,
+                TestDataPaths.HiraganaKatakana,
+                TestDataPaths.KanaRelated,
                 Encoding.UTF8);
             this.lang = new LanguageService(
                 new MeCabIpadic(new MeCabParam

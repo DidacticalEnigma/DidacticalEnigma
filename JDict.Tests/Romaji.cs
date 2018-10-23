@@ -44,10 +44,10 @@ namespace JDict.Tests
                 DicDir = TestDataPaths.Ipadic,
             });
             kanaProperties = new KanaProperties(
-                TestDataPaths.HiraganaPath,
-                TestDataPaths.KatakanaPath,
-                TestDataPaths.HiraganaKatakanaPath,
-                TestDataPaths.ComplexPath,
+                TestDataPaths.Hiragana,
+                TestDataPaths.Katakana,
+                TestDataPaths.HiraganaKatakana,
+                TestDataPaths.KanaRelated,
                 Encoding.UTF8);
         }
 

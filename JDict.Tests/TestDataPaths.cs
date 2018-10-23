@@ -37,13 +37,13 @@ namespace JDict.Tests
 
         public static readonly string Tanaka = Path.Combine(BaseDir, "corpora", "examples.utf.gz");
 
-        public static readonly string HiraganaPath = Path.Combine(BaseDir, @"character\hiragana_romaji.txt");
+        public static readonly string Hiragana = Path.Combine(BaseDir, @"character\hiragana_romaji.txt");
 
-        public static readonly string KatakanaPath = Path.Combine(BaseDir, @"character\katakana_romaji.txt");
+        public static readonly string Katakana = Path.Combine(BaseDir, @"character\katakana_romaji.txt");
 
-        public static readonly string HiraganaKatakanaPath = Path.Combine(BaseDir, @"character\hiragana_katakana.txt");
+        public static readonly string HiraganaKatakana = Path.Combine(BaseDir, @"character\hiragana_katakana.txt");
 
-        public static readonly string ComplexPath = Path.Combine(BaseDir, @"character\kana_related.txt");
+        public static readonly string KanaRelated = Path.Combine(BaseDir, @"character\kana_related.txt");
 
         public static readonly string EasilyConfused = Path.Combine(BaseDir, @"character\confused.txt");
     }
