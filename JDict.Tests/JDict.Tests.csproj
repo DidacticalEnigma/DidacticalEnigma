@@ -175,6 +175,7 @@
     <Compile Include="Romaji.cs" />
     <Compile Include="StringExtTests.cs" />
     <Compile Include="Tagger.cs" />
+    <Compile Include="TestDataPaths.cs" />
     <Compile Include="Yomichan.cs" />
     <Compile Include="ZipTests.cs" />
   </ItemGroup>
