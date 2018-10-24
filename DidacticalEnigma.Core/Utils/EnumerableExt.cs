@@ -121,5 +121,57 @@ namespace DidacticalEnigma.Core.Utils
         {
             return dict.TryGetValue(key, out var value) ? value.Some() : value.None();
         }
+
+        public static IEnumerable<(TIn1, TIn2)> Zip<TIn1, TIn2>(
+            this IEnumerable<TIn1> first,
+            IEnumerable<TIn2> second)
+        {
+            return first.Zip(second, (f, s) => (f, s));
+        }
+
+        public static IEnumerable<(TIn1, TIn2, TIn3)> Zip<TIn1, TIn2, TIn3>(
+            this IEnumerable<TIn1> first,
+            IEnumerable<TIn2> second,
+            IEnumerable<TIn3> third)
+        {
+            return Zip(first, second, third, (in1, in2, in3) => (in1, in2, in3));
+        }
+
+        public static IEnumerable<TOut> Zip<TOut, TIn1, TIn2, TIn3>(
+            this IEnumerable<TIn1> first,
+            IEnumerable<TIn2> second,
+            IEnumerable<TIn3> third,
+            Func<TIn1, TIn2, TIn3, TOut> selector)
+        {
+            using (var i1 = first.GetEnumerator())
+            using (var i2 = second.GetEnumerator())
+            using (var i3 = third.GetEnumerator())
+            {
+                while (i1.MoveNext() && i2.MoveNext() && i3.MoveNext())
+                {
+                    yield return selector(i1.Current, i2.Current, i3.Current);
+                }
+            }
+        }
+
+
+        public static IEnumerable<TElement> Cycle<TElement>(this IReadOnlyCollection<TElement> elements)
+        {
+            while (true)
+            {
+                foreach (var element in elements)
+                {
+                    yield return element;
+                }
+            }
+        }
+
+        public static IEnumerable<TElement> Repeat<TElement>(TElement element)
+        {
+            while (true)
+            {
+                yield return element;
+            }
+        }
     }
 }

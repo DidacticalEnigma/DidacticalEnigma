@@ -22,7 +22,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
             PartOfSpeech = MeCabEntryParser.PartOfSpeechFromString(MeCabEntryParser.OrNull(features, 0));
             ConjugatedForm = MeCabEntryParser.OrNull(features, 5);
-            NotInflected = MeCabEntryParser.OrNull(features, 7);
+            NotInflected = MeCabEntryParser.OrNull(features,　10);
+            Pronunciation = MeCabEntryParser.OrNull(features, 9);
+            Reading = MeCabEntryParser.OrNull(features, 17);
             Type = MeCabEntryParser.TypeFromString(ConjugatedForm);
             PartOfSpeechSections = features
                 .Skip(1)
