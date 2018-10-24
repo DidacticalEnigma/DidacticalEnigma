@@ -26,7 +26,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             Word = word;
             QueryText = queryText;
             PartOfSpeech = word.EstimatedPartOfSpeech;
-            NotInflected = word.NotInflected;
+            NotInflected = word.DictionaryForm;
             SubsequentWords = subsequentWords;
             AllText = allText;
         }

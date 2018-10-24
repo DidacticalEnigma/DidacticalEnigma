@@ -7,10 +7,16 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public interface IEntry
     {
-        string OriginalForm { get; }
+        // surface form is the form that appears in the text "as is"
+        // possibly inflected
+        string SurfaceForm { get; }
+        // pronunciation
         string Pronunciation { get; }
+        // reading
         string Reading { get; }
-        string NotInflected { get; }
+        // dictionary form is the base form of a word, pre inflections
+        // in English, given surface forms "going", "went", a dictionary form is "go"
+        string DictionaryForm { get; }
         string ConjugatedForm { get; }
         string Inflection { get; }
         [Obsolete]

@@ -10,7 +10,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     {
         public PartOfSpeech EstimatedPartOfSpeech { get; }
 
-        public string NotInflected { get; }
+        public string DictionaryForm { get; }
 
         public string RawWord { get; }
 
@@ -25,7 +25,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public WordInfo(
             string word,
             PartOfSpeech partOfSpeech = PartOfSpeech.Unknown,
-            string notInflected = null,
+            string dictionaryForm = null,
             bool? isIndependent = null,
             Option<EdictType> type = default,
             IEnumerable<PartOfSpeechInfo> posInfo = null)
@@ -34,7 +34,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             CodePoints = new List<CodePoint>(
                 word.AsCodePoints().Select(cp => CodePoint.FromInt(cp)));
             EstimatedPartOfSpeech = partOfSpeech;
-            NotInflected = notInflected;
+            DictionaryForm = dictionaryForm;
             Independent = isIndependent;
             Type = type;
             this.PartOfSpeechInfo = posInfo?.ToList() ?? Enumerable.Empty<PartOfSpeechInfo>();

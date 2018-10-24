@@ -37,7 +37,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     var w = string.Join("", s);
                     return dict.Lookup(w) != null;
                 }).ToList();
-                var lookup = dict.Lookup(word.NotInflected ?? word.RawWord)?.ToList();
+                var lookup = dict.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();
 
                 if (word.RawWord.All(c => ".!?？！⁉、".IndexOf(c) != -1))
                 {
@@ -80,7 +80,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         ?.Description;
                     if (description != null)
                     {
-                        glosses.Add(new GlossNote(word.RawWord, "Particle " + word.NotInflected + " - " + description));
+                        glosses.Add(new GlossNote(word.RawWord, "Particle " + word.DictionaryForm + " - " + description));
                     }
                     else
                     {
@@ -115,7 +115,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
             return new GlossNote(
                 foreign.RawWord,
-                (string.Format(format, senseString) + (foreign.RawWord != foreign.NotInflected && foreign.NotInflected != null ? " + inflections" : "")).Trim());
+                (string.Format(format, senseString) + (foreign.RawWord != foreign.DictionaryForm && foreign.DictionaryForm != null ? " + inflections" : "")).Trim());
         }
 
         public AutoGlosser(ILanguageService lang, JMDict dict)

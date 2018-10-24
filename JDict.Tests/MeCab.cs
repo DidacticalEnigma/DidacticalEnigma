@@ -17,22 +17,22 @@ namespace JDict.Tests
             {
                 new DummyEntry
                 {
-                    OriginalForm = "これ",
-                    NotInflected = "これ",
+                    SurfaceForm = "これ",
+                    DictionaryForm = "これ",
                     Pronunciation = "コレ",
                     Reading = "コレ"
                 },
                 new DummyEntry
                 {
-                    OriginalForm = "は",
-                    NotInflected = "は",
+                    SurfaceForm = "は",
+                    DictionaryForm = "は",
                     Pronunciation = "ワ",
                     Reading = "ハ"
                 },
                 new DummyEntry
                 {
-                    OriginalForm = "俺",
-                    NotInflected = "俺",
+                    SurfaceForm = "俺",
+                    DictionaryForm = "俺",
                     Pronunciation = "オレ",
                     Reading = "オレ"
                 }
@@ -41,15 +41,15 @@ namespace JDict.Tests
             {
                 new DummyEntry
                 {
-                    OriginalForm = "楽しかっ",
-                    NotInflected = "楽しい",
+                    SurfaceForm = "楽しかっ",
+                    DictionaryForm = "楽しい",
                     Pronunciation = "タノシカッ",
                     Reading = "タノシカッ"
                 },
                 new DummyEntry
                 {
-                    OriginalForm = "た",
-                    NotInflected = "た",
+                    SurfaceForm = "た",
+                    DictionaryForm = "た",
                     Pronunciation = "タ",
                     Reading = "タ"
                 }
@@ -67,19 +67,19 @@ namespace JDict.Tests
             {
                 //Assert.AreEqual(e.ConjugatedForm, i.ConjugatedForm);
                 //Assert.AreEqual(e.Inflection, i.Inflection);
-                Assert.AreEqual(e.OriginalForm, i.OriginalForm);
+                Assert.AreEqual(e.SurfaceForm, i.SurfaceForm);
                 //Assert.AreEqual(e.PartOfSpeech, i.PartOfSpeech);
                 Assert.AreEqual(e.Pronunciation, i.Pronunciation);
                 Assert.AreEqual(e.Reading, i.Reading);
-                Assert.AreEqual(e.NotInflected, i.NotInflected);
+                Assert.AreEqual(e.DictionaryForm, i.DictionaryForm);
 
                 //Assert.AreEqual(e.ConjugatedForm, u.ConjugatedForm);
                 //Assert.AreEqual(e.Inflection, u.Inflection);
-                Assert.AreEqual(e.OriginalForm, u.OriginalForm);
+                Assert.AreEqual(e.SurfaceForm, u.SurfaceForm);
                 //Assert.AreEqual(e.PartOfSpeech, u.PartOfSpeech);
                 Assert.AreEqual(e.Pronunciation, u.Pronunciation);
                 Assert.AreEqual(e.Reading, u.Reading);
-                Assert.AreEqual(e.NotInflected, u.NotInflected);
+                Assert.AreEqual(e.DictionaryForm, u.DictionaryForm);
             }
         }
 
@@ -114,13 +114,13 @@ namespace JDict.Tests
         public string Inflection { get; set; }
         public bool? IsIndependent { get; set; }
         public bool IsRegular { get; set; } = true;
-        public string OriginalForm { get; set; }
+        public string SurfaceForm { get; set; }
         public PartOfSpeech PartOfSpeech { get; set; }
         public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo { get; set; }
         public IEnumerable<string> PartOfSpeechSections { get; set; }
         public string Pronunciation { get; set; }
         public string Reading { get; set; }
-        public string NotInflected { get; set; }
+        public string DictionaryForm { get; set; }
         public Option<EdictType> Type { get; set; }
     }
 }

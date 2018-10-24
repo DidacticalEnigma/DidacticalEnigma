@@ -9,9 +9,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class UnidicEntry : IEntry
     {
-        public UnidicEntry(string originalForm, Option<string> feature)
+        public UnidicEntry(string surfaceForm, Option<string> feature)
         {
-            OriginalForm = originalForm;
+            SurfaceForm = surfaceForm;
             IsRegular = feature.HasValue;
             if (!IsRegular)
                 return;
@@ -22,7 +22,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
             PartOfSpeech = MeCabEntryParser.PartOfSpeechFromString(MeCabEntryParser.OrNull(features, 0));
             ConjugatedForm = MeCabEntryParser.OrNull(features, 5);
-            NotInflected = MeCabEntryParser.OrNull(features,　10);
+            DictionaryForm = MeCabEntryParser.OrNull(features,　10);
             Pronunciation = MeCabEntryParser.OrNull(features, 9);
             Reading = MeCabEntryParser.OrNull(features, 17);
             Type = MeCabEntryParser.TypeFromString(ConjugatedForm);
@@ -39,14 +39,14 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public string Inflection { get; }
         public bool? IsIndependent { get; }
         public bool IsRegular { get; }
-        public string OriginalForm { get; }
+        public string SurfaceForm { get; }
         public PartOfSpeech PartOfSpeech { get; }
         public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo =>
             PartOfSpeechSections.Select(MeCabEntryParser.PartOfSpeechInfoFromString);
         public IEnumerable<string> PartOfSpeechSections { get; }
         public string Pronunciation { get; }
         public string Reading { get; }
-        public string NotInflected { get; }
+        public string DictionaryForm { get; }
         public Option<EdictType> Type { get; }
     }
 }

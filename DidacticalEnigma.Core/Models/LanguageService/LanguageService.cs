@@ -20,9 +20,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     return morphologicalAnalyzer.ParseToEntries(line)
                         .Where(a => a.IsRegular)
                         .Select(word => new WordInfo(
-                            word.OriginalForm,
+                            word.SurfaceForm,
                             word.PartOfSpeech,
-                            word.NotInflected,
+                            word.DictionaryForm,
                             word.IsIndependent,
                             word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictType.pn) : word.Type,
                             word.PartOfSpeechInfo));

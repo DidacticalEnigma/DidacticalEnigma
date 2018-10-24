@@ -10,9 +10,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     {
         public bool IsRegular { get; }
 
-        public IpadicEntry(string originalForm, Option<string> feature)
+        public IpadicEntry(string surfaceForm, Option<string> feature)
         {
-            OriginalForm = originalForm;
+            SurfaceForm = surfaceForm;
             IsRegular = feature.HasValue;
             if(!IsRegular)
                 return;
@@ -23,7 +23,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             ConjugatedForm = MeCabEntryParser.OrNull(features, 4);
             Type = MeCabEntryParser.TypeFromString(ConjugatedForm);
             Inflection = MeCabEntryParser.OrNull(features, 5);
-            NotInflected = MeCabEntryParser.OrNull(features, 6);
+            DictionaryForm = MeCabEntryParser.OrNull(features, 6);
             Reading = MeCabEntryParser.OrNull(features, 7);
             Pronunciation = MeCabEntryParser.OrNull(features, 8);
             PartOfSpeechSections = features
@@ -36,7 +36,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public Option<EdictType> Type { get; }
 
-        public string OriginalForm { get; }
+        public string SurfaceForm { get; }
 
         public PartOfSpeech PartOfSpeech { get; }
 
@@ -51,7 +51,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public string Reading { get; }
 
-        public string NotInflected { get; }
+        public string DictionaryForm { get; }
 
         public string Pronunciation { get; }
 
