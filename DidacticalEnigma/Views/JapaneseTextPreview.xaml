@@ -60,7 +60,7 @@
                                                             </ContextMenu.ItemContainerStyle>
                                                             <ContextMenu.ItemTemplate>
                                                                 <DataTemplate>
-                                                                    <TextBlock Text="{Binding ., Converter={x:Static converters:CodePointToLongStringConverter.Default}}" />
+                                                                    <TextBlock FontSize="24" Text="{Binding ., Converter={x:Static converters:CodePointToLongStringConverter.Default}}" />
                                                                 </DataTemplate>
                                                             </ContextMenu.ItemTemplate>
                                                         </ContextMenu>
