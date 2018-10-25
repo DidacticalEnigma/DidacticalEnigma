@@ -85,6 +85,10 @@ namespace DidacticalEnigma
                 () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
                 get.Get<IKanjiProperties>()));
+            kernel.Bind<IRomaji, ModifiedHepburn>();
+            kernel.BindFactory(get => new ModifiedHepburn(
+                get.Get<IMorphologicalAnalyzer<IEntry>>(),
+                get.Get<IKanaProperties>()));
             kernel.BindFactory(get => new AutoGlosser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDict>()));
             kernel.BindFactory<IEnumerable<DataSourceVM>>(get => new[] {
                 new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFontResolver>()),
@@ -97,7 +101,8 @@ namespace DidacticalEnigma
                 new DataSourceVM(new TanakaCorpusDataSource(get.Get<Tanaka>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<JMDict>(), get.Get<FrequencyList>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFontResolver>())
+                new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFontResolver>()),
+                new DataSourceVM(new RomajiDataSource(get.Get<IRomaji>()), get.Get<IFontResolver>())
             }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new DataSourceVM(new EpwingDataSource(dict, get.Get<IKanaProperties>()), get.Get<IFontResolver>()))));
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
