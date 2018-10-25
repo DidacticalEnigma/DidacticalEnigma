@@ -20,11 +20,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             var words = mecab.ParseToEntries(input)
                 .Where(entry => entry.IsRegular)
-                .Select(entry => entry.Pronunciation);
+                .Select(entry => entry.Pronunciation ?? entry.SurfaceForm)
+                .ToList();
 
             bool first = true;
             var sb = new StringBuilder();
-            foreach (var word in words)
+            foreach (var (word, nextWord) in words.Zip(words.Skip(1).Concat(EnumerableExt.OfSingle(""))))
             {
                 if (!first)
                     sb.Append(" ");
@@ -32,7 +33,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 for (int i = 0; i < word.Length; ++i)
                 {
                     var c = word[i];
-                    var n = i+1 < word.Length ? word[i+1] : '\0';
+                    var hasNext = i + 1 < word.Length;
+                    var n = hasNext ? word[i+1] : '\0';
 
                     if (c == 'ー' && i > 0)
                     {
@@ -43,6 +45,16 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         continue;
                     }
 
+                    if (c == 'っ' || c == 'ッ')
+                    {
+                        var next = hasNext ? n : nextWord.ElementAtOrDefault(0);
+                        if (next != '\0')
+                        {
+                            var r = props.LookupRomaji(next.ToString());
+                            sb.Append(r[0]);
+                            continue;
+                        }
+                    }
                     if ((c == 'ん' || c == 'ン')
                         && "あいうえおアイウエオ".Contains(n.ToString()))
                     {

@@ -31,7 +31,9 @@ namespace JDict.Tests
             // romanization can distinguish between ん (n) followed by い (i)
             // and に (ni)
             new TestCaseData("jun'ichi rou", "じゅんいちろう"), 
-            new TestCaseData("ikiru ka shinu ka 、 sore ga mondai da", "生きるか死ぬか、それが問題だ")
+            new TestCaseData("ikiru ka shinu ka 、 sore ga mondai da", "生きるか死ぬか、それが問題だ"),
+            new TestCaseData("issei", "一斉"),
+
         };
 
         [TestCaseSource(nameof(TestCases))]
@@ -39,6 +41,15 @@ namespace JDict.Tests
         {
             var romaji = new ModifiedHepburn(mecab, kanaProperties);
             Assert.AreEqual(expected, romaji.ToRomaji(input));
+        }
+
+        [Explicit]
+        [Test]
+        public void Sandbox()
+        {
+            var romaji = new ModifiedHepburn(mecab, kanaProperties);
+            var sentence = "";
+            Console.WriteLine(romaji.ToRomaji(sentence));
         }
 
         [OneTimeSetUp]
