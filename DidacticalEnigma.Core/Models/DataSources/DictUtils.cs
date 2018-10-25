@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DidacticalEnigma.Core.Models.Formatting;
 using JDict;
+using Optional;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
-    public static class DictUtils
+    static class DictUtils
     {
         public static (IEnumerable<T> entry, string word) GreedyLookup<T>(Func<string, IEnumerable<T>> lookup, IEnumerable<string> request, int backOffCountStart = 5)
         {
@@ -31,6 +35,64 @@ namespace DidacticalEnigma.Core.Models.DataSources
             }
 
             return (found, foundWord);
+        }
+
+        public static Task<Option<RichFormatting>> Lookup<T>(
+            Request request,
+            Func<string, IEnumerable<T>> lookup,
+            Func<Request, (IEnumerable<T> entry, string word)> greedyLookup)
+        {
+            var entry = lookup(request.Word.RawWord.Trim());
+            var rich = new RichFormatting();
+
+            var (greedyEntry, greedyWord) = greedyLookup(request);
+            if (greedyEntry != null && greedyWord != request.Word.RawWord)
+            {
+                rich.Paragraphs.Add(new TextParagraph(new[]
+                {
+                    new Text("The entries below are a result of the greedy lookup: "),
+                    new Text(greedyWord, emphasis: true)
+                }));
+                var p = new TextParagraph();
+                p.Content.Add(new Text(string.Join("\n\n", greedyEntry.Select(e => e.ToString()))));
+                rich.Paragraphs.Add(p);
+            }
+
+            if (entry != null)
+            {
+                if (greedyEntry != null && greedyWord != request.Word.RawWord)
+                {
+                    rich.Paragraphs.Add(new TextParagraph(new[]
+                    {
+                        new Text("The entries below are a result of the regular lookup: "),
+                        new Text(request.Word.RawWord, emphasis: true)
+                    }));
+                }
+                var p = new TextParagraph();
+                p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
+                rich.Paragraphs.Add(p);
+            }
+
+            if (request.NotInflected != null && request.NotInflected != request.Word.RawWord)
+            {
+                entry = lookup(request.NotInflected);
+                if (entry != null)
+                {
+                    rich.Paragraphs.Add(new TextParagraph(new[]
+                    {
+                        new Text("The entries below are a result of lookup on the base form: "),
+                        new Text(request.NotInflected, emphasis: true)
+                    }));
+                    var p = new TextParagraph();
+                    p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
+                    rich.Paragraphs.Add(p);
+                }
+            }
+
+            if (rich.Paragraphs.Count == 0)
+                return Task.FromResult(Option.None<RichFormatting>());
+
+            return Task.FromResult(Option.Some(rich));
         }
     }
 }
