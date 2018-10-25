@@ -8,7 +8,7 @@ using DidacticalEnigma.Core.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public class EasilyConfusedKana : ISimilarKana
+    public class EasilyConfusedKana : ISimilarKana, IRelated
     {
         private Dictionary<CodePoint, List<CodePoint>> similarityGroups;
 
@@ -69,6 +69,14 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     .Where(line => !line.StartsWith("#"))
                     .Select(line => line.AsCodePoints().Select(cp => CodePoint.FromInt(cp))));
             
+        }
+
+        public IEnumerable<IGrouping<string, CodePoint>> FindRelated(CodePoint codePoint)
+        {
+            return new IGrouping<string, CodePoint>[]
+            {
+                new CategoryGrouping("Similarly looking", FindSimilar(codePoint))
+            };
         }
     }
 }

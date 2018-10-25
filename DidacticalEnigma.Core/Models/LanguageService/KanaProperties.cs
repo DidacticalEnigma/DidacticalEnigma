@@ -60,30 +60,30 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             ReadKanaFile(katakanaPath);
             ReadKanaFile(hiraganaPath);
 
-            foreach(var lineColumn in File.ReadLines(complexPath, encoding))
+            foreach (var lineColumn in File.ReadLines(complexPath, encoding))
             {
                 var components = lineColumn.Split(' ');
-                if(components.Length > 2)
+                if (components.Length > 2)
                     romajiMapping.Add(components[1], components[2]);
                 var list = mapping.GetOrAdd(components[0], () => new List<string>());
                 list.Add(components[1]);
             }
 
             var kana = new Dictionary<int, int>();
-            foreach(var lineColumn in File.ReadLines(hiraganaKatakanaPath, encoding))
+            foreach (var lineColumn in File.ReadLines(hiraganaKatakanaPath, encoding))
             {
                 var components = lineColumn.Split(' ');
-                if(components.Length > 1)
+                if (components.Length > 1)
                     kana.Add(components[0].AsCodePoints().Single(), components[1].AsCodePoints().Single());
             }
             hiraganaKatakana = new DualDictionary<int, int>(kana);
 
             void ReadKanaFile(string kanaPath)
             {
-                foreach(var lineColumn in File.ReadLines(kanaPath, encoding))
+                foreach (var lineColumn in File.ReadLines(kanaPath, encoding))
                 {
                     var components = lineColumn.Split(' ');
-                    if(components.Length > 1)
+                    if (components.Length > 1)
                         romajiMapping.Add(components[0], components[1]);
                 }
             }
@@ -91,11 +91,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public int? OppositeSizedVersionOf(int codePoint)
         {
-            if(smallLargeVersions.TryGetKey(codePoint, out var outKana))
+            if (smallLargeVersions.TryGetKey(codePoint, out var outKana))
             {
                 return outKana;
             }
-            else if(smallLargeVersions.TryGetValue(codePoint, out outKana))
+            else if (smallLargeVersions.TryGetValue(codePoint, out outKana))
             {
                 return outKana;
             }
@@ -107,7 +107,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public int? LargeKanaOf(int codePoint)
         {
-            if(smallLargeVersions.TryGetValue(codePoint, out var outKana))
+            if (smallLargeVersions.TryGetValue(codePoint, out var outKana))
             {
                 return outKana;
             }
@@ -119,7 +119,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public int? SmallKanaOf(int codePoint)
         {
-            if(smallLargeVersions.TryGetKey(codePoint, out var outKana))
+            if (smallLargeVersions.TryGetKey(codePoint, out var outKana))
             {
                 return outKana;
             }
@@ -133,7 +133,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             return StringExt.FromCodePoints(input.AsCodePoints().Select(c =>
             {
-                if(hiraganaKatakana.TryGetKey(c, out var hiraganaCodePoint))
+                if (hiraganaKatakana.TryGetKey(c, out var hiraganaCodePoint))
                 {
                     return hiraganaCodePoint;
                 }
@@ -141,7 +141,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 {
                     // maybe it's a small version?
                     var large = OppositeSizedVersionOf(c);
-                    if(large.HasValue && hiraganaKatakana.TryGetKey(large.Value, out hiraganaCodePoint))
+                    if (large.HasValue && hiraganaKatakana.TryGetKey(large.Value, out hiraganaCodePoint))
                     {
                         return OppositeSizedVersionOf(large.Value).Value;
                     }
@@ -155,7 +155,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public string LookupRomaji(string s)
         {
-            if(s.Length == 1)
+            if (s.Length == 1)
             {
                 var largeOpt = LargeKanaOf(char.ConvertToUtf32(s, 0));
                 s = largeOpt != null ? char.ConvertFromUtf32(largeOpt.Value) : s;
@@ -184,7 +184,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         }
     }
 
-    public class KanaProperties2 : IKanaProperties
+    public class KanaProperties2 : IKanaProperties, IRelated
     {
         public IEnumerable<CodePoint> FindSimilar(CodePoint point)
         {
@@ -330,10 +330,50 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             if (s.Length <= 0 || s.Length > 2)
                 throw new ArgumentException();
 
-            if(s.Length == 2 && !char.IsHighSurrogate(s[0]))
+            if (s.Length == 2 && !char.IsHighSurrogate(s[0]))
                 throw new ArgumentException();
 
             return char.ConvertToUtf32(s, 0);
+        }
+
+        public IEnumerable<IGrouping<string, CodePoint>> FindRelated(CodePoint codePoint)
+        {
+            var result = new List<IGrouping<string, CodePoint>>();
+            if (hiraganaKatakanaMap.TryGetValue(codePoint.Utf32, out var katakana))
+            {
+                result.Add(new CategoryGrouping("Katakana", new[] { CodePoint.FromInt(katakana), }));
+            }
+            if (hiraganaKatakanaMap.TryGetKey(codePoint.Utf32, out var hiragana))
+            {
+                result.Add(new CategoryGrouping("Hiragana", new[] { CodePoint.FromInt(hiragana), }));
+            }
+            if (smallLargeMap.TryGetValue(codePoint.Utf32, out var large))
+            {
+                result.Add(new CategoryGrouping("Large", new []{CodePoint.FromInt(large), }));
+            }
+            if (smallLargeMap.TryGetKey(codePoint.Utf32, out var small))
+            {
+                result.Add(new CategoryGrouping("Small", new[] { CodePoint.FromInt(small), }));
+            }
+            if (regularDakutenMap.TryGetValue(codePoint.Utf32, out var dakuten) ||
+                (regularHandakutenMap.TryGetKey(codePoint.Utf32, out var r1) &&
+                 regularDakutenMap.TryGetValue(r1, out dakuten)))
+            {
+                result.Add(new CategoryGrouping("Dakuten", new []{ CodePoint.FromInt(dakuten), }));
+            }
+            if (regularHandakutenMap.TryGetValue(codePoint.Utf32, out var handakuten) ||
+                (regularDakutenMap.TryGetKey(codePoint.Utf32, out var r2) && 
+                 regularHandakutenMap.TryGetValue(r2, out handakuten)))
+            {
+                result.Add(new CategoryGrouping("Handakuten", new[] { CodePoint.FromInt(handakuten), }));
+            }
+            if (regularDakutenMap.TryGetKey(codePoint.Utf32, out var regular) ||
+                regularHandakutenMap.TryGetKey(codePoint.Utf32, out regular))
+            {
+                result.Add(new CategoryGrouping("Regular", new[] { CodePoint.FromInt(regular), }));
+            }
+
+            return result;
         }
     }
 }

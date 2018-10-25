@@ -34,15 +34,16 @@ namespace DidacticalEnigma.ViewModels
             KanaBoardVM katakanaBoard,
             UsageDataSourcePreviewVM usageDataSourceVm,
             KanjiRadicalLookupControlVM kanjiLookupVm,
+            IRelated related,
             Func<string> aboutTextProvider)
         {
             HiraganaBoard = hiraganaBoard;
             KatakanaBoard = katakanaBoard;
             this.aboutTextProvider = aboutTextProvider;
             UsageDataSourceVM = usageDataSourceVm;
-            TextBuffers.Add(new TextBufferVM("Scratchpad", lang));
-            TextBuffers.Add(new TextBufferVM("Main", lang));
-            ClipboardTextBuffer = new TextBufferVM("Clipboard", lang);
+            TextBuffers.Add(new TextBufferVM("Scratchpad", lang, related));
+            TextBuffers.Add(new TextBufferVM("Main", lang, related));
+            ClipboardTextBuffer = new TextBufferVM("Clipboard", lang, related);
             TextBuffers.Add(ClipboardTextBuffer);
             KanjiLookupVM = kanjiLookupVm;
             hook = new ClipboardHook();

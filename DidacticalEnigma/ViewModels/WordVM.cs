@@ -20,7 +20,7 @@ namespace DidacticalEnigma.ViewModels
 
         public Func<IEnumerable<WordVM>> SubsequentWords { get; set; }
 
-        public WordVM(WordInfo wordInfo, ILanguageService lang)
+        public WordVM(WordInfo wordInfo, ILanguageService lang, IRelated related)
         {
             var s = wordInfo.RawWord;
             StringForm = s;
@@ -29,7 +29,7 @@ namespace DidacticalEnigma.ViewModels
                 var cp = CodePoint.FromInt(rawCp);
                 var vm = new CodePointVM(
                     cp,
-                    lang.LookupRelatedCharacters(cp),
+                    related.FindRelated(cp).SelectMany(g => g),
                     cp is Kanji k
                         ? lang.LookupRadicals(k).ValueOr(Enumerable.Empty<CodePoint>())
                         : Enumerable.Empty<CodePoint>(),

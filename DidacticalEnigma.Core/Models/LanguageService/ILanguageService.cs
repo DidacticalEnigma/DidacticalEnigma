@@ -4,6 +4,7 @@ using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
+    [Obsolete]
     public interface ILanguageService : IDisposable
     {
         IEnumerable<CodePoint> LookupRelatedCharacters(CodePoint point);

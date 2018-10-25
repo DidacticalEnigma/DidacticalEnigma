@@ -79,9 +79,10 @@ namespace DidacticalEnigma
                 DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
             }));
             kernel.BindFactory(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
+            kernel.BindFactory(get => EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")));
             kernel.BindFactory<ILanguageService>(get => new LanguageService(
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
-                EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")),
+                get.Get<EasilyConfusedKana>(),
                 get.Get<Kradfile>(),
                 get.Get<Radkfile>(),
                 get.Get<KanjiDict>(),
@@ -93,6 +94,7 @@ namespace DidacticalEnigma
                 new KanaBoardVM(Path.Combine(dataDir, "character", "katakana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
                 get.Get<UsageDataSourcePreviewVM>(),
                 get.Get<KanjiRadicalLookupControlVM>(),
+                get.Get<IRelated>(),
                 () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
                 get.Get<ILanguageService>(),
@@ -111,6 +113,11 @@ namespace DidacticalEnigma
                 new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<JMDict>(), get.Get<FrequencyList>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFontResolver>())
             }.Concat(epwing.Select(source => new DataSourceVM(source, get.Get<IFontResolver>()))));
+            kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
+            kernel.BindFactory<IRelated>(get =>
+                new CompositeRelated(
+                    get.Get<KanaProperties2>(),
+                    get.Get<EasilyConfusedKana>()));
             kernel.BindFactory(get => new UsageDataSourcePreviewVM(
                 get.Get<ILanguageService>(),
                 get.Get<IEnumerable<DataSourceVM>>()));
