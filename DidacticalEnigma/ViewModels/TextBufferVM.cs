@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
 
@@ -15,6 +16,8 @@ namespace DidacticalEnigma.ViewModels
         private string rawOutput = "";
 
         private readonly ILanguageService lang;
+
+        private readonly StringBuilder buffer = new StringBuilder();
 
         public string RawOutput
         {

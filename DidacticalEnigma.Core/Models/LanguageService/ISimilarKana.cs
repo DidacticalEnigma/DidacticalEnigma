@@ -2,7 +2,7 @@
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    interface ISimilarKana
+    public interface ISimilarKana
     {
         IEnumerable<CodePoint> FindSimilar(CodePoint point);
     }

@@ -4,7 +4,6 @@ using System.Linq;
 using DidacticalEnigma.Core.Utils;
 using JDict;
 using Optional;
-using Optional.Unsafe;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
@@ -24,8 +23,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                             word.PartOfSpeech,
                             word.DictionaryForm,
                             word.IsIndependent,
-                            word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictType.pn) : word.Type,
-                            word.PartOfSpeechInfo));
+                            word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictType.pn) : word.Type));
                 });
         }
 
@@ -59,7 +57,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private readonly KanjiDict kanjidict;
 
-        private readonly KanaProperties kanaProperties;
+        private readonly IKanaProperties kanaProperties;
 
         private readonly RadicalRemapper remapper;
 
@@ -69,7 +67,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             Kradfile kradfile,
             Radkfile radkfile,
             KanjiDict kanjiDict,
-            KanaProperties kanaProperties,
+            IKanaProperties kanaProperties,
             RadicalRemapper remapper)
         {
             this.morphologicalAnalyzer = morphologicalAnalyzer;

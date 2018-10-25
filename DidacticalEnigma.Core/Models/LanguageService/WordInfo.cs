@@ -20,15 +20,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public Option<EdictType> Type { get; }
 
-        public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo { get; }
-
         public WordInfo(
             string word,
             PartOfSpeech partOfSpeech = PartOfSpeech.Unknown,
             string dictionaryForm = null,
             bool? isIndependent = null,
-            Option<EdictType> type = default,
-            IEnumerable<PartOfSpeechInfo> posInfo = null)
+            Option<EdictType> type = default)
         {
             RawWord = word;
             CodePoints = new List<CodePoint>(
@@ -37,7 +34,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             DictionaryForm = dictionaryForm;
             Independent = isIndependent;
             Type = type;
-            this.PartOfSpeechInfo = posInfo?.ToList() ?? Enumerable.Empty<PartOfSpeechInfo>();
         }
     }
 }

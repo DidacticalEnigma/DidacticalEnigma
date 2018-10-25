@@ -15,7 +15,7 @@ namespace JDict.Tests
     {
         private static IMorphologicalAnalyzer<IEntry> mecab;
 
-        private static KanaProperties kanaProperties;
+        private static IKanaProperties kanaProperties;
 
         private static readonly TestCaseData[] TestCases =
         {
@@ -25,7 +25,13 @@ namespace JDict.Tests
             new TestCaseData("fushigi", "ふしぎ"),
             new TestCaseData("fushigi", "不思議"),
             new TestCaseData("senpai", "先輩"),
-            new TestCaseData("jun'ichirou", "じゅんいちろう"), 
+            // The expected of this test should actually be jun'ichirou
+            // but morphological analyzer treats this as multiple words
+            // spacing doesn't really matter in this case, but whether 
+            // romanization can distinguish between ん (n) followed by い (i)
+            // and に (ni)
+            new TestCaseData("jun'ichi rou", "じゅんいちろう"), 
+            new TestCaseData("ikiru ka shinu ka 、 sore ga mondai da", "生きるか死ぬか、それが問題だ")
         };
 
         [TestCaseSource(nameof(TestCases))]
@@ -43,11 +49,8 @@ namespace JDict.Tests
             {
                 DicDir = TestDataPaths.Ipadic,
             });
-            kanaProperties = new KanaProperties(
-                TestDataPaths.Hiragana,
-                TestDataPaths.Katakana,
-                TestDataPaths.HiraganaKatakana,
-                TestDataPaths.KanaRelated,
+            kanaProperties = new KanaProperties2(
+                TestDataPaths.Kana,
                 Encoding.UTF8);
         }
 

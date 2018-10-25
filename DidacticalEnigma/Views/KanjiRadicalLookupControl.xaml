@@ -120,6 +120,7 @@
                         Command="{Binding KeyClickCommand, RelativeSource={RelativeSource AncestorType={x:Type views:KanjiRadicalLookupControl}, Mode=FindAncestor}}"
                         CommandParameter="{Binding .}"
                         Content="{Binding .}"
+                        Focusable="False"
                         FontSize="24" />
                 </DataTemplate>
             </ListBox.ItemTemplate>

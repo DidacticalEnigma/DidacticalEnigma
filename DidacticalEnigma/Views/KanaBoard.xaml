@@ -25,6 +25,7 @@
                     Command="{Binding KeyClickCommand, RelativeSource={RelativeSource AncestorType=views:KanaBoard, Mode=FindAncestor}, Mode=OneWay}"
                     CommandParameter="{Binding Kana}"
                     Content="{Binding Kana}"
+                    Focusable="False"
                     FontSize="24"
                     ToolTipService.IsEnabled="{Binding IsRegular}"
                     ToolTipService.ShowDuration="120000">
