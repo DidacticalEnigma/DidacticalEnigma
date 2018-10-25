@@ -95,8 +95,8 @@ namespace DidacticalEnigma.Views
                 previousClickedLetter = clickedLetter;
                 codePointVM = (CodePointVM)clickedLetter.DataContext;
                 SetCurrentValue(SelectionInfoProperty, SelectionInfo == null
-                    ? new SelectionInfoVM(codePointVM, wordVM, text, AllText)
-                    : SelectionInfo.Clone(codePointVM, wordVM, text));
+                    ? new SelectionInfoVM(codePointVM, wordVM, AllText)
+                    : SelectionInfo.Clone(codePointVM, wordVM));
             }
         }
 

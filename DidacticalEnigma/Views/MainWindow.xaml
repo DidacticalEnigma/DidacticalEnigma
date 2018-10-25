@@ -118,34 +118,6 @@
             <TabItem Header="Usage">
                 <views:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.CurrentTextBuffer.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Converter={x:Static converters:SelectionInfoToRequestConverter.Default}, Mode=OneWay}" />
             </TabItem>
-            <TabItem Header="Clipboard">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <views:JapaneseTextPreview Grid.Column="0" SelectionInfo="{Binding ClipboardTextBuffer.SelectionInfo, Mode=OneWayToSource}" />
-                        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
-                        <TextBox
-                            Grid.Column="2"
-                            AcceptsReturn="True"
-                            FontSize="24"
-                            Text="{Binding ClipboardTextBuffer.RawOutput, UpdateSourceTrigger=PropertyChanged}"
-                            TextWrapping="Wrap"
-                            VerticalScrollBarVisibility="Auto" />
-                    </Grid>
-                    <UniformGrid Grid.Row="1" Columns="2">
-                        <Button Command="{Binding SendToScratchpad}" Content="Send to scratchpad" />
-                        <Button Command="{Binding SendToCurrent}" Content="Send to current" />
-                    </UniformGrid>
-                </Grid>
-            </TabItem>
             <TabItem Header="Hiragana">
                 <views:KanaBoard DataContext="{Binding HiraganaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>

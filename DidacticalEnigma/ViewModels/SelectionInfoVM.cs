@@ -12,22 +12,18 @@ namespace DidacticalEnigma.ViewModels
 
         public WordVM Word { get; }
 
-        public string Text { get; }
-
-        public SelectionInfoVM Clone(CodePointVM cpVm = null, WordVM word = null, string text = null, Func<string> allText = null)
+        public SelectionInfoVM Clone(CodePointVM cpVm = null, WordVM word = null, Func<string> allText = null)
         {
             cpVm = cpVm ?? this.Character;
             word = word ?? this.Word;
-            text = text ?? this.Text;
             allText = allText ?? this.AllText;
-            return new SelectionInfoVM(cpVm, word, text, allText);
+            return new SelectionInfoVM(cpVm, word, allText);
         }
 
-        public SelectionInfoVM(CodePointVM cpVm, WordVM word, string text, Func<string> allText)
+        public SelectionInfoVM(CodePointVM cpVm, WordVM word, Func<string> allText)
         {
             Character = cpVm;
             Word = word;
-            Text = text;
             AllText = allText;
         }
 

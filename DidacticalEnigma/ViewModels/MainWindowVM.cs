@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using DidacticalEnigma.Core.Models;
@@ -42,6 +43,7 @@ namespace DidacticalEnigma.ViewModels
             TextBuffers.Add(new TextBufferVM("Scratchpad", lang));
             TextBuffers.Add(new TextBufferVM("Main", lang));
             ClipboardTextBuffer = new TextBufferVM("Clipboard", lang);
+            TextBuffers.Add(ClipboardTextBuffer);
             KanjiLookupVM = kanjiLookupVm;
             hook = new ClipboardHook();
             hook.ClipboardChanged += SetContent;
@@ -49,16 +51,6 @@ namespace DidacticalEnigma.ViewModels
             {
                 var codePoint = (CodePoint)p;
                 Clipboard.SetText(codePoint.ToString());
-            });
-            SendToCurrent = new RelayCommand(() =>
-            {
-                if(CurrentTextBuffer == null)
-                    return;
-                CurrentTextBuffer.RawOutput = ClipboardTextBuffer.RawOutput;
-            });
-            SendToScratchpad = new RelayCommand(() =>
-            {
-                TextBuffers[0].RawOutput = ClipboardTextBuffer.RawOutput;
             });
             SearchWeb = new RelayCommand(query =>
             {
@@ -80,13 +72,13 @@ namespace DidacticalEnigma.ViewModels
                     TabIndex = 1;
                     break;
                     case "hiragana":
-                    TabIndex = 3;
+                    TabIndex = 2;
                     break;
                     case "kanji":
-                    TabIndex = 4;
+                    TabIndex = 3;
                     break;
                     case "katakana":
-                    TabIndex = 5;
+                    TabIndex = 4;
                     break;
                     ;
 
@@ -109,6 +101,15 @@ namespace DidacticalEnigma.ViewModels
         private void SetContent(object sender, string e)
         {
             ClipboardTextBuffer.RawOutput = e;
+            ClipboardTextBuffer.IssueMeCabSplit.Execute(null);
+            var word = ClipboardTextBuffer.Lines.FirstOrDefault()?.Words?.FirstOrDefault();
+            var codePoint = word?.CodePoints.FirstOrDefault();
+            if (codePoint != null)
+            {
+                ClipboardTextBuffer.SelectionInfo = new SelectionInfoVM(codePoint, word,
+                    () => string.Join("\n",
+                        ClipboardTextBuffer.Lines.Select(l => string.Join(" ", l.Words.Select(w => w.StringForm)))));
+            }
         }
 
         public ObservableBatchCollection<TextBufferVM> TextBuffers { get; } = new ObservableBatchCollection<TextBufferVM>();
@@ -166,10 +167,6 @@ namespace DidacticalEnigma.ViewModels
         public TextBufferVM ClipboardTextBuffer { get; }
 
         public RelayCommand PlaceInClipboard { get; }
-
-        public RelayCommand SendToScratchpad { get; }
-
-        public RelayCommand SendToCurrent { get; }
 
         public RelayCommand SearchWeb { get; }
 
