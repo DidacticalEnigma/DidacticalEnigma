@@ -48,9 +48,7 @@ namespace DidacticalEnigma.ViewModels
             return Task.WhenAll(tasks);
         }
 
-        public UsageDataSourcePreviewVM(
-            ILanguageService lang,
-            IEnumerable<DataSourceVM> dataSources)
+        public UsageDataSourcePreviewVM(IEnumerable<DataSourceVM> dataSources)
         {
             DataSources.AddRange(dataSources);
             Leaf Fac() => new Leaf(() => new DataSourcePreviewVM(this), o =>

@@ -15,9 +15,10 @@ namespace DidacticalEnigma.ViewModels
 
         private string rawOutput = "";
 
-        private readonly ILanguageService lang;
+        private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
+        private readonly IKanjiProperties kanji;
+        private readonly IKanaProperties kana;
         private readonly IRelated related;
-        private readonly StringBuilder buffer = new StringBuilder();
 
         public string RawOutput
         {
@@ -126,7 +127,7 @@ namespace DidacticalEnigma.ViewModels
                 unannotatedOutput
                     .Split(new []{"\r\n", "\n", "\r"}, StringSplitOptions.None)
                     .Select(rawSentence => rawSentence.Split(new[]{" ", "　"}, StringSplitOptions.None))
-                    .Select(sentence => new LineVM(sentence.Select(word => new WordVM(new WordInfo(word), lang, related)))));
+                    .Select(sentence => new LineVM(sentence.Select(word => new WordVM(new WordInfo(word), kanji, kana, related)))));
             AddIteration();
             rawOutput = string.Join(
                 "\n",
@@ -140,8 +141,8 @@ namespace DidacticalEnigma.ViewModels
         {
             Lines.Clear();
             Lines.AddRange(
-                lang.BreakIntoSentences(unannotatedOutput)
-                    .Select(sentence => new LineVM(sentence.Select(word => new WordVM(word, lang, related)))));
+                morphologicalAnalyzer.BreakIntoSentences(unannotatedOutput)
+                    .Select(sentence => new LineVM(sentence.Select(word => new WordVM(word, kanji, kana, related)))));
             AddIteration();
             rawOutput = string.Join(
                 "\n",
@@ -158,9 +159,16 @@ namespace DidacticalEnigma.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public TextBufferVM(string name, ILanguageService lang, IRelated related)
+        public TextBufferVM(
+            string name,
+            IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer,
+            IKanjiProperties kanji,
+            IKanaProperties kana,
+            IRelated related)
         {
-            this.lang = lang;
+            this.morphologicalAnalyzer = morphologicalAnalyzer;
+            this.kanji = kanji;
+            this.kana = kana;
             this.related = related;
             Name = name;
             InsertTextAtCaret = new RelayCommand((s) =>

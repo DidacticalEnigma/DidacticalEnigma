@@ -12,7 +12,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class AutoGlosser
     {
-        private readonly ILanguageService lang;
+        private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
         private readonly JMDict dict;
 
         private static readonly IReadOnlyDictionary<PartOfSpeech, EdictType> mapping = new Dictionary<PartOfSpeech, EdictType>
@@ -23,7 +23,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<GlossNote> Gloss(string inputText)
         {
-            var words = lang.BreakIntoSentences(inputText)
+            var words = morphologicalAnalyzer.BreakIntoSentences(inputText)
                 .SelectMany(x => x)
                 .ToList();
 
@@ -63,7 +63,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         var greedyWord = string.Join("", greedySelection);
                         var greedyEntries = dict.Lookup(greedyWord);
 
-                        var splitGreedyWord = string.Join(" ", lang.BreakIntoSentences(greedyWord).SelectMany(x => x).Select(x => x.RawWord));
+                        var splitGreedyWord = string.Join(" ", morphologicalAnalyzer.BreakIntoSentences(greedyWord).SelectMany(x => x).Select(x => x.RawWord));
                         glosses.Add(CreateGloss(new WordInfo(splitGreedyWord), "{0}", greedyEntries));
 
                         i += greedySelection.Count - 1; // -1 because iteration will result in one extra increase
@@ -118,9 +118,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 (string.Format(format, senseString) + (foreign.RawWord != foreign.DictionaryForm && foreign.DictionaryForm != null ? " + inflections" : "")).Trim());
         }
 
-        public AutoGlosser(ILanguageService lang, JMDict dict)
+        public AutoGlosser(IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer, JMDict dict)
         {
-            this.lang = lang;
+            this.morphologicalAnalyzer = morphologicalAnalyzer;
             this.dict = dict;
         }
     }

@@ -16,7 +16,7 @@ namespace JDict.Tests
     {
         private static AutoGlosser glosser;
         private JMDict jmdict;
-        private LanguageService lang;
+        private IMorphologicalAnalyzer<IEntry> mecab;
 
         private static readonly TestCaseData[] TestCases =
         {
@@ -135,25 +135,18 @@ namespace JDict.Tests
             var kanaProperties = new KanaProperties2(
                 TestDataPaths.Kana,
                 Encoding.UTF8);
-            this.lang = new LanguageService(
-                new MeCabIpadic(new MeCabParam
-                {
-                    DicDir = TestDataPaths.Ipadic,
-                }), 
-                EasilyConfusedKana.FromFile(TestDataPaths.EasilyConfused),
-                kradfile,
-                radkfile,
-                kanjidict,
-                kanaProperties,
-                new RadicalRemapper(kradfile, radkfile));
+            this.mecab = new MeCabIpadic(new MeCabParam
+            {
+                DicDir = TestDataPaths.Ipadic,
+            });
             this.jmdict = JDict.JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
-            glosser = new AutoGlosser(lang, jmdict);
+            glosser = new AutoGlosser(mecab, jmdict);
         }
 
         [OneTimeTearDown]
         public void TearDown()
         {
-            lang.Dispose();
+            mecab.Dispose();
             jmdict.Dispose();
         }
     }

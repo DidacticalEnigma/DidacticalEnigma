@@ -22,7 +22,7 @@ namespace DidacticalEnigma.ViewModels
 
             public bool IsRegular => CodePoint != null;
 
-            private KanaBoardVM boardVM;
+            private readonly KanaBoardVM boardVM;
 
             public KanaVM(KanaBoardVM boardVM, CodePoint codePoint, string romaji, int x, int y)
             {
@@ -40,7 +40,7 @@ namespace DidacticalEnigma.ViewModels
 
         public int Height { get; }
 
-        public KanaBoardVM(string path, Encoding encoding, ILanguageService service)
+        public KanaBoardVM(string path, Encoding encoding)
         {
             Kana = new ObservableBatchCollection<KanaVM>();
             int x = 0;
@@ -49,7 +49,7 @@ namespace DidacticalEnigma.ViewModels
             {
                 var components = lineColumn.Split(' ');
                 if (components.Length > 1)
-                    Kana.Add(new KanaVM(this, service.LookupCharacter(components[0]), components[1], x, y));
+                    Kana.Add(new KanaVM(this, CodePoint.FromString(components[0]), components[1], x, y));
                 else
                     Kana.Add(new KanaVM(this, null, null, x, y));
 

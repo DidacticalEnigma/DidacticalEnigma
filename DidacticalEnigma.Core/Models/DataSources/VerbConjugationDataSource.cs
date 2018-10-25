@@ -20,8 +20,6 @@ namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class VerbConjugationDataSource : IDataSource
     {
-        private readonly string path;
-
         private readonly JMDict jdict;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(

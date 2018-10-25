@@ -94,9 +94,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public AutoGlosserDataSource(ILanguageService lang, JMDict jdict)
+        public AutoGlosserDataSource(AutoGlosser autoglosser)
         {
-            this.autoglosser = new AutoGlosser(lang, jdict);
+            this.autoglosser = autoglosser;
         }
     }
 }

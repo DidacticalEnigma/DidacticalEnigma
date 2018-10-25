@@ -9,9 +9,11 @@ namespace DidacticalEnigma.ViewModels
     {
         public static FlowDocument Render(IFontResolver fontResolver, RichFormatting document)
         {
-            var flow = new FlowDocument();
-            flow.PagePadding = new Thickness(4);
-            flow.TextAlignment = TextAlignment.Left;
+            var flow = new FlowDocument
+            {
+                PagePadding = new Thickness(4),
+                TextAlignment = TextAlignment.Left
+            };
             foreach(var paragraph in document.Paragraphs)
             {
                 switch(paragraph)

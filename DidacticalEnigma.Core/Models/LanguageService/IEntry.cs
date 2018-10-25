@@ -21,11 +21,15 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         string Inflection { get; }
         [Obsolete]
         bool? IsIndependent { get; }
+
         bool IsRegular { get; }
+        [Obsolete]
         PartOfSpeech PartOfSpeech { get; }
+        [Obsolete]
         IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo { get; }
+        [Obsolete]
         IEnumerable<string> PartOfSpeechSections { get; }
-        
+        [Obsolete]
         Option<EdictType> Type { get; }
     }
 }

@@ -4,23 +4,21 @@ using Optional;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    [Obsolete]
-    public interface ILanguageService : IDisposable
+    public interface IKanjiProperties
     {
-        Option<IEnumerable<CodePoint>> LookupRadicals(Kanji kanji);
+        Option<IEnumerable<CodePoint>> LookupRadicalsByKanji(Kanji kanji);
 
-        IEnumerable<Radical> AllRadicals();
+        IEnumerable<IKanjiOrdering> KanjiOrderings { get; }
 
-        string LookupRomaji(Kana kana);
+        IEnumerable<CodePoint> LookupKanjiByRadicals(IEnumerable<CodePoint> radicals, IKanjiOrdering ordering);
 
-        IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals);
+        IEnumerable<JDict.Radical> Radicals { get; }
 
-        CodePoint LookupCharacter(string s, int position = 0);
-
-        IEnumerable<IEnumerable<WordInfo>> BreakIntoSentences(string input);
+        IEqualityComparer<string> RadicalComparer { get; }
     }
 
-
-
-    // composite 
+    public interface IKanjiOrdering : IComparer<CodePoint>
+    {
+        string Description { get; }
+    }
 }

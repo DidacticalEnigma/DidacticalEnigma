@@ -11,7 +11,8 @@ namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class CharacterDataSource : IDataSource
     {
-        private ILanguageService lang;
+        private readonly IKanjiProperties kanji;
+        private readonly IKanaProperties kana;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
             new Guid("9EAF9B28-6ABC-40B1-86D1-14967E0FA4DA"),
@@ -27,9 +28,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             var p = new TextParagraph();
 
             var radicals = cp is Kanji k
-                ? lang.LookupRadicals(k).ValueOr(Enumerable.Empty<CodePoint>())
+                ? kanji.LookupRadicalsByKanji(k).ValueOr(Enumerable.Empty<CodePoint>())
                 : Enumerable.Empty<CodePoint>();
-            var romaji = cp is Kana kana ? lang.LookupRomaji(kana) : null;
+            var romaji = cp is Kana kana ? this.kana.LookupRomaji(kana.ToString()) : null;
             var text = cp.ToDescriptionString() + "\n" +
                        (romaji != null ? romaji + "\n" : "") +
                        string.Join(" ; ", radicals);
@@ -44,14 +45,15 @@ namespace DidacticalEnigma.Core.Models.DataSources
             // purposefully not disposing language service
         }
 
-        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
+        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default)
         {
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public CharacterDataSource(ILanguageService languageService)
+        public CharacterDataSource(IKanjiProperties kanji, IKanaProperties kana)
         {
-            this.lang = languageService;
+            this.kanji = kanji;
+            this.kana = kana;
         }
     }
 }

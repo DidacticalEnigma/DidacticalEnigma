@@ -44,7 +44,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
-        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
+        public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default)
         {
             return Task.FromResult(UpdateResult.NotSupported);
         }

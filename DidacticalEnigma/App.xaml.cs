@@ -67,33 +67,32 @@ namespace DidacticalEnigma
             }));
             kernel.BindFactory(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
             kernel.BindFactory(get => EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")));
-            kernel.BindFactory<ILanguageService>(get => new LanguageService(
-                get.Get<IMorphologicalAnalyzer<IEntry>>(),
-                get.Get<EasilyConfusedKana>(),
+            kernel.Bind<IKanjiProperties, KanjiProperties>();
+            kernel.BindFactory(get => new KanjiProperties(
+                get.Get<KanjiDict>(),
                 get.Get<Kradfile>(),
                 get.Get<Radkfile>(),
-                get.Get<KanjiDict>(),
-                get.Get<IKanaProperties>(),
                 get.Get<RadicalRemapper>()));
             kernel.BindFactory(get => new MainWindowVM(
-                get.Get<ILanguageService>(),
-                new KanaBoardVM(Path.Combine(dataDir, "character", "hiragana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
-                new KanaBoardVM(Path.Combine(dataDir, "character", "katakana_romaji.txt"), Encoding.UTF8, get.Get<ILanguageService>()),
+                get.Get<IMorphologicalAnalyzer<IEntry>>(),
+                new KanaBoardVM(Path.Combine(dataDir, "character", "hiragana_romaji.txt"), Encoding.UTF8),
+                new KanaBoardVM(Path.Combine(dataDir, "character", "katakana_romaji.txt"), Encoding.UTF8),
                 get.Get<UsageDataSourcePreviewVM>(),
                 get.Get<KanjiRadicalLookupControlVM>(),
                 get.Get<IRelated>(),
+                get.Get<IKanjiProperties>(),
+                get.Get<IKanaProperties>(),
                 () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
-                get.Get<ILanguageService>(),
-                get.Get<KanjiDict>(),
-                get.Get<RadicalRemapper>()));
+                get.Get<IKanjiProperties>()));
+            kernel.BindFactory(get => new AutoGlosser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDict>()));
             kernel.BindFactory<IEnumerable<DataSourceVM>>(get => new[] {
-                new DataSourceVM(new CharacterDataSource(get.Get<ILanguageService>()), get.Get<IFontResolver>()),
+                new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFontResolver>()),
                 new DataSourceVM(new JMDictDataSource(get.Get<JMDict>(), get.Get<IKanaProperties>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new JNeDictDataSource(get.Get<Jnedict>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDict>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new AutoGlosserDataSource(get.Get<ILanguageService>(), get.Get<JMDict>()), get.Get<IFontResolver>()),
+                new DataSourceVM(new AutoGlosserDataSource(get.Get<AutoGlosser>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new CustomNotesDataSource(Path.Combine(dataDir, "custom", "custom_notes.txt")), get.Get<IFontResolver>()),
                 new DataSourceVM(new TanakaCorpusDataSource(get.Get<Tanaka>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>()), get.Get<IFontResolver>()),
@@ -109,7 +108,6 @@ namespace DidacticalEnigma
                     get.Get<EasilyConfusedKana>(),
                     get.Get<SimilarKanji>()));
             kernel.BindFactory(get => new UsageDataSourcePreviewVM(
-                get.Get<ILanguageService>(),
                 get.Get<IEnumerable<DataSourceVM>>()));
             kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
             Kernel = kernel;
@@ -128,7 +126,7 @@ namespace DidacticalEnigma
                         dictionaries.Add(dict);
                     }
                 }
-                catch (DirectoryNotFoundException e)
+                catch (DirectoryNotFoundException)
                 {
                     
                 }

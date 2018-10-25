@@ -10,7 +10,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     class KanjiPlaceholder
     {
-        public IEnumerable<Radical> Radicals { get; }
+        public IEnumerable<JDict.Radical> Radicals { get; }
 
         public CodePoint MappedCodePoint { get; }
     }
@@ -18,7 +18,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     static class KanjiPlaceholderExtensions
     {
         public static Func<string, bool> CreateMatcher(
-            this ILanguageService lang,
+            this IKanjiProperties kana,
             IReadOnlyDictionary<CodePoint, KanjiPlaceholder> haystack,
             string template)
         {
@@ -36,10 +36,10 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         continue;
 
                     var concreteRadicals = new HashSet<CodePoint>(concreteChar is Kanji k
-                        ? lang.LookupRadicals(k).ValueOr(Enumerable.Empty<CodePoint>())
+                        ? kana.LookupRadicalsByKanji(k).ValueOr(Enumerable.Empty<CodePoint>())
                         : Enumerable.Empty<CodePoint>());
                     if (placeholder.Radicals.All(templateRadical =>
-                        concreteRadicals.Contains(templateRadical.CodePoint)))
+                        concreteRadicals.Contains(CodePoint.FromInt(templateRadical.CodePoint))))
                     {
                         continue;
                     }

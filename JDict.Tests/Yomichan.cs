@@ -14,7 +14,7 @@ namespace JDict.Tests
     [TestFixture]
     class Yomichan
     {
-        private string serialized =
+        private readonly string serialized =
             @"[[""焚き木"",""たきぎ"",""n"","""",9,[""firewood"",""kindling"",""fuel""],1365010,""""],[""焚き木"",""たきぎ"",""n"","""",8,[""piece(s) of firewood""],1365010,""""],[""発行市場"","""","""","""",0,[""発行市場　〔株式などの〕 an ┏issue [investment] market; a primary market.\n""],157730,""""]]";
 
         private List<YomichanDictionaryEntry> deserialized = new List<YomichanDictionaryEntry>

@@ -66,13 +66,13 @@ namespace DidacticalEnigma.ViewModels
                 }
             }
 
-            public bool Highlighted => lookupVm.remapper.Comparer.Equals(CodePoint.ToString(), lookupVm.SearchText?.Trim() ?? "");
+            public bool Highlighted => lookupVm.kanjiProperties.RadicalComparer.Equals(CodePoint.ToString(), lookupVm.SearchText?.Trim() ?? "");
 
             private readonly KanjiRadicalLookupControlVM lookupVm;
 
-            public RadicalVM(Radical radical, bool enabled, KanjiRadicalLookupControlVM lookupVm)
+            public RadicalVM(JDict.Radical radical, bool enabled, KanjiRadicalLookupControlVM lookupVm)
             {
-                CodePoint = radical.CodePoint;
+                CodePoint = CodePoint.FromInt(radical.CodePoint);
                 StrokeCount = radical.StrokeCount;
                 this.enabled = enabled;
                 this.lookupVm = lookupVm;
@@ -98,46 +98,36 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private readonly ILanguageService service;
-        private readonly KanjiDict kanjiDict;
-        private readonly RadicalRemapper remapper;
+        private IEnumerable<CodePoint> currentlySelected;
+
+        private IKanjiProperties kanjiProperties;
 
         public void SelectRadicals(IEnumerable<CodePoint> codePoints)
         {
-            try
+            var codePointsList = codePoints.ToList();
+            if (!codePointsList.Any())
             {
-                var codePointsList = codePoints.ToList();
-                if (!codePointsList.Any())
-                {
-                    foreach (var radical in Radicals)
-                    {
-                        radical.Enabled = true;
-                    }
-
-                    kanji.Clear();
-                    return;
-                }
-
-                var lookup = service.LookupByRadicals(codePointsList).ToList();
-                kanji.Clear();
-                kanji.AddRange(lookup);
-                var lookupHash = new HashSet<CodePoint>(lookup);
                 foreach (var radical in Radicals)
                 {
-                    var kanjiForRadical = service.LookupByRadicals(Enumerable.Repeat(radical.CodePoint, 1));
-                    radical.Enabled = lookupHash.IsIntersectionNonEmpty(kanjiForRadical);
+                    radical.Enabled = true;
                 }
-            }
-            finally
-            {
-                OrderKanji();
-            }
-        }
 
-        private void OrderKanji()
-        {
-            sortedKanji.Clear();
-            sortedKanji.AddRange(kanji.OrderBy(x => x, CurrentSortingCriterion.Comparer));
+                kanji.Clear();
+                return;
+            }
+
+            var lookup = kanjiProperties.LookupKanjiByRadicals(codePointsList, currentKanjiOrdering);
+            kanji.Clear();
+            kanji.AddRange(lookup);
+            var lookupHash = new HashSet<CodePoint>(lookup);
+            foreach (var radical in Radicals)
+            {
+                var kanjiForRadical = kanjiProperties
+                    .LookupKanjiByRadicals(Enumerable.Repeat(radical.CodePoint, 1), currentKanjiOrdering);
+                radical.Enabled = lookupHash.IsIntersectionNonEmpty(kanjiForRadical);
+            }
+
+            currentlySelected = codePointsList;
         }
 
         private bool hideNonMatchingRadicals = false;
@@ -174,21 +164,17 @@ namespace DidacticalEnigma.ViewModels
 
         public double Height { get; }
 
-        private readonly ObservableBatchCollection<CodePoint> sortedKanji = new ObservableBatchCollection<CodePoint>();
-        public IEnumerable<CodePoint> SortedKanji => sortedKanji;
-
         private readonly ObservableBatchCollection<CodePoint> kanji = new ObservableBatchCollection<CodePoint>();
-        public IEnumerable<CodePoint> Kanji => kanji;
+        public IEnumerable<CodePoint> SortedKanji => kanji;
 
         private readonly ObservableBatchCollection<RadicalVM> radicals = new ObservableBatchCollection<RadicalVM>();
         public IEnumerable<RadicalVM> Radicals => radicals;
 
-        public KanjiRadicalLookupControlVM(ILanguageService service, KanjiDict kanjiDict, RadicalRemapper remapper)
+        public KanjiRadicalLookupControlVM(
+            IKanjiProperties kanjiProperties)
         {
-            this.service = service;
-            this.kanjiDict = kanjiDict;
-            this.remapper = remapper;
-            radicals.AddRange(service.AllRadicals().Select(r => new RadicalVM(r, enabled: true, this)));
+            this.kanjiProperties = kanjiProperties;
+            radicals.AddRange(kanjiProperties.Radicals.Select(r => new RadicalVM(r, enabled: true, this)));
             var tb = new TextBlock
             {
                 FontSize = 24
@@ -208,22 +194,8 @@ namespace DidacticalEnigma.ViewModels
                 var codePoint = (CodePoint)p;
                 Clipboard.SetText(codePoint.ToString());
             });
-            sortingCriteria = new ObservableBatchCollection<SortingCriterion>
-            {
-                new SortingCriterion("Sort by stroke count", CompareBy(x => x.StrokeCount)),
-                new SortingCriterion("Sort by frequency", CompareBy(x => x.FrequencyRating))
-            };
-            currentSortingCriterion = sortingCriteria[0];
-        }
-
-        private IComparer<CodePoint> CompareBy<T>(Func<KanjiEntry, T> f)
-        {
-            return Comparer<CodePoint>.Create((l, r) =>
-            {
-                var left = kanjiDict.Lookup(l.ToString()).Map(f);
-                var right = kanjiDict.Lookup(r.ToString()).Map(f);
-                return left.CompareTo(right);
-            });
+            
+            currentKanjiOrdering = SortingCriteria.First();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -232,39 +204,20 @@ namespace DidacticalEnigma.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        
+        public IEnumerable<IKanjiOrdering> SortingCriteria => kanjiProperties.KanjiOrderings;
 
-        public class SortingCriterion
+        private IKanjiOrdering currentKanjiOrdering;
+        public IKanjiOrdering CurrentKanjiOrdering
         {
-            public string Description { get; }
-
-            public IComparer<CodePoint> Comparer { get; }
-
-            public SortingCriterion(string description, IComparer<CodePoint> comparer)
-            {
-                Description = description ?? throw new ArgumentNullException(nameof(description));
-                Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
-            }
-
-            public override string ToString()
-            {
-                return Description;
-            }
-        }
-
-        private readonly ObservableBatchCollection<SortingCriterion> sortingCriteria;
-        public IEnumerable<SortingCriterion> SortingCriteria => sortingCriteria;
-
-        private SortingCriterion currentSortingCriterion;
-        public SortingCriterion CurrentSortingCriterion
-        {
-            get => currentSortingCriterion;
+            get => currentKanjiOrdering;
             set
             {
-                if (currentSortingCriterion == value)
+                if (currentKanjiOrdering == value)
                     return;
 
-                currentSortingCriterion = value;
-                OrderKanji();
+                currentKanjiOrdering = value;
+                SelectRadicals(currentlySelected);
                 OnPropertyChanged();
             }
         }
