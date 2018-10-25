@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using Optional;
 
@@ -40,9 +41,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
         public static Task<Option<RichFormatting>> Lookup<T>(
             Request request,
             Func<string, IEnumerable<T>> lookup,
-            Func<Request, (IEnumerable<T> entry, string word)> greedyLookup)
+            Func<Request, (IEnumerable<T> entry, string word)> greedyLookup,
+            IKanaProperties kana)
         {
-            var entry = lookup(request.Word.RawWord.Trim());
+            var rawWord = request.Word.RawWord.Trim();
+            var entry = lookup(rawWord);
             var rich = new RichFormatting();
 
             var (greedyEntry, greedyWord) = greedyLookup(request);
@@ -82,6 +85,23 @@ namespace DidacticalEnigma.Core.Models.DataSources
                     {
                         new Text("The entries below are a result of lookup on the base form: "),
                         new Text(request.NotInflected, emphasis: true)
+                    }));
+                    var p = new TextParagraph();
+                    p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
+                    rich.Paragraphs.Add(p);
+                }
+            }
+
+            var rawWordHiragana = kana.ToHiragana(rawWord);
+            if (rawWordHiragana != rawWord)
+            {
+                entry = lookup(rawWordHiragana);
+                if (entry != null)
+                {
+                    rich.Paragraphs.Add(new TextParagraph(new[]
+                    {
+                        new Text("The entries below are a result of forced katakana -> hiragana conversion: "),
+                        new Text($"{rawWord} -> {rawWordHiragana}", emphasis: true), 
                     }));
                     var p = new TextParagraph();
                     p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using Optional;
 
@@ -13,6 +14,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
     public class JMDictDataSource : IDataSource
     {
         private readonly JMDict jdict;
+        private readonly IKanaProperties kana;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
             new Guid("ED1B840C-B2A8-4018-87B0-D5FC64A1ABC8"),
@@ -25,7 +27,8 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return DictUtils.Lookup(
                 request,
                 t => jdict.Lookup(t),
-                r => GreedyLookup(r));
+                r => GreedyLookup(r),
+                kana);
         }
 
         private (IEnumerable<JMDictEntry> entry, string word) GreedyLookup(Request request, int backOffCountStart = 5)
@@ -46,9 +49,10 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public JMDictDataSource(JMDict jdict)
+        public JMDictDataSource(JMDict jdict, IKanaProperties kana)
         {
             this.jdict = jdict;
+            this.kana = kana;
         }
     }
 }

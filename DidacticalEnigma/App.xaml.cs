@@ -23,8 +23,6 @@ namespace DidacticalEnigma
     {
         private Kernel Kernel;
 
-        private IReadOnlyCollection<EpwingDataSource> epwing;
-
         public App()
         {
             var splash = new SplashScreen();
@@ -44,10 +42,6 @@ namespace DidacticalEnigma
             Exit += (sender, args) =>
             {
                 Kernel.Dispose();
-                foreach (var ep in epwing)
-                {
-                    ep.Dispose();
-                }
             };
         }
 
@@ -56,7 +50,6 @@ namespace DidacticalEnigma
             var kernel = new Kernel();
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             var dataDir = Path.Combine(baseDir, "Data");
-            epwing = CreateEpwingDataSources(Path.Combine(dataDir, "epwing")).ToList();
             kernel.BindFactory(() => JDict.KanjiDict.Create(Path.Combine(dataDir, "character", "kanjidic2.xml.gz")));
             kernel.BindFactory(() => new Kradfile(Path.Combine(dataDir, "character", "kradfile1_plus_2_utf8"), Encoding.UTF8));
             kernel.BindFactory(() => new Radkfile(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8"), Encoding.UTF8));
@@ -97,7 +90,7 @@ namespace DidacticalEnigma
             kernel.BindFactory<IEnumerable<DataSourceVM>>(get => new[] {
                 new DataSourceVM(new CharacterDataSource(get.Get<ILanguageService>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFontResolver>()),
-                new DataSourceVM(new JMDictDataSource(get.Get<JMDict>()), get.Get<IFontResolver>()),
+                new DataSourceVM(new JMDictDataSource(get.Get<JMDict>(), get.Get<IKanaProperties>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new JNeDictDataSource(get.Get<Jnedict>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDict>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new AutoGlosserDataSource(get.Get<ILanguageService>(), get.Get<JMDict>()), get.Get<IFontResolver>()),
@@ -106,7 +99,7 @@ namespace DidacticalEnigma
                 new DataSourceVM(new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<JMDict>(), get.Get<FrequencyList>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFontResolver>())
-            }.Concat(epwing.Select(source => new DataSourceVM(source, get.Get<IFontResolver>()))));
+            }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new DataSourceVM(new EpwingDataSource(dict, get.Get<IKanaProperties>()), get.Get<IFontResolver>()))));
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
             kernel.BindFactory(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
@@ -118,22 +111,29 @@ namespace DidacticalEnigma
             kernel.BindFactory(get => new UsageDataSourcePreviewVM(
                 get.Get<ILanguageService>(),
                 get.Get<IEnumerable<DataSourceVM>>()));
+            kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
             Kernel = kernel;
             
 
-            IEnumerable<EpwingDataSource> CreateEpwingDataSources(string targetPath)
+            EpwingDictionaries CreateEpwing(string targetPath)
             {
+                var dictionaries = new EpwingDictionaries();
                 try
                 {
-                    return Directory.EnumerateFiles(targetPath, "*.zip")
+                    var dicts = Directory.EnumerateFiles(targetPath, "*.zip")
                         .Take(1) // we need to ensure our capability to handle multiple data sources with the same GUID
-                        .Select(file => new YomichanTermDictionary(file, file + ".cache"))
-                        .Select(dataSource => new EpwingDataSource(dataSource));
+                        .Select(file => new YomichanTermDictionary(file, file + ".cache"));
+                    foreach (var dict in dicts)
+                    {
+                        dictionaries.Add(dict);
+                    }
                 }
                 catch (DirectoryNotFoundException e)
                 {
-                    return Enumerable.Empty<EpwingDataSource>();
+                    
                 }
+
+                return dictionaries;
             }
         }
     }
