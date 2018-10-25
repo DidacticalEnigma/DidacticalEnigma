@@ -8,7 +8,7 @@ using DidacticalEnigma.Core.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public class EasilyConfusedKana : ISimilarKana, IRelated
+    public class EasilyConfusedKana : IRelated
     {
         private Dictionary<CodePoint, List<CodePoint>> similarityGroups;
 
@@ -20,7 +20,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             { typeof(CodePoint), 8 },
         };
 
-        public IEnumerable<CodePoint> FindSimilar(CodePoint point)
+        private IEnumerable<CodePoint> FindSimilar(CodePoint point)
         {
             similarityGroups.TryGetValue(point, out var listOfSimilar);
             var similar = listOfSimilar ?? Enumerable.Empty<CodePoint>();

@@ -79,42 +79,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             this.remapper = remapper;
         }
 
-        private IEnumerable<string> SplitWords(string input)
-        {
-            input = input.Trim();
-            int start = 0;
-            int end = 0;
-            bool current = false;
-            for (int i = 0; i < input.Length; ++i)
-            {
-                if (char.IsWhiteSpace(input[i]) == current)
-                {
-                    ++end;
-                }
-                else
-                {
-                    current = !current;
-                    yield return input.Substring(start, end - start);
-                    start = end;
-                    ++end;
-                }
-            }
-            if (start != end)
-            {
-                yield return input.Substring(start, end - start);
-            }
-        }
-
-        public IEnumerable<CodePoint> LookupRelatedCharacters(CodePoint point)
-        {
-            return EnumerableExt.IntersperseSequencesWith(new[]
-                {
-                    kanaProperties.FindSimilar(point),
-                    confused.FindSimilar(point)
-                },
-                null as CodePoint);
-        }
-
         public Option<IEnumerable<CodePoint>> LookupRadicals(Kanji kanji)
         {
             return remapper

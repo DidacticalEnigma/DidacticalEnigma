@@ -64,12 +64,6 @@ namespace DidacticalEnigma
             kernel.BindFactory(() => JDict.Jnedict.Create(Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache")));
             kernel.BindFactory(() =>
                 new FrequencyList(Path.Combine(dataDir, "other", "word_form_frequency_list.txt"), Encoding.UTF8));
-            kernel.BindFactory(() => new KanaProperties(
-                hiraganaPath: Path.Combine(dataDir, "character", "hiragana_romaji.txt"),
-                katakanaPath: Path.Combine(dataDir, "character", "katakana_romaji.txt"),
-                hiraganaKatakanaPath: Path.Combine(dataDir, "character", "hiragana_katakana.txt"),
-                complexPath: Path.Combine(dataDir, "character", "kana_related.txt"),
-                encoding: Encoding.UTF8));
             kernel.BindFactory(() => new Tanaka(Path.Combine(dataDir, "corpora", "examples.utf.gz"), Encoding.UTF8));
             kernel.BindFactory(() => new JESC(Path.Combine(dataDir, "corpora", "jesc_raw"), Encoding.UTF8));
             kernel.BindFactory(() => new BasicExpressionsCorpus(Path.Combine(dataDir, "corpora", "JEC_basic_sentence_v1-2.csv"), Encoding.UTF8));
@@ -86,7 +80,7 @@ namespace DidacticalEnigma
                 get.Get<Kradfile>(),
                 get.Get<Radkfile>(),
                 get.Get<KanjiDict>(),
-                get.Get<KanaProperties>(),
+                get.Get<IKanaProperties>(),
                 get.Get<RadicalRemapper>()));
             kernel.BindFactory(get => new MainWindowVM(
                 get.Get<ILanguageService>(),
@@ -113,11 +107,14 @@ namespace DidacticalEnigma
                 new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<JMDict>(), get.Get<FrequencyList>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFontResolver>())
             }.Concat(epwing.Select(source => new DataSourceVM(source, get.Get<IFontResolver>()))));
+            kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
+            kernel.BindFactory(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
             kernel.BindFactory<IRelated>(get =>
                 new CompositeRelated(
                     get.Get<KanaProperties2>(),
-                    get.Get<EasilyConfusedKana>()));
+                    get.Get<EasilyConfusedKana>(),
+                    get.Get<SimilarKanji>()));
             kernel.BindFactory(get => new UsageDataSourcePreviewVM(
                 get.Get<ILanguageService>(),
                 get.Get<IEnumerable<DataSourceVM>>()));

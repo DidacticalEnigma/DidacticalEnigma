@@ -7,8 +7,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     [Obsolete]
     public interface ILanguageService : IDisposable
     {
-        IEnumerable<CodePoint> LookupRelatedCharacters(CodePoint point);
-
         Option<IEnumerable<CodePoint>> LookupRadicals(Kanji kanji);
 
         IEnumerable<Radical> AllRadicals();
@@ -16,8 +14,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         string LookupRomaji(Kana kana);
 
         IEnumerable<CodePoint> LookupByRadicals(IEnumerable<CodePoint> radicals);
-
-        CodePoint LookupCharacter(int codePoint);
 
         CodePoint LookupCharacter(string s, int position = 0);
 
