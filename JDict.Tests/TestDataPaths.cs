@@ -11,7 +11,7 @@ namespace JDict.Tests
 
         // POINT THIS TO A yomichan-import CREATED ZIP FILE FROM "研究社　新和英大辞典　第５版" EPWING DICTIONARY
         // Can't attach this in a repo for obvious copyright reasons
-        public static readonly string Kenkyusha5 = @"D:\a\xc\kenkyusha5.zip";
+        public static readonly string Kenkyusha5 = @"D:\DidacticalEnigma-Data\epwing\kenkyusha5.zip";
 
         // sanity check for above path, SHA256 hash of the file
         public static readonly string Kenkyusha5Hash =
