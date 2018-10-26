@@ -44,13 +44,13 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<CodePoint> LookupKanjiByRadicals(IEnumerable<CodePoint> radicals, IKanjiOrdering ordering)
         {
-            return radkfile
-                .LookupMatching(radicals.Select(s => s.ToString()))
+            return remapper
+                .LookupKanji(radicals.Select(s => s.ToString()))
                 .Select(r => CodePoint.FromString(r))
                 .ToList();
         }
 
-        public IEnumerable<JDict.Radical> Radicals => radkfile.Radicals;
+        public IEnumerable<JDict.Radical> Radicals => remapper.Radicals;
 
         public IEnumerable<IKanjiOrdering> KanjiOrderings { get; }
 
