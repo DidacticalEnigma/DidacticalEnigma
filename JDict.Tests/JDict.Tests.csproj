@@ -169,6 +169,7 @@
     <Compile Include="EnumerableExt.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="JnedictTests.cs" />
+    <Compile Include="KanaPropertiesTests.cs" />
     <Compile Include="Kradfile.cs" />
     <Compile Include="MeCab.cs" />
     <Compile Include="Program.cs" />

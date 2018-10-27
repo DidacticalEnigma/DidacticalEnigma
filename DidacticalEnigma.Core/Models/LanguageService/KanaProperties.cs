@@ -116,8 +116,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 {
                     case "regular":
                     case "archaic":
-                        katakanaHiraganaMap.Add(AssumeSingleCodepoint(katakana), AssumeSingleCodepoint(hiragana));
-                        hiraganaKatakanaMap.Add(AssumeSingleCodepoint(hiragana), AssumeSingleCodepoint(katakana));
+                        AddHiraganaKatakanaMapping(katakanaHiraganaMap, hiraganaKatakanaMap, katakana, hiragana);
                         AddToRomajiDic(kanaToRomaji, hiragana, katakana, romaji);
                         break;
                     case "combo":
@@ -130,11 +129,13 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     case "dakuten":
                         regularDakutenMap.Add(AssumeSingleCodepoint(components[4]), AssumeSingleCodepoint(hiragana));
                         regularDakutenMap.Add(hiraganaKatakanaMap[AssumeSingleCodepoint(components[4])], AssumeSingleCodepoint(katakana));
+                        AddHiraganaKatakanaMapping(katakanaHiraganaMap, hiraganaKatakanaMap, katakana, hiragana);
                         AddToRomajiDic(kanaToRomaji, hiragana, katakana, romaji);
                         break;
                     case "handakuten":
                         regularHandakutenMap.Add(AssumeSingleCodepoint(components[4]), AssumeSingleCodepoint(hiragana));
                         regularHandakutenMap.Add(hiraganaKatakanaMap[AssumeSingleCodepoint(components[4])], AssumeSingleCodepoint(katakana));
+                        AddHiraganaKatakanaMapping(katakanaHiraganaMap, hiraganaKatakanaMap, katakana, hiragana);
                         AddToRomajiDic(kanaToRomaji, hiragana, katakana, romaji);
                         break;
                     default:
@@ -152,6 +153,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             {
                 map.Add(hiragana, romaji);
                 map.Add(katakana, romaji);
+            }
+
+            void AddHiraganaKatakanaMapping(Dictionary<int, int> dictionary, Dictionary<int, int> ints, string katakana, string hiragana)
+            {
+                dictionary.Add(AssumeSingleCodepoint(katakana), AssumeSingleCodepoint(hiragana));
+                ints.Add(AssumeSingleCodepoint(hiragana), AssumeSingleCodepoint(katakana));
             }
         }
 

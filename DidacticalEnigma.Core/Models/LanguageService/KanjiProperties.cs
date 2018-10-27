@@ -47,6 +47,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return remapper
                 .LookupKanji(radicals.Select(s => s.ToString()))
                 .Select(r => CodePoint.FromString(r))
+                .OrderBy(x => x, ordering)
                 .ToList();
         }
 
@@ -61,12 +62,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             public string Description { get; }
 
             private IComparer<CodePoint> comparer;
-
-            internal KanjiOrdering(string description, IComparer<CodePoint> comparer)
-            {
-                Description = description ?? throw new ArgumentNullException(nameof(description));
-                this.comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
-            }
 
             public int Compare(CodePoint x, CodePoint y)
             {
