@@ -1,0 +1,2 @@
+"C:\code\DidacticalEnigma\DidacticalEnigma\bin\Debug\Data" 
+"C:\code\DidacticalEnigma\Data\" 

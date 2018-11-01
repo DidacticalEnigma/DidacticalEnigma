@@ -13,6 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.Core", "Di
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.Avalonia", "DidacticalEnigma.Avalonia\DidacticalEnigma.Avalonia.csproj", "{EE231E09-1275-48D6-8F31-4812FA98664A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{EE43707F-AF5D-4211-A24F-55DA492139A6}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\postBuild.bat = Scripts\postBuild.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
