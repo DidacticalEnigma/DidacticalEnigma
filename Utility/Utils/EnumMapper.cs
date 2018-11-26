@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Optional;
 using Optional.Collections;
 
-namespace JDict.Utils
+namespace Utility.Utils
 {
-    internal class EnumMapper<T>
+    public class EnumMapper<T>
         where T : Enum
     {
         public Option<T> FromDescription(string description)
@@ -25,7 +24,7 @@ namespace JDict.Utils
         }
 
         // https://stackoverflow.com/questions/2650080/how-to-get-c-sharp-enum-description-from-value
-        private static string GetEnumDescription(Enum value)
+        private static string GetEnumDescription(T value)
         {
             FieldInfo fi = value.GetType().GetField(value.ToString());
 

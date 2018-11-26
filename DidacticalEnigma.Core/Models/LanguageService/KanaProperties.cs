@@ -5,8 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using DidacticalEnigma.Core.Utils;
 using Optional;
+using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
@@ -178,36 +178,36 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             var result = new List<IGrouping<string, CodePoint>>();
             if (hiraganaKatakanaMap.TryGetValue(codePoint.Utf32, out var katakana))
             {
-                result.Add(new CategoryGrouping("Katakana", new[] { CodePoint.FromInt(katakana), }));
+                result.Add(new CategoryGrouping<CodePoint>("Katakana", new[] { CodePoint.FromInt(katakana), }));
             }
             if (hiraganaKatakanaMap.TryGetKey(codePoint.Utf32, out var hiragana))
             {
-                result.Add(new CategoryGrouping("Hiragana", new[] { CodePoint.FromInt(hiragana), }));
+                result.Add(new CategoryGrouping<CodePoint>("Hiragana", new[] { CodePoint.FromInt(hiragana), }));
             }
             if (smallLargeMap.TryGetValue(codePoint.Utf32, out var large))
             {
-                result.Add(new CategoryGrouping("Large", new []{CodePoint.FromInt(large), }));
+                result.Add(new CategoryGrouping<CodePoint>("Large", new []{CodePoint.FromInt(large), }));
             }
             if (smallLargeMap.TryGetKey(codePoint.Utf32, out var small))
             {
-                result.Add(new CategoryGrouping("Small", new[] { CodePoint.FromInt(small), }));
+                result.Add(new CategoryGrouping<CodePoint>("Small", new[] { CodePoint.FromInt(small), }));
             }
             if (regularDakutenMap.TryGetValue(codePoint.Utf32, out var dakuten) ||
                 (regularHandakutenMap.TryGetKey(codePoint.Utf32, out var r1) &&
                  regularDakutenMap.TryGetValue(r1, out dakuten)))
             {
-                result.Add(new CategoryGrouping("Dakuten", new []{ CodePoint.FromInt(dakuten), }));
+                result.Add(new CategoryGrouping<CodePoint>("Dakuten", new []{ CodePoint.FromInt(dakuten), }));
             }
             if (regularHandakutenMap.TryGetValue(codePoint.Utf32, out var handakuten) ||
                 (regularDakutenMap.TryGetKey(codePoint.Utf32, out var r2) && 
                  regularHandakutenMap.TryGetValue(r2, out handakuten)))
             {
-                result.Add(new CategoryGrouping("Handakuten", new[] { CodePoint.FromInt(handakuten), }));
+                result.Add(new CategoryGrouping<CodePoint>("Handakuten", new[] { CodePoint.FromInt(handakuten), }));
             }
             if (regularDakutenMap.TryGetKey(codePoint.Utf32, out var regular) ||
                 regularHandakutenMap.TryGetKey(codePoint.Utf32, out regular))
             {
-                result.Add(new CategoryGrouping("Regular", new[] { CodePoint.FromInt(regular), }));
+                result.Add(new CategoryGrouping<CodePoint>("Regular", new[] { CodePoint.FromInt(regular), }));
             }
 
             return result;

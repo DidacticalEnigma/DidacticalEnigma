@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DidacticalEnigma.Core.Utils;
 using Newtonsoft.Json;
+using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

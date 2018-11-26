@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
-using JDict.Utils;
 using LiteDB;
 using Optional;
 using Optional.Collections;
 using Optional.Unsafe;
+using Utility.Utils;
 using FileMode = System.IO.FileMode;
 
 namespace JDict

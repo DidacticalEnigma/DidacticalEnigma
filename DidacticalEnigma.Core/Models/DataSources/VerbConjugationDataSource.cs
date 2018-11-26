@@ -8,11 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Core.Utils;
 using JDict;
 using LibJpConjSharp;
 using Optional;
 using Optional.Collections;
+using Utility.Utils;
 using EdictType = JDict.EdictType;
 using EdictTypeUtils = JDict.EdictTypeUtils;
 

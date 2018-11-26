@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Core.Utils;
+using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

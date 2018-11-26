@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Project;
-using DidacticalEnigma.Core.Utils;
+using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

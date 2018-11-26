@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace DidacticalEnigma.Core.Utils
+namespace Utility.Utils
 {
-    class DualDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+    public class DualDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
     {
         private Dictionary<TKey, TValue> keyToValue = new Dictionary<TKey, TValue>();
         private Dictionary<TValue, TKey> valueToKey = new Dictionary<TValue, TKey>();

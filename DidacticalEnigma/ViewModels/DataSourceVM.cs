@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Documents;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Formatting;
-using DidacticalEnigma.Core.Utils;
+using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DidacticalEnigma.Core.Utils
+namespace Utility.Utils
 {
     public static class StringExt
     {

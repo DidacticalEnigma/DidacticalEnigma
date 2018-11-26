@@ -8,9 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Core.Utils;
 using JDict;
 using Optional;
+using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {

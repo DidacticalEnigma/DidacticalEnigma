@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using DidacticalEnigma.Core.Utils;
+using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
@@ -75,7 +75,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             return new IGrouping<string, CodePoint>[]
             {
-                new CategoryGrouping("Similarly looking", FindSimilar(codePoint))
+                new CategoryGrouping<CodePoint>("Similarly looking", FindSimilar(codePoint))
             };
         }
     }

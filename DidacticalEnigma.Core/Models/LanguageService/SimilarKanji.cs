@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using DidacticalEnigma.Core.Utils;
+using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
@@ -30,7 +30,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             similar.TryGetValue(codePoint.ToString(), out var resultList);
             IEnumerable<string> result = resultList ?? Enumerable.Empty<string>();
-            return EnumerableExt.OfSingle(new CategoryGrouping("Similar Kanji",
+            return EnumerableExt.OfSingle(new CategoryGrouping<CodePoint>("Similar Kanji",
                 result.Select(r => CodePoint.FromString(r, 0))));
         }
     }

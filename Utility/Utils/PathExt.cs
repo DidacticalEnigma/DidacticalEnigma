@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace DidacticalEnigma.Core.Utils
+namespace Utility.Utils
 {
     internal static class PathExt
     {

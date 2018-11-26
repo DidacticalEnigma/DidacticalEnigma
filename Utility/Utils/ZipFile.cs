@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace JDict.Utils
+namespace Utility.Utils
 {
-    class ZipFile : IZipFile
+    public class ZipFile : IZipFile
     {
         private readonly string tempDir;
 

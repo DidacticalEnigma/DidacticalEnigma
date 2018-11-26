@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JDict\JDict.csproj" />
+    <ProjectReference Include="..\Utility\Utility.csproj" />
   </ItemGroup>
 
   <ItemGroup>

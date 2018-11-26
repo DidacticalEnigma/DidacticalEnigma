@@ -7,8 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Core.Utils;
 using JDict;
+using Utility.Utils;
 using Radical = DidacticalEnigma.Core.Models.LanguageService.Radical;
 
 namespace DidacticalEnigma.ViewModels

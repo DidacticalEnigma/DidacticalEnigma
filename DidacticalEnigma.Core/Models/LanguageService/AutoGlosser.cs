@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Project;
-using DidacticalEnigma.Core.Utils;
 using JDict;
 using Optional;
+using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {

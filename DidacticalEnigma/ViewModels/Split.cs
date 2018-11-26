@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using DidacticalEnigma.Core.Utils;
 using Newtonsoft.Json;
+using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

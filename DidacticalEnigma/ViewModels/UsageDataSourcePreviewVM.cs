@@ -7,10 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Core.Utils;
 using JDict;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

@@ -28,7 +28,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace DidacticalEnigma.Core.Utils
+namespace Utility.Utils
 {
     /// <summary>
     /// An <see cref="ObservableCollection{T}"/> with support for AddRange and RemoveRange

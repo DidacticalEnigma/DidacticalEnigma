@@ -1,15 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DidacticalEnigma.Core.Models.LanguageService;
 
-namespace DidacticalEnigma.Core.Utils
+namespace Utility.Utils
 {
-    class CategoryGrouping : IGrouping<string, CodePoint>
+    public class CategoryGrouping<T> : IGrouping<string, T>
     {
-        private readonly IEnumerable<CodePoint> values;
+        private readonly IEnumerable<T> values;
 
-        public IEnumerator<CodePoint> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
             return values.GetEnumerator();
         }
@@ -21,7 +20,7 @@ namespace DidacticalEnigma.Core.Utils
 
         public string Key { get; }
 
-        public CategoryGrouping(string key, IEnumerable<CodePoint> values)
+        public CategoryGrouping(string key, IEnumerable<T> values)
         {
             Key = key;
             this.values = values;

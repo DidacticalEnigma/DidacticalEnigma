@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace JDict.Utils
+namespace Utility.Utils
 {
     public interface IZipFile : IDisposable
     {

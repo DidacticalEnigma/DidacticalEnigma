@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DidacticalEnigma.Core.Utils;
+using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

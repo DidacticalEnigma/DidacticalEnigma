@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
-using DidacticalEnigma.Core.Utils;
 using Newtonsoft.Json;
+using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

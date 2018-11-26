@@ -7,8 +7,8 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Core.Utils;
 using DidacticalEnigma.Utils;
+using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {

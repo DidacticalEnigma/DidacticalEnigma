@@ -310,6 +310,10 @@
       <Project>{82e18376-40e8-4f9d-bc46-e166354bccb3}</Project>
       <Name>JDict</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{6014edb7-3375-4d85-90a5-4db7638d7b39}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Gu.Analyzers.1.3.0.0-dev\analyzers\dotnet\cs\Gu.Analyzers.dll" />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DidacticalEnigma.Core.Utils
+namespace Utility.Utils
 {
     /// <summary>
     /// A UnionFindNode represents a set of nodes that it is a member of.

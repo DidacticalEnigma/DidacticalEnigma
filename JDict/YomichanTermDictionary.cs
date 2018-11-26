@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JDict.Json;
-using JDict.Utils;
 using LiteDB;
 using Newtonsoft.Json;
+using Utility.Utils;
 using FileMode = System.IO.FileMode;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 

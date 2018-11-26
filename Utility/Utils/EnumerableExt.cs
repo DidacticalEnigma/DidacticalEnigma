@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Optional;
 
-namespace DidacticalEnigma.Core.Utils
+namespace Utility.Utils
 {
     public static class EnumerableExt
     {
+        public static IEnumerable<string> AllRotationsOf(string s)
+        {
+            var queue = new Queue<int>();
+            return Enumerable.Empty<string>();
+        }
+
         public static IEnumerable<T> OfSingle<T>(T element)
         {
             yield return element;

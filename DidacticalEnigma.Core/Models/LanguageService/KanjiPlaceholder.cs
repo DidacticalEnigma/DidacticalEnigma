@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using DidacticalEnigma.Core.Utils;
 using JDict;
+using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {

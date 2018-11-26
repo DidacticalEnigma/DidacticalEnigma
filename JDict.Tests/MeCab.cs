@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Core.Utils;
 using NMeCab;
 using NUnit.Framework;
 using Optional;
+using Utility.Utils;
 
 namespace JDict.Tests
 {
@@ -63,7 +63,7 @@ namespace JDict.Tests
             var unidicEntries = unidicMecab.ParseToEntries(sentence).Where(e => e.IsRegular);
             // this is to make test cases fail in case the number of expecteds is less than the number of actuals
             var nullDummyEntry = new DummyEntry();
-            foreach (var (i, u, e) in ipadicEntries.Zip(unidicEntries, expectedEntries.Concat(DidacticalEnigma.Core.Utils.EnumerableExt.Repeat(nullDummyEntry))))
+            foreach (var (i, u, e) in ipadicEntries.Zip(unidicEntries, expectedEntries.Concat(Utility.Utils.EnumerableExt.Repeat(nullDummyEntry))))
             {
                 //Assert.AreEqual(e.ConjugatedForm, i.ConjugatedForm);
                 //Assert.AreEqual(e.Inflection, i.Inflection);
