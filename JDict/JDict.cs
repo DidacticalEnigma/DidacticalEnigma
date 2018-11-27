@@ -25,7 +25,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
-        private static readonly int Version = 2;
+        private static readonly int Version = 3;
 
         private LiteDatabase db;
 
@@ -169,10 +169,61 @@ namespace JDict
                 ?.Select(e => e.To(s => s.To()));
         }
 
-        public IEnumerable<string> PartialWordLookup(string v)
+        public IEnumerable<string> PartialWordLookup(string input)
         {
-            var regex = new Regex("^" + Regex.Escape(v).Replace(@"/\\", ".") + "$");
-            return WordLookupByPredicate(word => regex.IsMatch(word));
+            string wildcardChar = "/\\";
+            IEnumerable<DbDictEntryKeyValue> preFiltered;
+            if (input.Replace(wildcardChar, "").Length == input.Length)
+            {
+                // if there's no placeholders, just do unique search
+                var key = kvps.FindOne(kvp => kvp.LookupKey == input);
+                return key != null
+                    ? EnumerableExt.OfSingle(key.LookupKey).ToList()
+                    : new List<string>();
+            }
+            var components = input
+                .Split(new[] { wildcardChar }, StringSplitOptions.RemoveEmptyEntries);
+            var regex = new Regex("^" + Regex.Escape(input).Replace(@"/\\", ".") + "$");
+            if (components.Length == 0)
+            {
+                preFiltered = kvps.FindAll();
+            }
+            else
+            {
+                if (!input.StartsWith(wildcardChar))
+                {
+                    // prefix search is preferred because we can do filtering before we even hit the index
+                    preFiltered = LookupByStart(components[0]);
+                }
+                else
+                {
+                    // worst case we filter by anywhere in the query
+                    var x = components
+                        .MaxBy(l => l.Length);
+                    preFiltered = LookupByAnywhere(x);
+                }
+            }
+
+            return preFiltered
+                .Where(kvp => regex.IsMatch(kvp.LookupKey))
+                .Select(kvp => kvp.LookupKey)
+                .ToList();
+        }
+
+        private IEnumerable<DbDictEntryKeyValue> LookupByLength(string v)
+        {
+            var len = v.Length;
+            return kvps.Find(kvp => kvp.LookupKey.Length == len);
+        }
+
+        private IEnumerable<DbDictEntryKeyValue> LookupByStart(string v)
+        {
+            return kvps.Find(kvp => kvp.LookupKey.StartsWith(v));
+        }
+
+        private IEnumerable<DbDictEntryKeyValue> LookupByAnywhere(string v)
+        {
+            return kvps.Find(kvp => kvp.LookupKey.Contains(v));
         }
 
         public IEnumerable<string> WordLookupByPredicate(Func<string, bool> matcher)
@@ -216,33 +267,33 @@ namespace JDict
         {
             return new JMDict().Init(
                 path,
-                OpenDatabase(File.Open(cache, FileMode.OpenOrCreate), dispose: true));
+                OpenDatabase(cache));
         }
 
-        public static JMDict Create(Stream stream, Stream cache)
+        public static JMDict Create(Stream stream, string cache)
         {
             return new JMDict().Init(
                 stream,
-                OpenDatabase(cache, dispose: false));
+                OpenDatabase(cache));
         }
 
         public static async Task<JMDict> CreateAsync(string path, string cache)
         {
             return await new JMDict().InitAsync(
                 path,
-                OpenDatabase(File.Open(cache, FileMode.OpenOrCreate), dispose: true));
+                OpenDatabase(cache));
         }
 
-        public static async Task<JMDict> CreateAsync(Stream stream, Stream cache)
+        public static async Task<JMDict> CreateAsync(Stream stream, string cache)
         {
             return await new JMDict().InitAsync(
                 stream,
-                OpenDatabase(cache, dispose: false));
+                OpenDatabase(cache));
         }
 
-        private static LiteDatabase OpenDatabase(Stream stream, bool dispose)
+        private static LiteDatabase OpenDatabase(string cachePath)
         {
-            return new LiteDatabase(stream, disposeStream: dispose);
+            return new LiteDatabase(new FileDiskService(cachePath, journal: false));
         }
 
         public void Dispose()

@@ -42,6 +42,9 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dotMemory.Unit, Version=111.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.dotMemoryUnit.3.0.20171219.105559\lib\net35\dotMemory.Unit.dll</HintPath>
+    </Reference>
     <Reference Include="Gu.Inject, Version=0.1.0.0, Culture=neutral, PublicKeyToken=84247aff6de990f8, processorArchitecture=MSIL">
       <HintPath>..\packages\Gu.Inject.0.1.0-dev\lib\net452\Gu.Inject.dll</HintPath>
     </Reference>
@@ -172,6 +175,7 @@
     <Compile Include="KanaPropertiesTests.cs" />
     <Compile Include="Kradfile.cs" />
     <Compile Include="MeCab.cs" />
+    <Compile Include="PerformanceTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Romaji.cs" />

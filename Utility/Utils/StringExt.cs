@@ -7,6 +7,24 @@ namespace Utility.Utils
 {
     public static class StringExt
     {
+        public static IEnumerable<string> AllRotationsOf(string s)
+        {
+            if (s == null)
+                throw new ArgumentNullException(nameof(s));
+
+            if (s.Length == 0)
+                yield break;
+
+            var queue = new Queue<int>(s.AsCodePoints());
+            string result = s;
+            do
+            {
+                queue.Enqueue(queue.Dequeue());
+                result = FromCodePoints(queue);
+                yield return result;
+            } while (result != s);
+        }
+
         public static IEnumerable<int> AsCodePoints(this string s)
         {
             for (int i = 0; i < s.Length; ++i)

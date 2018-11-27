@@ -7,12 +7,6 @@ namespace Utility.Utils
 {
     public static class EnumerableExt
     {
-        public static IEnumerable<string> AllRotationsOf(string s)
-        {
-            var queue = new Queue<int>();
-            return Enumerable.Empty<string>();
-        }
-
         public static IEnumerable<T> OfSingle<T>(T element)
         {
             yield return element;
@@ -64,7 +58,7 @@ namespace Utility.Utils
                 yield return list;
         }
 
-        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> Valuefactory)
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> valuefactory)
         {
             if (dict.TryGetValue(key, out var value))
             {
@@ -72,7 +66,7 @@ namespace Utility.Utils
             }
             else
             {
-                value = Valuefactory();
+                value = valuefactory();
                 dict[key] = value;
                 return value;
             }
@@ -160,6 +154,10 @@ namespace Utility.Utils
             }
         }
 
+        public static IEnumerable<(TElement element, int index)> Indexed<TElement>(this IEnumerable<TElement> input)
+        {
+            return input.Select((element, index) => (element, index));
+        }
 
         public static IEnumerable<TElement> Cycle<TElement>(this IReadOnlyCollection<TElement> elements)
         {
@@ -178,6 +176,65 @@ namespace Utility.Utils
             {
                 yield return element;
             }
+        }
+
+        public static TSource MinBy<TSource, TCompared>(
+            this IEnumerable<TSource> elements,
+            Func<TSource, TCompared> comparedCriterionSelector,
+            IComparer<TCompared> comparer)
+        {
+            TSource currentMinimum = default(TSource);
+            bool isFirst = true;
+            foreach (var element in elements)
+            {
+                if (isFirst)
+                {
+                    currentMinimum = element;
+                }
+                else
+                {
+                    var comparisonResult = comparer.Compare(
+                        comparedCriterionSelector(element),
+                        comparedCriterionSelector(currentMinimum));
+                    currentMinimum = comparisonResult < 0
+                        ? element
+                        : currentMinimum;
+                }
+
+                isFirst = false;
+            }
+
+            if (!isFirst)
+            {
+                return currentMinimum;
+            }
+            else
+            {
+                throw new ArgumentException("can't be an empty sequence", nameof(elements));
+            }
+        }
+
+        public static TSource MinBy<TSource, TCompared>(
+            this IEnumerable<TSource> elements,
+            Func<TSource, TCompared> comparedCriterionSelector)
+        {
+            return MinBy(elements, comparedCriterionSelector, Comparer<TCompared>.Default);
+        }
+
+        public static TSource MaxBy<TSource, TCompared>(
+            this IEnumerable<TSource> elements,
+            Func<TSource, TCompared> comparedCriterionSelector,
+            IComparer<TCompared> comparer)
+        {
+            var inverseComparer = Comparer<TCompared>.Create((lhs, rhs) => -Math.Sign(comparer.Compare(lhs, rhs)));
+            return MinBy(elements, comparedCriterionSelector, inverseComparer);
+        }
+
+        public static TSource MaxBy<TSource, TCompared>(
+            this IEnumerable<TSource> elements,
+            Func<TSource, TCompared> comparedCriterionSelector)
+        {
+            return MaxBy(elements, comparedCriterionSelector, Comparer<TCompared>.Default);
         }
     }
 }
