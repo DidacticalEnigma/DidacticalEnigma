@@ -198,33 +198,33 @@ namespace JDict
         {
             return new Jnedict().Init(
                 path,
-                OpenDatabase(File.Open(cache, FileMode.OpenOrCreate), dispose: true));
+                OpenDatabase(cache));
         }
 
-        public static Jnedict Create(Stream stream, Stream cache)
+        public static Jnedict Create(Stream stream, string cache)
         {
             return new Jnedict().Init(
                 stream,
-                OpenDatabase(cache, dispose: false));
+                OpenDatabase(cache));
         }
 
         public static async Task<Jnedict> CreateAsync(string path, string cache)
         {
             return await new Jnedict().InitAsync(
                 path,
-                OpenDatabase(File.Open(cache, FileMode.OpenOrCreate), dispose: true));
+                OpenDatabase(cache));
         }
 
-        public static async Task<Jnedict> CreateAsync(Stream stream, Stream cache)
+        public static async Task<Jnedict> CreateAsync(Stream stream, string cache)
         {
             return await new Jnedict().InitAsync(
                 stream,
-                OpenDatabase(cache, dispose: false));
+                OpenDatabase(cache));
         }
 
-        private static LiteDatabase OpenDatabase(Stream stream, bool dispose)
+        private static LiteDatabase OpenDatabase(string cache)
         {
-            return new LiteDatabase(stream, disposeStream: dispose);
+            return new LiteDatabase(new FileDiskService(cache, journal: false));
         }
     }
 
