@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.DataSources;
@@ -25,12 +26,22 @@ namespace DidacticalEnigma
 
         public App()
         {
-            var splash = new SplashScreen();
-            splash.Show();
-            Encoding.RegisterProvider(new Utf8EncodingProviderHack());
-            Configure();
-            Startup += (sender, args) =>
+            Startup += async (sender, args) =>
             {
+                Configure();
+
+                var splashVm = new SplashScreenVM();
+                var splash = new SplashScreen()
+                {
+                    DataContext = splashVm
+                };
+                IProgress<string> progress = new Progress<string>(s => splashVm.ProgressReport = s);
+                splash.Show();
+                Encoding.RegisterProvider(new Utf8EncodingProviderHack());
+                await Task.Run(() =>
+                {
+                    Preload(progress);
+                });
                 var vm = Kernel.Get<MainWindowVM>();
                 var window = new MainWindow()
                 {
@@ -43,6 +54,17 @@ namespace DidacticalEnigma
             {
                 Kernel.Dispose();
             };
+        }
+
+        public void Preload(IProgress<string> reporter)
+        {
+            reporter.Report("Initializing JMdict dictionary (first time may take up to several minutes)");
+            var jdict = Kernel.Get<JMDict>();
+            reporter.Report("Initializing JMnedict dictionary (first time may take up to several minutes)");
+            var jnedict = Kernel.Get<Jnedict>();
+            reporter.Report("Initializing MeCab");
+            var mecab = Kernel.Get<IMorphologicalAnalyzer<IEntry>>();
+            reporter.Report("Initializing other components");
         }
 
         private void Configure()
