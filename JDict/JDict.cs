@@ -26,7 +26,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
-        private static readonly int Version = 5;
+        private static readonly int Version = 6;
 
         private LiteDatabase db;
 
@@ -38,6 +38,8 @@ namespace JDict
 
         private LiteCollection<DbSense> senses;
 
+        private LiteCollection<DbExpression> expressions;
+
         private JMDict Init(Stream stream, LiteDatabase cache)
         {
             db = cache;
@@ -45,6 +47,7 @@ namespace JDict
             kvps = cache.GetCollection<DbDictEntryKeyValue>("kvps");
             entries = cache.GetCollection<DbDictEntry>("entries");
             senses = cache.GetCollection<DbSense>("senses");
+            expressions = cache.GetCollection<DbExpression>("expressions");
             var versionInfo = version.FindAll().FirstOrDefault();
             if (versionInfo == null ||
                 (versionInfo.OriginalFileSize != -1 && stream.CanSeek && stream.Length != versionInfo.OriginalFileSize) ||
@@ -146,13 +149,35 @@ namespace JDict
                     new KeyValuePair<string, IEnumerable<JMDictEntry>>(kvp.Key, kvp.Value),
                     e => entriesDict[e]));
 
+            var kvpsSequence = kvpsDict.Select(kvp => DbDictEntryKeyValue.From(
+                new KeyValuePair<string, IEnumerable<JMDictEntry>>(kvp.Value.Key, kvp.Value.Value),
+                e => entriesDict[e]))
+                .ToList();
+
             senses.InsertBulk(sensesDict.Values);
             entries.InsertBulk(entriesDict.Values);
-            kvps.InsertBulk(kvpsDict.Select(kvp => DbDictEntryKeyValue.From(
-                new KeyValuePair<string, IEnumerable<JMDictEntry>>(kvp.Value.Key, kvp.Value.Value),
-                e => entriesDict[e])));
+            kvps.InsertBulk(kvpsSequence);
+
+            {
+                var exprs = kvpsSequence
+                    .Where(kvp =>
+                        kvp.Values.Any(e =>
+                            e.Senses.Any(s =>
+                                s.PartOfSpeech.Any(pos => pos == EdictPartOfSpeech.exp))))
+                    .ToList();
+                var rotations = exprs.SelectMany(kvp => StringExt.AllRotationsOf(kvp.LookupKey + "\0")
+                    .Where(key => !key.StartsWith("\0"))
+                    .Select(key => new DbExpression
+                    {
+                        LookupKey = key,
+                        Entry = kvp.Values
+                    }));
+                
+                expressions.InsertBulk(rotations);
+            }
 
             kvps.EnsureIndex(x => x.LookupKey);
+            expressions.EnsureIndex(e => e.LookupKey);
 
             version.Insert(new DbDictVersion
             {
@@ -176,6 +201,15 @@ namespace JDict
                 .FindOne(kvp => kvp.LookupKey == v)
                 ?.Values
                 ?.Select(e => e.To(s => s.To()));
+        }
+
+        public IEnumerable<JMDictEntry> PartialExpressionLookup(string p, int limit = int.MaxValue)
+        {
+            return expressions
+                .IncludeAll()
+                .Find(e => e.LookupKey.StartsWith(p))
+                .SelectMany(e => e.Entry)
+                .Select(e => e.To(s => s.To()));
         }
 
         public IEnumerable<string> PartialWordLookup(string input)
@@ -401,6 +435,16 @@ namespace JDict
                 POS = sense.Type.ToNullable()
             };
         }
+    }
+
+    internal class DbExpression
+    {
+        public long Id { get; set; }
+
+        public string LookupKey { get; set; }
+
+        [BsonRef("entries")]
+        public List<DbDictEntry> Entry { get; set; }
     }
 
     public class JMDictEntry

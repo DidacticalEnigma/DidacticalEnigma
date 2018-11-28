@@ -236,5 +236,19 @@ namespace Utility.Utils
         {
             return MaxBy(elements, comparedCriterionSelector, Comparer<TCompared>.Default);
         }
+
+        // https://stackoverflow.com/a/489421/1012936
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
+            (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            HashSet<TKey> seenKeys = new HashSet<TKey>();
+            foreach (TSource element in source)
+            {
+                if (seenKeys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
+        }
     }
 }

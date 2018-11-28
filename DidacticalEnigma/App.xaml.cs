@@ -118,6 +118,7 @@ namespace DidacticalEnigma
                 new DataSourceVM(new JMDictDataSource(get.Get<JMDict>(), get.Get<IKanaProperties>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new JNeDictDataSource(get.Get<Jnedict>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDict>()), get.Get<IFontResolver>()),
+                new DataSourceVM(new PartialExpressionJMDictDataSource(get.Get<JMDict>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new AutoGlosserDataSource(get.Get<AutoGlosser>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new CustomNotesDataSource(Path.Combine(dataDir, "custom", "custom_notes.txt")), get.Get<IFontResolver>()),
                 new DataSourceVM(new TanakaCorpusDataSource(get.Get<Tanaka>()), get.Get<IFontResolver>()),
