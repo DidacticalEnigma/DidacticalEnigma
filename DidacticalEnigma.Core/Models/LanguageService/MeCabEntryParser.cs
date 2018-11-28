@@ -6,112 +6,112 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     internal static class MeCabEntryParser
     {
-        public static Option<EdictType> TypeFromString(string s)
+        public static Option<EdictPartOfSpeech> TypeFromString(string s)
         {
             switch (s)
             {
                 case "五段・ラ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "特殊・マス":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "特殊・タ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "一段":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "サ変・スル":
-                    return Option.Some(EdictType.vs_i);
+                    return Option.Some(EdictPartOfSpeech.vs_i);
                 case "特殊・ナイ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・サ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "形容詞・アウオ段":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・カ行イ音便":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・ワ行促音便":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "特殊・ダ":
-                    return Option.Some(EdictType.cop_da);
+                    return Option.Some(EdictPartOfSpeech.cop_da);
                 case "五段・バ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "カ変・クル":
-                    return Option.Some(EdictType.vk);
+                    return Option.Some(EdictPartOfSpeech.vk);
                 case "不変化型":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・タ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・マ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・カ行促音便":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "特殊・デス":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "カ変・来ル":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・ラ行特殊":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "特殊・タイ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "形容詞・イ段":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "文語・ベシ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・ラ行アル":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "形容詞・イイ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・カ行促音便ユク":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "一段・クレル":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・ガ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "下二・タ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "特殊・ヌ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "文語・ナリ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・ナ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "サ変・－スル":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "文語・キ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "一段・得ル":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "文語・リ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "サ変・－ズル":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "特殊・ヤ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "文語・ル":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "特殊・ジャ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "文語・ゴトシ":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "ラ変":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "四段・ハ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "下二・カ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "上二・ダ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "下二・ガ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "四段・バ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "下二・マ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "五段・ワ行ウ音便":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 case "下二・ダ行":
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
                 default:
-                    return Option.None<EdictType>();
+                    return Option.None<EdictPartOfSpeech>();
             }
         }
 

@@ -18,14 +18,14 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public bool? Independent { get; }
 
-        public Option<EdictType> Type { get; }
+        public Option<EdictPartOfSpeech> Type { get; }
 
         public WordInfo(
             string word,
             PartOfSpeech partOfSpeech = PartOfSpeech.Unknown,
             string dictionaryForm = null,
             bool? isIndependent = null,
-            Option<EdictType> type = default)
+            Option<EdictPartOfSpeech> type = default)
         {
             RawWord = word;
             CodePoints = new List<CodePoint>(

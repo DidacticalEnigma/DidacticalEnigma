@@ -25,7 +25,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
-        private static readonly int Version = 3;
+        private static readonly int Version = 4;
 
         private LiteDatabase db;
 
@@ -56,6 +56,11 @@ namespace JDict
             return this;
         }
 
+        private IEnumerable<JdicEntry> Deserialize(XmlReader reader)
+        {
+            return ((JdicRoot) serializer.Deserialize(reader)).Entries;
+        }
+
         private Dictionary<string, List<JMDictEntry>> ReadFromXml(Stream stream)
         {
             var xmlSettings = new XmlReaderSettings
@@ -69,7 +74,7 @@ namespace JDict
             using (var xmlReader = XmlReader.Create(stream, xmlSettings))
             {
                 var root = new Dictionary<string, List<JMDictEntry>>();
-                var entries = ((JdicRoot)serializer.Deserialize(xmlReader)).Entries
+                var entries = Deserialize(xmlReader)
                     .SelectMany(e =>
                     {
                         var kanjiElements = e.KanjiElements ?? Enumerable.Empty<KanjiElement>();
@@ -368,7 +373,7 @@ namespace JDict
     {
         public long Id { get; set; }
 
-        public EdictType? Type { get; set; }
+        public EdictPartOfSpeech? POS { get; set; }
 
         public string PartOfSpeech { get; set; }
 
@@ -377,7 +382,7 @@ namespace JDict
         public JMDictSense To()
         {
             return new JMDictSense(
-                Type?.Some() ?? Option.None<EdictType>(),
+                POS?.Some() ?? Option.None<EdictPartOfSpeech>(),
                 PartOfSpeech,
                 Description);
         }
@@ -389,7 +394,7 @@ namespace JDict
                 Id = id,
                 Description = sense.Description,
                 PartOfSpeech = sense.PartOfSpeech,
-                Type = sense.Type.ToNullable()
+                POS = sense.Type.ToNullable()
             };
         }
     }
@@ -455,13 +460,13 @@ namespace JDict
 
     public class JMDictSense
     {
-        public Option<EdictType> Type { get; }
+        public Option<EdictPartOfSpeech> Type { get; }
 
         public string PartOfSpeech { get; }
 
         public string Description { get; }
 
-        public JMDictSense(Option<EdictType> type, string pos, string text)
+        public JMDictSense(Option<EdictPartOfSpeech> type, string pos, string text)
         {
             Type = type;
             PartOfSpeech = pos;
@@ -476,26 +481,26 @@ namespace JDict
 
     public static class EdictTypeUtils
     {
-        public static Option<EdictType> FromDescription(string description)
+        public static Option<EdictPartOfSpeech> FromDescription(string description)
         {
             return mapping.FromDescription(description);
         }
 
-        public static bool IsVerb(this EdictType type)
+        public static string ToDescription(this EdictPartOfSpeech pos)
         {
-            return (int)type < (int)EdictType.n;
+            return mapping.ToLongString(pos);
         }
 
-        public static bool IsNoun(this EdictType type)
+        public static string ToAbbrevation(this EdictPartOfSpeech pos)
         {
-            return (int)type < 256 && (int)type >= (int)EdictType.n;
+            return pos.ToString().Replace("_", "-");
         }
 
-        private static EnumMapper<EdictType> mapping = new EnumMapper<EdictType>();
+        private static EnumMapper<EdictPartOfSpeech> mapping = new EnumMapper<EdictPartOfSpeech>();
     }
 
     // Make sure to synchronize these constants with the values at LibJpConjSharp project
-    public enum EdictType
+    public enum EdictPartOfSpeech
     {
         [Description("This means no type at all, it is used to return the radical as it is")]
         v0 = 0,
@@ -581,7 +586,76 @@ namespace JDict
         [Description("suru verb - special class")]
         vs_s = 27,
 
-        // Ichidan verb - kureru special class
+        [Description("Yodan verb with `ku' ending (archaic)")]
+        v4k,
+        [Description("Yodan verb with `gu' ending (archaic)")]
+        v4g,
+        [Description("Yodan verb with `su' ending (archaic)")]
+        v4s,
+        [Description("Yodan verb with `tsu' ending (archaic)")]
+        v4t,
+        [Description("Yodan verb with `nu' ending (archaic)")]
+        v4n,
+        [Description("Yodan verb with `bu' ending (archaic)")]
+        v4b,
+        [Description("Yodan verb with `mu' ending (archaic)")]
+        v4m,
+        [Description("Nidan verb (upper class) with `ku' ending (archaic)")]
+        v2k_k,
+        [Description("Nidan verb (upper class) with `gu' ending (archaic)")]
+        v2g_k,
+        [Description("Nidan verb (upper class) with `tsu' ending (archaic)")]
+        v2t_k,
+        [Description("Nidan verb (upper class) with `dzu' ending (archaic)")]
+        v2d_k,
+        [Description("Nidan verb (upper class) with `hu/fu' ending (archaic)")]
+        v2h_k,
+        [Description("Nidan verb (upper class) with `bu' ending (archaic)")]
+        v2b_k,
+        [Description("Nidan verb (upper class) with `mu' ending (archaic)")]
+        v2m_k,
+        [Description("Nidan verb (upper class) with `yu' ending (archaic)")]
+        v2y_k,
+        [Description("Nidan verb (upper class) with `ru' ending (archaic)")]
+        v2r_k,
+        [Description("Nidan verb (lower class) with `ku' ending (archaic)")]
+        v2k_s,
+        [Description("Nidan verb (lower class) with `gu' ending (archaic)")]
+        v2g_s,
+        [Description("Nidan verb (lower class) with `su' ending (archaic)")]
+        v2s_s,
+        [Description("Nidan verb (lower class) with `zu' ending (archaic)")]
+        v2z_s,
+        [Description("Nidan verb (lower class) with `tsu' ending (archaic)")]
+        v2t_s,
+        [Description("Nidan verb (lower class) with `dzu' ending (archaic)")]
+        v2d_s,
+        [Description("Nidan verb (lower class) with `nu' ending (archaic)")]
+        v2n_s,
+        [Description("Nidan verb (lower class) with `hu/fu' ending (archaic)")]
+        v2h_s,
+        [Description("Nidan verb (lower class) with `bu' ending (archaic)")]
+        v2b_s,
+        [Description("Nidan verb (lower class) with `mu' ending (archaic)")]
+        v2m_s,
+        [Description("Nidan verb (lower class) with `yu' ending (archaic)")]
+        v2y_s,
+        [Description("Nidan verb (lower class) with `ru' ending (archaic)")]
+        v2r_s,
+        [Description("Nidan verb (lower class) with `u' ending and `we' conjugation (archaic)")]
+        v2w_s,
+        [Description("verb unspecified")]
+        v_unspec,
+        [Description("irregular verb")]
+        iv,
+        [Description("Ichidan verb - kureru special class")]
+        v1_s,
+        [Description("intransitive verb")]
+        vi,
+        [Description("irregular ru verb, plain form ends with -ri")]
+        vr,
+        [Description("transitive verb")]
+        vt,
 
         [Description("noun (common) (futsuumeishi)")]
         n = 128,
@@ -612,5 +686,243 @@ namespace JDict
 
         [Description("copula")]
         cop_da,
+
+        [Description("adjective (keiyoushi)")]
+        adj_i,
+        [Description("adjective (keiyoushi) - yoi/ii class")]
+        adj_ix,
+        [Description("adjectival nouns or quasi-adjectives (keiyodoshi)")]
+        adj_na,
+        [Description("nouns which may take the genitive case particle `no'")]
+        adj_no,
+        [Description("`taru' adjective")]
+        adj_t,
+        [Description("noun or verb acting prenominally")]
+        adj_f,
+        [Description("adverb (fukushi)")]
+        adv,
+        [Description("adverb taking the `to' particle")]
+        adv_to,
+        [Description("auxiliary")]
+        aux,
+        [Description("auxiliary adjective")]
+        aux_adj,
+        [Description("conjunction")]
+        conj,
+        [Description("counter")]
+        ctr,
+        [Description("expressions (phrases, clauses, etc.)")]
+        exp,
+        [Description("interjection (kandoushi)")]
+        @int,
+        [Description("numeric")]
+        num,
+        [Description("prefix")]
+        pref,
+        [Description("suffix")]
+        suf,
+        [Description("unclassified")]
+        unc,
+        [Description("`kari' adjective (archaic)")]
+        adj_kari,
+        [Description("`ku' adjective (archaic)")]
+        adj_ku,
+        [Description("`shiku' adjective (archaic)")]
+        adj_shiku,
+        [Description("archaic/formal form of na-adjective")]
+        adj_nari,
+        [Description("proper noun")]
+        n_pr,
     }
+
+    enum EdictDialect
+    {
+        // reserving 0 for an "unknown"
+        [Description("Kyoto-ben")]
+        kyb = 1,
+        [Description("Osaka-ben")]
+        osb,
+        [Description("Kansai-ben")]
+        ksb,
+        [Description("Kantou-ben")]
+        ktb,
+        [Description("Tosa-ben")]
+        tsb,
+        [Description("Touhoku-ben")]
+        thb,
+        [Description("Tsugaru-ben")]
+        tsug,
+        [Description("Kyuushuu-ben")]
+        kyu,
+        [Description("Ryuukyuu-ben")]
+        rkb,
+        [Description("Hokkaido-ben")]
+        hob,
+        [Description("Nagano-ben")]
+        nab,
+    }
+
+    enum EdictField
+    {
+        // reserving 0 for an "unknown"
+        [Description("martial arts term")]
+        MA = 1,
+        [Description("Buddhist term")]
+        Buddh,
+        [Description("chemistry term")]
+        chem,
+        [Description("computer terminology")]
+        comp,
+        [Description("food term")]
+        food,
+        [Description("geometry term")]
+        geom,
+        [Description("linguistics terminology")]
+        ling,
+        [Description("mathematics")]
+        math,
+        [Description("military")]
+        mil,
+        [Description("physics terminology")]
+        physics,
+        [Description("astronomy, etc. term")]
+        astron,
+        [Description("baseball term")]
+        baseb,
+        [Description("biology term")]
+        biol,
+        [Description("botany term")]
+        bot,
+        [Description("business term")]
+        bus,
+        [Description("economics term")]
+        econ,
+        [Description("engineering term")]
+        engr,
+        [Description("finance term")]
+        finc,
+        [Description("geology, etc. term")]
+        geol,
+        [Description("law, etc. term")]
+        law,
+        [Description("mahjong term")]
+        mahj,
+        [Description("medicine, etc. term")]
+        med,
+        [Description("music term")]
+        music,
+        [Description("Shinto term")]
+        Shinto,
+        [Description("shogi term")]
+        shogi,
+        [Description("sports term")]
+        sports,
+        [Description("sumo term")]
+        sumo,
+        [Description("zoology term")]
+        zool,
+        [Description("anatomical term")]
+        anat,
+    }
+
+    enum EdictMisc
+    {
+        // reserving 0 for an "unknown"
+        [Description("architecture term")]
+        archit = 1,
+        [Description("abbreviation")]
+        abbr,
+        [Description("archaism")]
+        arch,
+        [Description("children's language")]
+        chn,
+        [Description("colloquialism")]
+        col,
+        [Description("derogatory")]
+        derog,
+        [Description("familiar language")]
+        fam,
+        [Description("female term or language")]
+        fem,
+        [Description("honorific or respectful (sonkeigo) language")]
+        hon,
+        [Description("humble (kenjougo) language")]
+        hum,
+        [Description("idiomatic expression")]
+        id,
+        [Description("manga slang")]
+        m_sl,
+        [Description("male term or language")]
+        male,
+        [Description("male slang")]
+        male_sl,
+        [Description("obsolete term")]
+        obs,
+        [Description("obscure term")]
+        obsc,
+        [Description("onomatopoeic or mimetic word")]
+        on_mim,
+        [Description("poetical term")]
+        poet,
+        [Description("polite (teineigo) language")]
+        pol,
+        [Description("proverb")]
+        proverb,
+        [Description("quotation")]
+        quote,
+        [Description("rare")]
+        rare,
+        [Description("sensitive")]
+        sens,
+        [Description("slang")]
+        sl,
+        [Description("word usually written using kana alone")]
+        uk,
+        [Description("yojijukugo")]
+        yoji,
+        [Description("vulgar expression or word")]
+        vulg,
+        [Description("jocular, humorous term")]
+        joc,
+    }
+
+    enum EdictReadingInformation
+    {
+        // reserving 0 for an "unknown"
+        [Description("gikun (meaning as reading) or jukujikun (special kanji reading)")]
+        gikun = 1,
+        [Description("word containing irregular kana usage")]
+        ik,
+        [Description("out-dated or obsolete kana usage")]
+        ok,
+        [Description("old or irregular kana form")]
+        oik,
+    }
+
+    enum EdictKanjiInformation
+    {
+        // reserving 0 for an "unknown"
+        [Description("ateji (phonetic) reading")]
+        ateji = 1,
+        [Description("word containing irregular kanji usage")]
+        iK,
+        [Description("word containing irregular kana usage")]
+        ik,
+        [Description("irregular okurigana usage")]
+        io,
+        [Description("word containing out-dated kanji")]
+        oK,
+    }
+
+    /*
+        uncategorized:
+        [Description("rude or X-rated term (not displayed in educational software)")]
+        X,
+        [Description("exclusively kanji")]
+        eK,
+        [Description("exclusively kana")]
+        ek,
+        [Description("word usually written using kanji alone")]
+        uK,
+    */
 }

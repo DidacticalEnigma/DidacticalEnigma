@@ -47,6 +47,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public string Pronunciation { get; }
         public string Reading { get; }
         public string DictionaryForm { get; }
-        public Option<EdictType> Type { get; }
+        public Option<EdictPartOfSpeech> Type { get; }
     }
 }

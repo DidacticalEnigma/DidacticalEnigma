@@ -15,10 +15,10 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
         private readonly JMDict dict;
 
-        private static readonly IReadOnlyDictionary<PartOfSpeech, EdictType> mapping = new Dictionary<PartOfSpeech, EdictType>
+        private static readonly IReadOnlyDictionary<PartOfSpeech, EdictPartOfSpeech> mapping = new Dictionary<PartOfSpeech, EdictPartOfSpeech>
         {
-            { PartOfSpeech.PreNounAdjectival, EdictType.adj_pn },
-            { PartOfSpeech.AuxiliaryVerb, EdictType.aux_v }
+            { PartOfSpeech.PreNounAdjectival, EdictPartOfSpeech.adj_pn },
+            { PartOfSpeech.AuxiliaryVerb, EdictPartOfSpeech.aux_v }
         };
 
         public IEnumerable<GlossNote> Gloss(string inputText)
@@ -44,11 +44,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     // skip punctuation
                     continue;
                 }
-                if (word.Type == Option.Some(EdictType.vs_s))
+                if (word.Type == Option.Some(EdictPartOfSpeech.vs_s))
                 {
                     glosses.Add(CreateGloss(word, "suru, {0}", lookup));
                 }
-                if (word.Type == Option.Some(EdictType.vs_i))
+                if (word.Type == Option.Some(EdictPartOfSpeech.vs_i))
                 {
                     glosses.Add(CreateGloss(word, "suru, {0}, verbalizing suffix", lookup));
                 }
@@ -58,7 +58,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         ?.SelectMany(entry => entry.Senses)
                         .FirstOrDefault(s => s.Type.HasValue && s.Type == Option.Some(edictType))
                         ?.Description;
-                    if((description == null || word.Type == Option.Some(EdictType.cop_da)) && greedySelection.Count > 1)
+                    if((description == null || word.Type == Option.Some(EdictPartOfSpeech.cop_da)) && greedySelection.Count > 1)
                     {
                         var greedyWord = string.Join("", greedySelection);
                         var greedyEntries = dict.Lookup(greedyWord);
@@ -76,7 +76,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 {
                     var description = lookup
                         ?.SelectMany(entry => entry.Senses)
-                        .FirstOrDefault(s => s.Type == Option.Some(EdictType.prt))
+                        .FirstOrDefault(s => s.Type == Option.Some(EdictPartOfSpeech.prt))
                         ?.Description;
                     if (description != null)
                     {

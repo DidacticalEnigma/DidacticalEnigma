@@ -121,6 +121,6 @@ namespace JDict.Tests
         public string Pronunciation { get; set; }
         public string Reading { get; set; }
         public string DictionaryForm { get; set; }
-        public Option<EdictType> Type { get; set; }
+        public Option<EdictPartOfSpeech> Type { get; set; }
     }
 }

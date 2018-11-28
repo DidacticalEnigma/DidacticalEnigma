@@ -30,6 +30,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         [Obsolete]
         IEnumerable<string> PartOfSpeechSections { get; }
         [Obsolete]
-        Option<EdictType> Type { get; }
+        Option<EdictPartOfSpeech> Type { get; }
     }
 }

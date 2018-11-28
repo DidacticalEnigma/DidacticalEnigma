@@ -34,7 +34,7 @@ public static class MorphologicalAnalyzerExt
                         word.PartOfSpeech,
                         word.DictionaryForm,
                         word.IsIndependent,
-                        word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictType.pn) : word.Type));
+                        word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictPartOfSpeech.pn) : word.Type));
             });
     }
 }

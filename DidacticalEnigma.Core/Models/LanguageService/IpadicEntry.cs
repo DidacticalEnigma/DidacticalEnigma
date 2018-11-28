@@ -34,7 +34,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             IsIndependent = MeCabEntryParser.IsIndependentFromSections(PartOfSpeechSections);
         }
 
-        public Option<EdictType> Type { get; }
+        public Option<EdictPartOfSpeech> Type { get; }
 
         public string SurfaceForm { get; }
 

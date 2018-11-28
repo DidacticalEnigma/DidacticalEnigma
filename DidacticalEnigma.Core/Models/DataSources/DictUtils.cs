@@ -6,6 +6,7 @@ using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using Optional;
+using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -44,6 +45,28 @@ namespace DidacticalEnigma.Core.Models.DataSources
             Func<Request, (IEnumerable<T> entry, string word)> greedyLookup,
             IKanaProperties kana)
         {
+            IEnumerable<TextParagraph> Render(IEnumerable<T> entries)
+            {
+                var p = new TextParagraph();
+                p.Content.Add(new Text(string.Join("\n\n", entries.Select(e => e.ToString()))));
+                return EnumerableExt.OfSingle(p);
+            }
+
+            return Lookup(
+                request,
+                lookup,
+                greedyLookup,
+                kana,
+                Render);
+        }
+
+        public static Task<Option<RichFormatting>> Lookup<T>(
+            Request request,
+            Func<string, IEnumerable<T>> lookup,
+            Func<Request, (IEnumerable<T> entry, string word)> greedyLookup,
+            IKanaProperties kana,
+            Func<IEnumerable<T>, IEnumerable<Paragraph>> render)
+        {
             var rawWord = request.Word.RawWord.Trim();
             var entry = lookup(rawWord);
             var rich = new RichFormatting();
@@ -56,9 +79,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
                     new Text("The entries below are a result of the greedy lookup: "),
                     new Text(greedyWord, emphasis: true)
                 }));
-                var p = new TextParagraph();
-                p.Content.Add(new Text(string.Join("\n\n", greedyEntry.Select(e => e.ToString()))));
-                rich.Paragraphs.Add(p);
+                foreach (var p in render(greedyEntry))
+                {
+                    rich.Paragraphs.Add(p);
+                }
+                
             }
 
             if (entry != null)
@@ -71,9 +96,10 @@ namespace DidacticalEnigma.Core.Models.DataSources
                         new Text(request.Word.RawWord, emphasis: true)
                     }));
                 }
-                var p = new TextParagraph();
-                p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
-                rich.Paragraphs.Add(p);
+                foreach (var p in render(entry))
+                {
+                    rich.Paragraphs.Add(p);
+                }
             }
 
             if (request.NotInflected != null && request.NotInflected != request.Word.RawWord)
@@ -86,9 +112,10 @@ namespace DidacticalEnigma.Core.Models.DataSources
                         new Text("The entries below are a result of lookup on the base form: "),
                         new Text(request.NotInflected, emphasis: true)
                     }));
-                    var p = new TextParagraph();
-                    p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
-                    rich.Paragraphs.Add(p);
+                    foreach (var p in render(entry))
+                    {
+                        rich.Paragraphs.Add(p);
+                    }
                 }
             }
 
@@ -103,9 +130,10 @@ namespace DidacticalEnigma.Core.Models.DataSources
                         new Text("The entries below are a result of forced katakana -> hiragana conversion: "),
                         new Text($"{rawWord} -> {rawWordHiragana}", emphasis: true), 
                     }));
-                    var p = new TextParagraph();
-                    p.Content.Add(new Text(string.Join("\n\n", entry.Select(e => e.ToString()))));
-                    rich.Paragraphs.Add(p);
+                    foreach (var p in render(entry))
+                    {
+                        rich.Paragraphs.Add(p);
+                    }
                 }
             }
 

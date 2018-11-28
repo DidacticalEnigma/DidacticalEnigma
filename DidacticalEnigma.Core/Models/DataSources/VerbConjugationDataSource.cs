@@ -13,7 +13,6 @@ using LibJpConjSharp;
 using Optional;
 using Optional.Collections;
 using Utility.Utils;
-using EdictType = JDict.EdictType;
 using EdictTypeUtils = JDict.EdictTypeUtils;
 
 namespace DidacticalEnigma.Core.Models.DataSources
@@ -118,7 +117,7 @@ Te - Te Form
             var senseType = entry.Senses
                 .Select(s => s.Type)
                 .OfNonNone()
-                .Where(t => t.IsVerb())
+                .Where(t => (int)t <= (int)EdictType.vs_s)
                 .FirstOrNone();
             return senseType.Map(s => (LibJpConjSharp.EdictType)(int)s);
         }
