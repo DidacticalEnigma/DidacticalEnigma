@@ -28,9 +28,10 @@ namespace DidacticalEnigma.ViewModels
                                 switch (c.FontSize)
                                 {
                                     case FontSize.ExtraSmall:
+                                        r.FontSize = 9;
                                         break;
                                     case FontSize.Small:
-                                        r.FontSize = 10;
+                                        r.FontSize = 12;
                                         break;
                                     case FontSize.Normal:
                                         r.FontSize = 16;

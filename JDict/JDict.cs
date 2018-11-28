@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
-        private static readonly int Version = 4;
+        private static readonly int Version = 5;
 
         private LiteDatabase db;
 
@@ -104,12 +105,15 @@ namespace JDict
             string[] previousPartOfSpeech = null;
             foreach (var s in xmlEntry.Senses)
             {
-                var partOfSpeech = s.PartOfSpeech ?? previousPartOfSpeech;
-                var partOfSpeechString = s.PartOfSpeech != null ? string.Join("/", s.PartOfSpeech) : "";
+                var partOfSpeech = s.PartOfSpeech ?? previousPartOfSpeech ?? Array.Empty<string>();
                 sense.Add(new JMDictSense(
                     EdictTypeUtils.FromDescription(partOfSpeech?.FirstOrNone(pos => EdictTypeUtils.FromDescription(pos).HasValue).ValueOr("")),
-                    partOfSpeechString,
-                    string.Join("/", s.Glosses.Select(g => g.Text.Trim()))));
+                    partOfSpeech.Select(posStr => EdictTypeUtils.FromDescription(posStr).ValueOr(() =>
+                    {
+                        Debug.WriteLine($"{posStr} unknown");
+                        return default(EdictPartOfSpeech);
+                    })).ToList(),
+                    s.Glosses.Select(g => g.Text.Trim()).ToList()));
                 previousPartOfSpeech = partOfSpeech;
             }
 
@@ -375,16 +379,16 @@ namespace JDict
 
         public EdictPartOfSpeech? POS { get; set; }
 
-        public string PartOfSpeech { get; set; }
+        public List<EdictPartOfSpeech> PartOfSpeech { get; set; }
 
-        public string Description { get; set; }
+        public List<string> Glosses { get; set; }
 
         public JMDictSense To()
         {
             return new JMDictSense(
                 POS?.Some() ?? Option.None<EdictPartOfSpeech>(),
                 PartOfSpeech,
-                Description);
+                Glosses);
         }
 
         public static DbSense From(JMDictSense sense, int id = 0)
@@ -392,8 +396,8 @@ namespace JDict
             return new DbSense
             {
                 Id = id,
-                Description = sense.Description,
-                PartOfSpeech = sense.PartOfSpeech,
+                Glosses = sense.Glosses.ToList(),
+                PartOfSpeech = sense.PartOfSpeechInfo.ToList(),
                 POS = sense.Type.ToNullable()
             };
         }
@@ -462,20 +466,26 @@ namespace JDict
     {
         public Option<EdictPartOfSpeech> Type { get; }
 
-        public string PartOfSpeech { get; }
+        public IEnumerable<EdictPartOfSpeech> PartOfSpeechInfo { get; }
 
-        public string Description { get; }
+        public IEnumerable<string> Glosses { get; }
 
-        public JMDictSense(Option<EdictPartOfSpeech> type, string pos, string text)
+        [Obsolete]
+        public string PartOfSpeechString => string.Join("/", PartOfSpeechInfo.Select(pos => pos.ToDescription()));
+
+        [Obsolete]
+        public string Description => string.Join("/", Glosses);
+
+        public JMDictSense(Option<EdictPartOfSpeech> type, IReadOnlyCollection<EdictPartOfSpeech> pos, IReadOnlyCollection<string> text)
         {
             Type = type;
-            PartOfSpeech = pos;
-            Description = text;
+            PartOfSpeechInfo = pos;
+            Glosses = text;
         }
 
         public override string ToString()
         {
-            return PartOfSpeech + "\n" + Description;
+            return PartOfSpeechString + "\n" + Description;
         }
     }
 
@@ -565,7 +575,7 @@ namespace JDict
         [Description("Godan verb with `zu' ending")]
         v5z = 20,
 
-        [Description("Ichidan verb - zuru verb - (alternative form of -jiru verbs)")]
+        [Description("Ichidan verb - zuru verb (alternative form of -jiru verbs)")]
         vz = 21,
 
         [Description("Kuru verb - special class")]

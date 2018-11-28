@@ -68,7 +68,7 @@ namespace JDict.Tests
                 //Assert.AreEqual(e.ConjugatedForm, i.ConjugatedForm);
                 //Assert.AreEqual(e.Inflection, i.Inflection);
                 Assert.AreEqual(e.SurfaceForm, i.SurfaceForm);
-                //Assert.AreEqual(e.PartOfSpeech, i.PartOfSpeech);
+                //Assert.AreEqual(e.PartOfSpeechString, i.PartOfSpeechString);
                 Assert.AreEqual(e.Pronunciation, i.Pronunciation);
                 Assert.AreEqual(e.Reading, i.Reading);
                 Assert.AreEqual(e.DictionaryForm, i.DictionaryForm);
@@ -76,7 +76,7 @@ namespace JDict.Tests
                 //Assert.AreEqual(e.ConjugatedForm, u.ConjugatedForm);
                 //Assert.AreEqual(e.Inflection, u.Inflection);
                 Assert.AreEqual(e.SurfaceForm, u.SurfaceForm);
-                //Assert.AreEqual(e.PartOfSpeech, u.PartOfSpeech);
+                //Assert.AreEqual(e.PartOfSpeechString, u.PartOfSpeechString);
                 Assert.AreEqual(e.Pronunciation, u.Pronunciation);
                 Assert.AreEqual(e.Reading, u.Reading);
                 Assert.AreEqual(e.DictionaryForm, u.DictionaryForm);

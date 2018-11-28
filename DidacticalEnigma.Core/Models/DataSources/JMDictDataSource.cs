@@ -75,7 +75,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 {
                     foreach (var sense in entry.Senses)
                     {
-                        l.Add(new Text(sense.PartOfSpeech, fontSize: FontSize.Small));
+                        l.Add(new Text(sense.PartOfSpeechString, fontSize: FontSize.Small));
                         l.Add(new Text("\n"));
                         l.Add(new Text(sense.Description));
                         l.Add(new Text("\n"));
