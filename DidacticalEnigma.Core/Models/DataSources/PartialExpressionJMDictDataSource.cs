@@ -49,9 +49,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
         {
             return Impl(request, ahead)
                 .Reverse()
-                .SelectMany(key => jdict.PartialExpressionLookup(key).Select(e => (entry: e, word: key)))
+                .SelectMany(key => jdict.PartialExpressionLookup(key, 60).Select(e => (entry: e, word: key)))
                 .DistinctBy(k => k.entry.SequenceNumber)
-                .Take(120);
+                .Take(60);
 
             IEnumerable<string> Impl(Request r, int a)
             {

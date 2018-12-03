@@ -33,6 +33,9 @@ namespace DidacticalEnigma.ViewModels
                                     case FontSize.Small:
                                         r.FontSize = 12;
                                         break;
+                                    case FontSize.Medium:
+                                        r.FontSize = 14;
+                                        break;
                                     case FontSize.Normal:
                                         r.FontSize = 16;
                                         break;

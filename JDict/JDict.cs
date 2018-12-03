@@ -26,7 +26,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
-        private static readonly int Version = 6;
+        private static readonly int Version = 7;
 
         private LiteDatabase db;
 
@@ -116,7 +116,8 @@ namespace JDict
                         Debug.WriteLine($"{posStr} unknown");
                         return default(EdictPartOfSpeech);
                     })).ToList(),
-                    s.Glosses.Select(g => g.Text.Trim()).ToList()));
+                    s.Glosses.Select(g => g.Text.Trim()).ToList(),
+                    s.Information?.ToList() ?? new List<string>()));
                 previousPartOfSpeech = partOfSpeech;
             }
 
@@ -128,6 +129,7 @@ namespace JDict
             senses.Delete(_ => true);
             entries.Delete(_ => true);
             kvps.Delete(_ => true);
+            expressions.Delete(_ => true);
             version.Delete(_ => true);
 
             var sensesDict = root.Values
@@ -417,12 +419,15 @@ namespace JDict
 
         public List<string> Glosses { get; set; }
 
+        public List<string> Informational { get; set; }
+
         public JMDictSense To()
         {
             return new JMDictSense(
                 POS?.Some() ?? Option.None<EdictPartOfSpeech>(),
                 PartOfSpeech,
-                Glosses);
+                Glosses,
+                Informational);
         }
 
         public static DbSense From(JMDictSense sense, int id = 0)
@@ -432,7 +437,8 @@ namespace JDict
                 Id = id,
                 Glosses = sense.Glosses.ToList(),
                 PartOfSpeech = sense.PartOfSpeechInfo.ToList(),
-                POS = sense.Type.ToNullable()
+                POS = sense.Type.ToNullable(),
+                Informational = sense.Informational.ToList()
             };
         }
     }
@@ -514,17 +520,24 @@ namespace JDict
 
         public IEnumerable<string> Glosses { get; }
 
+        public IEnumerable<string> Informational { get; }
+
         [Obsolete]
         public string PartOfSpeechString => string.Join("/", PartOfSpeechInfo.Select(pos => pos.ToDescription()));
 
         [Obsolete]
         public string Description => string.Join("/", Glosses);
 
-        public JMDictSense(Option<EdictPartOfSpeech> type, IReadOnlyCollection<EdictPartOfSpeech> pos, IReadOnlyCollection<string> text)
+        public JMDictSense(
+            Option<EdictPartOfSpeech> type,
+            IReadOnlyCollection<EdictPartOfSpeech> pos,
+            IReadOnlyCollection<string> text,
+            IReadOnlyCollection<string> informational)
         {
             Type = type;
             PartOfSpeechInfo = pos;
             Glosses = text;
+            Informational = informational;
         }
 
         public override string ToString()
