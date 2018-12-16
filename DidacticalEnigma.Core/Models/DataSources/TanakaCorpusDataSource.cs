@@ -24,11 +24,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "These sentences are from Tanaka Corpus",
             new Uri("http://www.edrdg.org/wiki/index.php/Tanaka_Corpus"));
 
-        public Task<Option<RichFormatting>> Answer(Request request)
+        public async Task<Option<RichFormatting>> Answer(Request request)
         {
             var rich = new RichFormatting();
-            var sentences = tanaka.SearchByJapaneseText(request.QueryText);
-            foreach (var sentence in sentences.Take(100).OrderBy(s => s.JapaneseSentence.Length).Take(20))
+            var sentences = tanaka.SearchByJapaneseTextAsync(request.QueryText);
+            foreach (var sentence in (await sentences.Take(100).ToListAsync()).OrderBy(s => s.JapaneseSentence.Length).Take(20))
             {
                 var paragraph = new TextParagraph();
                 foreach (var (text, highlight) in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))
@@ -40,10 +40,10 @@ namespace DidacticalEnigma.Core.Models.DataSources
             };
             if (rich.Paragraphs.Count != 0)
             {
-                return Task.FromResult(Option.Some(rich));
+                return Option.Some(rich);
             }
 
-            return Task.FromResult(Option.None<RichFormatting>());
+            return Option.None<RichFormatting>();
         }
 
         public void Dispose()
