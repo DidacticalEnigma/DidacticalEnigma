@@ -31,9 +31,14 @@ namespace DidacticalEnigma.ViewModels
 
                 request = value;
                 OnPropertyChanged();
-                Task.Run(() => Search(request));
+                tokenSource.Cancel();
+                var t = new CancellationTokenSource();
+                Task.Run(() => Search(request), t.Token);
+                tokenSource = t;
             }
         }
+
+        private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
         private long id = 0;
 
