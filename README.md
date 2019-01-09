@@ -8,15 +8,12 @@ Interface
 
 ![UI](Docs/interface_overview.png)
 
-The following gifs are from an older version of the program:
+![UI](Docs/interface_overview_2.png)
 
-![UI](Docs/1.gif)
+![UI](Docs/interface_overview_3.png)
 
-![UI](Docs/2.gif)
+![UI](Docs/interface_overview_4.png)
 
-![UI](Docs/3.gif)
-
-![UI](Docs/4.gif)
 
 Data sources
 ------------
