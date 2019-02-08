@@ -209,7 +209,7 @@ namespace JDict
         {
             return expressions
                 .IncludeAll()
-                .Find(e => e.LookupKey.StartsWith(p))
+                .Find(e => e.LookupKey.StartsWith(p), limit: limit)
                 .SelectMany(e => e.Entry)
                 .Select(e => e.To(s => s.To()));
         }
