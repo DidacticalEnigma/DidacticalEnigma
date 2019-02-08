@@ -98,7 +98,7 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private IEnumerable<CodePoint> currentlySelected;
+        private IEnumerable<CodePoint> currentlySelected = Enumerable.Empty<CodePoint>();
 
         private IKanjiProperties kanjiProperties;
 
