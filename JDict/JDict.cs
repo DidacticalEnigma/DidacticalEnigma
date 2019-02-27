@@ -18,6 +18,7 @@ using Optional.Collections;
 using Optional.Unsafe;
 using Utility.Utils;
 using FileMode = System.IO.FileMode;
+using FileOptions = LiteDB.FileOptions;
 
 namespace JDict
 {
@@ -338,7 +339,12 @@ namespace JDict
 
         private static LiteDatabase OpenDatabase(string cachePath)
         {
-            return new LiteDatabase(new FileDiskService(cachePath, journal: false));
+            return new LiteDatabase(new FileDiskService(cachePath, new FileOptions()
+            {
+                Journal = false,
+                FileMode = LiteDB.FileMode.Exclusive,
+                Flush = false,
+            }));
         }
 
         public void Dispose()

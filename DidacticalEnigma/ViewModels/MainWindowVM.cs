@@ -62,7 +62,11 @@ namespace DidacticalEnigma.ViewModels
                 if(SearchEngineIndex == -1)
                     return;
 
-                LaunchWebBrowserAt(SearchEngines[SearchEngineIndex].BuildSearch(CurrentTextBuffer.SelectionInfo.GetRequest().QueryText));
+                var queryText = CurrentTextBuffer.SelectionInfo?.GetRequest().QueryText;
+                if (queryText == null)
+                    return;
+
+                LaunchWebBrowserAt(SearchEngines[SearchEngineIndex].BuildSearch(queryText));
             });
             SwitchToTab = new RelayCommand(tab =>
             {
