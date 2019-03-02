@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using DidacticalEnigma.Views;
 using Gu.Inject;
 using JDict;
 using NMeCab;
+using Sentry;
 using SplashScreen = DidacticalEnigma.Views.SplashScreen;
 
 namespace DidacticalEnigma
@@ -24,8 +26,11 @@ namespace DidacticalEnigma
     {
         private Kernel Kernel;
 
+        private IDisposable sentry;
+
         public App()
         {
+            SetUpCrashReporting(ConfigurationManager.AppSettings["SentryDsn"]);
             Startup += async (sender, args) =>
             {
                 Configure();
@@ -53,6 +58,25 @@ namespace DidacticalEnigma
             Exit += (sender, args) =>
             {
                 Kernel.Dispose();
+            };
+        }
+
+        // does nothing if dsn is null
+        private void SetUpCrashReporting(string dsn)
+        {
+            if (string.IsNullOrWhiteSpace(dsn))
+                return;
+            Startup += (sender, args) =>
+            {
+                sentry = SentrySdk.Init(o =>
+                {
+                    o.Dsn = new Dsn(dsn);
+                    o.AttachStacktrace = true;
+                });
+            };
+            Exit += (sender, args) =>
+            {
+                sentry.Dispose();
             };
         }
 
