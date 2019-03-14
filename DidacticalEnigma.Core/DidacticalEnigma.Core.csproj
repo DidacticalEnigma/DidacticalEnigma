@@ -6,17 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AsyncEnumerator" Version="2.2.1" />
+    <PackageReference Include="AsyncEnumerator" Version="2.2.2" />
     <PackageReference Include="Gu.Analyzers" Version="1.3.0-dev">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="LibJpConjSharp" Version="0.5.8" />
     <PackageReference Include="LiteDB" Version="4.1.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NMeCabNetStandard" Version="0.7.0" />
     <PackageReference Include="Optional" Version="4.0.0" />
-    <PackageReference Include="UnicodeInformation" Version="2.2.1" />
+    <PackageReference Include="UnicodeInformation" Version="2.3.0.26" />
   </ItemGroup>
 
   <ItemGroup>
