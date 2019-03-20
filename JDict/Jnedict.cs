@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
-using LiteDB;
 using Optional;
 using Optional.Collections;
 using TinyIndex;
@@ -213,11 +212,6 @@ namespace JDict
             return await new Jnedict().InitAsync(
                 stream,
                 cache);
-        }
-
-        private static LiteDatabase OpenDatabase(string cache)
-        {
-            return new LiteDatabase(new FileDiskService(cache, journal: false));
         }
     }
 

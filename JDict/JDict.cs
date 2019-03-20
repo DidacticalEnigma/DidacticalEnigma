@@ -12,14 +12,12 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
-using LiteDB;
 using Optional;
 using Optional.Collections;
 using Optional.Unsafe;
 using TinyIndex;
 using Utility.Utils;
 using FileMode = System.IO.FileMode;
-using FileOptions = LiteDB.FileOptions;
 
 namespace JDict
 {

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JDict.Json;
-using LiteDB;
 using Newtonsoft.Json;
 using TinyIndex;
 using Utility.Utils;
