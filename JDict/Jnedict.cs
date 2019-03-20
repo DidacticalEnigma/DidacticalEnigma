@@ -315,37 +315,4 @@ namespace JDict
         [Description("old or irregular kana form")]
         ok
     }
-
-    internal class DbNeDictKeyValue
-    {
-        public long Id { get; set; }
-
-        public string LookupKey { get; set; }
-
-        [BsonRef("entries")]
-        public List<DbNeEntry> Entries { get; set; }
-    }
-
-    internal class DbNeEntry
-    {
-        public long Id { get; set; }
-
-        public long SequenceNumber { get; set; }
-
-        public List<string> Kanji { get; set; }
-
-        public List<string> Reading { get; set; }
-
-        [BsonRef("trans")]
-        public List<DbNeTranslation> Translation { get; set; }
-    }
-
-    internal class DbNeTranslation
-    {
-        public long Id { get; set; }
-
-        public List<JnedictType> Type { get; set; }
-
-        public List<string> Detail { get; set; }
-    }
 }
