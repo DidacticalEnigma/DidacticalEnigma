@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using Optional;
 
@@ -11,7 +12,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class PartialWordLookupJMDictDataSource : IDataSource
     {
-        private readonly JMDict jmdict;
+        private readonly PartialWordLookup lookup;
         private readonly FrequencyList list;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
@@ -20,9 +21,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "The data JMdict by Electronic Dictionary Research and Development Group",
             new Uri("http://www.edrdg.org/jmdict/j_jmdict.html"));
 
-        public PartialWordLookupJMDictDataSource(JMDict jmdict, FrequencyList list)
+        public PartialWordLookupJMDictDataSource(PartialWordLookup lookup, FrequencyList list)
         {
-            this.jmdict = jmdict;
+            this.lookup = lookup;
             this.list = list;
         }
 
@@ -33,7 +34,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         public Task<Option<RichFormatting>> Answer(Request request)
         {
-            var entry = jmdict.PartialWordLookup(request.Word.RawWord.Trim());
+            var entry = lookup.LookupWords(request.Word.RawWord.Trim());
             var rich = new RichFormatting();
             var p = new TextParagraph();
             p.Content.Add(new Text(string.Join("\n", entry.OrderByDescending(m => list.RateFrequency(m)).Distinct()), fontSize: FontSize.Large));

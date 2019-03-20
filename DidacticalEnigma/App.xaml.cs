@@ -148,7 +148,7 @@ namespace DidacticalEnigma
                 new DataSourceVM(new CustomNotesDataSource(Path.Combine(dataDir, "custom", "custom_notes.txt")), get.Get<IFontResolver>()),
                 new DataSourceVM(new TanakaCorpusDataSource(get.Get<Tanaka>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<JMDict>(), get.Get<FrequencyList>()), get.Get<IFontResolver>()),
+                new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<PartialWordLookup>(), get.Get<FrequencyList>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new RomajiDataSource(get.Get<IRomaji>()), get.Get<IFontResolver>())
             }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new DataSourceVM(new EpwingDataSource(dict, get.Get<IKanaProperties>()), get.Get<IFontResolver>()))));
@@ -164,6 +164,7 @@ namespace DidacticalEnigma
                 get.Get<IEnumerable<DataSourceVM>>()));
             kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
             kernel.BindFactory(get => new IdiomDetector(get.Get<JMDict>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
+            kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDict>()));
             Kernel = kernel;
             
 
