@@ -107,10 +107,11 @@ namespace DidacticalEnigma
             kernel.BindFactory(() => new JESC(Path.Combine(dataDir, "corpora", "jesc_raw"), Encoding.UTF8));
             kernel.BindFactory(() => new BasicExpressionsCorpus(Path.Combine(dataDir, "corpora", "JEC_basic_sentence_v1-2.csv"), Encoding.UTF8));
             kernel.BindFactory<IFontResolver>(() => new DefaultFontResolver(Path.Combine(dataDir, "character", "KanjiStrokeOrders")));
-            kernel.BindFactory<IMorphologicalAnalyzer<IEntry>>(() => new MeCabIpadic(new MeCabParam
+            kernel.BindFactory<IMorphologicalAnalyzer<IpadicEntry>>(() => new MeCabIpadic(new MeCabParam
             {
                 DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
             }));
+            kernel.Bind<IMorphologicalAnalyzer<IEntry>, IMorphologicalAnalyzer<IpadicEntry>>();
             kernel.BindFactory(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
             kernel.BindFactory(get => EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")));
             kernel.Bind<IKanjiProperties, KanjiProperties>();
@@ -142,7 +143,7 @@ namespace DidacticalEnigma
                 new DataSourceVM(new JMDictDataSource(get.Get<JMDict>(), get.Get<IKanaProperties>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new JNeDictDataSource(get.Get<Jnedict>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDict>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new PartialExpressionJMDictDataSource(get.Get<JMDict>()), get.Get<IFontResolver>()),
+                new DataSourceVM(new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new AutoGlosserDataSource(get.Get<AutoGlosser>()), get.Get<IFontResolver>()),
                 new DataSourceVM(new CustomNotesDataSource(Path.Combine(dataDir, "custom", "custom_notes.txt")), get.Get<IFontResolver>()),
                 new DataSourceVM(new TanakaCorpusDataSource(get.Get<Tanaka>()), get.Get<IFontResolver>()),
@@ -162,6 +163,7 @@ namespace DidacticalEnigma
             kernel.BindFactory(get => new UsageDataSourcePreviewVM(
                 get.Get<IEnumerable<DataSourceVM>>()));
             kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
+            kernel.BindFactory(get => new IdiomDetector(get.Get<JMDict>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
             Kernel = kernel;
             
 

@@ -206,6 +206,7 @@ namespace JDict
             }
         }
 
+        [Obsolete("Please use DidacticalEnigma.Core.Models.LanguageService.IdiomDetector instead")]
         public IEnumerable<JMDictEntry> PartialExpressionLookup(string p, int limit = int.MaxValue)
         {
             return Enumerable.Empty<JMDictEntry>();

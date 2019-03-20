@@ -14,7 +14,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class PartialExpressionJMDictDataSource : IDataSource
     {
-        private readonly JMDict jdict;
+        private readonly IdiomDetector idiomDetector;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
             new Guid("C04648BA-68B2-467B-87C4-33DA5B9CA070"),
@@ -26,14 +26,13 @@ namespace DidacticalEnigma.Core.Models.DataSources
         {
             var rich = new RichFormatting();
             var lookup = LookAhead(request);
-            foreach (var (l, word) in lookup)
+            foreach (var l in lookup)
             {
                 var textParagraph = new TextParagraph(
                         l.Readings
                             .Concat(l.Kanji)
-                            .Where(r => r.Contains(word))
-                            .SelectMany(w => StringExt.HighlightWords(w, word).Concat(EnumerableExt.OfSingle((text: "; ", highlight: false))))
-                            .Select(t => new Text(t.text, emphasis: t.highlight)));
+                            .Intersperse("/")
+                            .Select(t => new Text(t, emphasis: false)));
                 textParagraph.Content.Add(new Text("\n"));
                 textParagraph.Content.Add(new Text(string.Join("\n", l.Senses
                     .Where(s => s.PartOfSpeechInfo.Contains(EdictPartOfSpeech.exp))
@@ -45,23 +44,13 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(Option.Some(rich));
         }
 
-        private IEnumerable<(JMDictEntry entry, string word)> LookAhead(Request request, int ahead = 5)
+        private IEnumerable<JMDictEntry> LookAhead(Request request, int ahead = 5)
         {
-            return Impl(request, ahead)
-                .Reverse()
-                .SelectMany(key => jdict.PartialExpressionLookup(key, 60).Select(e => (entry: e, word: key)))
-                .DistinctBy(k => k.entry.SequenceNumber)
-                .Take(60);
+            return idiomDetector.Detect(Impl(request, ahead));
 
-            IEnumerable<string> Impl(Request r, int a)
+            string Impl(Request r, int a)
             {
-                string k = "";
-                foreach(var word in r.SubsequentWords)
-                {
-                    k += word;
-                    if (jdict.PartialExpressionLookup(k, 1).Any())
-                        yield return k;
-                }
+                return string.Join("", r.SubsequentWords.Take(a));
             }
         }
 
@@ -75,9 +64,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public PartialExpressionJMDictDataSource(JMDict jdict)
+        public PartialExpressionJMDictDataSource(IdiomDetector idiomDetector)
         {
-            this.jdict = jdict;
+            this.idiomDetector = idiomDetector;
         }
     }
 }

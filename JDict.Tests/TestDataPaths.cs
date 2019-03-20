@@ -29,6 +29,8 @@ namespace JDict.Tests
 
         public static readonly string JMnedictCache = Path.Combine(BaseDir, "dictionaries", "JMnedict.xml.cache");
 
+        public static readonly string IdiomsCache = Path.Combine(BaseDir, "dictionaries", "idioms.cache");
+
         public static readonly string KanjiDic = Path.Combine(BaseDir, "character", "kanjidic2.xml.gz");
 
         public static readonly string Kradfile = Path.Combine(BaseDir, "character", "kradfile1_plus_2_utf8");
