@@ -25,7 +25,7 @@ namespace JDict
 
             public Option<T> Deserialize(byte[] sourceBuffer, int sourceBufferOffset, int sourceBufferLength)
             {
-                if (sourceBuffer[0] == 0)
+                if (sourceBuffer[sourceBufferOffset] == 0)
                     return Option.Some(serializer.Deserialize(
                         sourceBuffer, 
                         sourceBufferOffset + 1,
@@ -56,7 +56,7 @@ namespace JDict
                     },
                     () =>
                     {
-                        destinationBuffer[destinationBufferOffset] = 1;
+                        destinationBuffer[destinationBufferOffset] = byte.MaxValue;
                         return (true, 1);
                     });
                 actualSize = actualSizeResult;

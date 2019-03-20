@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Optional;
 
 namespace JDict.Tests
 {
@@ -28,7 +29,7 @@ namespace JDict.Tests
         public void LookupKana()
         {
             {
-                var entries = jmdict.Lookup("みなみ") ?? Enumerable.Empty<JMDictEntry>();
+                var entries = jmdict.Lookup("みなみ");
                 Assert.True(entries.Any(e => e.Senses.Any(s => s.Glosses.Contains("south"))));
             }
         }
@@ -37,7 +38,7 @@ namespace JDict.Tests
         public void LookupKanji()
         {
             {
-                var entries = jmdict.Lookup("南") ?? Enumerable.Empty<JMDictEntry>();
+                var entries = jmdict.Lookup("南");
                 Assert.True(entries.Any(e => e.Senses.Any(s => s.Glosses.Contains("south"))));
             }
         }
@@ -46,8 +47,17 @@ namespace JDict.Tests
         public void LookupOther()
         {
             {
-                var entries = jmdict.Lookup("私") ?? Enumerable.Empty<JMDictEntry>();
+                var entries = jmdict.Lookup("私");
                 Assert.False(entries.Any(e => e.Senses.Any(s => s.Glosses.Contains("south"))));
+            }
+        }
+
+        [Test]
+        public void LookupKangaeru()
+        {
+            {
+                var entries = jmdict.Lookup("考える");
+                Assert.True(entries.Any(e => e.Senses.Any(s => s.Type == EdictPartOfSpeech.v1.Some())));
             }
         }
     }

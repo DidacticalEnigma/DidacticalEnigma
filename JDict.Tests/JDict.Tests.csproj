@@ -48,6 +48,9 @@
     <Reference Include="Gu.Inject, Version=0.1.0.0, Culture=neutral, PublicKeyToken=84247aff6de990f8, processorArchitecture=MSIL">
       <HintPath>..\packages\Gu.Inject.0.1.0-dev\lib\net452\Gu.Inject.dll</HintPath>
     </Reference>
+    <Reference Include="LibJpConjSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LibJpConjSharp.0.5.8\lib\netstandard2.0\LibJpConjSharp.dll</HintPath>
+    </Reference>
     <Reference Include="LibNMeCabNetStandard, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NMeCabNetStandard.0.7.0\lib\netstandard2.0\LibNMeCabNetStandard.dll</HintPath>
     </Reference>
@@ -180,9 +183,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Romaji.cs" />
+    <Compile Include="SerializerExtTests.cs" />
     <Compile Include="StringExtTests.cs" />
     <Compile Include="Tagger.cs" />
     <Compile Include="TestDataPaths.cs" />
+    <Compile Include="VerbInflecterDataSourceTests.cs" />
     <Compile Include="Yomichan.cs" />
     <Compile Include="ZipTests.cs" />
   </ItemGroup>
@@ -200,6 +205,10 @@
     <ProjectReference Include="..\JDict\JDict.csproj">
       <Project>{82e18376-40e8-4f9d-bc46-e166354bccb3}</Project>
       <Name>JDict</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TinyIndex\TinyIndex\TinyIndex.csproj">
+      <Project>{41b81c6b-c466-4c3f-8460-3ef2288a33d8}</Project>
+      <Name>TinyIndex</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{6014edb7-3375-4d85-90a5-4db7638d7b39}</Project>

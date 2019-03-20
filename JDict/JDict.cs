@@ -157,61 +157,6 @@ namespace JDict
             return sense;
         }
 
-        /*private void FillDatabase(IReadOnlyDictionary<string, List<JMDictEntry>> root)
-        {
-            senses.Delete(_ => true);
-            entries.Delete(_ => true);
-            kvps.Delete(_ => true);
-            expressions.Delete(_ => true);
-            version.Delete(_ => true);
-
-            var sensesDict = root.Values
-                .SelectMany(e => e.SelectMany(p => p.Senses))
-                .Distinct()
-                .Select((s, i) => (s, i+2))
-                .ToDictionary(kvp => kvp.Item1, kvp => DbSense.From(kvp.Item1, kvp.Item2));
-
-            var entriesDict = root.Values
-                .SelectMany(e => e)
-                .Distinct()
-                .Select((e, i) => (e, i+2))
-                .ToDictionary(
-                    kvp => kvp.Item1,
-                    kvp => DbDictEntry.From(kvp.Item1, s => sensesDict[s], kvp.Item2));
-
-            var kvpsDict = root
-                .ToDictionary(kvp => DbDictEntryKeyValue.From(
-                    new KeyValuePair<string, IEnumerable<JMDictEntry>>(kvp.Key, kvp.Value),
-                    e => entriesDict[e]));
-
-            var kvpsSequence = kvpsDict.Select(kvp => DbDictEntryKeyValue.From(
-                new KeyValuePair<string, IEnumerable<JMDictEntry>>(kvp.Value.Key, kvp.Value.Value),
-                e => entriesDict[e]))
-                .ToList();
-
-            senses.InsertBulk(sensesDict.Values);
-            entries.InsertBulk(entriesDict.Values);
-            kvps.InsertBulk(kvpsSequence);
-
-            {
-                var exprs = kvpsSequence
-                    .Where(kvp =>
-                        kvp.Values.Any(e =>
-                            e.Senses.Any(s =>
-                                s.PartOfSpeech.Any(pos => pos == EdictPartOfSpeech.exp))))
-                    .ToList();
-                var rotations = exprs.SelectMany(kvp => StringExt.AllRotationsOf(kvp.LookupKey + "\0")
-                    .Where(key => !key.StartsWith("\0"))
-                    .Select(key => new DbExpression
-                    {
-                        LookupKey = key,
-                        Entry = kvp.Values
-                    }));
-                
-                expressions.InsertBulk(rotations);
-            }
-        }*/
-
         private async Task<JMDict> InitAsync(Stream stream, string cache)
         {
             // TODO: not a lazy way
