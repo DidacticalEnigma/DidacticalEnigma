@@ -171,6 +171,7 @@
     <Compile Include="AutoGlosserTests.cs" />
     <Compile Include="EnumerableExt.cs" />
     <Compile Include="Index.cs" />
+    <Compile Include="JMDictTests.cs" />
     <Compile Include="JnedictTests.cs" />
     <Compile Include="KanaPropertiesTests.cs" />
     <Compile Include="Kradfile.cs" />

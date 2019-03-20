@@ -16,6 +16,7 @@ using LiteDB;
 using Optional;
 using Optional.Collections;
 using Optional.Unsafe;
+using TinyIndex;
 using Utility.Utils;
 using FileMode = System.IO.FileMode;
 using FileOptions = LiteDB.FileOptions;
@@ -27,46 +28,95 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
-        private static readonly int Version = 7;
+        private static readonly Guid Version = new Guid("09443314-67EC-40C9-ADF7-7E155EBF2486");
 
-        private LiteDatabase db;
+        private TinyIndex.Database db;
 
-        private LiteCollection<DbDictEntryKeyValue> kvps;
+        private IReadOnlyDiskArray<KeyValuePair<string, IReadOnlyList<long>>> kvps;
 
-        private LiteCollection<DbDictVersion> version;
+        private IReadOnlyDiskArray<JMDictEntry> entries;
 
-        private LiteCollection<DbDictEntry> entries;
-
-        private LiteCollection<DbSense> senses;
-
-        private LiteCollection<DbExpression> expressions;
-
-        private JMDict Init(Stream stream, LiteDatabase cache)
+        private JMDict Init(Stream stream, string cache)
         {
-            db = cache;
-            version = cache.GetCollection<DbDictVersion>("version");
-            kvps = cache.GetCollection<DbDictEntryKeyValue>("kvps");
-            entries = cache.GetCollection<DbDictEntry>("entries");
-            senses = cache.GetCollection<DbSense>("senses");
-            expressions = cache.GetCollection<DbExpression>("expressions");
-            var versionInfo = version.FindAll().FirstOrDefault();
-            if (versionInfo == null ||
-                (versionInfo.OriginalFileSize != -1 && stream.CanSeek && stream.Length != versionInfo.OriginalFileSize) ||
-                versionInfo.DbVersion != Version)
-            {
-                var root = ReadFromXml(stream);
-                FillDatabase(root);
-            }
+            var entrySerializer = TinyIndex.Serializer.ForComposite()
+                .With(Serializer.ForLong())
+                .With(Serializer.ForReadOnlyCollection(Serializer.ForStringAsUTF8()))
+                .With(Serializer.ForReadOnlyCollection(Serializer.ForStringAsUTF8()))
+                .With(Serializer.ForReadOnlyCollection(Serializer.ForComposite()
+                    .With(SerializerExt.ForOption(Serializer.ForEnum<EdictPartOfSpeech>()))
+                    .With(Serializer.ForReadOnlyCollection(Serializer.ForEnum<EdictPartOfSpeech>()))
+                    .With(Serializer.ForReadOnlyCollection(Serializer.ForStringAsUTF8()))
+                    .With(Serializer.ForReadOnlyCollection(Serializer.ForStringAsUTF8()))
+                    .Create()
+                    .Mapping(
+                        raw => new JMDictSense(
+                            (Option<EdictPartOfSpeech>)raw[0],
+                            (IReadOnlyCollection<EdictPartOfSpeech>)raw[1],
+                            (IReadOnlyCollection<string>)raw[2],
+                            (IReadOnlyCollection<string>)raw[3]),
+                        obj => new object[]
+                        {
+                            obj.Type,
+                            obj.PartOfSpeechInfo,
+                            obj.Glosses,
+                            obj.Informational
+                        })))
+                .Create()
+                .Mapping(
+                    raw => new JMDictEntry(
+                        (long)raw[0],
+                        (IReadOnlyCollection<string>)raw[1],
+                        (IReadOnlyCollection<string>)raw[2],
+                        (IReadOnlyCollection<JMDictSense>)raw[3]),
+                    obj => new object[]
+                    {
+                        obj.SequenceNumber,
+                        obj.Readings,
+                        obj.Kanji,
+                        obj.Senses
+                    });
+
+            var lazyRoot = new Lazy<List<JMDictEntry>>(() => Deserialize(stream)
+                .Select(xmlEntry => new JMDictEntry(
+                    xmlEntry.Number,
+                    xmlEntry.ReadingElements.Select(r => r.Reb).ToList(),
+                    (xmlEntry.KanjiElements?.Select(k => k.Key) ?? Enumerable.Empty<string>()).ToList(),
+                    CreateSenses(xmlEntry)))
+                .ToList());
+
+            db = TinyIndex.Database.CreateOrOpen(cache, Version)
+                .AddIndirectArray(entrySerializer, () => lazyRoot.Value, x => x.SequenceNumber)
+                .AddIndirectArray(TinyIndex.Serializer.ForKeyValuePair(TinyIndex.Serializer.ForStringAsUTF8(), TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForLong())), () =>
+                    {
+                        IEnumerable<KeyValuePair<long, string>> It()
+                        {
+                            foreach (var e in lazyRoot.Value)
+                            {
+                                foreach (var r in e.Kanji)
+                                {
+                                    yield return new KeyValuePair<long, string>(e.SequenceNumber, r);
+                                }
+
+                                foreach (var r in e.Readings)
+                                {
+                                    yield return new KeyValuePair<long, string>(e.SequenceNumber, r);
+                                }
+                            }
+                        }
+
+                        return It()
+                            .GroupBy(kvp => kvp.Value, kvp => kvp.Key)
+                            .Select(x => new KeyValuePair<string, IReadOnlyList<long>>(x.Key, x.ToList()));
+                    },
+                    x => x.Key)
+                .Build();
+            entries = db.Get<JMDictEntry>(0);
+            kvps = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
 
             return this;
         }
 
-        private IEnumerable<JdicEntry> Deserialize(XmlReader reader)
-        {
-            return ((JdicRoot) serializer.Deserialize(reader)).Entries;
-        }
-
-        private Dictionary<string, List<JMDictEntry>> ReadFromXml(Stream stream)
+        private IEnumerable<JdicEntry> Deserialize(Stream stream)
         {
             var xmlSettings = new XmlReaderSettings
             {
@@ -78,32 +128,14 @@ namespace JDict
             };
             using (var xmlReader = XmlReader.Create(stream, xmlSettings))
             {
-                var root = new Dictionary<string, List<JMDictEntry>>();
-                var entries = Deserialize(xmlReader)
-                    .SelectMany(e =>
-                    {
-                        var kanjiElements = e.KanjiElements ?? Enumerable.Empty<KanjiElement>();
-                        return kanjiElements
-                            .Select(k => new KeyValuePair<string, JdicEntry>(k.Key, e))
-                            .Concat(e.ReadingElements.Select(r => new KeyValuePair<string, JdicEntry>(r.Reb, e)));
-                    });
-                foreach (var kvp in entries)
+                foreach (var entry in ((JdicRoot)serializer.Deserialize(xmlReader)).Entries)
                 {
-                    var xmlEntry = kvp.Value;
-                    if (!root.ContainsKey(kvp.Key))
-                        root[kvp.Key] = new List<JMDictEntry>();
-                    root[kvp.Key].Add(new JMDictEntry(
-                        xmlEntry.Number,
-                        xmlEntry.ReadingElements.Select(r => r.Reb),
-                        xmlEntry.KanjiElements?.Select(k => k.Key) ?? Enumerable.Empty<string>(),
-                        CreateSense(xmlEntry)));
+                    yield return entry;
                 }
-
-                return root;
             }
         }
 
-        private IEnumerable<JMDictSense> CreateSense(JdicEntry xmlEntry)
+        private IReadOnlyCollection<JMDictSense> CreateSenses(JdicEntry xmlEntry)
         {
             var sense = new List<JMDictSense>();
             string[] previousPartOfSpeech = null;
@@ -125,7 +157,7 @@ namespace JDict
             return sense;
         }
 
-        private void FillDatabase(IReadOnlyDictionary<string, List<JMDictEntry>> root)
+        /*private void FillDatabase(IReadOnlyDictionary<string, List<JMDictEntry>> root)
         {
             senses.Delete(_ => true);
             entries.Delete(_ => true);
@@ -178,46 +210,55 @@ namespace JDict
                 
                 expressions.InsertBulk(rotations);
             }
+        }*/
 
-            kvps.EnsureIndex(x => x.LookupKey);
-            expressions.EnsureIndex(e => e.LookupKey);
-
-            version.Insert(new DbDictVersion
-            {
-                DbVersion = Version,
-                OriginalFileSize = -1,
-                OriginalFileHash = Array.Empty<byte>()
-            });
-        }
-
-        private async Task<JMDict> InitAsync(Stream stream, LiteDatabase cache)
+        private async Task<JMDict> InitAsync(Stream stream, string cache)
         {
             // TODO: not a lazy way
             await Task.Run(() => Init(stream, cache));
             return this;
         }
 
-        public IEnumerable<JMDictEntry> Lookup(string v)
+        public IEnumerable<JMDictEntry> Lookup(string key)
         {
-            return kvps
-                .IncludeAll()
-                .FindOne(kvp => kvp.LookupKey == v)
-                ?.Values
-                ?.Select(e => e.To(s => s.To()));
+            var res = kvps.BinarySearch(key, kvp => kvp.Key);
+            if (res.id == -1)
+            {
+                return null;
+            }
+            else
+            {
+                return It();
+            }
+
+            IEnumerable<JMDictEntry> It()
+            {
+                var sequenceNumbers = res.element.Value;
+                foreach (var sequenceNumber in sequenceNumbers)
+                {
+                    var searchResult = entries.BinarySearch(sequenceNumber, e => e.SequenceNumber);
+                    if (searchResult.id != -1)
+                    {
+                        yield return searchResult.element;
+                    }
+                }
+            }
         }
 
         public IEnumerable<JMDictEntry> PartialExpressionLookup(string p, int limit = int.MaxValue)
         {
-            return expressions
+            return Enumerable.Empty<JMDictEntry>();
+            /*return expressions
                 .IncludeAll()
                 .Find(e => e.LookupKey.StartsWith(p), limit: limit)
                 .SelectMany(e => e.Entry)
-                .Select(e => e.To(s => s.To()));
+                .Select(e => e.To(s => s.To()));*/
         }
 
         public IEnumerable<string> PartialWordLookup(string input)
         {
-            string wildcardChar = "/\\";
+            return Enumerable.Empty<string>();
+            /*string wildcardChar = "/\\";
             IEnumerable<DbDictEntryKeyValue> preFiltered;
             if (input.Replace(wildcardChar, "").Length == input.Length)
             {
@@ -253,40 +294,10 @@ namespace JDict
             return preFiltered
                 .Where(kvp => regex.IsMatch(kvp.LookupKey))
                 .Select(kvp => kvp.LookupKey)
-                .ToList();
+                .ToList();*/
         }
 
-        private IEnumerable<DbDictEntryKeyValue> LookupByLength(string v)
-        {
-            var len = v.Length;
-            return kvps.Find(kvp => kvp.LookupKey.Length == len);
-        }
-
-        private IEnumerable<DbDictEntryKeyValue> LookupByStart(string v)
-        {
-            return kvps.Find(kvp => kvp.LookupKey.StartsWith(v));
-        }
-
-        private IEnumerable<DbDictEntryKeyValue> LookupByAnywhere(string v)
-        {
-            return kvps.Find(kvp => kvp.LookupKey.Contains(v));
-        }
-
-        public IEnumerable<string> WordLookupByPredicate(Func<string, bool> matcher)
-        {
-            return kvps
-                .FindAll()
-                .Where(kvp => matcher(kvp.LookupKey))
-                .Select(kvp => kvp.LookupKey)
-                .ToList();
-        }
-
-        private KeyValuePair<string, IEnumerable<JMDictEntry>> SimpleMap(DbDictEntryKeyValue kvp)
-        {
-            return kvp.To(e => e.To(en => en.To()));
-        }
-
-        private async Task<JMDict> InitAsync(string path, LiteDatabase cache)
+        private async Task<JMDict> InitAsync(string path, string cache)
         {
             using (var file = File.OpenRead(path))
             using (var gzip = new GZipStream(file, CompressionMode.Decompress))
@@ -295,7 +306,7 @@ namespace JDict
             }
         }
 
-        private JMDict Init(string path, LiteDatabase cache)
+        private JMDict Init(string path, string cache)
         {
             using (var file = File.OpenRead(path))
             using (var gzip = new GZipStream(file, CompressionMode.Decompress))
@@ -313,150 +324,34 @@ namespace JDict
         {
             return new JMDict().Init(
                 path,
-                OpenDatabase(cache));
+                cache);
         }
 
         public static JMDict Create(Stream stream, string cache)
         {
             return new JMDict().Init(
                 stream,
-                OpenDatabase(cache));
+                cache);
         }
 
         public static async Task<JMDict> CreateAsync(string path, string cache)
         {
             return await new JMDict().InitAsync(
                 path,
-                OpenDatabase(cache));
+                cache);
         }
 
         public static async Task<JMDict> CreateAsync(Stream stream, string cache)
         {
             return await new JMDict().InitAsync(
                 stream,
-                OpenDatabase(cache));
-        }
-
-        private static LiteDatabase OpenDatabase(string cachePath)
-        {
-            return new LiteDatabase(new FileDiskService(cachePath, new FileOptions()
-            {
-                Journal = false,
-                FileMode = LiteDB.FileMode.Exclusive,
-                Flush = false,
-            }));
+                cache);
         }
 
         public void Dispose()
         {
             db.Dispose();
         }
-    }
-
-    internal class DbDictEntryKeyValue
-    {
-        public long Id { get; set; }
-
-        public string LookupKey { get; set; }
-
-        [BsonRef("entries")]
-        public List<DbDictEntry> Values { get; set; }
-
-        public KeyValuePair<string, IEnumerable<JMDictEntry>> To(Func<DbDictEntry, JMDictEntry> entryMapper)
-        {
-            return new KeyValuePair<string, IEnumerable<JMDictEntry>>(
-                LookupKey,
-                Values.Select(entryMapper));
-        }
-
-        public static DbDictEntryKeyValue From(KeyValuePair<string, IEnumerable<JMDictEntry>> kvp, Func<JMDictEntry, DbDictEntry> entryMapper, int id = 0)
-        {
-            return new DbDictEntryKeyValue
-            {
-                Id = id,
-                LookupKey = kvp.Key,
-                Values = kvp.Value.Select(entryMapper).ToList()
-            };
-        }
-    }
-
-    internal class DbDictEntry
-    {
-        public long Id { get; set; }
-
-        public long SequenceNumber { get; set; }
-
-        public List<string> Readings { get; set; }
-
-        public List<string> Kanji { get; set; }
-
-        [BsonRef("senses")]
-        public List<DbSense> Senses { get; set; }
-
-        public JMDictEntry To(Func<DbSense, JMDictSense> senseMapper)
-        {
-            return new JMDictEntry(
-                SequenceNumber,
-                Readings,
-                Kanji,
-                Senses.Select(senseMapper));
-        }
-
-        public static DbDictEntry From(JMDictEntry entry, Func<JMDictSense, DbSense> senseMapper, int id = 0)
-        {
-            return new DbDictEntry
-            {
-                Id = id,
-                Kanji = entry.Kanji.ToList(),
-                Readings = entry.Readings.ToList(),
-                SequenceNumber = entry.SequenceNumber,
-                Senses = entry.Senses.Select(senseMapper).ToList()
-            };
-        }
-    }
-
-    internal class DbSense
-    {
-        public long Id { get; set; }
-
-        public EdictPartOfSpeech? POS { get; set; }
-
-        public List<EdictPartOfSpeech> PartOfSpeech { get; set; }
-
-        public List<string> Glosses { get; set; }
-
-        public List<string> Informational { get; set; }
-
-        public JMDictSense To()
-        {
-            return new JMDictSense(
-                POS?.Some() ?? Option.None<EdictPartOfSpeech>(),
-                PartOfSpeech,
-                Glosses,
-                Informational);
-        }
-
-        public static DbSense From(JMDictSense sense, int id = 0)
-        {
-            return new DbSense
-            {
-                Id = id,
-                Glosses = sense.Glosses.ToList(),
-                PartOfSpeech = sense.PartOfSpeechInfo.ToList(),
-                POS = sense.Type.ToNullable(),
-                Informational = sense.Informational.ToList()
-            };
-        }
-    }
-
-    internal class DbExpression
-    {
-        public long Id { get; set; }
-
-        public string LookupKey { get; set; }
-
-        [BsonRef("entries")]
-        public List<DbDictEntry> Entry { get; set; }
     }
 
     public class JMDictEntry
@@ -507,14 +402,14 @@ namespace JDict
 
         public JMDictEntry(
             long sequenceNumber,
-            IEnumerable<string> readings,
-            IEnumerable<string> kanji,
-            IEnumerable<JMDictSense> senses)
+            IReadOnlyCollection<string> readings,
+            IReadOnlyCollection<string> kanji,
+            IReadOnlyCollection<JMDictSense> senses)
         {
             SequenceNumber = sequenceNumber;
-            Readings = readings.ToList();
-            Kanji = kanji.ToList();
-            Senses = senses.ToList();
+            Readings = readings;
+            Kanji = kanji;
+            Senses = senses;
         }
     }
 
