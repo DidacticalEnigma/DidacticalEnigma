@@ -47,9 +47,8 @@ namespace DidacticalEnigma.Core.Models.DataSources
             foreach (var entry in entries)
             {
                 var l = new List<Text>();
-                bool first;
                 {
-                    first = true;
+                    bool first = true;
                     foreach (var kanji in entry.Kanji)
                     {
                         if (!first)
@@ -61,7 +60,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                     l.Add(new Text("\n"));
                 }
                 {
-                    first = true;
+                    bool first = true;
                     foreach (var reading in entry.Readings)
                     {
                         if (!first)
@@ -77,6 +76,18 @@ namespace DidacticalEnigma.Core.Models.DataSources
                     {
                         l.Add(new Text(sense.PartOfSpeechString, fontSize: FontSize.ExtraSmall));
                         l.Add(new Text("\n"));
+                        {
+                            bool first = true;
+                            foreach (var dialect in sense.DialectalInfo)
+                            {
+                                if(!first)
+                                    l.Add(new Text(", ", fontSize: FontSize.Medium));
+                                first = false;
+                                l.Add(new Text(dialect.ToDescription(), fontSize: FontSize.Medium));
+                            }
+                            if(!first)
+                                l.Add(new Text("\n"));
+                        }
                         foreach (var inf in sense.Informational)
                         {
                             l.Add(new Text(inf, fontSize: FontSize.Medium));

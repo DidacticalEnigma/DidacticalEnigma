@@ -26,7 +26,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
 
-        private static readonly Guid Version = new Guid("09443314-67EC-40C9-ADF7-7E155EBF2486");
+        private static readonly Guid Version = new Guid("2DC4D47E-8306-4E4F-BC3E-970599812E76");
 
         private TinyIndex.Database db;
 
@@ -43,6 +43,7 @@ namespace JDict
                 .With(Serializer.ForReadOnlyCollection(Serializer.ForComposite()
                     .With(SerializerExt.ForOption(Serializer.ForEnum<EdictPartOfSpeech>()))
                     .With(Serializer.ForReadOnlyCollection(Serializer.ForEnum<EdictPartOfSpeech>()))
+                    .With(Serializer.ForReadOnlyCollection(Serializer.ForEnum<EdictDialect>()))
                     .With(Serializer.ForReadOnlyCollection(Serializer.ForStringAsUTF8()))
                     .With(Serializer.ForReadOnlyCollection(Serializer.ForStringAsUTF8()))
                     .Create()
@@ -50,12 +51,14 @@ namespace JDict
                         raw => new JMDictSense(
                             (Option<EdictPartOfSpeech>)raw[0],
                             (IReadOnlyCollection<EdictPartOfSpeech>)raw[1],
-                            (IReadOnlyCollection<string>)raw[2],
-                            (IReadOnlyCollection<string>)raw[3]),
+                            (IReadOnlyCollection<EdictDialect>)raw[2],
+                            (IReadOnlyCollection<string>)raw[3],
+                            (IReadOnlyCollection<string>)raw[4]),
                         obj => new object[]
                         {
                             obj.Type,
                             obj.PartOfSpeechInfo,
+                            obj.DialectalInfo,
                             obj.Glosses,
                             obj.Informational
                         })))
@@ -147,6 +150,7 @@ namespace JDict
                         Debug.WriteLine($"{posStr} unknown");
                         return default(EdictPartOfSpeech);
                     })).ToList(),
+                    (s.Dialect ?? Array.Empty<string>()).Select(EdictDialectUtils.FromDescription).Values().ToList(),
                     s.Glosses.Select(g => g.Text.Trim()).ToList(),
                     s.Information?.ToList() ?? new List<string>()));
                 previousPartOfSpeech = partOfSpeech;
@@ -389,14 +393,18 @@ namespace JDict
         [Obsolete]
         public string Description => string.Join("/", Glosses);
 
+        public IEnumerable<EdictDialect> DialectalInfo { get; }
+
         public JMDictSense(
             Option<EdictPartOfSpeech> type,
             IReadOnlyCollection<EdictPartOfSpeech> pos,
+            IReadOnlyCollection<EdictDialect> dialect,
             IReadOnlyCollection<string> text,
             IReadOnlyCollection<string> informational)
         {
             Type = type;
             PartOfSpeechInfo = pos;
+            DialectalInfo = dialect;
             Glosses = text;
             Informational = informational;
         }
@@ -663,7 +671,7 @@ namespace JDict
         n_pr,
     }
 
-    enum EdictDialect
+    public enum EdictDialect
     {
         // reserving 0 for an "unknown"
         [Description("Kyoto-ben")]
@@ -688,6 +696,26 @@ namespace JDict
         hob,
         [Description("Nagano-ben")]
         nab,
+    }
+
+    public static class EdictDialectUtils
+    {
+        public static Option<EdictDialect> FromDescription(string description)
+        {
+            return mapping.FromDescription(description);
+        }
+
+        public static string ToDescription(this EdictDialect d)
+        {
+            return mapping.ToLongString(d);
+        }
+
+        public static string ToAbbrevation(this EdictPartOfSpeech d)
+        {
+            return d.ToString().Replace("_", "-");
+        }
+
+        private static EnumMapper<EdictDialect> mapping = new EnumMapper<EdictDialect>();
     }
 
     enum EdictField
