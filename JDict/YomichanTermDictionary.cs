@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using JDict.Json;
 using LiteDB;
 using Newtonsoft.Json;
+using TinyIndex;
 using Utility.Utils;
 using FileMode = System.IO.FileMode;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
@@ -18,52 +19,93 @@ namespace JDict
     // 
     public class YomichanTermDictionary : IDisposable
     {
-        private static readonly int Version = 3;
+        private static readonly Guid Version = new Guid("F7D29471-7532-4CFC-AD18-75F26BFE406F");
 
-        private static readonly BsonMapper mapper = new BsonMapper
-        {
-            TrimWhitespace = false,
-            EmptyStringToNull = false,
-            // I'm fine with this - I don't use typeless schemas
-            SerializeNullValues = false
-        };
+        private TinyIndex.Database db;
 
-        private LiteDatabase db;
+        private IReadOnlyDiskArray<YomichanDictionaryEntry> entries;
 
-        private LiteCollection<YomichanDictionaryEntry> entries;
-
-        private LiteCollection<YomichanDictionaryInfo> version;
+        private IReadOnlyDiskArray<KeyValuePair<string, IReadOnlyList<long>>> index;
 
         private static readonly Regex termMatcher = new Regex(@"^term_bank_\d+.json$");
 
-        public string Revision { get; private set; }
-
-        public YomichanTermDictionary(string pathToZip, string cache)
+        public YomichanTermDictionary(string pathToZip, string cachePath)
         {
             using (var zip = new ZipFile(pathToZip))
             {
-                Init(zip, File.Open(cache, FileMode.OpenOrCreate));
+                Init(zip, cachePath);
             }
         }
 
-        private void Init(IZipFile zip, Stream cacheFile)
+        private void Init(IZipFile zip, string cachePath)
         {
-            db = new LiteDatabase(cacheFile, mapper);
-            entries = db.GetCollection<YomichanDictionaryEntry>("entries");
-            this.version = db.GetCollection<YomichanDictionaryInfo>("version");
-            var versionInfo = version.FindAll().SingleOrDefault();
-            if (versionInfo == null ||
-                versionInfo.DbVersion != Version)
-            {
-                FillDatabase(zip);
-            }
-            else
-            {
-                Revision = versionInfo.Title+"/"+versionInfo.Revision;
-            }
+            var entrySerializer = Serializer.ForComposite()
+                .With(Serializer.ForStringAsUTF8())
+                .With(Serializer.ForStringAsUTF8())
+                .With(Serializer.ForStringAsUTF8())
+                .With(Serializer.ForStringAsUTF8())
+                .With(Serializer.ForInt())
+                .With(Serializer.ForReadOnlyList(Serializer.ForStringAsUTF8()))
+                .With(Serializer.ForInt())
+                .With(Serializer.ForStringAsUTF8())
+                .Create()
+                .Mapping(
+                    raw => new YomichanDictionaryEntry()
+                    {
+                        Expression = (string)raw[0],
+                        Reading = (string)raw[1],
+                        DefinitionTags = (string)raw[2],
+                        Rules = (string)raw[3],
+                        Score = (int)raw[4],
+                        Glossary = (IReadOnlyList<string>)raw[5],
+                        Sequence = (int)raw[6],
+                        TermTags = (string)raw[7]
+                    },
+                    obj => new object[]
+                    {
+                        obj.Expression,
+                        obj.Reading,
+                        obj.DefinitionTags,
+                        obj.Rules,
+                        obj.Score,
+                        obj.Glossary,
+                        obj.Sequence,
+                        obj.TermTags
+                    });
+
+            var indexSerializer = Serializer.ForKeyValuePair(
+                Serializer.ForStringAsUTF8(),
+                Serializer.ForReadOnlyList(Serializer.ForLong()));
+
+            var lazyRoot = new Lazy<List<YomichanDictionaryEntry>>(() => ParseEntriesFromZip(zip).ToList());
+
+            db = TinyIndex.Database.CreateOrOpen(cachePath, Version)
+                .AddIndirectArray(entrySerializer, () => lazyRoot.Value)
+                .AddIndirectArray(indexSerializer, () => Index(lazyRoot.Value), kvp => kvp.Key)
+                .Build();
+
+            entries = db.Get<YomichanDictionaryEntry>(0);
+            index = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
         }
 
-        private void FillDatabase(IZipFile zip)
+        private static IEnumerable<KeyValuePair<string, IReadOnlyList<long>>> Index(
+            IReadOnlyList<YomichanDictionaryEntry> entries)
+        {
+            IEnumerable<KeyValuePair<long, string>> It()
+            {
+                foreach (var (e, i) in entries.Indexed())
+                {
+                    yield return new KeyValuePair<long, string>(i, e.Expression);
+                    yield return new KeyValuePair<long, string>(i, e.Reading);
+                }
+            }
+
+            return It()
+                .GroupBy(kvp => kvp.Value, kvp => kvp.Key)
+                .Select(x => new KeyValuePair<string, IReadOnlyList<long>>(x.Key, x.ToList()));
+        }
+
+        private IEnumerable<YomichanDictionaryEntry> ParseEntriesFromZip(IZipFile zip)
         {
             var groups = zip.Files.ToLookup(f =>
             {
@@ -90,11 +132,6 @@ namespace JDict
                 throw new InvalidDataException("unsupported format");
             }
 
-            this.version.Delete(_ => true);
-            this.entries.Delete(_ => true);
-            this.entries.EnsureIndex(e => e.Expression);
-            this.entries.EnsureIndex(e => e.Reading);
-
             foreach (var filePath in dataFilePaths)
             {
                 using (var dataFile = zip.OpenFile(filePath))
@@ -102,27 +139,27 @@ namespace JDict
                 using (var jsonReader = new JsonTextReader(reader))
                 {
                     var entries = serializer.Deserialize<IEnumerable<YomichanDictionaryEntry>>(jsonReader);
-                    this.entries.InsertBulk(entries);
+                    foreach (var entry in entries)
+                    {
+                        yield return entry;
+                    }
                 }
             }
-
-            this.version.Insert(new YomichanDictionaryInfo()
-            {
-                DbVersion = Version,
-                OriginalFileSize = -1,
-                Revision = version.Revision,
-                Title = version.Title
-            });
         }
 
-        public YomichanTermDictionary(IZipFile zipFile, string cache)
+        public YomichanTermDictionary(IZipFile zipFile, string cachePath)
         {
-            Init(zipFile, File.Open(cache, FileMode.OpenOrCreate));
+            Init(zipFile, cachePath);
         }
 
         public IEnumerable<Entry> Lookup(string key)
         {
-            var l = entries.Find(entry => entry.Expression == key || entry.Reading == key)
+            var result = index.BinarySearch(key, kvp => kvp.Key);
+            if (result.id == -1)
+                return null;
+
+            return result.element.Value
+                .Select(id => entries[id])
                 .OrderBy(entry =>
                 {
                     if (entry.Expression == key)
@@ -133,9 +170,6 @@ namespace JDict
                 })
                 .Select(entry => new Entry(entry.Expression, entry.Reading, entry.Glossary))
                 .ToList();
-            if (l.Count == 0)
-                return null;
-            return l;
         }
 
         private TOut With<TResource, TOut>(Func<TResource> resourceFactory, Func<TResource, TOut> resultFactory)
