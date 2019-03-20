@@ -23,8 +23,8 @@ namespace JDict.Tests
 
             var original = new object[] {Option.None<FileShare>(), FileShare.Delete.Some()};
             var buffer = new byte[16384];
-            var result = serializer.TrySerialize(original, buffer, 0, buffer.Length, out var actualSize);
-            var resurrected = serializer.Deserialize(buffer, 0, actualSize);
+            var result = serializer.TrySerialize(original, buffer.AsSpan(), out var actualSize);
+            var resurrected = serializer.Deserialize(buffer.AsSpan().Slice(0, actualSize));
             CollectionAssert.AreEqual(original, resurrected);
         }
 
@@ -37,7 +37,7 @@ namespace JDict.Tests
             {
                 {
                     var original = 1000042.Some();
-                    bool result = serializer.TrySerialize(original, buffer, 0, i, out var actualSize);
+                    bool result = serializer.TrySerialize(original, buffer.AsSpan().Slice(0, i), out var actualSize);
                     if (i < sizeof(int) + 1)
                     {
                         Assert.False(result);
@@ -46,13 +46,13 @@ namespace JDict.Tests
                     {
                         Assert.True(result);
                         Assert.AreEqual(sizeof(int) + 1, actualSize);
-                        var resurrected = serializer.Deserialize(buffer, 0, i);
+                        var resurrected = serializer.Deserialize(buffer.AsSpan().Slice(0, i));
                         Assert.AreEqual(original, resurrected);
                     }
                 }
                 {
                     var original = 1000042.None();
-                    bool result = serializer.TrySerialize(original, buffer, 0, i, out var actualSize);
+                    bool result = serializer.TrySerialize(original, buffer.AsSpan().Slice(0, i), out var actualSize);
                     if (i < 1)
                     {
                         Assert.False(result);
@@ -61,7 +61,7 @@ namespace JDict.Tests
                     {
                         Assert.True(result);
                         Assert.AreEqual(1, actualSize);
-                        var resurrected = serializer.Deserialize(buffer, 0, i);
+                        var resurrected = serializer.Deserialize(buffer.AsSpan().Slice(0, i));
                         Assert.AreEqual(original, resurrected);
                     }
                 }

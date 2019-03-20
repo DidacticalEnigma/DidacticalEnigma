@@ -16,6 +16,12 @@ namespace JDict
     {
         private class OptionalSerializer<T> : ISerializer<Option<T>>
         {
+            private static bool TryGetMaybe<U>(Option<U> input, out U output)
+            {
+                output = Optional.Unsafe.OptionUnsafeExtensions.ValueOrDefault(input);
+                return input.HasValue;
+            }
+
             private readonly ISerializer<T> serializer;
 
             public OptionalSerializer(ISerializer<T> serializer)
@@ -23,44 +29,38 @@ namespace JDict
                 this.serializer = serializer;
             }
 
-            public Option<T> Deserialize(byte[] sourceBuffer, int sourceBufferOffset, int sourceBufferLength)
+            public Option<T> Deserialize(ReadOnlySpan<byte> input)
             {
-                if (sourceBuffer[sourceBufferOffset] == 0)
-                    return Option.Some(serializer.Deserialize(
-                        sourceBuffer, 
-                        sourceBufferOffset + 1,
-                        sourceBufferLength - 1));
+                if (input[0] == 0)
+                    return Option.Some(serializer.Deserialize(input.Slice(1)));
                 else
                     return Option.None<T>();
             }
 
-            public bool TrySerialize(Option<T> element, byte[] destinationBuffer, int destinationBufferOffset, int destinationBufferLength,
-                out int actualSize)
+            public bool TrySerialize(Option<T> element, Span<byte> output, out int actualSize)
             {
-                if (destinationBufferLength < 1)
+                if (output.Length < 1)
                 {
                     actualSize = 0;
                     return false;
                 }
 
-                var (result, actualSizeResult) = element.Match(e =>
-                    {
-                        destinationBuffer[destinationBufferOffset] = 0;
-                        var r = serializer.TrySerialize(
-                            e,
-                            destinationBuffer,
-                            destinationBufferOffset + 1,
-                            destinationBufferLength - 1,
-                            out var a);
-                        return (r, a+1);
-                    },
-                    () =>
-                    {
-                        destinationBuffer[destinationBufferOffset] = byte.MaxValue;
-                        return (true, 1);
-                    });
-                actualSize = actualSizeResult;
-                return result;
+                if (TryGetMaybe(element, out var e))
+                {
+                    output[0] = 0;
+                    var r = serializer.TrySerialize(
+                        e,
+                        output.Slice(1),
+                        out var a);
+                    actualSize = a + 1;
+                    return r;
+                }
+                else
+                {
+                    output[0] = byte.MaxValue;
+                    actualSize = 1;
+                    return true;
+                }
             }
         }
 

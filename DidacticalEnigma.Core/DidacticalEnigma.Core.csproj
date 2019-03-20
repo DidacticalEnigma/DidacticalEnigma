@@ -16,6 +16,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NMeCabNetStandard" Version="0.7.0" />
     <PackageReference Include="Optional" Version="4.0.0" />
+    <PackageReference Include="System.Memory" Version="4.5.2" />
     <PackageReference Include="UnicodeInformation" Version="2.3.0.26" />
   </ItemGroup>
 

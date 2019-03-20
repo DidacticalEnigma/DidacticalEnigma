@@ -45,7 +45,7 @@ namespace JDict.Tests
 
         [Explicit]
         [Test]
-        public void Performance()
+        public void JMDictCacheCreationPerformance()
         {
             var cache = Path.Combine(Path.GetTempPath(), "whatever");
             File.Delete(cache);
@@ -54,7 +54,7 @@ namespace JDict.Tests
                 //var baseline = dotMemory.Check();
                 var watch = Stopwatch.StartNew();
 
-                using (var jnedict = JMDict.Create(TestDataPaths.JMDict, cache))
+                using (var jdict = JMDict.Create(TestDataPaths.JMDict, cache))
                 {
                     var elapsed = watch.Elapsed;
                     /*var _ = dotMemory.Check(m =>
@@ -62,14 +62,26 @@ namespace JDict.Tests
                         var traffic = m.GetTrafficFrom(baseline);
                         Assert.Less(traffic.AllocatedMemory.SizeInBytes, 4096L * 1024 * 1024);
                     });*/
-                    //Assert.Less(elapsed, TimeSpan.FromSeconds(20));
+                    Assert.Less(elapsed, TimeSpan.FromSeconds(20));
                 }
             }
             finally
             {
                 File.Delete(cache);
             }
-            
+        }
+
+        [Explicit]
+        [Test]
+        public void PartialLookupCreation()
+        {
+            using (var jmdict = JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache))
+            {
+                var watch = Stopwatch.StartNew();
+                var lookup = new PartialWordLookup(jmdict);
+                var elapsed = watch.Elapsed;
+                Assert.Less(elapsed, TimeSpan.FromSeconds(1));
+            }
         }
 
         [Explicit]
