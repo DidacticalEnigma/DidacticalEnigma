@@ -32,6 +32,19 @@ namespace JDict.Tests
 
         [Explicit]
         [Test]
+        public void JmdictAllEntriesPerformance()
+        {
+            using (var jmdict = JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache))
+            {
+                var watch = Stopwatch.StartNew();
+                var list = jmdict.AllEntries().ToList();
+                var elapsed = watch.Elapsed;
+                Assert.Less(elapsed, TimeSpan.FromSeconds(4));
+            }
+        }
+
+        [Explicit]
+        [Test]
         public void Performance()
         {
             var cache = Path.Combine(Path.GetTempPath(), "whatever");

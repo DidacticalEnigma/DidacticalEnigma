@@ -164,6 +164,22 @@ namespace JDict
             return this;
         }
 
+        public Option<JMDictEntry> LookupBySequenceNumber(long sequenceNumber)
+        {
+            var searchResult = entries.BinarySearch(sequenceNumber, e => e.SequenceNumber);
+            if (searchResult.id != -1)
+            {
+                return searchResult.element.Some();
+            }
+
+            return Option.None<JMDictEntry>();
+        }
+
+        public IEnumerable<JMDictEntry> AllEntries()
+        {
+            return entries.LinearScan();
+        }
+
         public IEnumerable<JMDictEntry> Lookup(string key)
         {
             var res = kvps.BinarySearch(key, kvp => kvp.Key);
