@@ -208,59 +208,6 @@ namespace JDict
             }
         }
 
-        [Obsolete("Please use DidacticalEnigma.Core.Models.LanguageService.IdiomDetector instead")]
-        public IEnumerable<JMDictEntry> PartialExpressionLookup(string p, int limit = int.MaxValue)
-        {
-            return Enumerable.Empty<JMDictEntry>();
-            /*return expressions
-                .IncludeAll()
-                .Find(e => e.LookupKey.StartsWith(p), limit: limit)
-                .SelectMany(e => e.Entry)
-                .Select(e => e.To(s => s.To()));*/
-        }
-
-        public IEnumerable<string> PartialWordLookup(string input)
-        {
-            return Enumerable.Empty<string>();
-            /*string wildcardChar = "/\\";
-            IEnumerable<DbDictEntryKeyValue> preFiltered;
-            if (input.Replace(wildcardChar, "").Length == input.Length)
-            {
-                // if there's no placeholders, just do unique search
-                var key = kvps.FindOne(kvp => kvp.LookupKey == input);
-                return key != null
-                    ? EnumerableExt.OfSingle(key.LookupKey).ToList()
-                    : new List<string>();
-            }
-            var components = input
-                .Split(new[] { wildcardChar }, StringSplitOptions.RemoveEmptyEntries);
-            var regex = new Regex("^" + Regex.Escape(input).Replace(@"/\\", ".") + "$");
-            if (components.Length == 0)
-            {
-                preFiltered = kvps.FindAll();
-            }
-            else
-            {
-                if (!input.StartsWith(wildcardChar))
-                {
-                    // prefix search is preferred because we can do filtering before we even hit the index
-                    preFiltered = LookupByStart(components[0]);
-                }
-                else
-                {
-                    // worst case we filter by anywhere in the query
-                    var x = components
-                        .MaxBy(l => l.Length);
-                    preFiltered = LookupByAnywhere(x);
-                }
-            }
-
-            return preFiltered
-                .Where(kvp => regex.IsMatch(kvp.LookupKey))
-                .Select(kvp => kvp.LookupKey)
-                .ToList();*/
-        }
-
         private async Task<JMDict> InitAsync(string path, string cache)
         {
             using (var file = File.OpenRead(path))
