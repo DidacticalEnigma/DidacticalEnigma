@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using DidacticalEnigma.Core.Models;
@@ -101,7 +103,7 @@ namespace DidacticalEnigma.ViewModels
         {
             using (Process.Start(url))
             {
-
+                
             }
         }
 
