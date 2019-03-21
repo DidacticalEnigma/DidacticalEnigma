@@ -66,7 +66,24 @@ namespace JDict.Tests
         {
             var entries = idiomDetector.Detect("明日").ToList();
             Assert.True(entries.DistinctBy(e => e.DictionaryEntry.SequenceNumber).Count() == entries.Count);
-            Assert.AreEqual(3, entries.Count);
+        }
+
+        [Test]
+        public void Basic4()
+        {
+            var entries = idiomDetector.Detect("同士").ToList();
+            Assert.True(entries.SelectMany(e => e.DictionaryEntry.Kanji).Contains("女同士"));
+        }
+
+        [Test]
+        public void Basic5()
+        {
+            var entry = idiomDetector.Detect("何も問題ない").First(e => e.DictionaryEntry.Kanji.Contains("何の変哲もない"));
+            CollectionAssert.AreEqual(new[]
+            {
+                ("何", true),
+                ("の変哲もない", false)
+            }, entry.RenderedHighlights);
         }
     }
 }

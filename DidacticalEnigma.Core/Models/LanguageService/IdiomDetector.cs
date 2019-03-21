@@ -55,6 +55,20 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .ValueOr(normalized);
         }
 
+        private double Similarity(IpadicEntry left, IpadicEntry right)
+        {
+            if (left.SurfaceForm == right.SurfaceForm)
+            {
+                return 1.0;
+            }
+            else if (left.DictionaryForm != null && left.DictionaryForm == right.DictionaryForm)
+            {
+                return 0.5;
+            }
+
+            return 0.0;
+        }
+
         private Option<Result> Rate(
             IReadOnlyList<IpadicEntry> queryMorphemes,
             string candidate,
@@ -69,8 +83,16 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 candidate = candidate.Substring(0, candidate.IndexOf('\0'));
                 var original = OriginalNotNormalized(remainder + candidate, candidateEntry);
 
+                int j = 0;
                 var analyzedCandidate = Analyze(original);
-                for (int i = 0, j = 0; j < analyzedCandidate.Count;)
+                while (j < analyzedCandidate.Count && Similarity(queryMorphemes[0], analyzedCandidate[j]) == 0.0)
+                {
+                    highlights.Add((analyzedCandidate[j].SurfaceForm, false));
+                    j++;
+                }
+
+                bool mismatch = false;
+                for (int i = 0; j < analyzedCandidate.Count;)
                 {
                     // use a sentinel
                     var queryMorpheme = i < queryMorphemes.Count
@@ -78,19 +100,28 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                         : new IpadicEntry("", Option.None<string>());
                     var candidateMorpheme = analyzedCandidate[j];
 
-                    if (queryMorpheme.SurfaceForm == candidateMorpheme.SurfaceForm)
+                    
+                    if (mismatch)
                     {
-                        similarity++;
+                        i++;
+                        j++;
+                        highlights.Add((candidateMorpheme.SurfaceForm, false));
+                        continue;
+                    }
+
+                    var morphemeSimilarity = Similarity(queryMorpheme, candidateMorpheme);
+                    if (morphemeSimilarity != 0.0)
+                    {
+                        similarity += morphemeSimilarity;
                         i++;
                         j++;
                         highlights.Add((candidateMorpheme.SurfaceForm, true));
                     }
-                    else if (queryMorpheme.DictionaryForm != null && queryMorpheme.DictionaryForm == candidateMorpheme.DictionaryForm)
+                    else if(queryMorpheme.PartOfSpeech == PartOfSpeech.Particle && candidateMorpheme.PartOfSpeech == PartOfSpeech.Particle)
                     {
-                        similarity += 0.5;
                         i++;
                         j++;
-                        highlights.Add((candidateMorpheme.SurfaceForm, true));
+                        highlights.Add((candidateMorpheme.SurfaceForm, false));
                     }
                     else if (queryMorpheme.PartOfSpeech == PartOfSpeech.Particle)
                     {
@@ -103,6 +134,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     }
                     else
                     {
+                        mismatch = true;
                         i++;
                         j++;
                         highlights.Add((candidateMorpheme.SurfaceForm, false));
