@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.LanguageService;
 using NMeCab;
 using NUnit.Framework;
+using Utility.Utils;
 
 namespace JDict.Tests
 {
@@ -58,6 +59,14 @@ namespace JDict.Tests
                 ("じゃ", true),
                 ("しょういちにょ", false)
             }, result.RenderedHighlights);
+        }
+
+        [Test]
+        public void Basic3()
+        {
+            var entries = idiomDetector.Detect("明日").ToList();
+            Assert.True(entries.DistinctBy(e => e.DictionaryEntry.SequenceNumber).Count() == entries.Count);
+            Assert.AreEqual(3, entries.Count);
         }
     }
 }

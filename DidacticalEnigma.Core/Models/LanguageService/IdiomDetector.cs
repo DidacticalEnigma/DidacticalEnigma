@@ -128,7 +128,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .Select(kvp => Rate(analyzed, kvp.Item2.Key, kvp.Item2.Value))
                 .Values()
                 .Where(r => r.Similarity > 0)
-                .OrderByDescending(r => r.Similarity);
+                .OrderByDescending(r => r.Similarity)
+                .DistinctBy(r => r.DictionaryEntry.SequenceNumber);
         }
 
         public IdiomDetector(
