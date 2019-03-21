@@ -40,7 +40,24 @@ namespace JDict.Tests
         public void Basic()
         {
             var entries = idiomDetector.Detect("鼻の下");
-            Assert.True(entries.Any(e => e.Kanji.Contains("鼻の下を伸ばす")));
+            var result = entries.First(e => e.DictionaryEntry.Kanji.Contains("鼻の下を伸ばす"));
+            CollectionAssert.AreEqual(new[]
+            {
+                ("鼻の下", true),
+                ("を伸ばす", false)
+            }, result.RenderedHighlights);
+        }
+
+        [Test]
+        public void Basic2()
+        {
+            var entries = idiomDetector.Detect("じゃねえかな");
+            var result = entries.First(e => e.DictionaryEntry.Readings.Contains("じゃしょういちにょ"));
+            CollectionAssert.AreEqual(new[]
+            {
+                ("じゃ", true),
+                ("しょういちにょ", false)
+            }, result.RenderedHighlights);
         }
     }
 }

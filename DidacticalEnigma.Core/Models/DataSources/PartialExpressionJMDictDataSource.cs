@@ -29,12 +29,10 @@ namespace DidacticalEnigma.Core.Models.DataSources
             foreach (var l in lookup)
             {
                 var textParagraph = new TextParagraph(
-                        l.Readings
-                            .Concat(l.Kanji)
-                            .Intersperse("/")
-                            .Select(t => new Text(t, emphasis: false)));
+                        l.RenderedHighlights
+                            .Select(t => new Text(t.fragment, emphasis: t.highlight)));
                 textParagraph.Content.Add(new Text("\n"));
-                textParagraph.Content.Add(new Text(string.Join("\n", l.Senses
+                textParagraph.Content.Add(new Text(string.Join("\n", l.DictionaryEntry.Senses
                     .Where(s => s.PartOfSpeechInfo.Contains(EdictPartOfSpeech.exp))
                     .Select(s => s.Description))));
 
@@ -44,7 +42,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(Option.Some(rich));
         }
 
-        private IEnumerable<JMDictEntry> LookAhead(Request request, int ahead = 5)
+        private IEnumerable<IdiomDetector.Result> LookAhead(Request request, int ahead = 5)
         {
             return idiomDetector.Detect(Impl(request, ahead));
 

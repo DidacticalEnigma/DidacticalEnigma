@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utility.Utils;
 
 namespace JDict.Tests
 {
@@ -33,6 +34,22 @@ namespace JDict.Tests
             CollectionAssert.AreEqual(
                 new[] { 1 },
                 Utility.Utils.EnumerableExt.IntersperseSequencesWith(input, -1).ToList());
+        }
+
+        private static int[][] GroupConsecutive(int[] input)
+        {
+            return input.GroupConsecutive(x => x).Select(x => x.ToArray()).ToArray();
+        }
+
+        [Test]
+        public void GroupConsecutive()
+        {
+            CollectionAssert.AreEqual(new int[][] { }, GroupConsecutive(new int[0]));
+            CollectionAssert.AreEqual(new int[][] { new[] { 1 } }, GroupConsecutive(new int[] { 1 }));
+            CollectionAssert.AreEqual(new int[][] { new[] { 1, 1 } }, GroupConsecutive(new int[] { 1, 1 }));
+            CollectionAssert.AreEqual(new int[][] { new[] { 1, 1, 1 } }, GroupConsecutive(new int[] { 1, 1, 1 }));
+            CollectionAssert.AreEqual(new int[][] { new[] { 1, 1 }, new[] { 3 } }, GroupConsecutive(new int[] { 1, 1, 3 }));
+            CollectionAssert.AreEqual(new int[][] { new[] { 1 }, new[] { 3 }, new[] { 1 } }, GroupConsecutive(new int[] { 1, 3, 1 }));
         }
     }
 }

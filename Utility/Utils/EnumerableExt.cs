@@ -246,8 +246,8 @@ namespace Utility.Utils
         }
 
         // https://stackoverflow.com/a/489421/1012936
-        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
-            (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(
+            this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             HashSet<TKey> seenKeys = new HashSet<TKey>();
             foreach (TSource element in source)
@@ -257,6 +257,54 @@ namespace Utility.Utils
                     yield return element;
                 }
             }
+        }
+
+        public static IEnumerable<IEnumerable<TElement>> GroupConsecutive<TElement, TKey>(
+            this IEnumerable<TElement> input,
+            Func<TElement, TKey> keySelector,
+            IComparer<TKey> comparer)
+        {
+            var group = new List<TElement>();
+            TKey previousKey = default(TKey);
+            TElement previous = default(TElement);
+            bool isFirst = true;
+            foreach (var current in input)
+            {
+                var currentKey = keySelector(current);
+                if (isFirst)
+                {
+                    group.Add(current);
+                }
+                else
+                {
+                    if (comparer.Compare(previousKey, currentKey) == 0)
+                    {
+                        group.Add(current);
+                    }
+                    else
+                    {
+                        yield return group;
+                        group = new List<TElement>();
+                        group.Add(current);
+                    }
+                }
+
+                previous = current;
+                previousKey = currentKey;
+                isFirst = false;
+            }
+
+            if (!isFirst && group.Count != 0)
+            {
+                yield return group;
+            }
+        }
+
+        public static IEnumerable<IEnumerable<TElement>> GroupConsecutive<TElement, TKey>(
+            this IEnumerable<TElement> input,
+            Func<TElement, TKey> keySelector)
+        {
+            return GroupConsecutive(input, keySelector, Comparer<TKey>.Default);
         }
     }
 }
