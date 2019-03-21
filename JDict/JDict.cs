@@ -334,11 +334,9 @@ namespace JDict
 
         public IEnumerable<string> Informational { get; }
 
-        [Obsolete]
-        public string PartOfSpeechString => string.Join("/", PartOfSpeechInfo.Select(pos => pos.ToDescription()));
+        private string PartOfSpeechString => string.Join("/", PartOfSpeechInfo.Select(pos => pos.ToDescription()));
 
-        [Obsolete]
-        public string Description => string.Join("/", Glosses);
+        private string Description => string.Join("/", Glosses);
 
         public IEnumerable<EdictDialect> DialectalInfo { get; }
 

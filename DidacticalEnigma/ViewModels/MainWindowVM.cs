@@ -22,7 +22,24 @@ namespace DidacticalEnigma.ViewModels
 
         public string AboutText => aboutTextProvider();
 
-        public UsageDataSourcePreviewVM UsageDataSourceVM { get; }
+        public IReadOnlyList<UsageDataSourcePreviewVM> UsageDataSourceVMs { get; }
+
+        private int usageDataSourceIndex = 0;
+        public int UsageDataSourceIndex
+        {
+            get => usageDataSourceIndex;
+            set
+            {
+                if (usageDataSourceIndex == value)
+                    return;
+
+                usageDataSourceIndex = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(UsageDataSourceVM));
+            }
+        }
+
+        public UsageDataSourcePreviewVM UsageDataSourceVM => UsageDataSourceVMs[UsageDataSourceIndex];
 
         public KanjiRadicalLookupControlVM KanjiLookupVM { get; }
 
@@ -30,11 +47,15 @@ namespace DidacticalEnigma.ViewModels
 
         public KanaBoardVM KatakanaBoard { get; }
 
+        private readonly int minUsageIndex = 1;
+
+        private readonly int maxUsageIndex = 3;
+
         public MainWindowVM(
             IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer,
             KanaBoardVM hiraganaBoard,
             KanaBoardVM katakanaBoard,
-            UsageDataSourcePreviewVM usageDataSourceVm,
+            IEnumerable<UsageDataSourcePreviewVM> usageDataSourceVms,
             KanjiRadicalLookupControlVM kanjiLookupVm,
             IRelated related,
             IKanjiProperties kanjiProperties,
@@ -44,7 +65,7 @@ namespace DidacticalEnigma.ViewModels
             HiraganaBoard = hiraganaBoard;
             KatakanaBoard = katakanaBoard;
             this.aboutTextProvider = aboutTextProvider;
-            UsageDataSourceVM = usageDataSourceVm;
+            UsageDataSourceVMs = new ObservableBatchCollection<UsageDataSourcePreviewVM>(usageDataSourceVms);
             TextBuffers.Add(new TextBufferVM("Scratchpad", morphologicalAnalyzer, kanjiProperties, kanaProperties, related));
             TextBuffers.Add(new TextBufferVM("Main", morphologicalAnalyzer, kanjiProperties, kanaProperties, related));
             ClipboardTextBuffer = new TextBufferVM("Clipboard", morphologicalAnalyzer, kanjiProperties, kanaProperties, related);
@@ -80,14 +101,20 @@ namespace DidacticalEnigma.ViewModels
                     case "usage1":
                     TabIndex = 1;
                     break;
-                    case "hiragana":
+                    case "usage2":
                     TabIndex = 2;
                     break;
-                    case "kanji":
+                    case "usage3":
                     TabIndex = 3;
                     break;
-                    case "katakana":
+                    case "hiragana":
                     TabIndex = 4;
+                    break;
+                    case "kanji":
+                    TabIndex = 5;
+                    break;
+                    case "katakana":
+                    TabIndex = 6;
                     break;
                     ;
 
@@ -95,7 +122,7 @@ namespace DidacticalEnigma.ViewModels
             });
             DataSourceForceRefresh = new RelayCommand(() =>
             {
-                usageDataSourceVm.Search(usageDataSourceVm.Request);
+                UsageDataSourceVM.Search(UsageDataSourceVM.Request);
             });
         }
 
@@ -184,7 +211,6 @@ namespace DidacticalEnigma.ViewModels
         public RelayCommand DataSourceForceRefresh { get; }
 
         private int tabIndex = 1;
-
         public int TabIndex
         {
             get => tabIndex;
@@ -193,6 +219,8 @@ namespace DidacticalEnigma.ViewModels
                 if (value == tabIndex)
                     return;
                 tabIndex = value;
+                if (minUsageIndex <= value && value <= maxUsageIndex)
+                    UsageDataSourceIndex = value - minUsageIndex;
                 OnPropertyChanged();
             }
         }

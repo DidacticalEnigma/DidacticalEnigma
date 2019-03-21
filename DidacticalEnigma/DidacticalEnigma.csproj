@@ -201,6 +201,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToColorConverter.cs" />
     <Compile Include="Converters\BooleanToLoadingTextConverter.cs" />
+    <Compile Include="Converters\SelectableDataSourceToStringConverter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Utils\ClipboardHook.cs" />
     <Compile Include="ViewModels\CreationConverter.cs" />

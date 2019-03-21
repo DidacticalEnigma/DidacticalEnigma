@@ -59,42 +59,13 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private bool isUsed;
-        public bool IsUsed
-        {
-            get => isUsed;
-            set
-            {
-                if (isUsed == value)
-                    return;
-                isUsed = value;
-                if (value)
-                {
-                    //Search(lastRequest, id);
-                }
-
-                OnPropertyChanged();
-                this.OnPropertyChanged(nameof(this.Visible));
-            }
-        }
-
-        public Visibility Visible
-        {
-            get
-            {
-                if (isUsed)
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-
         public bool HasFound => FormattedResult != null;
 
         public async Task Search(Request request, long id)
         {
             try
             {
-                if (!IsUsed || request == null)
+                if (request == null)
                     return;
                 this.id = id;
                 IsProcessing = true;
@@ -138,11 +109,6 @@ namespace DidacticalEnigma.ViewModels
         public void Dispose()
         {
             dataSource.Dispose();
-        }
-
-        public override string ToString()
-        {
-            return Descriptor.Name;
         }
     }
 }

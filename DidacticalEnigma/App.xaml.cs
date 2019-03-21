@@ -124,7 +124,7 @@ namespace DidacticalEnigma
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
                 new KanaBoardVM(Path.Combine(dataDir, "character", "hiragana_romaji.txt"), Encoding.UTF8),
                 new KanaBoardVM(Path.Combine(dataDir, "character", "katakana_romaji.txt"), Encoding.UTF8),
-                get.Get<UsageDataSourcePreviewVM>(),
+                get.Get<IEnumerable<UsageDataSourcePreviewVM>>(),
                 get.Get<KanjiRadicalLookupControlVM>(),
                 get.Get<IRelated>(),
                 get.Get<IKanjiProperties>(),
@@ -160,8 +160,11 @@ namespace DidacticalEnigma
                     get.Get<KanaProperties2>(),
                     get.Get<EasilyConfusedKana>(),
                     get.Get<SimilarKanji>()));
-            kernel.BindFactory(get => new UsageDataSourcePreviewVM(
-                get.Get<IEnumerable<DataSourceVM>>()));
+            kernel.BindFactory<IEnumerable<UsageDataSourcePreviewVM>>(get => new []{
+                new UsageDataSourcePreviewVM(get.Get<IEnumerable<DataSourceVM>>(), "view.config"),
+                new UsageDataSourcePreviewVM(get.Get<IEnumerable<DataSourceVM>>(), "view_2.config"),
+                new UsageDataSourcePreviewVM(get.Get<IEnumerable<DataSourceVM>>(), "view_3.config")
+            });
             kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
             kernel.BindFactory(get => new IdiomDetector(get.Get<JMDict>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
             kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDict>()));

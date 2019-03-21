@@ -34,7 +34,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 textParagraph.Content.Add(new Text("\n"));
                 textParagraph.Content.Add(new Text(string.Join("\n", l.DictionaryEntry.Senses
                     .Where(s => s.PartOfSpeechInfo.Contains(EdictPartOfSpeech.exp))
-                    .Select(s => s.Description))));
+                    .Select(s => string.Join("/", s.Glosses)))));
 
                 rich.Paragraphs.Add(textParagraph);
             }

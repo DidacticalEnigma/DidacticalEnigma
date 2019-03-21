@@ -74,7 +74,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 {
                     foreach (var sense in entry.Senses)
                     {
-                        l.Add(new Text(sense.PartOfSpeechString, fontSize: FontSize.ExtraSmall));
+                        l.Add(new Text(string.Join("/", sense.PartOfSpeechInfo.Select(pos => pos.ToDescription())), fontSize: FontSize.ExtraSmall));
                         l.Add(new Text("\n"));
                         {
                             bool first = true;
@@ -93,7 +93,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                             l.Add(new Text(inf, fontSize: FontSize.Medium));
                             l.Add(new Text("\n"));
                         }
-                        l.Add(new Text(sense.Description));
+                        l.Add(new Text(string.Join("/", sense.Glosses)));
                         l.Add(new Text("\n"));
                     }
                 }

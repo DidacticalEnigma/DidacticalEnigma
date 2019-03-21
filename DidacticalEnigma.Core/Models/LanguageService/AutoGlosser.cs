@@ -34,7 +34,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 var word = words[i];
                 var greedySelection = words.Skip(i).Select(w => w.RawWord).Greedy(s =>
                 {
-                    var w = string.Join("", s);
+                    var w = String.Join("", s);
                     return dict.Lookup(w) != null;
                 }).ToList();
                 var lookup = dict.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();
@@ -54,30 +54,28 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 }
                 else if (mapping.TryGetValue(word.EstimatedPartOfSpeech, out var edictType))
                 {
-                    var description = lookup
+                    var description = CreateDescription((lookup
                         ?.SelectMany(entry => entry.Senses)
-                        .FirstOrDefault(s => s.Type.HasValue && s.Type == Option.Some(edictType))
-                        ?.Description;
+                        .FirstOrDefault(s => s.Type.HasValue && s.Type == Option.Some(edictType))));
                     if((description == null || word.Type == Option.Some(EdictPartOfSpeech.cop_da)) && greedySelection.Count > 1)
                     {
-                        var greedyWord = string.Join("", greedySelection);
+                        var greedyWord = String.Join("", greedySelection);
                         var greedyEntries = dict.Lookup(greedyWord);
 
-                        var splitGreedyWord = string.Join(" ", morphologicalAnalyzer.BreakIntoSentences(greedyWord).SelectMany(x => x).Select(x => x.RawWord));
+                        var splitGreedyWord = String.Join(" ", morphologicalAnalyzer.BreakIntoSentences(greedyWord).SelectMany(x => x).Select(x => x.RawWord));
                         glosses.Add(CreateGloss(new WordInfo(splitGreedyWord), "{0}", greedyEntries));
 
                         i += greedySelection.Count - 1; // -1 because iteration will result in one extra increase
                         continue;
                     }
-                    description = description ?? lookup?.SelectMany(entry => entry.Senses).FirstOrDefault()?.Description ?? "";
+                    description = description ?? CreateDescription((lookup?.SelectMany(entry => entry.Senses).FirstOrDefault())) ?? "";
                     glosses.Add(new GlossNote(word.RawWord, description));
                 }
                 else if (word.EstimatedPartOfSpeech == PartOfSpeech.Particle)
                 {
-                    var description = lookup
+                    var description = CreateDescription((lookup
                         ?.SelectMany(entry => entry.Senses)
-                        .FirstOrDefault(s => s.Type == Option.Some(EdictPartOfSpeech.prt))
-                        ?.Description;
+                        .FirstOrDefault(s => s.Type == Option.Some(EdictPartOfSpeech.prt))));
                     if (description != null)
                     {
                         glosses.Add(new GlossNote(word.RawWord, "Particle " + word.DictionaryForm + " - " + description));
@@ -110,7 +108,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             {
                 JMDictSense sense = notInflected.SelectMany(e => e.Senses).FirstOrDefault(e => e.Type.HasValue && e.Type == foreign.Type);
                 sense = sense ?? notInflected.SelectMany(e => e.Senses).First();
-                senseString = sense.Description;
+                senseString = CreateDescription(sense);
             }
 
             return new GlossNote(
@@ -122,6 +120,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             this.morphologicalAnalyzer = morphologicalAnalyzer;
             this.dict = dict;
+        }
+
+        private static string CreateDescription(JMDictSense sense)
+        {
+            return string.Join("/", sense.Glosses);
         }
     }
 }

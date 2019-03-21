@@ -12,27 +12,37 @@
     mc:Ignorable="d">
     <Window.InputBindings>
         <KeyBinding
-            Key="D1"
+            Key="F1"
             Command="{Binding SwitchToTab}"
             CommandParameter="project"
             Modifiers="Control" />
         <KeyBinding
-            Key="D2"
+            Key="D1"
             Command="{Binding SwitchToTab}"
             CommandParameter="usage1"
             Modifiers="Control" />
         <KeyBinding
-            Key="F1"
+            Key="D2"
             Command="{Binding SwitchToTab}"
-            CommandParameter="hiragana"
+            CommandParameter="usage2"
+            Modifiers="Control" />
+        <KeyBinding
+            Key="D3"
+            Command="{Binding SwitchToTab}"
+            CommandParameter="usage3"
             Modifiers="Control" />
         <KeyBinding
             Key="F2"
             Command="{Binding SwitchToTab}"
-            CommandParameter="kanji"
+            CommandParameter="hiragana"
             Modifiers="Control" />
         <KeyBinding
             Key="F3"
+            Command="{Binding SwitchToTab}"
+            CommandParameter="kanji"
+            Modifiers="Control" />
+        <KeyBinding
+            Key="F4"
             Command="{Binding SwitchToTab}"
             CommandParameter="katakana"
             Modifiers="Control" />
@@ -115,7 +125,13 @@
             <TabItem Header="Project">
                 <TextBlock Text="To be implemented" />
             </TabItem>
-            <TabItem Header="Usage">
+            <TabItem Header="Usage #1">
+                <views:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.CurrentTextBuffer.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Converter={x:Static converters:SelectionInfoToRequestConverter.Default}, Mode=OneWay}" />
+            </TabItem>
+            <TabItem Header="Usage #2">
+                <views:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.CurrentTextBuffer.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Converter={x:Static converters:SelectionInfoToRequestConverter.Default}, Mode=OneWay}" />
+            </TabItem>
+            <TabItem Header="Usage #3">
                 <views:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.CurrentTextBuffer.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Converter={x:Static converters:SelectionInfoToRequestConverter.Default}, Mode=OneWay}" />
             </TabItem>
             <TabItem Header="Hiragana">

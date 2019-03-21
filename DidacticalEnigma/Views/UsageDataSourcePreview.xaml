@@ -82,23 +82,28 @@
                                 Grid.Column="1"
                                 Command="{Binding VSplit}"
                                 Content="V" />
-                            <Button Grid.Column="2" Content="{Binding Content.SelectedDataSource.IsProcessing, Converter={x:Static converters:BooleanToLoadingTextConverter.Default}}" />
+                            <Button Grid.Column="2" Content="{Binding Content.SelectedDataSource.Entity.IsProcessing, Converter={x:Static converters:BooleanToLoadingTextConverter.Default}}" />
                             <ComboBox
                                 Grid.Column="3"
                                 ItemsSource="{Binding Content.Parent.DataSources}"
                                 SelectedIndex="{Binding Content.SelectedDataSourceIndex}">
                                 <ComboBox.ItemContainerStyle>
                                     <Style TargetType="{x:Type ComboBoxItem}">
-                                        <Setter Property="IsEnabled" Value="{Binding IsUsed, Converter={x:Static converters:BooleanNegationConverter.Default}}" />
+                                        <Setter Property="IsEnabled" Value="{Binding Selected, Converter={x:Static converters:BooleanNegationConverter.Default}}" />
                                     </Style>
                                 </ComboBox.ItemContainerStyle>
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={x:Static converters:SelectableDataSourceToStringConverter.Default}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
                             </ComboBox>
                             <Button
                                 Grid.Column="4"
                                 Command="{Binding Close}"
                                 Content="X" />
                         </Grid>
-                        <FlowDocumentScrollViewer Grid.Row="1" Document="{Binding Content.SelectedDataSource.Document}" />
+                        <FlowDocumentScrollViewer Grid.Row="1" Document="{Binding Content.SelectedDataSource.Entity.Document}" />
                     </Grid>
                 </DataTemplate>
             </vms:TreeSplitDataTemplateSelector.LeafTemplate>

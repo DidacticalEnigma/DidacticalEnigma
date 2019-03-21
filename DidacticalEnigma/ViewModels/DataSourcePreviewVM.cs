@@ -21,7 +21,7 @@ namespace DidacticalEnigma.ViewModels
         public UsageDataSourcePreviewVM Parent { get; }
 
         private int selectedDataSourceIndex = -1;
-        private DataSourceVM selectedDataSource;
+        private Selectable<DataSourceVM> selectedDataSource;
 
         public int SelectedDataSourceIndex
         {
@@ -38,13 +38,13 @@ namespace DidacticalEnigma.ViewModels
                     : null;
                 OnPropertyChanged();
 
-                SelectedDataSource.IsUsed = true;
+                SelectedDataSource.Selected = true;
                 if (oldSource != null)
-                    oldSource.IsUsed = false;
+                    oldSource.Selected = false;
             }
         }
 
-        public DataSourceVM SelectedDataSource
+        public Selectable<DataSourceVM> SelectedDataSource
         {
             get => selectedDataSource;
             private set

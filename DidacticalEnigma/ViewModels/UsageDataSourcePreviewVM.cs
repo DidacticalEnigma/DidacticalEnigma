@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,9 +15,43 @@ using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {
+    public class Selectable<T> : INotifyPropertyChanged, IDisposable
+        where T : IDisposable
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public T Entity { get; }
+
+        public Selectable(T entity)
+        {
+            Entity = entity;
+        }
+
+        private bool selected;
+        public bool Selected
+        {
+            get => selected;
+            set
+            {
+                if (value == selected)
+                    return;
+
+                selected = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selected)));
+            }
+        }
+
+        public void Dispose()
+        {
+            Entity.Dispose();
+        }
+    }
+
     public class UsageDataSourcePreviewVM : INotifyPropertyChanged, IDisposable
     {
-        public ObservableBatchCollection<DataSourceVM> DataSources { get; } = new ObservableBatchCollection<DataSourceVM>();
+        private readonly string configPath;
+
+        public ObservableBatchCollection<Selectable<DataSourceVM>> DataSources { get; } = new ObservableBatchCollection<Selectable<DataSourceVM>>();
 
         public Root Root { get; }
 
@@ -48,26 +83,28 @@ namespace DidacticalEnigma.ViewModels
             var id = Interlocked.Increment(ref this.id);
             foreach(var dataSource in DataSources)
             {
-                tasks.Add(dataSource.Search(req, id));
+                if(dataSource.Selected)
+                    tasks.Add(dataSource.Entity.Search(req, id));
             }
             return Task.WhenAll(tasks);
         }
 
-        public UsageDataSourcePreviewVM(IEnumerable<DataSourceVM> dataSources)
+        public UsageDataSourcePreviewVM(IEnumerable<DataSourceVM> dataSources, string configPath)
         {
-            DataSources.AddRange(dataSources);
+            this.configPath = configPath;
+            DataSources.AddRange(dataSources.Select(d => new Selectable<DataSourceVM>(d)));
             Leaf Fac() => new Leaf(() => new DataSourcePreviewVM(this), o =>
             {
                 var dataSource = ((DataSourcePreviewVM) o).SelectedDataSource;
                 if (dataSource != null)
                 {
-                    dataSource.IsUsed = false;
+                    dataSource.Selected = false;
                 }
             });
 
             try
             {
-                var root = JsonConvert.DeserializeObject<Root>(File.ReadAllText("view.config"),
+                var root = JsonConvert.DeserializeObject<Root>(File.ReadAllText(configPath),
                     new ElementCreationConverter(Fac));
                 Root = root;
             }
@@ -94,7 +131,7 @@ namespace DidacticalEnigma.ViewModels
             {
                 dataSource.Dispose();
             }
-            File.WriteAllText("view.config", JsonConvert.SerializeObject(Root));
+            File.WriteAllText(configPath, JsonConvert.SerializeObject(Root));
         }
     }
 }
