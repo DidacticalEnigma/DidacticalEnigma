@@ -117,13 +117,13 @@ namespace DidacticalEnigma.ViewModels
 
             var lookup = this.lookup.SelectRadical(codePointsList);
             kanji.Clear();
-            kanji.AddRange(lookup);
-            var lookupHash = new HashSet<CodePoint>(lookup);
-            foreach (var radical in Radicals)
+            kanji.AddRange(lookup.Kanji);
+            for (var i = 0; i < radicals.Count; i++)
             {
-                var kanjiForRadical = this.lookup
-                    .SelectRadical(Enumerable.Repeat(radical.CodePoint, 1));
-                radical.Enabled = lookupHash.IsIntersectionNonEmpty(kanjiForRadical);
+                if(codePointsList.Contains(radicals[i].CodePoint))
+                    continue;
+
+                radicals[i].Enabled = lookup.PossibleRadicals[i].Value;
             }
 
             currentlySelected = codePointsList;

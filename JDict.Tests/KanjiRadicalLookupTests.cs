@@ -29,15 +29,20 @@ namespace JDict.Tests
         [Test]
         public void Test()
         {
-            
-
-
             CollectionAssert.AreEquivalent(
                 "籥鑰龠瀹爚禴籲鸙龡龢龣龥".AsCodePoints().Select(CodePoint.FromInt),
-                lookup.SelectRadical(new[]{ CodePoint.FromString("龠")}));
+                lookup.SelectRadical(new[]{ CodePoint.FromString("龠")})
+                    .Kanji);
             CollectionAssert.AreEquivalent(
                 "龥籲".AsCodePoints().Select(CodePoint.FromInt),
-            lookup.SelectRadical(new[]{CodePoint.FromString("龠"), CodePoint.FromString("ハ")}));
+            lookup.SelectRadical(new[]{CodePoint.FromString("龠"), CodePoint.FromString("ハ")})
+                .Kanji);
+            CollectionAssert.AreEquivalent(
+                "一｜亅个ハ冂口目冊竹貝頁龠廾".AsCodePoints().Select(CodePoint.FromInt),
+                lookup.SelectRadical(new[] { CodePoint.FromString("龠"), CodePoint.FromString("ハ") })
+                    .PossibleRadicals
+                    .Where(r => r.Value)
+                    .Select(r => r.Key));
             // 龠瀹爚禴龡龢籥鑰龣龥鸙籲
             // 籥鑰龠瀹爚禴籲鸙龡龢龣龥
         }

@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using JDict;
 using Utility.Utils;
@@ -90,7 +92,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                             ulong z = 0;
                             for (int k = 0; k < ulongBitCount; ++k)
                             {
-                                if(kradMapping[kanji].Contains(indexToRadical[radicalIndex]))
+                                if (kradMapping[kanji].Contains(indexToRadical[radicalIndex]))
                                     z |= 1UL << k;
                                 ++radicalIndex;
                                 if (radicalIndex == radicalCount)
@@ -109,19 +111,34 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             }
         }
 
-        public IReadOnlyCollection<CodePoint> SelectRadical(IEnumerable<CodePoint> radicals)
+        public class Result
+        {
+            public IReadOnlyCollection<CodePoint> Kanji { get; }
+
+            public IReadOnlyList<KeyValuePair<CodePoint, bool>> PossibleRadicals { get; }
+
+            public Result(IReadOnlyCollection<CodePoint> kanji, IReadOnlyList<KeyValuePair<CodePoint, bool>> possibleRadicals)
+            {
+                Kanji = kanji;
+                PossibleRadicals = possibleRadicals;
+            }
+        }
+
+        private Span<ulong> AsScalarSpan(Span<Vector<ulong>> input)
+        {
+            return MemoryMarshal.Cast<Vector<ulong>, ulong>(input);
+        }
+
+        public Result SelectRadical(IEnumerable<CodePoint> radicals)
         {
             var result = new List<CodePoint>();
-            var vec = new ulong[elementSize * Vector<ulong>.Count];
+            var possibleRadicals = new KeyValuePair<CodePoint, bool>[radicalCount];
+            var key = new Vector<ulong>[elementSize].AsSpan();
+            var vec = AsScalarSpan(key);
             foreach (var radical in radicals)
             {
                 var radicalIndex = radicalToIndex[radical.Utf32];
                 vec[radicalIndex / ulongBitCount] |= (1UL << radicalIndex % ulongBitCount);
-            }
-            var key = new Vector<ulong>[elementSize];
-            for (int i = 0; i < elementSize; ++i)
-            {
-                key[i] = new Vector<ulong>(vec, i * Vector<ulong>.Count);
             }
 
             var s = SortingCriteria.SelectedIndex;
@@ -135,22 +152,34 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 }
             }
 
+            var possible = new Vector<ulong>[elementSize].AsSpan();
             for (int i = 0; i < kanjiCount; ++i)
             {
                 bool isPresent = true;
                 for (int j = 0; j < elementSize; ++j)
                 {
-                    if(!Vector.EqualsAll(target[i * elementSize + j], key[j]))
+                    if (!Vector.EqualsAll(target[i * elementSize + j], key[j]))
                         isPresent = false;
                 }
 
                 if (isPresent)
                 {
                     result.Add(CodePoint.FromInt(indexToKanji[s][i]));
+                    for (int j = 0; j < elementSize; ++j)
+                    {
+                        possible[j] |= radk[i * elementSize + j];
+                    }
                 }
             }
 
-            return result;
+            var possibleUlong = AsScalarSpan(possible);
+            for(int radicalIndex = 0; radicalIndex < radicalCount; ++radicalIndex)
+            {
+                var mask = (1UL << radicalIndex % ulongBitCount);
+                bool isPresent = (possibleUlong[radicalIndex / ulongBitCount] & mask) == mask;
+                possibleRadicals[radicalIndex] = new KeyValuePair<CodePoint, bool>(CodePoint.FromInt(indexToRadical[radicalIndex]), isPresent);
+            }
+            return new Result(result, possibleRadicals);
         }
 
         public IEnumerable<CodePoint> AllRadicals => indexToRadical.Select(CodePoint.FromInt);
