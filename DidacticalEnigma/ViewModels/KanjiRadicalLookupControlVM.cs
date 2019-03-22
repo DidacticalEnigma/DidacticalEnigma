@@ -66,7 +66,8 @@ namespace DidacticalEnigma.ViewModels
                 }
             }
 
-            public bool Highlighted => lookupVm.kanjiProperties.RadicalComparer.Equals(CodePoint.ToString(), lookupVm.SearchText?.Trim() ?? "");
+            //public bool Highlighted => lookupVm.kanjiProperties.RadicalComparer.Equals(CodePoint.ToString(), lookupVm.SearchText?.Trim() ?? "");
+            public bool Highlighted => CodePoint.ToString() == lookupVm.SearchText?.Trim();
 
             private readonly KanjiRadicalLookupControlVM lookupVm;
 
@@ -100,8 +101,6 @@ namespace DidacticalEnigma.ViewModels
 
         private IEnumerable<CodePoint> currentlySelected = Enumerable.Empty<CodePoint>();
 
-        private IKanjiProperties kanjiProperties;
-
         public void SelectRadicals(IEnumerable<CodePoint> codePoints)
         {
             var codePointsList = codePoints.ToList();
@@ -116,14 +115,14 @@ namespace DidacticalEnigma.ViewModels
                 return;
             }
 
-            var lookup = kanjiProperties.LookupKanjiByRadicals(codePointsList, currentKanjiOrdering);
+            var lookup = this.lookup.SelectRadical(codePointsList);
             kanji.Clear();
             kanji.AddRange(lookup);
             var lookupHash = new HashSet<CodePoint>(lookup);
             foreach (var radical in Radicals)
             {
-                var kanjiForRadical = kanjiProperties
-                    .LookupKanjiByRadicals(Enumerable.Repeat(radical.CodePoint, 1), currentKanjiOrdering);
+                var kanjiForRadical = this.lookup
+                    .SelectRadical(Enumerable.Repeat(radical.CodePoint, 1));
                 radical.Enabled = lookupHash.IsIntersectionNonEmpty(kanjiForRadical);
             }
 
@@ -171,9 +170,10 @@ namespace DidacticalEnigma.ViewModels
         public IEnumerable<RadicalVM> Radicals => radicals;
 
         public KanjiRadicalLookupControlVM(
+            KanjiRadicalLookup lookup,
             IKanjiProperties kanjiProperties)
         {
-            this.kanjiProperties = kanjiProperties;
+            this.lookup = lookup;
             radicals.AddRange(kanjiProperties.Radicals.Select(r => new RadicalVM(r, enabled: true, this)));
             var tb = new TextBlock
             {
@@ -195,8 +195,6 @@ namespace DidacticalEnigma.ViewModels
                 var codePoint = (CodePoint)p;
                 Clipboard.SetText(codePoint.ToString());
             });
-            
-            currentKanjiOrdering = SortingCriteria.First();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -206,18 +204,19 @@ namespace DidacticalEnigma.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         
-        public IEnumerable<IKanjiOrdering> SortingCriteria => kanjiProperties.KanjiOrderings;
+        public IEnumerable<IKanjiOrdering> SortingCriteria => lookup.SortingCriteria;
 
-        private IKanjiOrdering currentKanjiOrdering;
-        public IKanjiOrdering CurrentKanjiOrdering
+        private readonly KanjiRadicalLookup lookup;
+
+        public int CurrentKanjiOrderingIndex
         {
-            get => currentKanjiOrdering;
+            get => lookup.SortingCriteria.SelectedIndex;
             set
             {
-                if (currentKanjiOrdering == value)
+                if (lookup.SortingCriteria.SelectedIndex == value)
                     return;
 
-                currentKanjiOrdering = value;
+                lookup.SortingCriteria.SelectedIndex = value;
                 SelectRadicals(currentlySelected);
                 OnPropertyChanged();
             }

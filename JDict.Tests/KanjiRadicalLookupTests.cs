@@ -13,14 +13,23 @@ namespace JDict.Tests
     [TestFixture]
     class KanjiRadicalLookupTests
     {
+        private KanjiRadicalLookup lookup;
+        private KanjiDict kanjiDict;
+
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            kanjiDict = KanjiDict.Create(TestDataPaths.KanjiDic);
+            using (var reader = File.OpenText(TestDataPaths.Radkfile))
+            {
+                lookup = new KanjiRadicalLookup(Radkfile.Parse(reader), kanjiDict);
+            }
+        }
+
         [Test]
         public void Test()
         {
-            KanjiRadicalLookup lookup;
-            using (var reader = File.OpenText(TestDataPaths.Radkfile))
-            {
-                lookup = new KanjiRadicalLookup(Radkfile.Parse(reader));
-            }
+            
 
 
             CollectionAssert.AreEquivalent(

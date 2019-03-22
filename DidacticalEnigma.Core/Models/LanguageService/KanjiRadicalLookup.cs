@@ -12,7 +12,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class KanjiRadicalLookup
     {
-        public ReadOnlyListWithSelector<IComparer<int>> SortingCriteria { get; }
+        public ReadOnlyListWithSelector<IKanjiOrdering> SortingCriteria { get; }
 
         //private ObservableBatchCollection<CodePoint> foundKanji = new ObservableBatchCollection<CodePoint>();
         //public ReadOnlyObservableCollection<CodePoint> FoundKanji { get; }
@@ -25,12 +25,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         private const int ulongBitCount = 8 * sizeof(ulong);
         private static readonly int vectorBitCount = ulongBitCount * Vector<ulong>.Count;
 
-        public KanjiRadicalLookup(IEnumerable<Radkfile.Entry> entries)
+        public KanjiRadicalLookup(IEnumerable<Radkfile.Entry> entries, KanjiDict kanjiDict)
         {
-            SortingCriteria = new ReadOnlyListWithSelector<IComparer<int>>(new IComparer<int>[]
+            SortingCriteria = new ReadOnlyListWithSelector<IKanjiOrdering>(new IKanjiOrdering[]
             {
-                Comparer<int>.Default,
-                Comparer<int>.Default
+                KanjiOrdering.Create("Sort by stroke count", kanjiDict, x => x.StrokeCount),
+                KanjiOrdering.Create("Sort by frequency", kanjiDict, x => x.FrequencyRating)
             });
             SortingCriteria.SelectedIndex = 0;
             //FoundKanji = new ReadOnlyObservableCollection<CodePoint>(foundKanji);
@@ -51,7 +51,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
             this.indexToKanji = SortingCriteria
                 .Select(sortingCriterion => kanjiCodePoints
-                    .OrderBy(x => x, sortingCriterion)
+                    .OrderBy(x => x, Comparer<int>.Create((l, r) => sortingCriterion.Compare(
+                        CodePoint.FromInt(l),
+                        CodePoint.FromInt(r))))
                     .ToArray())
                 .ToArray();
 
@@ -151,6 +153,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return result;
         }
 
+        public IEnumerable<CodePoint> AllRadicals => indexToRadical.Select(CodePoint.FromInt);
+
         private readonly Vector<ulong>[][] radkinfo;
         private readonly int[][] indexToKanji;
         private readonly int[] indexToRadical;
@@ -158,5 +162,41 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         private readonly int elementSize;
         private readonly int kanjiCount;
         private readonly IReadOnlyDictionary<int, int> radicalToIndex;
+
+        private class KanjiOrdering : IKanjiOrdering
+        {
+            public string Description { get; }
+
+            private IComparer<CodePoint> comparer;
+
+            public int Compare(CodePoint x, CodePoint y)
+            {
+                return comparer.Compare(x, y);
+            }
+
+            public override string ToString()
+            {
+                return Description;
+            }
+
+            private KanjiOrdering(string description)
+            {
+                Description = description;
+            }
+
+            public static KanjiOrdering Create<T>(string description, KanjiDict kanjiDict, Func<KanjiEntry, T> f)
+            {
+                var k = new KanjiOrdering(description)
+                {
+                    comparer = Comparer<CodePoint>.Create((l, r) =>
+                    {
+                        var left = kanjiDict.Lookup(l.ToString()).Map(f);
+                        var right = kanjiDict.Lookup(r.ToString()).Map(f);
+                        return left.CompareTo(right);
+                    })
+                };
+                return k;
+            }
+        }
     }
 }

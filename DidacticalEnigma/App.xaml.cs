@@ -119,7 +119,7 @@ namespace DidacticalEnigma
                 get.Get<KanjiDict>(),
                 get.Get<Kradfile>(),
                 get.Get<Radkfile>(),
-                get.Get<RadicalRemapper>()));
+                null));
             kernel.BindFactory(get => new MainWindowVM(
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
                 new KanaBoardVM(Path.Combine(dataDir, "character", "hiragana_romaji.txt"), Encoding.UTF8),
@@ -131,6 +131,7 @@ namespace DidacticalEnigma
                 get.Get<IKanaProperties>(),
                 () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
+                get.Get<KanjiRadicalLookup>(),
                 get.Get<IKanjiProperties>()));
             kernel.Bind<IRomaji, ModifiedHepburn>();
             kernel.BindFactory(get => new ModifiedHepburn(
@@ -168,6 +169,11 @@ namespace DidacticalEnigma
             kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
             kernel.BindFactory(get => new IdiomDetector(get.Get<JMDict>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
             kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDict>()));
+            kernel.BindFactory(get =>
+            {
+                using(var reader = File.OpenText(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8")))
+                    return new KanjiRadicalLookup(Radkfile.Parse(reader), get.Get<KanjiDict>());
+            });
             Kernel = kernel;
             
 

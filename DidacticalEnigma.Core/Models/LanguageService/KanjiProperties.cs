@@ -37,6 +37,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public Option<IEnumerable<CodePoint>> LookupRadicalsByKanji(Kanji kanji)
         {
+            if (remapper == null)
+            {
+                return kradfile.LookupRadicals(kanji.ToString())
+                    .Map(radicals => radicals.Select(cp => CodePoint.FromString(cp)));
+            }
+
             return remapper
                 .LookupRadicals(kanji.ToString())
                 .Map(radicals => radicals.Select(cp => CodePoint.FromString(cp)));
@@ -44,6 +50,15 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<CodePoint> LookupKanjiByRadicals(IEnumerable<CodePoint> radicals, IKanjiOrdering ordering)
         {
+            if (remapper == null)
+            {
+                radkfile
+                    .LookupMatching(radicals.Select(s => s.ToString()))
+                    .Select(r => CodePoint.FromString(r))
+                    .OrderBy(x => x, ordering)
+                    .ToList();
+            }
+
             return remapper
                 .LookupKanji(radicals.Select(s => s.ToString()))
                 .Select(r => CodePoint.FromString(r))
@@ -51,7 +66,16 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .ToList();
         }
 
-        public IEnumerable<JDict.Radical> Radicals => remapper.Radicals;
+        public IEnumerable<JDict.Radical> Radicals
+        {
+            get
+            {
+                if (remapper == null)
+                    return radkfile.Radicals;
+
+                return remapper.Radicals;
+            }
+        }
 
         public IEnumerable<IKanjiOrdering> KanjiOrderings { get; }
 

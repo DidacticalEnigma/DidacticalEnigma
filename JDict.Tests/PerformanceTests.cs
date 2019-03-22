@@ -33,7 +33,7 @@ namespace JDict.Tests
 
             using (var reader = File.OpenText(TestDataPaths.Radkfile))
             {
-                lookup = new KanjiRadicalLookup(Radkfile.Parse(reader));
+                lookup = new KanjiRadicalLookup(Radkfile.Parse(reader), kanjiDict);
             }
         }
 
