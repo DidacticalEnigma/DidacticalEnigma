@@ -20,6 +20,8 @@ namespace JDict.Tests
         private CodePoint[] radicalCodePoint;
         private IKanjiOrdering ordering;
 
+        private KanjiRadicalLookup lookup;
+
         public PerformanceTests()
         {
             kanjiDict = JDict.KanjiDict.Create(TestDataPaths.KanjiDic);
@@ -28,6 +30,11 @@ namespace JDict.Tests
             kanjiProperties = new KanjiProperties(kanjiDict, kradfile, radkfile, new RadicalRemapper(kradfile, radkfile));
             radicalCodePoint = radicalCodePoint = new[]{CodePoint.FromString("一") };
             ordering = kanjiProperties.KanjiOrderings.First();
+
+            using (var reader = File.OpenText(TestDataPaths.Radkfile))
+            {
+                lookup = new KanjiRadicalLookup(Radkfile.Parse(reader));
+            }
         }
 
         [Explicit]
@@ -90,6 +97,15 @@ namespace JDict.Tests
         {
             var watch = Stopwatch.StartNew();
             _ = kanjiProperties.LookupKanjiByRadicals(radicalCodePoint, ordering).ToList();
+            Assert.Less(watch.Elapsed, TimeSpan.FromMilliseconds(1));
+        }
+
+        [Explicit]
+        [Test]
+        public void RadicalLookupNew()
+        {
+            var watch = Stopwatch.StartNew();
+            _ = lookup.SelectRadical(radicalCodePoint);
             Assert.Less(watch.Elapsed, TimeSpan.FromMilliseconds(1));
         }
     }

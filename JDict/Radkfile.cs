@@ -51,6 +51,66 @@ namespace JDict
 
         public IEnumerable<Radical> Radicals => radicals.Select(kvp => new Radical(kvp.Value, kvp.Key));
 
+        public class Entry
+        {
+            public Radical Radical { get; }
+
+            public IReadOnlyCollection<int> KanjiCodePoints { get; }
+
+            public Entry(Radical radical, IReadOnlyCollection<int> kanjiCodePoints)
+            {
+                Radical = radical;
+                KanjiCodePoints = kanjiCodePoints;
+            }
+        }
+
+        public static IEnumerable<Entry> Parse(TextReader reader)
+        {
+            string line;
+            var radical = default(Radical);
+            var result = new List<Entry>();
+            List<int> kanji = null;
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (line.StartsWith("#"))
+                    continue;
+                if (line.StartsWith("$"))
+                {
+                    if(kanji != null)
+                        result.Add(new Entry(radical, kanji));
+
+                    kanji = new List<int>();
+                    line = line.Remove(0, 2);
+                    var components = line.Split(' ');
+                    int codePoint = char.ConvertToUtf32(components[0].Trim(), 0);
+                    int strokeCount = int.Parse(components[1]);
+                    radical = new Radical(codePoint, strokeCount);
+                }
+                else
+                {
+                    foreach (var codePoint in AsCodePoints(line.Trim()))
+                    {
+                        kanji.Add(codePoint);
+                    }
+                }
+            }
+
+            if (kanji?.Count != 0)
+            {
+                result.Add(new Entry(radical, kanji));
+            }
+
+            return result
+                .GroupBy(e => e.Radical.CodePoint)
+                .Select(g =>
+                {
+                    var codePoint = g.Key;
+                    var strokeCount = g.First().Radical.StrokeCount;
+                    var k = g.SelectMany(e => e.KanjiCodePoints).ToList();
+                    return new Entry(new Radical(codePoint, strokeCount), k);
+                });
+        }
+
         private void Init(TextReader reader)
         {
             string line;

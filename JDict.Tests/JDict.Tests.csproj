@@ -187,6 +187,7 @@
     <Compile Include="JMDictTests.cs" />
     <Compile Include="JnedictTests.cs" />
     <Compile Include="KanaPropertiesTests.cs" />
+    <Compile Include="KanjiRadicalLookupTests.cs" />
     <Compile Include="Kradfile.cs" />
     <Compile Include="MeCab.cs" />
     <Compile Include="PerformanceTests.cs" />

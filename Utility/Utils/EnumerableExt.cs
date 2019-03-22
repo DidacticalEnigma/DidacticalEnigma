@@ -20,6 +20,22 @@ namespace Utility.Utils
             yield return element;
         }
 
+        public static IReadOnlyDictionary<TValue, TKey> InvertMapping<TKey, TValue>(
+            this IReadOnlyDictionary<TKey, TValue> input)
+        {
+            return input.ToDictionary(i => i.Value, i => i.Key);
+        }
+
+        public static IReadOnlyDictionary<TValue, IEnumerable<TKey>> InvertMappingToSequence<TKey, TValue>(
+            this IReadOnlyDictionary<TKey, IEnumerable<TValue>> input)
+        {
+            return input
+                .SelectMany(kvp =>
+                    kvp.Value.Select(v => new KeyValuePair<TValue, TKey>(v, kvp.Key)))
+                .GroupBy(kvp => kvp.Key)
+                .ToDictionary(g => g.Key, g => g.Select(kvp => kvp.Value).ToList().AsEnumerable());
+        }
+
         public static IEnumerable<T> Greedy<T>(this IEnumerable<T> input, Func<IReadOnlyList<T>, bool> acceptor, int backOffCountStart = 5)
         {
             int backOffCount = backOffCountStart;

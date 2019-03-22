@@ -41,6 +41,40 @@ namespace JDict
             }
         }
 
+        public class Entry
+        {
+            public int Kanji { get; }
+
+            public IReadOnlyCollection<int> Radicals { get; }
+
+            public Entry(int kanji, IReadOnlyCollection<int> radicals)
+            {
+                Kanji = kanji;
+                Radicals = radicals;
+            }
+        }
+
+        public static IEnumerable<Entry> Parse(TextReader reader)
+        {
+            string line;
+            var result = new List<Entry>();
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (line.StartsWith("#"))
+                    continue;
+                var parts = line.Split(':');
+                var kanji = char.ConvertToUtf32(parts[0].Trim(), 0);
+                var radicals = parts[1]
+                    .Trim()
+                    .Split(' ')
+                    .Select(p => char.ConvertToUtf32(p, 0))
+                    .ToList();
+                result.Add(new Entry(kanji, radicals));
+            }
+
+            return result;
+        }
+
         public Kradfile(string path, Encoding encoding)
         {
             using (var reader = new StreamReader(path, encoding))

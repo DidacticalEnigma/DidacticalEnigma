@@ -51,5 +51,21 @@ namespace JDict.Tests
             CollectionAssert.AreEqual(new int[][] { new[] { 1, 1 }, new[] { 3 } }, GroupConsecutive(new int[] { 1, 1, 3 }));
             CollectionAssert.AreEqual(new int[][] { new[] { 1 }, new[] { 3 }, new[] { 1 } }, GroupConsecutive(new int[] { 1, 3, 1 }));
         }
+
+        [Test]
+        public void InvertMapping()
+        {
+            var dict = new Dictionary<string, IEnumerable<int>>
+            {
+                { "hello",  new []{1,2} },
+                { "world",  new []{1,3} }
+            };
+            CollectionAssert.AreEquivalent(new Dictionary<int, IEnumerable<string>>
+            {
+                {1, new []{ "hello", "world" } },
+                {2, new []{ "hello" } },
+                {3, new []{ "world" } }
+            }, dict.InvertMappingToSequence());
+        }
     }
 }
