@@ -108,8 +108,7 @@
                     <utils:VirtualizingTilePanel
                         CanHorizontallyScroll="False"
                         CanVerticallyScroll="True"
-                        ItemHeight="{Binding Height}"
-                        ItemWidth="{Binding Width}" />
+                        ChildSize="{Binding Width}" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>

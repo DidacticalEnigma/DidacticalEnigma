@@ -190,6 +190,8 @@ namespace DidacticalEnigma.ViewModels
 
             Height += 25;
             Width += 25;
+            Height = Math.Max(Width, Height);
+            Width = Math.Max(Width, Height);
             KanjiClick = new RelayCommand((p) =>
             {
                 var codePoint = (CodePoint)p;
