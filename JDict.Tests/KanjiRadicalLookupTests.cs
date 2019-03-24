@@ -26,6 +26,17 @@ namespace JDict.Tests
             }
         }
 
+        [Explicit]
+        [Test]
+        public void Count()
+        {
+            var count = lookup.AllRadicals
+                .Select(r => lookup.SelectRadical(Utility.Utils.EnumerableExt.OfSingle(r)))
+                .Select(r => r.Kanji.Count)
+                .Max();
+            ;
+        }
+
         [Test]
         public void Test()
         {

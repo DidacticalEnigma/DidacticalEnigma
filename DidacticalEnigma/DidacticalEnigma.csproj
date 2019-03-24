@@ -204,6 +204,7 @@
     <Compile Include="Converters\SelectableDataSourceToStringConverter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Utils\ClipboardHook.cs" />
+    <Compile Include="Utils\ControlRenderCache.cs" />
     <Compile Include="ViewModels\CreationConverter.cs" />
     <Compile Include="ViewModels\FlowDocumentRichFormattingRenderer.cs" />
     <Compile Include="ViewModels\IFontResolver.cs" />

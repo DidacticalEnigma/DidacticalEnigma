@@ -66,7 +66,6 @@ namespace DidacticalEnigma.ViewModels
                 }
             }
 
-            //public bool Highlighted => lookupVm.kanjiProperties.RadicalComparer.Equals(CodePoint.ToString(), lookupVm.SearchText?.Trim() ?? "");
             public bool Highlighted => CodePoint.ToString() == lookupVm.SearchText?.Trim();
 
             private readonly KanjiRadicalLookupControlVM lookupVm;

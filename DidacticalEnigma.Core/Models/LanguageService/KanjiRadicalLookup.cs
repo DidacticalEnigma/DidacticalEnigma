@@ -182,6 +182,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return new Result(result, possibleRadicals);
         }
 
+        public IEnumerable<CodePoint> AllKanji => indexToKanji[0].Select(CodePoint.FromInt);
+
         public IEnumerable<CodePoint> AllRadicals => indexToRadical.Select(CodePoint.FromInt);
 
         private readonly Vector<ulong>[][] radkinfo;
