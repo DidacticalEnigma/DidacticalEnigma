@@ -19,7 +19,7 @@ namespace DidacticalEnigma.Views
         private void ListView_Selected(object sender, RoutedEventArgs e)
         {
             var vm = (KanjiRadicalLookupControlVM)DataContext;
-            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint));
+            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint), Dispatcher);
         }
 
         public ICommand KeyClickCommand
@@ -36,7 +36,13 @@ namespace DidacticalEnigma.Views
         {
             var vm = (KanjiRadicalLookupControlVM)DataContext;
             RadicalSelector.SelectedItems.Clear();
-            vm.SelectRadicals(Enumerable.Empty<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint));
+            vm.SelectRadicals(Enumerable.Empty<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint), Dispatcher);
+        }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var vm = (KanjiRadicalLookupControlVM)DataContext;
+            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint), Dispatcher);
         }
     }
 }

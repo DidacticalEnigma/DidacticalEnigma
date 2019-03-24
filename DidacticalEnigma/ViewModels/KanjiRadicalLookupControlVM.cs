@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using Utility.Utils;
@@ -13,7 +17,7 @@ using Radical = DidacticalEnigma.Core.Models.LanguageService.Radical;
 
 namespace DidacticalEnigma.ViewModels
 {
-    public class KanjiRadicalLookupControlVM : INotifyPropertyChanged
+    public class KanjiRadicalLookupControlVM : INotifyPropertyChanged, IDisposable
     {
         public class RadicalVM : INotifyPropertyChanged
         {
@@ -100,7 +104,47 @@ namespace DidacticalEnigma.ViewModels
 
         private IEnumerable<CodePoint> currentlySelected = Enumerable.Empty<CodePoint>();
 
-        public void SelectRadicals(IEnumerable<CodePoint> codePoints)
+        private Task task = Task.CompletedTask;
+        private CancellationTokenSource addingTaskCancellationToken = null;
+
+        public async void SetElements(IReadOnlyCollection<CodePoint> elements, Dispatcher dispatcher)
+        {
+            addingTaskCancellationToken?.Cancel();
+            await task;
+
+            addingTaskCancellationToken = new CancellationTokenSource();
+            var token = addingTaskCancellationToken.Token;
+            kanji.Clear();
+            const int n = 20;
+            kanji.AddRange(elements.Take(n));
+            if (elements.Count <= n)
+            {
+                return;
+            }
+
+            var tcs = new TaskCompletionSource<bool>();
+            task = tcs.Task;
+            Task.Run(async () =>
+            {
+                try
+                {
+                    foreach (var chunk in elements.Skip(n).ChunkBy(400))
+                    {
+                        if (token.IsCancellationRequested)
+                            break;
+                        dispatcher.Invoke(() => { kanji.AddRange(chunk); },
+                            DispatcherPriority.ApplicationIdle,
+                            token);
+                    }
+                }
+                finally
+                {
+                    tcs.SetResult(true);
+                }
+            });
+        }
+
+        public void SelectRadicals(IEnumerable<CodePoint> codePoints, Dispatcher dispatcher)
         {
             var codePointsList = codePoints.ToList();
             if (!codePointsList.Any())
@@ -110,13 +154,12 @@ namespace DidacticalEnigma.ViewModels
                     radical.Enabled = true;
                 }
 
-                kanji.Clear();
+                SetElements(Array.Empty<CodePoint>(), dispatcher);
                 return;
             }
 
             var lookup = this.lookup.SelectRadical(codePointsList);
-            kanji.Clear();
-            kanji.AddRange(lookup.Kanji);
+            SetElements(lookup.Kanji, dispatcher);
             for (var i = 0; i < radicals.Count; i++)
             {
                 if(codePointsList.Contains(radicals[i].CodePoint))
@@ -218,9 +261,14 @@ namespace DidacticalEnigma.ViewModels
                     return;
 
                 lookup.SortingCriteria.SelectedIndex = value;
-                SelectRadicals(currentlySelected);
+                //SelectRadicals(currentlySelected);
                 OnPropertyChanged();
             }
+        }
+
+        public void Dispose()
+        {
+            addingTaskCancellationToken.Cancel();
         }
     }
 }

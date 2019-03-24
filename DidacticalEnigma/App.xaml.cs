@@ -34,7 +34,6 @@ namespace DidacticalEnigma
             Startup += async (sender, args) =>
             {
                 Configure();
-
                 var splashVm = new SplashScreenVM();
                 var splash = new SplashScreen()
                 {
