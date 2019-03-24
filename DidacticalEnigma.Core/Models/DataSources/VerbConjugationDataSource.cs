@@ -81,9 +81,12 @@ namespace DidacticalEnigma.Core.Models.DataSources
                     rich.Paragraphs.Add(new TextParagraph(new[]
                     {
                         Form("=", CForm.Present, verbType),
+                        Form("@=", CForm.Present, verbType, Politeness.Polite),
                         Form("<", CForm.Past, verbType),
                         Form("?", CForm.Potential, verbType),
+                        Form("#", CForm.Passive, verbType),
                         Form("->", CForm.Causative, verbType),
+                        Form("if", CForm.Condition, verbType),
                         Form("Te", CForm.TeForm, verbType),
                         Form("!", CForm.Imperative, verbType),
                         Form(":D", CForm.Volitional, verbType),
@@ -95,7 +98,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
 @"= - Present
 < - Past
 ? - Potential
+# - Passive
 -> - Causative
+if - Conditional
 Te - Te Form
 ! - Imperative
 :D - Volitional
@@ -105,10 +110,10 @@ Te - Te Form
 
             return Task.FromResult(Option.Some(rich));
 
-            Text Form(string name, CForm form, LibJpConjSharp.EdictType type)
+            Text Form(string name, CForm form, LibJpConjSharp.EdictType type, Politeness politeness = Politeness.Plain)
             {
                 return new Text(
-                    $"{name}: {JpConj.Conjugate(verb, type, form, Politeness.Plain, Polarity.Affirmative).Replace("|", "")}\n~{name}: {JpConj.Conjugate(verb, type, form, Politeness.Plain, Polarity.Negative).Replace("|", "")}\n");
+                    $"{name}: {JpConj.Conjugate(verb, type, form, politeness, Polarity.Affirmative).Replace("|", "")}\n~{name}: {JpConj.Conjugate(verb, type, form, politeness, Polarity.Negative).Replace("|", "")}\n");
             }
         }
 
