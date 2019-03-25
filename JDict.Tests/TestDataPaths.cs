@@ -27,6 +27,8 @@ namespace JDict.Tests
 
         public static readonly string JMnedict = Path.Combine(BaseDir, "dictionaries", "JMnedict.xml.gz");
 
+        public static readonly string JGram = Path.Combine(BaseDir, "dictionaries", "jgram");
+
         public static readonly string JMnedictCache = Path.Combine(BaseDir, "dictionaries", "JMnedict.xml.cache");
 
         public static readonly string IdiomsCache = Path.Combine(BaseDir, "dictionaries", "idioms.cache");
@@ -38,6 +40,8 @@ namespace JDict.Tests
         public static readonly string Radkfile = Path.Combine(BaseDir, "character", "radkfile1_plus_2_utf8");
 
         public static readonly string Tanaka = Path.Combine(BaseDir, "corpora", "examples.utf.gz");
+
+        public static readonly string JESC = Path.Combine(BaseDir, "corpora", "jesc_raw");
 
         public static readonly string Hiragana = Path.Combine(BaseDir, @"character\hiragana_romaji.txt");
 

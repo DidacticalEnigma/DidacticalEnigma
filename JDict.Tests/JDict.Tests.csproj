@@ -184,6 +184,7 @@
     <Compile Include="EnumerableExt.cs" />
     <Compile Include="IdiomDetectorTests.cs" />
     <Compile Include="Index.cs" />
+    <Compile Include="JGramTests.cs" />
     <Compile Include="JMDictTests.cs" />
     <Compile Include="JnedictTests.cs" />
     <Compile Include="KanaPropertiesTests.cs" />
