@@ -13,7 +13,7 @@ namespace DidacticalEnigma.Core.Models
 
         public bool Literal { get; }
 
-        public string BuildSearch(string text)
+        public Uri BuildSearch(string text)
         {
             text = text ?? throw new ArgumentNullException(nameof(text));
             string query = text;
@@ -22,7 +22,7 @@ namespace DidacticalEnigma.Core.Models
             if (!string.IsNullOrEmpty(AdditionalText))
                 query += " " + AdditionalText;
 
-            return UrlRoot + WebUtility.UrlEncode(query);
+            return new Uri(UrlRoot + WebUtility.UrlEncode(query));
         }
 
         public SearchEngine(string urlRoot, string additionalText = null, bool literal = false, string comment = null)

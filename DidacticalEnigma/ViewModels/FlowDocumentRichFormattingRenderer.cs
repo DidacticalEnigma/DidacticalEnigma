@@ -1,13 +1,30 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {
-    static class FlowDocumentRichFormattingRenderer
+    public interface IFlowDocumentRichFormattingRenderer
     {
-        public static FlowDocument Render(IFontResolver fontResolver, RichFormatting document)
+        FlowDocument Render(RichFormatting document);
+    }
+
+    public class FlowDocumentRichFormattingRenderer : IFlowDocumentRichFormattingRenderer
+    {
+        public FlowDocumentRichFormattingRenderer(IFontResolver fontResolver, IWebBrowser webBrowser)
+        {
+            this.webBrowser = webBrowser;
+            this.fontResolver = fontResolver;
+        }
+
+        private IWebBrowser webBrowser;
+
+        private IFontResolver fontResolver;
+
+        public FlowDocument Render(RichFormatting document)
         {
             var flow = new FlowDocument
             {
@@ -18,6 +35,22 @@ namespace DidacticalEnigma.ViewModels
             {
                 switch (paragraph)
                 {
+                    case LinkParagraph link:
+                        {
+                            var p = new System.Windows.Documents.Paragraph();
+                            var hlink = new Hyperlink(new Run(link.DisplayText))
+                            {
+                                NavigateUri = link.Target
+                            };
+                            hlink.RequestNavigate += (sender, args) =>
+                            {
+                                webBrowser.NavigateTo(args.Uri);
+                                args.Handled = true;
+                            };
+                            p.Inlines.Add(hlink);
+                            flow.Blocks.Add(p);
+                        }
+                        break;
                     case TextParagraph text:
                         {
                             var p = new System.Windows.Documents.Paragraph();

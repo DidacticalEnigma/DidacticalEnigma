@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Documents;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Formatting;
+using DidacticalEnigma.Utils;
 using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
@@ -17,6 +18,8 @@ namespace DidacticalEnigma.ViewModels
         private Request lastRequest;
 
         private readonly IFontResolver fontResolver;
+
+        private readonly IWebBrowser webBrowser;
 
         private long id = 0;
 
@@ -41,11 +44,14 @@ namespace DidacticalEnigma.ViewModels
                 new TextParagraph(
                     EnumerableExt.OfSingle(new Text("nothing found")))));
 
-        public FlowDocument Document => FlowDocumentRichFormattingRenderer.Render(fontResolver, FormattedResult);
+        public FlowDocument Document => documentRenderer.Render(FormattedResult);
 
         public DataSourceDescriptor Descriptor => dataSource.Descriptor;
 
         private bool isProcessing;
+
+        private IFlowDocumentRichFormattingRenderer documentRenderer;
+
         public bool IsProcessing
         {
             get => isProcessing;
@@ -85,18 +91,17 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        public DataSourceVM(Type type, string path, IFontResolver fontResolver)
+        public DataSourceVM(IDataSource dataSource, IFlowDocumentRichFormattingRenderer documentRenderer) :
+            this(Task.FromResult(dataSource), dataSource.GetType(), documentRenderer)
         {
-            this.fontResolver = fontResolver;
-            dataSource = new AsyncDataSource(
-                () => Task.Run(() => (IDataSource)Activator.CreateInstance(type, path)), type);
+            
         }
 
-        public DataSourceVM(IDataSource dataSource, IFontResolver fontResolver)
+        public DataSourceVM(Task<IDataSource> dataSource, Type type, IFlowDocumentRichFormattingRenderer documentRenderer)
         {
-            this.fontResolver = fontResolver;
+            this.documentRenderer = documentRenderer;
             this.dataSource = new AsyncDataSource(
-                () => Task.FromResult(dataSource), dataSource.GetType());
+                () => dataSource, type);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

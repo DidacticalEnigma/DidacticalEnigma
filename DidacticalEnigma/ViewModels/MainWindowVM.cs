@@ -60,6 +60,7 @@ namespace DidacticalEnigma.ViewModels
             IRelated related,
             IKanjiProperties kanjiProperties,
             IKanaProperties kanaProperties,
+            IWebBrowser webBrowser,
             Func<string> aboutTextProvider)
         {
             HiraganaBoard = hiraganaBoard;
@@ -89,7 +90,7 @@ namespace DidacticalEnigma.ViewModels
                 if (queryText == null)
                     return;
 
-                LaunchWebBrowserAt(SearchEngines[SearchEngineIndex].BuildSearch(queryText));
+                webBrowser.NavigateTo(SearchEngines[SearchEngineIndex].BuildSearch(queryText));
             });
             SwitchToTab = new RelayCommand(tab =>
             {
@@ -124,14 +125,6 @@ namespace DidacticalEnigma.ViewModels
             {
                 UsageDataSourceVM.Search(UsageDataSourceVM.Request);
             });
-        }
-
-        private static void LaunchWebBrowserAt(string url)
-        {
-            using (Process.Start(url))
-            {
-                
-            }
         }
 
         private void SetContent(object sender, string e)

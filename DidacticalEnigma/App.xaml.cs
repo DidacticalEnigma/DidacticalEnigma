@@ -9,6 +9,7 @@ using System.Windows;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Utils;
 using DidacticalEnigma.ViewModels;
 using DidacticalEnigma.Views;
 using Gu.Inject;
@@ -128,6 +129,7 @@ namespace DidacticalEnigma
                 get.Get<IRelated>(),
                 get.Get<IKanjiProperties>(),
                 get.Get<IKanaProperties>(),
+                get.Get<IWebBrowser>(),
                 () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
                 get.Get<KanjiRadicalLookup>(),
@@ -138,20 +140,20 @@ namespace DidacticalEnigma
                 get.Get<IKanaProperties>()));
             kernel.BindFactory(get => new AutoGlosser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDict>()));
             kernel.BindFactory<IEnumerable<DataSourceVM>>(get => new[] {
-                new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFontResolver>()),
-                new DataSourceVM(new JMDictDataSource(get.Get<JMDict>(), get.Get<IKanaProperties>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new JNeDictDataSource(get.Get<Jnedict>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDict>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new AutoGlosserDataSource(get.Get<AutoGlosser>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new CustomNotesDataSource(Path.Combine(dataDir, "custom", "custom_notes.txt")), get.Get<IFontResolver>()),
-                new DataSourceVM(new TanakaCorpusDataSource(get.Get<Tanaka>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<PartialWordLookup>(), get.Get<FrequencyList>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFontResolver>()),
-                new DataSourceVM(new RomajiDataSource(get.Get<IRomaji>()), get.Get<IFontResolver>())
-            }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new DataSourceVM(new EpwingDataSource(dict, get.Get<IKanaProperties>()), get.Get<IFontResolver>()))));
+                new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new JMDictDataSource(get.Get<JMDict>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new JNeDictDataSource(get.Get<Jnedict>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDict>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new AutoGlosserDataSource(get.Get<AutoGlosser>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new CustomNotesDataSource(Path.Combine(dataDir, "custom", "custom_notes.txt")), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new TanakaCorpusDataSource(get.Get<Tanaka>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<PartialWordLookup>(), get.Get<FrequencyList>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new RomajiDataSource(get.Get<IRomaji>()), get.Get<IFlowDocumentRichFormattingRenderer>())
+            }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new DataSourceVM(new EpwingDataSource(dict, get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()))));
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
             kernel.BindFactory(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
@@ -173,6 +175,8 @@ namespace DidacticalEnigma
                 using(var reader = File.OpenText(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8")))
                     return new KanjiRadicalLookup(Radkfile.Parse(reader), get.Get<KanjiDict>());
             });
+            kernel.BindFactory<IWebBrowser>(get => new WebBrowser());
+            kernel.BindFactory<IFlowDocumentRichFormattingRenderer>(get => new FlowDocumentRichFormattingRenderer(get.Get<IFontResolver>(), get.Get<IWebBrowser>()));
             Kernel = kernel;
             
 

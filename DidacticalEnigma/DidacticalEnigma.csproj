@@ -210,6 +210,7 @@
     <Compile Include="ViewModels\IFontResolver.cs" />
     <Compile Include="ViewModels\SplashScreenVM.cs" />
     <Compile Include="ViewModels\TranslationVM.cs" />
+    <Compile Include="Utils\WebBrowser.cs" />
     <Compile Include="Views\JapaneseTextPreview.xaml.cs">
       <DependentUpon>JapaneseTextPreview.xaml</DependentUpon>
     </Compile>
