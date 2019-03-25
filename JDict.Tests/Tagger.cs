@@ -34,34 +34,31 @@ namespace JDict.Tests
         [Test]
         public void Tanaka()
         {
-            var tanaka = new Tanaka(TestDataPaths.Tanaka, Encoding.UTF8);
             var meCab = new MeCabUnidic(new MeCabParam
             {
                 DicDir = TestDataPaths.Unidic,
             });
-            var sentences = tanaka.AllSentences();
+            var sentences = new Tanaka(TestDataPaths.Tanaka, Encoding.UTF8).AllSentences();
             var features = new HashSet<string>();
             var sentencesFiltered = new HashSet<string>();
+            var count = 0;
+            var sum = 0;
+            var max = 0;
+            var permutermSizeEstimate = 0;
             foreach(var rawSentence in sentences.Select(s => s.JapaneseSentence))
             {
-                var sentence = meCab.ParseToEntries(rawSentence)
-                    .Where(e => e.IsRegular)
-                    .ToList();
-                foreach (var word in sentence)
-                {
-                    foreach (var s in word.PartOfSpeechSections)
-                    {
-                        var newElement = features.Add(s);
-                        if (newElement)
-                        {
-                            sentencesFiltered.Add(rawSentence);
-                        }
-                    }
-                }
+                var c = meCab
+                    .ParseToEntries(rawSentence)
+                    .Count(e => e.IsRegular);
+                count++;
+                sum += c;
+                max = Math.Max(c, max);
+                permutermSizeEstimate += (Encoding.UTF8.GetByteCount(rawSentence)+1) * c;
             }
-            var ss = string.Join("\n", sentencesFiltered);
-            var xx = string.Join("\n", features);
-            ;
+            Console.WriteLine($"Count: {count}");
+            Console.WriteLine($"Max: {max}");
+            Console.WriteLine($"Avg: {sum/count}");
+            Console.WriteLine($"Permuterm size UTF-8: {permutermSizeEstimate / 1024 / 1024}MB");
         }
 
         [TearDown]
