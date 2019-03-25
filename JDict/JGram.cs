@@ -6,11 +6,11 @@ using System.Text;
 
 namespace JDict
 {
-    class JGram
+    public class JGram
     {
         public class Entry
         {
-            public int Id { get; }
+            public long Id { get; }
 
             public string Key { get; }
 
@@ -22,7 +22,7 @@ namespace JDict
 
             public string Example { get; }
 
-            public Entry(int id, string key, string reading, string romaji, string translation, string example)
+            public Entry(long id, string key, string reading, string romaji, string translation, string example)
             {
                 Id = id;
                 Key = key;
@@ -41,7 +41,7 @@ namespace JDict
                 if(line.StartsWith("？") || string.IsNullOrWhiteSpace(line))
                     continue;
 
-                int id = 0;
+                long id = 0;
                 string key = null;
                 string reading = null;
                 string romaji = null;
@@ -57,7 +57,7 @@ namespace JDict
                     }
                     if (component.StartsWith(idStart))
                     {
-                        int.TryParse(component.Remove(0, idStart.Length), out id);
+                        long.TryParse(component.Remove(0, idStart.Length), out id);
                     }
                     else if (component.StartsWith("/"))
                     {
