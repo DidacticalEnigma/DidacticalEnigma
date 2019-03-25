@@ -32,7 +32,8 @@ namespace JDict.Tests
         {
             using(var lookup = new JGramLookup(TestDataPaths.JGram, TestDataPaths.JGramLookup, TestDataPaths.JGramCache))
             {
-                var entry = lookup.Lookup("くせに").First();
+                var entries = lookup.Lookup("くせに");
+                var entry = entries.First();
                 Assert.AreEqual(112, entry.Id);
             }
         }

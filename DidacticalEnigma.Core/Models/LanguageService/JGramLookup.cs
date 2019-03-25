@@ -48,6 +48,14 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             }
         }
 
+        private int CommonPrefixLength(string left, string right)
+        {
+            return left.AsCodePoints()
+                .Zip(right.AsCodePoints(), (l, r) => l == r)
+                .TakeWhile(p => p)
+                .Count();
+        }
+
         public IEnumerable<JGram.Entry> Lookup(string key)
         {
             int limit = 50;
@@ -58,10 +66,17 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             var mid = (start + end) / 2;
             return EnumerableExt.Range(start, end - start)
                 .OrderBy(i => Math.Abs(i - mid))
-                .Select(i =>
+                .Select(i => (id: i, kvp: index[i]))
+                .Select(v =>
                 {
-                    var (entry, id) = entries.BinarySearch(i, e => e.Id);
-                    return id == -1 ? Option.None<JGram.Entry>() : entry.Some();
+                    var (i, kvp) = v;
+                    var k = kvp.Key;
+                    var (entry, id) = entries.BinarySearch(kvp.Value, e => e.Id);
+                    if (id == -1)
+                        return entry.None();
+                    if(CommonPrefixLength(k, key) == 0)
+                        return entry.None();
+                    return entry.Some();
                 })
                 .Values()
                 .DistinctBy(r => r.Id);
