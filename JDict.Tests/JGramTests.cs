@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DidacticalEnigma.Core.Models.LanguageService;
 using NUnit.Framework;
 
 namespace JDict.Tests
@@ -23,6 +24,29 @@ namespace JDict.Tests
                 Assert.AreEqual("nikuwaete", entry.Romaji);
                 Assert.AreEqual("in addition to", entry.Translation);
                 Assert.AreEqual("Well, in addition to that, he also paid for the food.", entry.Example);
+            }
+        }
+
+        [Test]
+        public void Lookup()
+        {
+            using(var lookup = new JGramLookup(TestDataPaths.JGram, TestDataPaths.JGramLookup, TestDataPaths.JGramCache))
+            {
+                var entry = lookup.Lookup("くせに").First();
+                Assert.AreEqual(112, entry.Id);
+            }
+        }
+
+        [Explicit]
+        [Test]
+        public void Sandbox()
+        {
+            using (var reader = File.OpenText(TestDataPaths.JGram))
+            {
+                foreach (var entry in JGram.Parse(reader))
+                {
+                    Console.WriteLine($"{entry.Id}\t{entry.Key}・{entry.Reading}");
+                }
             }
         }
     }

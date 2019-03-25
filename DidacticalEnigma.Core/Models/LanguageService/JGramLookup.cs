@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Async;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using JDict;
+using Optional;
+using Optional.Collections;
 using TinyIndex;
+using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
@@ -15,25 +19,55 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
     public class JGramLookup : IJGramLookup
     {
-        private static readonly Guid Version = new Guid("17FF94CC-0EC9-4D98-A975-1D0321FE6ABE");
+        private static readonly Guid Version = new Guid("8B0B7D21-C47F-467B-BDDA-921B3F947ED7");
 
-        private IReadOnlyDiskArray<JGram.Entry> entries;
+        private readonly IReadOnlyDiskArray<JGram.Entry> entries;
 
-        private IReadOnlyDiskArray<KeyValuePair<string, long>> index;
+        private readonly IReadOnlyDiskArray<KeyValuePair<string, long>> index;
 
-        private Database db;
+        private readonly Database db;
 
-        private IEnumerable<KeyValuePair<string, long>> CreateIndexEntriesFor(JGram.Entry entry)
+        private IEnumerable<KeyValuePair<string, long>> LoadIndexEntries(string path)
         {
-            yield break;
+            foreach (var line in File.ReadLines(path, Encoding.UTF8))
+            {
+                if (line.StartsWith("？") || line.StartsWith("#") || string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                var components = line.Split('\t');
+                var id = long.Parse(components[0]);
+                components = components[1].Split('・');
+                foreach (var lookup in components.Select(c => c.Trim()).Distinct())
+                {
+                    // TODO: handle split entries
+                    if (lookup.Contains("～"))
+                        continue;
+
+                    yield return new KeyValuePair<string, long>(lookup, id);
+                }
+            }
         }
 
         public IEnumerable<JGram.Entry> Lookup(string key)
         {
-            yield break;
+            int limit = 50;
+            var (start, end) = index.EqualRange(key, kvp => kvp.Key);
+            var outOfBoundLimit = (limit - (end - start)) / 2;
+            start = Math.Max(0, start - outOfBoundLimit);
+            end = Math.Min(entries.Count, end + outOfBoundLimit);
+            var mid = (start + end) / 2;
+            return EnumerableExt.Range(start, end - start)
+                .OrderBy(i => Math.Abs(i - mid))
+                .Select(i =>
+                {
+                    var (entry, id) = entries.BinarySearch(i, e => e.Id);
+                    return id == -1 ? Option.None<JGram.Entry>() : entry.Some();
+                })
+                .Values()
+                .DistinctBy(r => r.Id);
         }
 
-        public JGramLookup(string jgramPath, string cachePath)
+        public JGramLookup(string jgramPath, string jgramLookupPath, string cachePath)
         {
             var entrySerializer = Serializer.ForComposite()
                 .With(Serializer.ForLong())
@@ -44,41 +78,43 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .With(Serializer.ForStringAsUTF8())
                 .Create()
                 .Mapping(raw => new JGram.Entry(
-                        (long) raw[0],
-                        (string) raw[1],
-                        (string) raw[2],
-                        (string) raw[3],
-                        (string) raw[4],
-                        (string) raw[5]),
+                        (long)raw[0],
+                        EmptyToNull((string)raw[1]),
+                        EmptyToNull((string)raw[2]),
+                        EmptyToNull((string)raw[3]),
+                        EmptyToNull((string)raw[4]),
+                        EmptyToNull((string)raw[5])),
                     obj => new object[]
                     {
                         obj.Id,
-                        obj.Key,
-                        obj.Reading,
-                        obj.Romaji,
-                        obj.Translation,
-                        obj.Example
+                        NullToEmpty(obj.Key),
+                        NullToEmpty(obj.Reading),
+                        NullToEmpty(obj.Romaji),
+                        NullToEmpty(obj.Translation),
+                        NullToEmpty(obj.Example)
                     });
 
             var indexSerializer = Serializer.ForKeyValuePair(
                 Serializer.ForStringAsUTF8(),
                 Serializer.ForLong());
 
-            var lazyRoot = new Lazy<IEnumerable<JGram.Entry>>(() =>
-            {
-                using (var reader = File.OpenText(jgramPath))
-                {
-                    return JGram.Parse(reader).ToList();
-                }
-            });
-
             db = Database.CreateOrOpen(cachePath, Version)
-                .AddIndirectArray(entrySerializer, () => lazyRoot.Value)
-                .AddIndirectArray(indexSerializer, () => lazyRoot.Value.SelectMany(CreateIndexEntriesFor))
+                .AddIndirectArray(entrySerializer, () => JGram.Parse(jgramPath, Encoding.UTF8), e => e.Id)
+                .AddIndirectArray(indexSerializer, () => LoadIndexEntries(jgramLookupPath), kvp => kvp.Key)
                 .Build();
 
             entries = db.Get<JGram.Entry>(0);
             index = db.Get<KeyValuePair<string, long>>(1);
+
+            string NullToEmpty(string s)
+            {
+                return s ?? "";
+            }
+
+            string EmptyToNull(string s)
+            {
+                return s == "" ? null : s;
+            }
         }
 
         public void Dispose()

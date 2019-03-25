@@ -29,6 +29,10 @@ namespace JDict.Tests
 
         public static readonly string JGram = Path.Combine(BaseDir, "dictionaries", "jgram");
 
+        public static readonly string JGramLookup = Path.Combine(BaseDir, "dictionaries", "jgram_lookup");
+
+        public static readonly string JGramCache = Path.Combine(BaseDir, "dictionaries", "jgram.cache");
+
         public static readonly string JMnedictCache = Path.Combine(BaseDir, "dictionaries", "JMnedict.xml.cache");
 
         public static readonly string IdiomsCache = Path.Combine(BaseDir, "dictionaries", "idioms.cache");

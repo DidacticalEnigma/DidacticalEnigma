@@ -33,6 +33,18 @@ namespace JDict
             }
         }
 
+
+        public static IEnumerable<Entry> Parse(string path, Encoding encoding)
+        {
+            using (var reader = new StreamReader(path, encoding))
+            {
+                foreach (var entry in Parse(reader))
+                {
+                    yield return entry;
+                }
+            }
+        }
+
         public static IEnumerable<Entry> Parse(TextReader reader)
         {
             string line;
