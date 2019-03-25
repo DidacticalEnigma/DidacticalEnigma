@@ -66,20 +66,19 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             var mid = (start + end) / 2;
             return EnumerableExt.Range(start, end - start)
                 .OrderBy(i => Math.Abs(i - mid))
-                .Select(i => (id: i, kvp: index[i]))
-                .Select(v =>
+                .Select(i => index[i])
+                .Select(indexEntry =>
                 {
-                    var (i, kvp) = v;
-                    var k = kvp.Key;
-                    var (entry, id) = entries.BinarySearch(kvp.Value, e => e.Id);
-                    if (id == -1)
-                        return entry.None();
-                    if(CommonPrefixLength(k, key) == 0)
-                        return entry.None();
-                    return entry.Some();
+                    var indexKey = indexEntry.Key;
+                    var entryKey = indexEntry.Value;
+                    var (entry, id) = entries.BinarySearch(entryKey, e => e.Id);
+                    return (indexKey, entry).SomeWhen(_ => id != -1);
                 })
                 .Values()
-                .DistinctBy(r => r.Id);
+                .OrderByDescending(r => CommonPrefixLength(r.indexKey, key))
+                .Where(r => CommonPrefixLength(r.indexKey, key) != 0)
+                .Select(r => r.entry)
+                .DistinctBy(entry => entry.Id);
         }
 
         public JGramLookup(string jgramPath, string jgramLookupPath, string cachePath)

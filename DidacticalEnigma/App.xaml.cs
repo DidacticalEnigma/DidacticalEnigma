@@ -178,7 +178,10 @@ namespace DidacticalEnigma
             });
             kernel.BindFactory<IWebBrowser>(get => new WebBrowser());
             kernel.BindFactory<IFlowDocumentRichFormattingRenderer>(get => new FlowDocumentRichFormattingRenderer(get.Get<IFontResolver>(), get.Get<IWebBrowser>()));
-            kernel.BindFactory<IJGramLookup>(get => new MockJGramLookup());
+            kernel.BindFactory<IJGramLookup>(get => new JGramLookup(
+                Path.Combine(dataDir, "dictionaries", "jgram"),
+                Path.Combine(dataDir, "dictionaries", "jgram_lookup"),
+                Path.Combine(dataDir, "dictionaries", "jgram.cache")));
             Kernel = kernel;
             
 
@@ -201,32 +204,6 @@ namespace DidacticalEnigma
                 }
 
                 return dictionaries;
-            }
-        }
-
-        private class MockJGramLookup : IJGramLookup
-        {
-            public void Dispose()
-            {
-                // no-op
-            }
-
-            public IEnumerable<JGram.Entry> Lookup(string key)
-            {
-                yield return new JGram.Entry(
-                    55,
-                    "に加えて",
-                    "にくわえて",
-                    "nikuwaete",
-                    "in addition to",
-                    "Well, in addition to that, he also paid for the food.");
-                yield return new JGram.Entry(
-                    55,
-                    "に加えて",
-                    "にくわえて",
-                    "nikuwaete",
-                    "in addition to",
-                    "Well, in addition to that, he also paid for the food.");
             }
         }
     }
