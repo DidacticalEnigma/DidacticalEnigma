@@ -1,9 +1,6 @@
 ﻿using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Utility.Utils;
 
 namespace JDict.Tests
@@ -14,7 +11,8 @@ namespace JDict.Tests
         [Test]
         public void Intersperse()
         {
-            var input = new int[][]{
+            var input = new[]
+            {
                 new int[] { 1, 2 },
                 new int[] { 5, 6 },
                 new int[] { },

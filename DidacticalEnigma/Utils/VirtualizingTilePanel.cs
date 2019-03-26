@@ -18,7 +18,7 @@ namespace DidacticalEnigma.Utils
 
         // Dependency property that controls the size of the child elements
         public static readonly DependencyProperty ChildSizeProperty
-            = DependencyProperty.RegisterAttached("ChildSize", typeof(double), typeof(VirtualizingTilePanel),
+            = DependencyProperty.RegisterAttached(nameof(ChildSize), typeof(double), typeof(VirtualizingTilePanel),
                 new FrameworkPropertyMetadata(200.0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
                                                       FrameworkPropertyMetadataOptions.AffectsArrange));
 

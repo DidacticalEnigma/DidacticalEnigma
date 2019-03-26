@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Utility.Utils;
 
@@ -21,8 +17,7 @@ namespace JDict.Tests
                 using (var file = zip.OpenFile(l[0]))
                 using (var reader = new StreamReader(file))
                 {
-                    var a = reader.ReadToEnd();
-                    ;
+                    reader.ReadToEnd();
                 }
             }
         }

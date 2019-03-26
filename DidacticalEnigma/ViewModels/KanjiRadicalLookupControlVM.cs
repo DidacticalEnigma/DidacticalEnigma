@@ -109,9 +109,9 @@ namespace DidacticalEnigma.ViewModels
 
             addingTaskCancellationToken = new CancellationTokenSource();
             var token = addingTaskCancellationToken.Token;
-            kanji.Clear();
+            sortedKanji.Clear();
             const int n = 20;
-            kanji.AddRange(elements.Take(n));
+            sortedKanji.AddRange(elements.Take(n));
             if (elements.Count <= n)
             {
                 return;
@@ -127,7 +127,7 @@ namespace DidacticalEnigma.ViewModels
                     {
                         if (token.IsCancellationRequested)
                             break;
-                        dispatcher.Invoke(() => { kanji.AddRange(chunk); },
+                        dispatcher.Invoke(() => { sortedKanji.AddRange(chunk); },
                             DispatcherPriority.ApplicationIdle,
                             token);
                     }
@@ -192,14 +192,12 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        public ICommand KanjiClick { get; }
-
         public double Width { get; }
 
         public double Height { get; }
 
-        private readonly ObservableBatchCollection<CodePoint> kanji = new ObservableBatchCollection<CodePoint>();
-        public IEnumerable<CodePoint> SortedKanji => kanji;
+        private readonly ObservableBatchCollection<CodePoint> sortedKanji = new ObservableBatchCollection<CodePoint>();
+        public IEnumerable<CodePoint> SortedKanji => sortedKanji;
 
         private readonly ObservableBatchCollection<RadicalVM> radicals = new ObservableBatchCollection<RadicalVM>();
         public IEnumerable<RadicalVM> Radicals => radicals;
@@ -227,11 +225,6 @@ namespace DidacticalEnigma.ViewModels
             Width += 25;
             Height = Math.Max(Width, Height);
             Width = Math.Max(Width, Height);
-            KanjiClick = new RelayCommand((p) =>
-            {
-                var codePoint = (CodePoint)p;
-                Clipboard.SetText(codePoint.ToString());
-            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

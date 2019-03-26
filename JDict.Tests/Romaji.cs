@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.LanguageService;
 using NMeCab;
 using NUnit.Framework;

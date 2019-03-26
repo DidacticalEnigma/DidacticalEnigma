@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.LanguageService;
-using JetBrains.dotMemoryUnit;
 using NUnit.Framework;
 
 namespace JDict.Tests

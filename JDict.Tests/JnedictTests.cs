@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DidacticalEnigma.Core.Models.LanguageService;
-using NMeCab;
+﻿using System.Linq;
 using NUnit.Framework;
 
 namespace JDict.Tests
@@ -18,7 +11,7 @@ namespace JDict.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            jnedict = JDict.Jnedict.Create(TestDataPaths.JMnedict, TestDataPaths.JMnedictCache);
+            jnedict = Jnedict.Create(TestDataPaths.JMnedict, TestDataPaths.JMnedictCache);
         }
 
         [OneTimeTearDown]
