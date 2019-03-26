@@ -3,11 +3,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using DidacticalEnigma;
 using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.ViewModels;
 using NUnit.Framework;
 
 namespace JDict.Tests
 {
+    [TestFixture]
     class PerformanceTests
     {
         private KanjiDict kanjiDict;
@@ -104,6 +108,48 @@ namespace JDict.Tests
             var watch = Stopwatch.StartNew();
             _ = lookup.SelectRadical(radicalCodePoint);
             Assert.Less(watch.Elapsed, TimeSpan.FromMilliseconds(1));
+        }
+    }
+
+    [RequiresThread(ApartmentState.STA)]
+    public class ProgramStartupPerformanceTests
+    {
+        [Explicit]
+        [Test]
+        public void StartupTimeTest()
+        {
+            // cold boot
+            using (var kernel = App.Configure(TestDataPaths.BaseDir))
+            {
+                kernel.BindFactory<ITextInsertCommand>(() => new MockInsertTextCommand());
+                _ = kernel.Get<MainWindowVM>();
+            }
+
+            var watch = Stopwatch.StartNew();
+            // hot boot
+            using (var kernel = App.Configure(TestDataPaths.BaseDir))
+            {
+                kernel.BindFactory<ITextInsertCommand>(() => new MockInsertTextCommand());
+                _ = kernel.Get<MainWindowVM>();
+                watch.Stop();
+            }
+
+            Assert.Less(watch.Elapsed, TimeSpan.FromSeconds(10));
+        }
+
+        private class MockInsertTextCommand : ITextInsertCommand
+        {
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object parameter)
+            {
+                
+            }
+
+            public event EventHandler CanExecuteChanged;
         }
     }
 }

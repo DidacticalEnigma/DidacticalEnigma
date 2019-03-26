@@ -32,7 +32,9 @@ namespace DidacticalEnigma
             SetUpCrashReporting(ConfigurationManager.AppSettings["SentryDsn"]);
             Startup += async (sender, args) =>
             {
-                Configure();
+                var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                var dataDir = Path.Combine(baseDir, "Data");
+                kernel = Configure(dataDir);
                 var window = new MainWindow();
                 var splashVm = new SplashScreenVM();
                 var splash = new SplashScreen
@@ -89,11 +91,10 @@ namespace DidacticalEnigma
             reporter.Report("Initializing other components");
         }
 
-        private void Configure()
+        public static Kernel Configure(string dataDir)
         {
-            kernel = new Kernel();
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            var dataDir = Path.Combine(baseDir, "Data");
+            var kernel = new Kernel();
+            
             kernel.BindFactory(() => KanjiDict.Create(Path.Combine(dataDir, "character", "kanjidic2.xml.gz")));
             kernel.BindFactory(() => new Kradfile(Path.Combine(dataDir, "character", "kradfile1_plus_2_utf8"), Encoding.UTF8));
             kernel.BindFactory(() => new Radkfile(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8"), Encoding.UTF8));
@@ -181,6 +182,8 @@ namespace DidacticalEnigma
                 Path.Combine(dataDir, "dictionaries", "jgram"),
                 Path.Combine(dataDir, "dictionaries", "jgram_lookup"),
                 Path.Combine(dataDir, "dictionaries", "jgram.cache")));
+
+            return kernel;
 
             EpwingDictionaries CreateEpwing(string targetPath)
             {

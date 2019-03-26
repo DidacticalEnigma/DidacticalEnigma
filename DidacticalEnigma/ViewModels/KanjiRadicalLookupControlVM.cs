@@ -259,7 +259,7 @@ namespace DidacticalEnigma.ViewModels
 
         public void Dispose()
         {
-            addingTaskCancellationToken.Cancel();
+            addingTaskCancellationToken?.Cancel();
         }
     }
 }
