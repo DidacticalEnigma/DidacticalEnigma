@@ -207,7 +207,11 @@ namespace DidacticalEnigma.ViewModels
             IKanjiProperties kanjiProperties)
         {
             this.lookup = lookup;
-            radicals.AddRange(kanjiProperties.Radicals.Select(r => new RadicalVM(r, enabled: true, this)));
+            radicals.AddRange(lookup.AllRadicals.Join(
+                kanjiProperties.Radicals,
+                c => c.Utf32,
+                r => r.CodePoint,
+                (c, r) => new RadicalVM(r, enabled: true, this)));
             var tb = new TextBlock
             {
                 FontSize = 24
