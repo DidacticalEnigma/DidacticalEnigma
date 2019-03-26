@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Input;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Utils;
@@ -11,6 +12,38 @@ using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {
+    public interface ITextInsertCommand : ICommand
+    {
+
+    }
+
+    public class TextInsertCommand : ITextInsertCommand
+    {
+        private Action<string> action;
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            if (parameter is string s)
+                action(s);
+            else if (parameter is CodePoint c)
+                action(c.ToString());
+            else
+                throw new ArgumentException(nameof(parameter));
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public TextInsertCommand(Action<string> action)
+        {
+            this.action = action;
+        }
+    }
+
     public class MainWindowVM : INotifyPropertyChanged, IDisposable
     {
         private readonly ClipboardHook hook;
@@ -58,10 +91,12 @@ namespace DidacticalEnigma.ViewModels
             IKanjiProperties kanjiProperties,
             IKanaProperties kanaProperties,
             IWebBrowser webBrowser,
-            Func<string> aboutTextProvider)
+            Func<string> aboutTextProvider,
+            ITextInsertCommand insertText)
         {
             HiraganaBoard = hiraganaBoard;
             KatakanaBoard = katakanaBoard;
+            InsertTextAtCaret = insertText;
             this.aboutTextProvider = aboutTextProvider;
             UsageDataSourceVMs = new ObservableBatchCollection<UsageDataSourcePreviewVM>(usageDataSourceVms);
             TextBuffers.Add(new TextBufferVM("Scratchpad", morphologicalAnalyzer, kanjiProperties, kanaProperties, related));
@@ -78,9 +113,9 @@ namespace DidacticalEnigma.ViewModels
             });
             SearchWeb = new RelayCommand(query =>
             {
-                if(CurrentTextBuffer == null)
+                if (CurrentTextBuffer == null)
                     return;
-                if(SearchEngineIndex == -1)
+                if (SearchEngineIndex == -1)
                     return;
 
                 var queryText = CurrentTextBuffer.SelectionInfo?.GetRequest().QueryText;
@@ -91,29 +126,29 @@ namespace DidacticalEnigma.ViewModels
             });
             SwitchToTab = new RelayCommand(tab =>
             {
-                switch((string)tab)
+                switch ((string)tab)
                 {
                     case "project":
-                    TabIndex = 0;
-                    break;
+                        TabIndex = 0;
+                        break;
                     case "usage1":
-                    TabIndex = 1;
-                    break;
+                        TabIndex = 1;
+                        break;
                     case "usage2":
-                    TabIndex = 2;
-                    break;
+                        TabIndex = 2;
+                        break;
                     case "usage3":
-                    TabIndex = 3;
-                    break;
+                        TabIndex = 3;
+                        break;
                     case "hiragana":
-                    TabIndex = 4;
-                    break;
+                        TabIndex = 4;
+                        break;
                     case "kanji":
-                    TabIndex = 5;
-                    break;
+                        TabIndex = 5;
+                        break;
                     case "katakana":
-                    TabIndex = 6;
-                    break;
+                        TabIndex = 6;
+                        break;
                 }
             });
             DataSourceForceRefresh = new RelayCommand(() =>
@@ -197,6 +232,8 @@ namespace DidacticalEnigma.ViewModels
         public RelayCommand SwitchToTab { get; }
 
         public RelayCommand DataSourceForceRefresh { get; }
+
+        public ICommand InsertTextAtCaret { get; }
 
         private int tabIndex = 1;
         public int TabIndex

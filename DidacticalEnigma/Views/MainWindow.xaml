@@ -105,6 +105,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <TextBox
+                                Name="JapaneseTextInputBox"
                                 Grid.Row="0"
                                 AcceptsReturn="True"
                                 FontSize="24"
@@ -135,13 +136,13 @@
                 <views:UsageDataSourcePreview DataContext="{Binding UsageDataSourceVM}" SearchQuery="{Binding DataContext.CurrentTextBuffer.SelectionInfo, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Converter={x:Static converters:SelectionInfoToRequestConverter.Default}, Mode=OneWay}" />
             </TabItem>
             <TabItem Header="Hiragana">
-                <views:KanaBoard DataContext="{Binding HiraganaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+                <views:KanaBoard DataContext="{Binding HiraganaBoard}" KeyClickCommand="{Binding DataContext.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
             <TabItem Header="Kanji">
-                <views:KanjiRadicalLookupControl DataContext="{Binding KanjiLookupVM}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+                <views:KanjiRadicalLookupControl DataContext="{Binding KanjiLookupVM}" KeyClickCommand="{Binding DataContext.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
             <TabItem Header="Katakana">
-                <views:KanaBoard DataContext="{Binding KatakanaBoard}" KeyClickCommand="{Binding DataContext.CurrentTextBuffer.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+                <views:KanaBoard DataContext="{Binding KatakanaBoard}" KeyClickCommand="{Binding DataContext.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
             <TabItem Header="Settings">
                 <TextBlock Text="To be implemented" />

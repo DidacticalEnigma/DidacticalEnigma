@@ -33,6 +33,7 @@ namespace DidacticalEnigma
             Startup += async (sender, args) =>
             {
                 Configure();
+                var window = new MainWindow();
                 var splashVm = new SplashScreenVM();
                 var splash = new SplashScreen
                 {
@@ -41,15 +42,14 @@ namespace DidacticalEnigma
                 IProgress<string> progress = new Progress<string>(s => splashVm.ProgressReport = s);
                 splash.Show();
                 Encoding.RegisterProvider(new Utf8EncodingProviderHack());
+                kernel.BindFactory<ITextInsertCommand>(() => new TextInsertCommand(window.InsertTextAtCursor));
                 await Task.Run(() =>
                 {
                     Preload(progress);
                 });
+                
                 var vm = kernel.Get<MainWindowVM>();
-                var window = new MainWindow
-                {
-                    DataContext = vm
-                };
+                window.DataContext = vm;
                 window.Show();
                 splash.Close();
             };
@@ -128,7 +128,8 @@ namespace DidacticalEnigma
                 get.Get<IKanjiProperties>(),
                 get.Get<IKanaProperties>(),
                 get.Get<IWebBrowser>(),
-                () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)));
+                () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8),
+                get.Get<ITextInsertCommand>()));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
                 get.Get<KanjiRadicalLookup>(),
                 get.Get<IKanjiProperties>()));
