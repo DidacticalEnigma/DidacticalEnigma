@@ -27,7 +27,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<string> LookupWords(string input)
         {
-            var regex = new Regex(Regex.Escape(start + input + end).Replace(@"/\\", ".") );
+            var regex = new Regex(
+                Regex.Escape(start + input + end)
+                    .Replace(@"\?", ".")
+                    .Replace(@"？", ".")
+                    .Replace(@"\*", ".*?")
+                    .Replace(@"＊", ".*?"));
             return regex.Matches(allWords)
                 .Cast<Match>()
                 .Select(m => m.Value.TrimStart(startArr).TrimEnd(endArr))
