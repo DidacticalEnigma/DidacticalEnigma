@@ -5,7 +5,7 @@ using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {
-    public partial class Leaf : Element
+    public class Leaf : Element
     {
         private readonly Func<object> factory;
         private readonly Action<object> onClose;
@@ -17,7 +17,7 @@ namespace DidacticalEnigma.ViewModels
             get => content;
             set
             {
-                if (object.Equals(content, value))
+                if (Equals(content, value))
                     return;
                 content = value;
                 OnPropertyChanged();
@@ -28,7 +28,7 @@ namespace DidacticalEnigma.ViewModels
         {
             switch (Parent)
             {
-                case Root root:
+                case Root _:
                 {
                     // do nothing
                 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Async;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
@@ -13,7 +9,6 @@ using LibJpConjSharp;
 using Optional;
 using Optional.Collections;
 using Utility.Utils;
-using EdictTypeUtils = JDict.EdictTypeUtils;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
@@ -39,7 +34,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 rich.Paragraphs.Add(
                     new TextParagraph(
                         EnumerableExt.OfSingle(
-                            new Text("The program estimates this word is not a verb. The results below may be garbage.", emphasis: false))));
+                            new Text("The program estimates this word is not a verb. The results below may be garbage."))));
 
             
             var verb = request.NotInflected ?? request.Word.RawWord;
@@ -49,14 +44,14 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 rich.Paragraphs.Add(
                     new TextParagraph(
                         EnumerableExt.OfSingle(
-                            new Text("No word found.", emphasis: false))));
+                            new Text("No word found."))));
                 return Task.FromResult(Option.Some(rich));
             }
 
             var verbTypes = entries.Select(e =>
             {
                 if(!e.Readings.Any())
-                    return Option.None<LibJpConjSharp.EdictType>();
+                    return Option.None<EdictType>();
                 return GetEdictVerbType(e);
             })
                 .OfNonNone()
@@ -68,7 +63,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 rich.Paragraphs.Add(
                     new TextParagraph(
                         EnumerableExt.OfSingle(
-                            new Text("No verb found.", emphasis: false))));
+                            new Text("No verb found."))));
                 return Task.FromResult(Option.Some(rich));
             }
             else
@@ -110,21 +105,21 @@ Te - Te Form
 
             return Task.FromResult(Option.Some(rich));
 
-            Text Form(string name, CForm form, LibJpConjSharp.EdictType type, Politeness politeness = Politeness.Plain)
+            Text Form(string name, CForm form, EdictType type, Politeness politeness = Politeness.Plain)
             {
                 return new Text(
-                    $"{name}: {JpConj.Conjugate(verb, type, form, politeness, Polarity.Affirmative).Replace("|", "")}\n~{name}: {JpConj.Conjugate(verb, type, form, politeness, Polarity.Negative).Replace("|", "")}\n");
+                    $"{name}: {JpConj.Conjugate(verb, type, form, politeness).Replace("|", "")}\n~{name}: {JpConj.Conjugate(verb, type, form, politeness, Polarity.Negative).Replace("|", "")}\n");
             }
         }
 
-        private Option<LibJpConjSharp.EdictType> GetEdictVerbType(JMDictEntry entry)
+        private Option<EdictType> GetEdictVerbType(JMDictEntry entry)
         {
             var senseType = entry.Senses
                 .Select(s => s.Type)
                 .OfNonNone()
                 .Where(t => (int)t <= (int)EdictType.vs_s)
                 .FirstOrNone();
-            return senseType.Map(s => (LibJpConjSharp.EdictType)(int)s);
+            return senseType.Map(s => (EdictType)(int)s);
         }
 
         public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using JDict;
 using Optional;
 using Optional.Collections;
@@ -43,6 +42,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             return input
                 .GroupConsecutive(x => x.highlight)
+                .Select(x => x.Materialize())
                 .Select(x => (string.Join("", x.Select(y => y.fragment)), x.First().highlight))
                 .ToList();
         }
@@ -85,6 +85,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
                 int j = 0;
                 var analyzedCandidate = Analyze(original);
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
                 while (j < analyzedCandidate.Count && Similarity(queryMorphemes[0], analyzedCandidate[j]) == 0.0)
                 {
                     highlights.Add((analyzedCandidate[j].SurfaceForm, false));
@@ -110,6 +111,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     }
 
                     var morphemeSimilarity = Similarity(queryMorpheme, candidateMorpheme);
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (morphemeSimilarity != 0.0)
                     {
                         similarity += morphemeSimilarity;
@@ -165,18 +167,18 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         }
 
         public IdiomDetector(
-            JDict.JMDict jmDict,
+            JMDict jmDict,
             IMorphologicalAnalyzer<IpadicEntry> analyzer,
             string cachePath)
         {
             this.jmDict = jmDict;
             this.analyzer = analyzer;
-            this.db = Database.CreateOrOpen(cachePath, Version)
+            db = Database.CreateOrOpen(cachePath, Version)
                 .AddIndirectArray(Serializer.ForKeyValuePair(Serializer.ForStringAsUTF8(), Serializer.ForLong()),
                     CreateEntries, kvp => kvp.Key)
                 .Build();
 
-            this.entries = db.Get<KeyValuePair<string, long>>(0);
+            entries = db.Get<KeyValuePair<string, long>>(0);
         }
 
         private IEnumerable<KeyValuePair<string, long>> CreateEntries()

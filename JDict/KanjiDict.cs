@@ -1,5 +1,4 @@
-﻿using System;
-using JDict.Internal.XmlModels;
+﻿using JDict.Internal.XmlModels;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;

@@ -8,12 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using DidacticalEnigma.Core.Models.LanguageService;
-using JDict;
 using Utility.Utils;
-using Radical = DidacticalEnigma.Core.Models.LanguageService.Radical;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -102,8 +99,6 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private IEnumerable<CodePoint> currentlySelected = Enumerable.Empty<CodePoint>();
-
         private Task task = Task.CompletedTask;
         private CancellationTokenSource addingTaskCancellationToken = null;
 
@@ -124,7 +119,7 @@ namespace DidacticalEnigma.ViewModels
 
             var tcs = new TaskCompletionSource<bool>();
             task = tcs.Task;
-            Task.Run(async () =>
+            await Task.Run(() =>
             {
                 try
                 {
@@ -146,8 +141,8 @@ namespace DidacticalEnigma.ViewModels
 
         public void SelectRadicals(IEnumerable<CodePoint> codePoints, Dispatcher dispatcher)
         {
-            var codePointsList = codePoints.ToList();
-            if (!codePointsList.Any())
+            codePoints = codePoints.Materialize();
+            if (!codePoints.Any())
             {
                 foreach (var radical in Radicals)
                 {
@@ -158,17 +153,15 @@ namespace DidacticalEnigma.ViewModels
                 return;
             }
 
-            var lookup = this.lookup.SelectRadical(codePointsList);
+            var lookup = this.lookup.SelectRadical(codePoints);
             SetElements(lookup.Kanji, dispatcher);
             for (var i = 0; i < radicals.Count; i++)
             {
-                if(codePointsList.Contains(radicals[i].CodePoint))
+                if(codePoints.Contains(radicals[i].CodePoint))
                     continue;
 
                 radicals[i].Enabled = lookup.PossibleRadicals[i].Value;
             }
-
-            currentlySelected = codePointsList;
         }
 
         private bool hideNonMatchingRadicals = false;
@@ -223,7 +216,7 @@ namespace DidacticalEnigma.ViewModels
             };
             foreach (var k in Radicals)
             {
-                tb.Measure(new System.Windows.Size(100, 100));
+                tb.Measure(new Size(100, 100));
                 tb.Text = k.CodePoint.ToString();
                 var size = tb.DesiredSize;
                 Height = Math.Max(Height, size.Height);
@@ -261,7 +254,6 @@ namespace DidacticalEnigma.ViewModels
                     return;
 
                 lookup.SortingCriteria.SelectedIndex = value;
-                //SelectRadicals(currentlySelected);
                 OnPropertyChanged();
             }
         }

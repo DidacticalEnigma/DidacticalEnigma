@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DidacticalEnigma.ViewModels
+﻿namespace DidacticalEnigma.ViewModels
 {
     public class HSplit : Split
     {

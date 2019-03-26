@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using JDict.Json;
 using Newtonsoft.Json;
 using TinyIndex;
 using Utility.Utils;
-using FileMode = System.IO.FileMode;
-using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace JDict
 {
@@ -20,7 +17,7 @@ namespace JDict
     {
         private static readonly Guid Version = new Guid("F7D29471-7532-4CFC-AD18-75F26BFE406F");
 
-        private TinyIndex.Database db;
+        private Database db;
 
         private IReadOnlyDiskArray<YomichanDictionaryEntry> entries;
 
@@ -49,7 +46,7 @@ namespace JDict
                 .With(Serializer.ForStringAsUTF8())
                 .Create()
                 .Mapping(
-                    raw => new YomichanDictionaryEntry()
+                    raw => new YomichanDictionaryEntry
                     {
                         Expression = (string)raw[0],
                         Reading = (string)raw[1],
@@ -78,7 +75,7 @@ namespace JDict
 
             var lazyRoot = new Lazy<List<YomichanDictionaryEntry>>(() => ParseEntriesFromZip(zip).ToList());
 
-            db = TinyIndex.Database.CreateOrOpen(cachePath, Version)
+            db = Database.CreateOrOpen(cachePath, Version)
                 .AddIndirectArray(entrySerializer, () => lazyRoot.Value)
                 .AddIndirectArray(indexSerializer, () => Index(lazyRoot.Value), kvp => kvp.Key)
                 .Build();
@@ -110,10 +107,9 @@ namespace JDict
             {
                 if (f == "index.json")
                     return 0;
-                else if (termMatcher.IsMatch(f))
+                if (termMatcher.IsMatch(f))
                     return 1;
-                else
-                    return 2;
+                return 2;
             });
             var indexPath = groups[0].SingleOrDefault() ?? throw new InvalidDataException("not a valid yomichan dictionary");
             var dataFilePaths = groups[1].ToList();

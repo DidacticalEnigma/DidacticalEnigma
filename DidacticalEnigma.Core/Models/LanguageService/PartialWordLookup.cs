@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using JDict;
 
@@ -13,13 +11,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private static readonly char start = '\x0002';
 
-        private static readonly char[] startArr = new[] { start };
+        private static readonly char[] startArr = { start };
 
         private static readonly char end = '\x0001';
 
-        private static readonly char[] endArr = new[] { end };
-
-        string wildcardChar = "/\\";
+        private static readonly char[] endArr = { end };
 
         public PartialWordLookup(JMDict jmDict)
         {

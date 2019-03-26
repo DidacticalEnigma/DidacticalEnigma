@@ -12,7 +12,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public SimilarKanji(string path, Encoding encoding)
         {
-            this.similar = new Dictionary<string, List<string>>();
+            similar = new Dictionary<string, List<string>>();
             foreach (var line in File.ReadLines(path, encoding))
             {
                 var components = line.Split('/');
@@ -31,7 +31,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             similar.TryGetValue(codePoint.ToString(), out var resultList);
             IEnumerable<string> result = resultList ?? Enumerable.Empty<string>();
             return EnumerableExt.OfSingle(new CategoryGrouping<CodePoint>("Similar Kanji",
-                result.Select(r => CodePoint.FromString(r, 0))));
+                result.Select(r => CodePoint.FromString(r))));
         }
     }
 }

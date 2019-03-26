@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Async;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
@@ -31,11 +30,6 @@ namespace DidacticalEnigma.Core.Models.DataSources
         public Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
         {
             return Task.FromResult(UpdateResult.NotSupported);
-        }
-
-        public CharacterStrokeOrderDataSource()
-        {
-
         }
     }
 }

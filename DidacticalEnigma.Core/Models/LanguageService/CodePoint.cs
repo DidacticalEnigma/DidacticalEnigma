@@ -4,19 +4,16 @@ using System.Unicode;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-
     // To check: do I need normalization forms?
     public class CodePoint : IEquatable<CodePoint>
     {
-        protected readonly int codePoint;
+        public int Utf32 { get; }
 
-        public int Utf32 => codePoint;
-
-        public string Name => UnicodeInfo.GetCharInfo(codePoint).Name;
+        public string Name => UnicodeInfo.GetCharInfo(Utf32).Name;
 
         public string ToLongString()
         {
-            return $"{char.ConvertFromUtf32(codePoint)} ({codePoint}): {Name}";
+            return $"{char.ConvertFromUtf32(Utf32)} ({Utf32}): {Name}";
         }
 
         public virtual string ToDescriptionString()
@@ -26,12 +23,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public override string ToString()
         {
-            return char.ConvertFromUtf32(codePoint);
+            return char.ConvertFromUtf32(Utf32);
         }
 
         internal CodePoint(int s)
         {
-            codePoint = s;
+            Utf32 = s;
         }
 
         public static CodePoint FromInt(int codePoint)
@@ -63,12 +60,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public bool Equals(CodePoint other)
         {
             return other != null &&
-                   codePoint == other.codePoint;
+                   Utf32 == other.Utf32;
         }
 
         public override int GetHashCode()
         {
-            return -1644926438 + codePoint.GetHashCode();
+            return -1644926438 + Utf32.GetHashCode();
         }
 
         public static bool operator ==(CodePoint point1, CodePoint point2)

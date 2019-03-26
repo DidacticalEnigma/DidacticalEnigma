@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Optional;
 using TinyIndex;
 
@@ -16,7 +11,7 @@ namespace JDict
     {
         private class OptionalSerializer<T> : ISerializer<Option<T>>
         {
-            private static bool TryGetMaybe<U>(Option<U> input, out U output)
+            private static bool TryGetMaybe<TElement>(Option<TElement> input, out TElement output)
             {
                 output = Optional.Unsafe.OptionUnsafeExtensions.ValueOrDefault(input);
                 return input.HasValue;

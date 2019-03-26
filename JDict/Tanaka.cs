@@ -14,7 +14,7 @@ namespace JDict
         {
             var components = line.Split('\t');
             var japaneseSentence = components[0].Remove(0, 3);
-            var englishSentence = components[1].Remove(components[1].IndexOf("#ID"));
+            var englishSentence = components[1].Remove(components[1].IndexOf("#ID", StringComparison.InvariantCulture));
             return new Sentence(japaneseSentence, englishSentence);
         }
 

@@ -88,6 +88,9 @@ namespace JDict
                 }
                 else
                 {
+                    if(kanji == null)
+                        throw new InvalidDataException();
+
                     foreach (var codePoint in AsCodePoints(line.Trim()))
                     {
                         kanji.Add(codePoint);
@@ -130,7 +133,10 @@ namespace JDict
                 }
                 else
                 {
-                    foreach(var codePoint in AsCodePoints(line.Trim()))
+                    if (current == null)
+                        throw new InvalidDataException();
+
+                    foreach (var codePoint in AsCodePoints(line.Trim()))
                     {
                         current.Add(codePoint);
                     }
@@ -152,7 +158,7 @@ namespace JDict
             Init(reader);
         }
 
-        private static TValue GetOrAdd<TKey, TValue>(IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> Valuefactory)
+        private static TValue GetOrAdd<TKey, TValue>(IDictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> valueFactory)
         {
             if(dict.TryGetValue(key, out var value))
             {
@@ -160,7 +166,7 @@ namespace JDict
             }
             else
             {
-                value = Valuefactory(key);
+                value = valueFactory(key);
                 dict[key] = value;
                 return value;
             }

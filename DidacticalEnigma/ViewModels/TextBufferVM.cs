@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Core.Utils;
 using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels

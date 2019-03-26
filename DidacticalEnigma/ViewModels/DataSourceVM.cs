@@ -2,11 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Documents;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Formatting;
-using DidacticalEnigma.Utils;
 using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
@@ -14,12 +12,6 @@ namespace DidacticalEnigma.ViewModels
     public class DataSourceVM : INotifyPropertyChanged, IDisposable
     {
         private AsyncDataSource dataSource;
-
-        private Request lastRequest;
-
-        private readonly IFontResolver fontResolver;
-
-        private readonly IWebBrowser webBrowser;
 
         private long id = 0;
 
@@ -50,7 +42,7 @@ namespace DidacticalEnigma.ViewModels
 
         private bool isProcessing;
 
-        private IFlowDocumentRichFormattingRenderer documentRenderer;
+        private readonly IFlowDocumentRichFormattingRenderer documentRenderer;
 
         public bool IsProcessing
         {
@@ -69,32 +61,24 @@ namespace DidacticalEnigma.ViewModels
 
         public async Task Search(Request request, long id)
         {
-            try
+            if (request == null)
+                return;
+            this.id = id;
+            IsProcessing = true;
+            var result = await dataSource.Answer(request);
+            if (this.id > id)
             {
-                if (request == null)
-                    return;
-                this.id = id;
-                IsProcessing = true;
-                var result = await dataSource.Answer(request);
-                if (this.id > id)
-                {
-                    return;
-                }
+                return;
+            }
 
-                FormattedResult = result.ValueOr(emptyDocument);
-                IsProcessing = false;
-            }
-            finally
-            {
-                if(request != null)
-                    lastRequest = request;
-            }
+            FormattedResult = result.ValueOr(emptyDocument);
+            IsProcessing = false;
         }
 
         public DataSourceVM(IDataSource dataSource, IFlowDocumentRichFormattingRenderer documentRenderer) :
             this(Task.FromResult(dataSource), dataSource.GetType(), documentRenderer)
         {
-            
+
         }
 
         public DataSourceVM(Task<IDataSource> dataSource, Type type, IFlowDocumentRichFormattingRenderer documentRenderer)

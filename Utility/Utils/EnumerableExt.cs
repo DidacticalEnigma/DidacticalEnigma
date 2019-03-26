@@ -20,6 +20,13 @@ namespace Utility.Utils
             yield return element;
         }
 
+        public static IReadOnlyCollection<TElement> Materialize<TElement>(this IEnumerable<TElement> input)
+        {
+            if (input is IReadOnlyCollection<TElement> readOnlyCollection)
+                return readOnlyCollection;
+            return input.ToList();
+        }
+
         public static IReadOnlyDictionary<TValue, TKey> InvertMapping<TKey, TValue>(
             this IReadOnlyDictionary<TKey, TValue> input)
         {
@@ -141,7 +148,7 @@ namespace Utility.Utils
             return otherSet.Any(element => set.Contains(element));
         }
 
-        public static Option<V> Lookup<K, V>(this IReadOnlyDictionary<K, V> dict, K key)
+        public static Option<TValue> Lookup<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dict, TKey key)
         {
             return dict.TryGetValue(key, out var value) ? value.Some() : value.None();
         }
@@ -192,6 +199,8 @@ namespace Utility.Utils
                     yield return element;
                 }
             }
+            // well duh
+            // ReSharper disable once IteratorNeverReturns
         }
 
         public static IEnumerable<TElement> Repeat<TElement>(TElement element)
@@ -200,6 +209,8 @@ namespace Utility.Utils
             {
                 yield return element;
             }
+            // well duh
+            // ReSharper disable once IteratorNeverReturns
         }
 
         public static TSource MinBy<TSource, TCompared>(
@@ -282,7 +293,6 @@ namespace Utility.Utils
         {
             var group = new List<TElement>();
             TKey previousKey = default(TKey);
-            TElement previous = default(TElement);
             bool isFirst = true;
             foreach (var current in input)
             {
@@ -300,12 +310,10 @@ namespace Utility.Utils
                     else
                     {
                         yield return group;
-                        group = new List<TElement>();
-                        group.Add(current);
+                        group = new List<TElement> {current};
                     }
                 }
 
-                previous = current;
                 previousKey = currentKey;
                 isFirst = false;
             }

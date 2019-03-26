@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
@@ -16,16 +15,15 @@ using Gu.Inject;
 using JDict;
 using NMeCab;
 using Sentry;
-using SplashScreen = DidacticalEnigma.Views.SplashScreen;
 
 namespace DidacticalEnigma
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
-        private Kernel Kernel;
+        private Kernel kernel;
 
         private IDisposable sentry;
 
@@ -36,7 +34,7 @@ namespace DidacticalEnigma
             {
                 Configure();
                 var splashVm = new SplashScreenVM();
-                var splash = new SplashScreen()
+                var splash = new SplashScreen
                 {
                     DataContext = splashVm
                 };
@@ -47,8 +45,8 @@ namespace DidacticalEnigma
                 {
                     Preload(progress);
                 });
-                var vm = Kernel.Get<MainWindowVM>();
-                var window = new MainWindow()
+                var vm = kernel.Get<MainWindowVM>();
+                var window = new MainWindow
                 {
                     DataContext = vm
                 };
@@ -57,7 +55,7 @@ namespace DidacticalEnigma
             };
             Exit += (sender, args) =>
             {
-                Kernel.Dispose();
+                kernel.Dispose();
             };
         }
 
@@ -83,24 +81,24 @@ namespace DidacticalEnigma
         public void Preload(IProgress<string> reporter)
         {
             reporter.Report("Initializing JMdict dictionary (first time may take up to several minutes)");
-            var jdict = Kernel.Get<JMDict>();
+            kernel.Get<JMDict>();
             reporter.Report("Initializing JMnedict dictionary (first time may take up to several minutes)");
-            var jnedict = Kernel.Get<Jnedict>();
+            kernel.Get<Jnedict>();
             reporter.Report("Initializing MeCab");
-            var mecab = Kernel.Get<IMorphologicalAnalyzer<IEntry>>();
+            kernel.Get<IMorphologicalAnalyzer<IEntry>>();
             reporter.Report("Initializing other components");
         }
 
         private void Configure()
         {
-            var kernel = new Kernel();
+            kernel = new Kernel();
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             var dataDir = Path.Combine(baseDir, "Data");
-            kernel.BindFactory(() => JDict.KanjiDict.Create(Path.Combine(dataDir, "character", "kanjidic2.xml.gz")));
+            kernel.BindFactory(() => KanjiDict.Create(Path.Combine(dataDir, "character", "kanjidic2.xml.gz")));
             kernel.BindFactory(() => new Kradfile(Path.Combine(dataDir, "character", "kradfile1_plus_2_utf8"), Encoding.UTF8));
             kernel.BindFactory(() => new Radkfile(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8"), Encoding.UTF8));
-            kernel.BindFactory(() => JDict.JMDict.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")));
-            kernel.BindFactory(() => JDict.Jnedict.Create(Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache")));
+            kernel.BindFactory(() => JMDict.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")));
+            kernel.BindFactory(() => Jnedict.Create(Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache")));
             kernel.BindFactory(() =>
                 new FrequencyList(Path.Combine(dataDir, "other", "word_form_frequency_list.txt"), Encoding.UTF8));
             kernel.BindFactory(() => new Tanaka(Path.Combine(dataDir, "corpora", "examples.utf.gz"), Encoding.UTF8));
@@ -109,7 +107,7 @@ namespace DidacticalEnigma
             kernel.BindFactory<IFontResolver>(() => new DefaultFontResolver(Path.Combine(dataDir, "character", "KanjiStrokeOrders")));
             kernel.BindFactory<IMorphologicalAnalyzer<IpadicEntry>>(() => new MeCabIpadic(new MeCabParam
             {
-                DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
+                DicDir = Path.Combine(dataDir, "mecab", "ipadic")
             }));
             kernel.Bind<IMorphologicalAnalyzer<IEntry>, IMorphologicalAnalyzer<IpadicEntry>>();
             kernel.BindFactory(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
@@ -139,7 +137,7 @@ namespace DidacticalEnigma
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
                 get.Get<IKanaProperties>()));
             kernel.BindFactory(get => new AutoGlosser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDict>()));
-            kernel.BindFactory<IEnumerable<DataSourceVM>>(get => new[] {
+            kernel.BindFactory(get => new[] {
                 new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JMDictDataSource(get.Get<JMDict>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
@@ -182,8 +180,6 @@ namespace DidacticalEnigma
                 Path.Combine(dataDir, "dictionaries", "jgram"),
                 Path.Combine(dataDir, "dictionaries", "jgram_lookup"),
                 Path.Combine(dataDir, "dictionaries", "jgram.cache")));
-            Kernel = kernel;
-            
 
             EpwingDictionaries CreateEpwing(string targetPath)
             {

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Newtonsoft.Json;
 using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
 {
-    public class Root : Element, INotifyPropertyChanged
+    public class Root : Element
     {
         private readonly ObservableBatchCollection<Element> children;
 

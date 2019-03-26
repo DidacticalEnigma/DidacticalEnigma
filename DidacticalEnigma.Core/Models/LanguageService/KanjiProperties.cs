@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using Optional;
 using Utility.Utils;
@@ -10,8 +9,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class KanjiProperties : IKanjiProperties
     {
-        private readonly KanjiDict kanjidict;
-
         private readonly RadicalRemapper remapper;
 
         private readonly Radkfile radkfile;
@@ -24,7 +21,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             Radkfile radkfile,
             RadicalRemapper remapper)
         {
-            this.kanjidict = kanjiDict;
             this.kradfile = kradfile;
             this.radkfile = radkfile;
             this.remapper = remapper;
@@ -52,7 +48,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             if (remapper == null)
             {
-                radkfile
+                return radkfile
                     .LookupMatching(radicals.Select(s => s.ToString()))
                     .Select(r => CodePoint.FromString(r))
                     .OrderBy(x => x, ordering)

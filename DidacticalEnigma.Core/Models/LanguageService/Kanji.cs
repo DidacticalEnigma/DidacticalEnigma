@@ -12,8 +12,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public override string ToDescriptionString()
         {
-            var info = UnicodeInfo.GetCharInfo(codePoint);
-            return base.ToLongString() + "\n" +
+            var info = UnicodeInfo.GetCharInfo(Utf32);
+            return ToLongString() + "\n" +
                    "Kun: " + info.JapaneseKunReading + "\n" +
                    "On: " + info.JapaneseOnReading + "\n" +
                    info.Definition + "\n";

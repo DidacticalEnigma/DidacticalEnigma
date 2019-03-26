@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Optional;
 using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService

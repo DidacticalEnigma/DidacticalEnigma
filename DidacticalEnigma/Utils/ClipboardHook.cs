@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Threading;
 
 namespace DidacticalEnigma.Utils
 {
@@ -29,6 +28,7 @@ namespace DidacticalEnigma.Utils
             /// <summary>
             /// Sent when the contents of the clipboard have changed.
             /// </summary>
+            // ReSharper disable once InconsistentNaming
             public const int WM_CLIPBOARDUPDATE = 0x031D;
 
             /// <summary>

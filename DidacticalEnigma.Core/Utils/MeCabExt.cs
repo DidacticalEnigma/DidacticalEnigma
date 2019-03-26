@@ -6,35 +6,38 @@ using JDict;
 using NMeCab;
 using Optional;
 
-internal static class MeCabExt
+namespace DidacticalEnigma.Core.Utils
 {
-    public static IEnumerable<MeCabNode> ParseToNodes(this MeCabTagger tagger, string text)
+    internal static class MeCabExt
     {
-        for (var node = tagger.ParseToNode(text); node != null; node = node.Next)
+        public static IEnumerable<MeCabNode> ParseToNodes(this MeCabTagger tagger, string text)
         {
-            yield return node;
+            for (var node = tagger.ParseToNode(text); node != null; node = node.Next)
+            {
+                yield return node;
+            }
         }
     }
-}
 
-public static class MorphologicalAnalyzerExt
-{
-    public static IEnumerable<IEnumerable<WordInfo>> BreakIntoSentences<TEntry>(this IMorphologicalAnalyzer<TEntry> morphologicalAnalyzer, string input)
-        where TEntry : IEntry
+    public static class MorphologicalAnalyzerExt
     {
-        if (input.Trim() == "")
-            return Enumerable.Empty<IEnumerable<WordInfo>>();
-        return input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
-            .Select(line =>
-            {
-                return morphologicalAnalyzer.ParseToEntries(line)
-                    .Where(a => a.IsRegular)
-                    .Select(word => new WordInfo(
-                        word.SurfaceForm,
-                        word.PartOfSpeech,
-                        word.DictionaryForm,
-                        word.IsIndependent,
-                        word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictPartOfSpeech.pn) : word.Type));
-            });
+        public static IEnumerable<IEnumerable<WordInfo>> BreakIntoSentences<TEntry>(this IMorphologicalAnalyzer<TEntry> morphologicalAnalyzer, string input)
+            where TEntry : IEntry
+        {
+            if (input.Trim() == "")
+                return Enumerable.Empty<IEnumerable<WordInfo>>();
+            return input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
+                .Select(line =>
+                {
+                    return morphologicalAnalyzer.ParseToEntries(line)
+                        .Where(a => a.IsRegular)
+                        .Select(word => new WordInfo(
+                            word.SurfaceForm,
+                            word.PartOfSpeech,
+                            word.DictionaryForm,
+                            word.IsIndependent,
+                            word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictPartOfSpeech.pn) : word.Type));
+                });
+        }
     }
 }

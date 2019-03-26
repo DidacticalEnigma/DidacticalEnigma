@@ -13,7 +13,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class CustomNotesDataSource : IDataSource
     {
-        private readonly string path;
+        private readonly string notesFilePath;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
             new Guid("AF9401B8-958E-4F31-8673-9B64C8A5F2CD"),
@@ -31,7 +31,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             try
             {
                 var rich = new RichFormatting();
-                var paragraphs = ReadParagraphs(path);
+                var paragraphs = ReadParagraphs();
                 if (paragraphs != null)
                 {
                     await paragraphs.Where(paragraph => paragraph.Contains(request.QueryText)).ForEachAsync(paragraph =>
@@ -58,11 +58,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Option.None<RichFormatting>();
         }
 
-        public IAsyncEnumerable<string> ReadParagraphs(string path)
+        private IAsyncEnumerable<string> ReadParagraphs()
         {
             return new AsyncEnumerable<string>(async yield =>
             {
-                using (var reader = new StreamReader(path))
+                using (var reader = new StreamReader(notesFilePath))
                 {
                     var sb = new StringBuilder();
                     string line;
@@ -93,7 +93,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         public CustomNotesDataSource(string notesFilePath)
         {
-            this.path = notesFilePath;
+            this.notesFilePath = notesFilePath;
         }
     }
 }

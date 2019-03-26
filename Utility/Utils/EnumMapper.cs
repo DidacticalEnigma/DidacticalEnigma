@@ -33,8 +33,7 @@ namespace Utility.Utils
                     typeof(DescriptionAttribute),
                     inherit: false);
 
-            if (attributes != null &&
-                attributes.Length > 0)
+            if (attributes.Length > 0)
                 return attributes[0].Description;
             else
                 return value.ToString();

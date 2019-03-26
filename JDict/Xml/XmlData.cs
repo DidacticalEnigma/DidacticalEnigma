@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 // I have to make these classes public because otherwise XML serialization complains
 // But they aren't really for public use

@@ -14,9 +14,9 @@ namespace DidacticalEnigma.ViewModels
 
         public SelectionInfoVM Clone(CodePointVM cpVm = null, WordVM word = null, Func<string> allText = null)
         {
-            cpVm = cpVm ?? this.Character;
-            word = word ?? this.Word;
-            allText = allText ?? this.AllText;
+            cpVm = cpVm ?? Character;
+            word = word ?? Word;
+            allText = allText ?? AllText;
             return new SelectionInfoVM(cpVm, word, allText);
         }
 

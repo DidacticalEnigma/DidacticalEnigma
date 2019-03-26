@@ -1,10 +1,10 @@
-﻿using System.Windows.Controls.Primitives;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Media;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace DidacticalEnigma.Utils
 {
@@ -13,7 +13,7 @@ namespace DidacticalEnigma.Utils
         public VirtualizingTilePanel()
         {
             // For use in the IScrollInfo implementation
-            this.RenderTransform = _trans;
+            RenderTransform = trans;
         }
 
         // Dependency property that controls the size of the child elements
@@ -43,8 +43,8 @@ namespace DidacticalEnigma.Utils
             GetVisibleRange(out firstVisibleItemIndex, out lastVisibleItemIndex);
 
             // We need to access InternalChildren before the generator to work around a bug
-            UIElementCollection children = this.InternalChildren;
-            IItemContainerGenerator generator = this.ItemContainerGenerator;
+            UIElementCollection children = InternalChildren;
+            IItemContainerGenerator generator = ItemContainerGenerator;
 
             // Get the generator position of the first visible data item
             GeneratorPosition startPos = generator.GeneratorPositionFromIndex(firstVisibleItemIndex);
@@ -69,11 +69,11 @@ namespace DidacticalEnigma.Utils
                         // Figure out if we need to insert the child at the end or somewhere in the middle
                         if (childIndex >= children.Count)
                         {
-                            base.AddInternalChild(child);
+                            AddInternalChild(child);
                         }
                         else
                         {
-                            base.InsertInternalChild(childIndex, child);
+                            InsertInternalChild(childIndex, child);
                         }
 
                         generator.PrepareItemContainer(child);
@@ -102,13 +102,13 @@ namespace DidacticalEnigma.Utils
         /// <returns>Size used</returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            IItemContainerGenerator generator = this.ItemContainerGenerator;
+            IItemContainerGenerator generator = ItemContainerGenerator;
 
             UpdateScrollInfo(finalSize);
 
-            for (int i = 0; i < this.Children.Count; i++)
+            for (int i = 0; i < Children.Count; i++)
             {
-                UIElement child = this.Children[i];
+                UIElement child = Children[i];
 
                 // Map the child offset to an item offset
                 int itemIndex = generator.IndexFromGeneratorPosition(new GeneratorPosition(i, 0));
@@ -126,8 +126,8 @@ namespace DidacticalEnigma.Utils
         /// <param name="maxDesiredGenerated">last item index that should be visible</param>
         private void CleanUpItems(int minDesiredGenerated, int maxDesiredGenerated)
         {
-            UIElementCollection children = this.InternalChildren;
-            IItemContainerGenerator generator = this.ItemContainerGenerator;
+            UIElementCollection children = InternalChildren;
+            IItemContainerGenerator generator = ItemContainerGenerator;
 
             for (int i = children.Count - 1; i >= 0; i--)
             {
@@ -174,8 +174,8 @@ namespace DidacticalEnigma.Utils
             int childrenPerRow = CalculateChildrenPerRow(availableSize);
 
             // See how big we are
-            return new Size(childrenPerRow * this.ChildSize,
-                this.ChildSize * Math.Ceiling((double)itemCount / childrenPerRow));
+            return new Size(childrenPerRow * ChildSize,
+                ChildSize * Math.Ceiling((double)itemCount / childrenPerRow));
         }
 
         /// <summary>
@@ -185,11 +185,11 @@ namespace DidacticalEnigma.Utils
         /// <param name="lastVisibleItemIndex">The item index of the last visible item</param>
         private void GetVisibleRange(out int firstVisibleItemIndex, out int lastVisibleItemIndex)
         {
-            int childrenPerRow = CalculateChildrenPerRow(_extent);
+            int childrenPerRow = CalculateChildrenPerRow(extent);
 
-            firstVisibleItemIndex = (int)Math.Floor(_offset.Y / this.ChildSize) * childrenPerRow;
+            firstVisibleItemIndex = (int)Math.Floor(offset.Y / ChildSize) * childrenPerRow;
             lastVisibleItemIndex =
-                (int)Math.Ceiling((_offset.Y + _viewport.Height) / this.ChildSize) * childrenPerRow - 1;
+                (int)Math.Ceiling((offset.Y + viewport.Height) / ChildSize) * childrenPerRow - 1;
 
             ItemsControl itemsControl = ItemsControl.GetItemsOwner(this);
             int itemCount = itemsControl.HasItems ? itemsControl.Items.Count : 0;
@@ -204,7 +204,7 @@ namespace DidacticalEnigma.Utils
         /// <returns>The size</returns>
         private Size GetChildSize()
         {
-            return new Size(this.ChildSize, this.ChildSize);
+            return new Size(ChildSize, ChildSize);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace DidacticalEnigma.Utils
             int row = itemIndex / childrenPerRow;
             int column = itemIndex % childrenPerRow;
 
-            child.Arrange(new Rect(column * this.ChildSize, row * this.ChildSize, this.ChildSize, this.ChildSize));
+            child.Arrange(new Rect(column * ChildSize, row * ChildSize, ChildSize, ChildSize));
         }
 
         /// <summary>
@@ -232,10 +232,10 @@ namespace DidacticalEnigma.Utils
         {
             // Figure out how many children fit on each row
             int childrenPerRow;
-            if (availableSize.Width == Double.PositiveInfinity)
-                childrenPerRow = this.Children.Count;
+            if (double.IsPositiveInfinity(availableSize.Width))
+                childrenPerRow = Children.Count;
             else
-                childrenPerRow = Math.Max(1, (int)Math.Floor(availableSize.Width / this.ChildSize));
+                childrenPerRow = Math.Max(1, (int)Math.Floor(availableSize.Width / ChildSize));
             return childrenPerRow;
         }
 
@@ -254,98 +254,98 @@ namespace DidacticalEnigma.Utils
 
             Size extent = CalculateExtent(availableSize, itemCount);
             // Update extent
-            if (extent != _extent)
+            if (extent != this.extent)
             {
-                _extent = extent;
-                if (_owner != null)
-                    _owner.InvalidateScrollInfo();
+                this.extent = extent;
+                if (owner != null)
+                    owner.InvalidateScrollInfo();
             }
 
             // Update viewport
-            if (availableSize != _viewport)
+            if (availableSize != viewport)
             {
-                _viewport = availableSize;
-                if (_owner != null)
-                    _owner.InvalidateScrollInfo();
+                viewport = availableSize;
+                if (owner != null)
+                    owner.InvalidateScrollInfo();
             }
         }
 
         public ScrollViewer ScrollOwner
         {
-            get { return _owner; }
-            set { _owner = value; }
+            get { return owner; }
+            set { owner = value; }
         }
 
         public bool CanHorizontallyScroll
         {
-            get { return _canHScroll; }
-            set { _canHScroll = value; }
+            get { return canHScroll; }
+            set { canHScroll = value; }
         }
 
         public bool CanVerticallyScroll
         {
-            get { return _canVScroll; }
-            set { _canVScroll = value; }
+            get { return canVScroll; }
+            set { canVScroll = value; }
         }
 
         public double HorizontalOffset
         {
-            get { return _offset.X; }
+            get { return offset.X; }
         }
 
         public double VerticalOffset
         {
-            get { return _offset.Y; }
+            get { return offset.Y; }
         }
 
         public double ExtentHeight
         {
-            get { return _extent.Height; }
+            get { return extent.Height; }
         }
 
         public double ExtentWidth
         {
-            get { return _extent.Width; }
+            get { return extent.Width; }
         }
 
         public double ViewportHeight
         {
-            get { return _viewport.Height; }
+            get { return viewport.Height; }
         }
 
         public double ViewportWidth
         {
-            get { return _viewport.Width; }
+            get { return viewport.Width; }
         }
 
         public void LineUp()
         {
-            SetVerticalOffset(this.VerticalOffset - 10);
+            SetVerticalOffset(VerticalOffset - 10);
         }
 
         public void LineDown()
         {
-            SetVerticalOffset(this.VerticalOffset + 10);
+            SetVerticalOffset(VerticalOffset + 10);
         }
 
         public void PageUp()
         {
-            SetVerticalOffset(this.VerticalOffset - _viewport.Height);
+            SetVerticalOffset(VerticalOffset - viewport.Height);
         }
 
         public void PageDown()
         {
-            SetVerticalOffset(this.VerticalOffset + _viewport.Height);
+            SetVerticalOffset(VerticalOffset + viewport.Height);
         }
 
         public void MouseWheelUp()
         {
-            SetVerticalOffset(this.VerticalOffset - 10);
+            SetVerticalOffset(VerticalOffset - 10);
         }
 
         public void MouseWheelDown()
         {
-            SetVerticalOffset(this.VerticalOffset + 10);
+            SetVerticalOffset(VerticalOffset + 10);
         }
 
         public void LineLeft()
@@ -390,36 +390,36 @@ namespace DidacticalEnigma.Utils
 
         public void SetVerticalOffset(double offset)
         {
-            if (offset < 0 || _viewport.Height >= _extent.Height)
+            if (offset < 0 || viewport.Height >= extent.Height)
             {
                 offset = 0;
             }
             else
             {
-                if (offset + _viewport.Height >= _extent.Height)
+                if (offset + viewport.Height >= extent.Height)
                 {
-                    offset = _extent.Height - _viewport.Height;
+                    offset = extent.Height - viewport.Height;
                 }
             }
 
-            _offset.Y = offset;
+            this.offset.Y = offset;
 
-            if (_owner != null)
-                _owner.InvalidateScrollInfo();
+            if (owner != null)
+                owner.InvalidateScrollInfo();
 
-            _trans.Y = -offset;
+            trans.Y = -offset;
 
             // Force us to realize the correct children
             InvalidateMeasure();
         }
 
-        private TranslateTransform _trans = new TranslateTransform();
-        private ScrollViewer _owner;
-        private bool _canHScroll = false;
-        private bool _canVScroll = false;
-        private Size _extent = new Size(0, 0);
-        private Size _viewport = new Size(0, 0);
-        private Point _offset;
+        private readonly TranslateTransform trans = new TranslateTransform();
+        private ScrollViewer owner;
+        private bool canHScroll;
+        private bool canVScroll;
+        private Size extent = new Size(0, 0);
+        private Size viewport = new Size(0, 0);
+        private Point offset;
 
         #endregion
 

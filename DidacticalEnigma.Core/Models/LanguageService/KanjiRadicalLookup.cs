@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using JDict;
 using Utility.Utils;
 
@@ -15,9 +11,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     public class KanjiRadicalLookup
     {
         public ReadOnlyListWithSelector<IKanjiOrdering> SortingCriteria { get; }
-
-        //private ObservableBatchCollection<CodePoint> foundKanji = new ObservableBatchCollection<CodePoint>();
-        //public ReadOnlyObservableCollection<CodePoint> FoundKanji { get; }
 
         private static int DivideRoundUp(int x, int y)
         {
@@ -35,7 +28,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 KanjiOrdering.Create("Sort by frequency", kanjiDict, x => x.FrequencyRating)
             });
             SortingCriteria.SelectedIndex = 0;
-            //FoundKanji = new ReadOnlyObservableCollection<CodePoint>(foundKanji);
             var entryList = entries.ToList();
             radicalCount = entryList.Count;
             elementSize = DivideRoundUp(radicalCount, vectorBitCount);
@@ -51,7 +43,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .ToArray();
             kanjiCount = kanjiCodePoints.Length;
 
-            this.indexToKanji = SortingCriteria
+            indexToKanji = SortingCriteria
                 .Select(sortingCriterion => kanjiCodePoints
                     .OrderBy(x => x, Comparer<int>.Create((l, r) => sortingCriterion.Compare(
                         CodePoint.FromInt(l),
@@ -59,11 +51,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     .ToArray())
                 .ToArray();
 
-            this.indexToRadical = entryList
+            indexToRadical = entryList
                 .Select(entry => entry.Radical.CodePoint)
                 .ToArray();
 
-            this.radicalToIndex = indexToRadical
+            radicalToIndex = indexToRadical
                 .Indexed()
                 .ToDictionary(p => p.element, p => p.index);
 
@@ -73,7 +65,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     .ToDictionary(p => p.element, p => p.index))
                 .ToArray();
 
-            this.radkinfo = Enumerable.Range(0, SortingCriteria.Count)
+            radkinfo = Enumerable.Range(0, SortingCriteria.Count)
                 .Select(CreateRadkInfo)
                 .ToArray();
 

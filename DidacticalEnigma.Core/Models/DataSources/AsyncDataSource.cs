@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Async;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,9 +11,9 @@ namespace DidacticalEnigma.Core.Models.DataSources
     // not implementing the IDataSource because it purposefully violates the contract
     public class AsyncDataSource
     {
-        private readonly Task<IDataSource> dataSource;
+        private readonly Task<IDataSource> dataSourceTask;
 
-        private bool disposed = false;
+        private bool disposed;
 
         public enum InitializationState
         {
@@ -29,11 +28,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
         {
             get
             {
-                if (dataSource.IsFaulted)
+                if (dataSourceTask.IsFaulted)
                     return InitializationState.Failure;
-                if (dataSource.IsCanceled)
+                if (dataSourceTask.IsCanceled)
                     return InitializationState.Failure;
-                if (dataSource.IsCompleted)
+                if (dataSourceTask.IsCompleted)
                     return InitializationState.Success;
                 return InitializationState.InProgress;
             }
@@ -42,7 +41,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         public async Task<Option<RichFormatting>> Answer(Request request)
         {
-            var dataSource = await this.dataSource.ConfigureAwait(false);
+            var dataSource = await dataSourceTask.ConfigureAwait(false);
             var result = await dataSource.Answer(request);
             return result;
         }
@@ -54,7 +53,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             disposed = true;
             if (State == InitializationState.Success)
             {
-                dataSource.Result.Dispose();
+                dataSourceTask.Result.Dispose();
                 return;
             }
             // if it's still initializing, then we wait for a while
@@ -62,13 +61,13 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 await Task.Delay(5000);
             // then dispose it if it's initialized
             if (State == InitializationState.Success)
-                dataSource.Result.Dispose();
+                dataSourceTask.Result.Dispose();
             // otherwise fuck it
         }
 
-        public async Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default(CancellationToken))
+        public async Task<UpdateResult> UpdateLocalDataSource(CancellationToken cancellation = default)
         {
-            var dataSource = await this.dataSource.ConfigureAwait(false);
+            var dataSource = await dataSourceTask.ConfigureAwait(false);
             return await dataSource.UpdateLocalDataSource(cancellation);
         }
 
@@ -77,11 +76,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
             if (type.GetProperty("Descriptor", BindingFlags.Static | BindingFlags.Public)?.GetValue(null) is DataSourceDescriptor descriptor)
             {
                 Descriptor = descriptor;
-                this.dataSource = dataSource();
+                dataSourceTask = dataSource();
             }
             else
             {
-                this.dataSource = Task.FromException<IDataSource>(new InvalidOperationException("the data source doesn't provide a descriptor"));
+                dataSourceTask = Task.FromException<IDataSource>(new InvalidOperationException("the data source doesn't provide a descriptor"));
             }
         }
     }

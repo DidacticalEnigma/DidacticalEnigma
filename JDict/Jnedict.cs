@@ -12,6 +12,7 @@ using Optional;
 using Optional.Collections;
 using TinyIndex;
 using Utility.Utils;
+// ReSharper disable InconsistentNaming
 
 namespace JDict
 {
@@ -32,13 +33,13 @@ namespace JDict
 
         private Jnedict Init(Stream stream, string cache)
         {
-            var entrySerializer = TinyIndex.Serializer.ForComposite()
-                .With(TinyIndex.Serializer.ForLong())
-                .With(TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForStringAsUTF8()))
-                .With(TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForStringAsUTF8()))
-                .With(TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForComposite()
-                    .With(TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForEnum<JnedictType>()))
-                    .With(TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForStringAsUTF8()))
+            var entrySerializer = Serializer.ForComposite()
+                .With(Serializer.ForLong())
+                .With(Serializer.ForReadOnlyList(Serializer.ForStringAsUTF8()))
+                .With(Serializer.ForReadOnlyList(Serializer.ForStringAsUTF8()))
+                .With(Serializer.ForReadOnlyList(Serializer.ForComposite()
+                    .With(Serializer.ForReadOnlyList(Serializer.ForEnum<JnedictType>()))
+                    .With(Serializer.ForReadOnlyList(Serializer.ForStringAsUTF8()))
                     .Create()
                     .Mapping(
                         raw => new JnedictTranslation(
@@ -83,7 +84,7 @@ namespace JDict
                                     .Where(t => t.Lang == null || t.Lang == "eng")
                                     .Select(t => t.Text))))),
                     x => x.SequenceNumber)
-                .AddIndirectArray(TinyIndex.Serializer.ForKeyValuePair(TinyIndex.Serializer.ForStringAsUTF8(), TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForLong())), () =>
+                .AddIndirectArray(Serializer.ForKeyValuePair(Serializer.ForStringAsUTF8(), Serializer.ForReadOnlyList(Serializer.ForLong())), () =>
                     {
                         IEnumerable<KeyValuePair<long, string>> It()
                         {
@@ -108,8 +109,8 @@ namespace JDict
                     x => x.Key)
                 .Build();
 
-            this.entries = db.Get<JnedictEntry>(0);
-            this.kvps = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
+            entries = db.Get<JnedictEntry>(0);
+            kvps = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
 
             return this;
         }
@@ -121,10 +122,8 @@ namespace JDict
             {
                 return null;
             }
-            else
-            {
-                return It();
-            }
+
+            return It();
 
             IEnumerable<JnedictEntry> It()
             {

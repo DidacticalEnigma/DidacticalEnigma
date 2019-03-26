@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.LanguageService;
-using JDict;
 using Optional;
 using Utility.Utils;
 

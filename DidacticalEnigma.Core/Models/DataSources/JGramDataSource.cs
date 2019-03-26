@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using Optional;
-using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class JGramDataSource : IDataSource
     {
-        private readonly IKanjiProperties kanji;
-        private readonly IKanaProperties kana;
         private IJGramLookup lookup;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(

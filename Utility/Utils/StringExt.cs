@@ -16,7 +16,7 @@ namespace Utility.Utils
                 yield break;
 
             var queue = new Queue<int>(s.AsCodePoints());
-            string result = s;
+            string result;
             do
             {
                 queue.Enqueue(queue.Dequeue());
@@ -42,7 +42,7 @@ namespace Utility.Utils
 
         public static IEnumerable<(string text, bool highlight)> HighlightWords(string input, string word)
         {
-            return input.Split(new string[] { word }, StringSplitOptions.None).Select(part => (part, false)).Intersperse((word, true));
+            return input.Split(new[] { word }, StringSplitOptions.None).Select(part => (part, false)).Intersperse((word, true));
         }
 
         public static string FromCodePoints(IEnumerable<int> codePoints)

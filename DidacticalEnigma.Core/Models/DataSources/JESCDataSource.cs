@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Async;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;
@@ -40,7 +38,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                 }
                 paragraph.Content.Add(new Text(sentence.EnglishSentence));
                 rich.Paragraphs.Add(paragraph);
-            };
+            }
             if (rich.Paragraphs.Count != 0)
             {
                 return Option.Some(rich);

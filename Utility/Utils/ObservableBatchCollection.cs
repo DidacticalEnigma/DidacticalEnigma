@@ -85,19 +85,19 @@ namespace Utility.Utils
         /// <param name="items">The items to add.</param>
         public void AddRange(IEnumerable<T> items)
         {
-            this.CheckReentrancy();
+            CheckReentrancy();
             var count = 0;
             var added = default(T);
             foreach (var item in items)
             {
                 if (count > 0)
                 {
-                    this.Items.Add(item);
+                    Items.Add(item);
                 }
                 else
                 {
                     added = item;
-                    this.Items.Add(item);
+                    Items.Add(item);
                 }
 
                 count++;
@@ -110,13 +110,13 @@ namespace Utility.Utils
 
             if (count == 1)
             {
-                this.OnPropertyChanged(CountPropertyChangedEventArgs);
-                this.OnPropertyChanged(IndexerPropertyChangedEventArgs);
-                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added, this.Items.Count - 1));
+                OnPropertyChanged(CountPropertyChangedEventArgs);
+                OnPropertyChanged(IndexerPropertyChangedEventArgs);
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added, Items.Count - 1));
             }
             else
             {
-                this.RaiseReset();
+                RaiseReset();
             }
         }
 
@@ -126,7 +126,7 @@ namespace Utility.Utils
         /// <param name="items">The items to add.</param>
         public void RemoveRange(IEnumerable<T> items)
         {
-            this.CheckReentrancy();
+            CheckReentrancy();
             var count = 0;
             var index = -1;
             var removed = default(T);
@@ -134,13 +134,13 @@ namespace Utility.Utils
             {
                 if (count > 0)
                 {
-                    this.Items.Remove(item);
+                    Items.Remove(item);
                 }
                 else
                 {
                     removed = item;
-                    index = this.Items.IndexOf(item);
-                    this.Items.RemoveAt(index);
+                    index = Items.IndexOf(item);
+                    Items.RemoveAt(index);
                 }
 
                 count++;
@@ -153,21 +153,21 @@ namespace Utility.Utils
 
             if (count == 1)
             {
-                this.OnPropertyChanged(CountPropertyChangedEventArgs);
-                this.OnPropertyChanged(IndexerPropertyChangedEventArgs);
-                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, index));
+                OnPropertyChanged(CountPropertyChangedEventArgs);
+                OnPropertyChanged(IndexerPropertyChangedEventArgs);
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed, index));
             }
             else
             {
-                this.RaiseReset();
+                RaiseReset();
             }
         }
 
         private void RaiseReset()
         {
-            this.OnPropertyChanged(CountPropertyChangedEventArgs);
-            this.OnPropertyChanged(IndexerPropertyChangedEventArgs);
-            this.OnCollectionChanged(NotifyCollectionResetEventArgs);
+            OnPropertyChanged(CountPropertyChangedEventArgs);
+            OnPropertyChanged(IndexerPropertyChangedEventArgs);
+            OnCollectionChanged(NotifyCollectionResetEventArgs);
         }
     }
 }

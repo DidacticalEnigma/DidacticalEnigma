@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Reflection;
-using System.Text;
 
 namespace Utility.Utils
 {
@@ -23,7 +20,7 @@ namespace Utility.Utils
                 if (selectedIndex == value)
                     return;
 
-                if(!(-1 <= value && value < this.Count))
+                if(!(-1 <= value && value < Count))
                     throw new ArgumentOutOfRangeException();
                 if(!allowDeselect && value == -1)
                     throw new ArgumentOutOfRangeException();
@@ -35,13 +32,13 @@ namespace Utility.Utils
 
         public T SelectedItem
         {
-            get => selectedIndex == -1 ? default(T) : this[selectedIndex];
+            get => selectedIndex == -1 ? default : this[selectedIndex];
         }
 
         public ReadOnlyListWithSelector(IReadOnlyList<T> readOnlyList = null, bool allowDeselect = true)
         {
             this.allowDeselect = allowDeselect;
-            this.underlying = readOnlyList ?? Array.Empty<T>();
+            underlying = readOnlyList ?? Array.Empty<T>();
         }
 
         public IEnumerator<T> GetEnumerator()

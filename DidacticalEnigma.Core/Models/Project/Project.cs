@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -67,6 +68,7 @@ namespace DidacticalEnigma.Core.Models.Project
             public IReadOnlyCollection<string> Files { get; set; }
 
             [JsonExtensionData]
+            [UsedImplicitly]
             private readonly IDictionary<string, JToken> additionalData;
 
             public ProjectData(string version, IReadOnlyCollection<string> files)
@@ -193,10 +195,11 @@ namespace DidacticalEnigma.Core.Models.Project
 
         public static Translation CreateNew(string originalText, string translatedText)
         {
-            return new Translation(System.Guid.NewGuid(), originalText);
+            return new Translation(Guid.NewGuid(), originalText);
         }
 
         [JsonExtensionData]
+        [UsedImplicitly]
         private readonly IDictionary<string, JToken> additionalData;
     }
 
@@ -213,6 +216,7 @@ namespace DidacticalEnigma.Core.Models.Project
         }
 
         [JsonExtensionData]
+        [UsedImplicitly]
         private readonly IDictionary<string, JToken> additionalData;
     }
 
@@ -229,7 +233,7 @@ namespace DidacticalEnigma.Core.Models.Project
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((TranslatorNote) obj);
         }
 
@@ -274,7 +278,7 @@ namespace DidacticalEnigma.Core.Models.Project
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((GlossNote) obj);
         }
 

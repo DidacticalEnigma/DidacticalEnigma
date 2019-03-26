@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Async;
 using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Formatting;

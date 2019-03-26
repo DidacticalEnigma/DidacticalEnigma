@@ -14,15 +14,15 @@ namespace Utility.Utils
     /// </summary>
     public class UnionFindNode
     {
-        private UnionFindNode _parent;
-        private uint _rank;
+        private UnionFindNode parent;
+        private uint rank;
 
         /// <summary>
         /// Creates a new disjoint node, representative of a set containing only the new node.
         /// </summary>
         public UnionFindNode()
         {
-            _parent = this;
+            parent = this;
         }
 
         /// <summary>
@@ -31,8 +31,8 @@ namespace Utility.Utils
         /// </summary>
         public UnionFindNode Find()
         {
-            if (!ReferenceEquals(_parent, this)) _parent = _parent.Find();
-            return _parent;
+            if (!ReferenceEquals(parent, this)) parent = parent.Find();
+            return parent;
         }
 
         /// <summary>
@@ -52,22 +52,22 @@ namespace Utility.Utils
         public bool Union(UnionFindNode other)
         {
             if (other == null) throw new ArgumentNullException("other");
-            var root1 = this.Find();
+            var root1 = Find();
             var root2 = other.Find();
             if (ReferenceEquals(root1, root2)) return false;
 
-            if (root1._rank < root2._rank)
+            if (root1.rank < root2.rank)
             {
-                root1._parent = root2;
+                root1.parent = root2;
             }
-            else if (root1._rank > root2._rank)
+            else if (root1.rank > root2.rank)
             {
-                root2._parent = root1;
+                root2.parent = root1;
             }
             else
             {
-                root2._parent = root1;
-                root1._rank++;
+                root2.parent = root1;
+                root1.rank++;
             }
             return true;
         }
