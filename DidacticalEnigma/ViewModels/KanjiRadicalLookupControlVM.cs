@@ -119,7 +119,9 @@ namespace DidacticalEnigma.ViewModels
 
             var tcs = new TaskCompletionSource<bool>();
             task = tcs.Task;
-            await Task.Run(() =>
+#pragma warning disable 4014
+            Task.Run(() =>
+#pragma warning restore 4014
             {
                 try
                 {
