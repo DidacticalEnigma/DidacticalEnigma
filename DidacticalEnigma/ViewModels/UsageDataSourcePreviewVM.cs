@@ -111,7 +111,7 @@ namespace DidacticalEnigma.ViewModels
                 // being lazy
                 (Root.Tree as Leaf).VSplit.Execute(null);
                 (((Root.Tree as Split).First as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 0;
-                (((Root.Tree as Split).Second as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 1;
+                (((Root.Tree as Split).Second as Leaf).Content as DataSourcePreviewVM).SelectedDataSourceIndex = 2;
             }
         }
 
