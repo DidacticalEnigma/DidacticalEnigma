@@ -30,8 +30,8 @@ namespace JDict.Internal.XmlModels
         [XmlElement("literal")]
         public string Literal { get; set; }
 
-        // CodePoint
-        // 
+        [XmlElement("codepoint")]
+        public KanjiCodePoints CodePoints { get; set; }
 
         [XmlElement("radical")]
         public KanjiRadical Radical { get; set; }
@@ -39,13 +39,50 @@ namespace JDict.Internal.XmlModels
         [XmlElement("misc")]
         public KanjiMisc Misc { get; set; }
 
-        // dic_number?
+        [XmlElement("dic_number")]
+        public KanjiDictionaryNumbers DictionaryReferences { get; set; }
 
         [XmlElement("query_code")]
         public KanjiQueryCodes QueryCodes { get; set; }
 
         [XmlElement("reading_meaning")]
         public KanjiReadingMeaning ReadingsAndMeanings { get; set; }
+    }
+
+    public class KanjiDictionaryNumbers
+    {
+        [XmlElement("dic_ref")]
+        public KanjiDictionaryReference[] References { get; set; }
+    }
+
+    public class KanjiDictionaryReference
+    {
+        [XmlAttribute("dr_type")]
+        public string Type { get; set; }
+
+        [XmlAttribute("m_vol")]
+        public int Volume { get; set; }
+
+        [XmlAttribute("m_page")]
+        public int Page { get; set; }
+
+        [XmlText]
+        public string Info { get; set; }
+    }
+
+    public class KanjiCodePoints
+    {
+        [XmlElement("cp_value")]
+        public KanjiCodePoint[] CodePoints { get; set; }
+    }
+
+    public class KanjiCodePoint
+    {
+        [XmlAttribute("cp_type")]
+        public string Type { get; set; }
+
+        [XmlText]
+        public string Value { get; set; }
     }
 
     public class KanjiQueryCodes
@@ -58,6 +95,9 @@ namespace JDict.Internal.XmlModels
     {
         [XmlAttribute("qc_type")]
         public string Type { get; set; }
+
+        [XmlAttribute("skip_misclass")]
+        public string MisclassificationType { get; set; }
 
         [XmlText]
         public string Value { get; set; }
@@ -124,7 +164,8 @@ namespace JDict.Internal.XmlModels
         public int[] StrokeCount { get; set; }
 
         // Variant
-        //
+        [XmlElement("variant")]
+        public KanjiVariant[] Variants { get; set; }
 
         [XmlElement("freq")]
         public int FrequencyRating { get; set; }
@@ -134,5 +175,14 @@ namespace JDict.Internal.XmlModels
 
         [XmlElement("jlpt")]
         public int JlptLevel { get; set; }
+    }
+
+    public class KanjiVariant
+    {
+        [XmlAttribute("var_type")]
+        public string Type { get; set; }
+
+        [XmlText]
+        public string Data { get; set; }
     }
 }
