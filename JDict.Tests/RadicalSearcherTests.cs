@@ -26,6 +26,10 @@ namespace JDict.Tests
             new TestCaseData("", Enumerable.Empty<RadicalSearcherResult>()),
             new TestCaseData("      \t     ", Enumerable.Empty<RadicalSearcherResult>()),
             new TestCaseData("  龠  ", new[]{ new RadicalSearcherResult(2, 1, "龠", CodePoint.FromInt('龠')) }),
+            new TestCaseData("  龠ハ  ", new[]{ new RadicalSearcherResult(2, 1, "龠", CodePoint.FromInt('龠')), new RadicalSearcherResult(3, 1, "ハ", CodePoint.FromInt('ハ')) }),
+            new TestCaseData("  龠;ハ  ", new[]{ new RadicalSearcherResult(2, 1, "龠", CodePoint.FromInt('龠')), new RadicalSearcherResult(4, 1, "ハ", CodePoint.FromInt('ハ')) }),
+            new TestCaseData("  龠; ;ハ  ", new[]{ new RadicalSearcherResult(2, 1, "龠", CodePoint.FromInt('龠')), new RadicalSearcherResult(6, 1, "ハ", CodePoint.FromInt('ハ')) }),
+            new TestCaseData("heart ハ  ", new[]{ new RadicalSearcherResult(0, 5, "heart", CodePoint.FromInt('心')), new RadicalSearcherResult(7, 1, "ハ", CodePoint.FromInt('ハ')) }),
         };
 
         [Test]

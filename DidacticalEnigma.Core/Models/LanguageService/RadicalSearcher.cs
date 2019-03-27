@@ -63,6 +63,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Radical = radical ?? throw new ArgumentNullException(nameof(radical));
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(Start)}: {Start}, {nameof(Length)}: {Length}, {nameof(Text)}: {Text}, {nameof(Radical)}: {Radical}";
+        }
     }
 
     public interface IRadicalSearcher
@@ -72,7 +77,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
     public class RadicalSearcher : IRadicalSearcher
     {
-        private Dictionary<int, CodePoint> lookup;
+        private readonly Dictionary<string, CodePoint> names;
+
+        private readonly Dictionary<int, CodePoint> lookup;
 
         public IReadOnlyList<RadicalSearcherResult> Search(string text)
         {
@@ -86,22 +93,80 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public Option<RadicalSearcherResult> Match((int start, int length, string text) input)
         {
             var cp = char.ConvertToUtf32(input.text, 0);
-            return lookup.GetValueOrNone(cp).Map(radical => new RadicalSearcherResult(input.start, input.length, input.text, radical));
+            return lookup.GetValueOrNone(cp)
+                .Else(names.GetValueOrNone(input.text))
+                .Map(radical => new RadicalSearcherResult(input.start, input.length, input.text, radical));
         }
+
+        /*private class LexemeBuilder
+        {
+            private string input;
+
+            private int start = 0;
+
+            private StringBuilder sb;
+
+            public LexemeBuilder(string input, StringBuilder sb = null)
+            {
+                this.input = input;
+                sb = sb ?? new StringBuilder();
+                sb.Clear();
+                this.sb = sb;
+            }
+
+            public bool Next()
+            {
+                if (Index >= input.Length)
+                    return false;
+
+                Index++;
+                if (char.IsHighSurrogate(input, Index))
+                    Index++;
+                return true;
+            }
+
+            public int CodePoint { get; private set; }
+
+            public int Index { get; private set; } = -1;
+
+            public void Feed(int codePoint)
+            {
+                sb.AppendCodePoint(codePoint);
+            }
+
+            public bool Empty => sb.Length == 0;
+
+            public (int start, int length, string text) FlushRaw()
+            {
+
+            }
+        }*/
 
         private IEnumerable<(int start, int length, string text)> Split(string text)
         {
+            int currentState = 0;
             var sb = new StringBuilder();
+            text += " "; // sentinel value
             foreach (var i in text.AsCodePointIndices())
             {
-                if (char.IsWhiteSpace(text, i))
+                var cp = char.ConvertToUtf32(text, i);
+                if (char.IsWhiteSpace(text, i) || char.IsPunctuation(text, i))
                 {
-                    if (Flush(i, out var token)) yield return token;
+                    { if (Flush(i+1, out var token)) yield return token; }
                 }
                 else
                 {
-                    sb.AppendCodePoint(char.ConvertToUtf32(text, i));
-                    if (Flush(i, out var token)) yield return token;
+                    var blockName = UnicodeInfo.GetBlockName(cp);
+                    if (blockName == "CJK Unified Ideographs")
+                    {
+                        { if (Flush(i, out var token)) yield return token; }
+                        sb.AppendCodePoint(char.ConvertToUtf32(text, i));
+                        { if (Flush(i, out var token)) yield return token; }
+                    }
+                    else
+                    {
+                        sb.AppendCodePoint(char.ConvertToUtf32(text, i));
+                    }
                 }
             }
 
@@ -109,8 +174,13 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             {
                 v = default;
                 if (sb.Length == 0)
+                {
+                    currentState = i;
                     return false;
-                v = (i, sb.Length, sb.ToString());
+                }
+
+                v = (currentState, sb.Length, sb.ToString());
+                currentState = i+1;
                 sb.Clear();
                 return true;
             }
@@ -119,6 +189,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public RadicalSearcher(IEnumerable<CodePoint> radicals)
         {
             this.lookup = radicals.ToDictionary(r => r.Utf32, r => r);
+            this.names = new Dictionary<string, CodePoint>{
+                { "heart", CodePoint.FromInt('心')},
+                { "kokoro", CodePoint.FromInt('心')},
+                { "こころ", CodePoint.FromInt('心')}
+
+            };
         }
     }
 }
