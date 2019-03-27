@@ -35,6 +35,38 @@ namespace Utility.Utils
             }
         }
 
+        public static IEnumerable<int> AsCodePointIndices(this string s)
+        {
+            for (int i = 0; i < s.Length; ++i)
+            {
+                yield return i;
+                if (Char.IsHighSurrogate(s, i))
+                    i++;
+            }
+        }
+
+        public static StringBuilder AppendCodePoint(this StringBuilder stringBuilder, int codePoint)
+        {
+            int utf32 = codePoint;
+            if ((utf32 < 0 || utf32 > 0x10ffff) || (utf32 >= 0x00d800 && utf32 <= 0x00dfff))
+            {
+                throw new ArgumentException(nameof(codePoint));
+            }
+
+            if (utf32 < 0x10000)
+            {
+                stringBuilder.Append((char)codePoint);
+            }
+            else
+            {
+                utf32 -= 0x10000;
+                stringBuilder.Append((char)((utf32 / 0x400) + '\ud800'));
+                stringBuilder.Append((char)((utf32 % 0x400) + '\udc00'));
+            }
+
+            return stringBuilder;
+        }
+
         public static string SubstringFromTo(this string s, int start, int end)
         {
             return s.Substring(start, end - start);
@@ -47,27 +79,12 @@ namespace Utility.Utils
 
         public static string FromCodePoints(IEnumerable<int> codePoints)
         {
-            var list = new List<char>();
+            var sb = new StringBuilder();
             foreach(var codePoint in codePoints)
             {
-                int utf32 = codePoint;
-                if((utf32 < 0 || utf32 > 0x10ffff) || (utf32 >= 0x00d800 && utf32 <= 0x00dfff))
-                {
-                    throw new ArgumentException(nameof(codePoints));
-                }
-
-                if(utf32 < 0x10000)
-                {
-                    list.Add((char)codePoint);
-                }
-                else
-                {
-                    utf32 -= 0x10000;
-                    list.Add((char)((utf32 / 0x400) + '\ud800'));
-                    list.Add((char)((utf32 % 0x400) + '\udc00'));
-                }
+                sb.AppendCodePoint(codePoint);
             }
-            return new string(list.ToArray());
+            return sb.ToString();
         }
 
         public static IEnumerable<string> SplitWithQuotes(string input, char delimiter, char quote)

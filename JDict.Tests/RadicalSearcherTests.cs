@@ -21,15 +21,16 @@ namespace JDict.Tests
             searcher = new RadicalSearcher(lookup.AllRadicals);
         }
 
-        private static TestCaseData[] BasicTestCaseData = new TestCaseData[]
+        private static TestCaseData[] basicTestCaseData = new TestCaseData[]
         {
-            new TestCaseData("", Enumerable.Empty<KeyValuePair<string, CodePoint>>()),
-            new TestCaseData("      \t     ", Enumerable.Empty<KeyValuePair<string, CodePoint>>()),
+            new TestCaseData("", Enumerable.Empty<RadicalSearcherResult>()),
+            new TestCaseData("      \t     ", Enumerable.Empty<RadicalSearcherResult>()),
+            new TestCaseData("  龠  ", new[]{ new RadicalSearcherResult(2, 1, "龠", CodePoint.FromInt('龠')) }),
         };
 
         [Test]
-        [TestCaseSource(nameof(BasicTestCaseData))]
-        public void Basic(string input, IEnumerable<KeyValuePair<string, CodePoint>> expected)
+        [TestCaseSource(nameof(basicTestCaseData))]
+        public void Basic(string input, IEnumerable<RadicalSearcherResult> expected)
         {
             var actual = searcher.Search(input);
             CollectionAssert.AreEqual(expected, actual);
