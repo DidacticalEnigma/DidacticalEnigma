@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using System.Unicode;
 using DidacticalEnigma.Core.Models.LanguageService;
 using NUnit.Framework;
 using Utility.Utils;
@@ -31,6 +33,19 @@ namespace JDict.Tests
                 .Select(r => r.Kanji.Count)
                 .Max();
             ;
+        }
+
+        [Explicit]
+        [Test]
+        public void RadicalUnicodeCategories()
+        {
+            foreach (var radical in lookup.AllRadicals)
+            {
+                Console.Write(radical.ToString());
+                Console.Write(": ");
+                var info = UnicodeInfo.GetCharInfo(radical.Utf32);
+                Console.WriteLine(info.Name);
+            }
         }
 
         [Test]

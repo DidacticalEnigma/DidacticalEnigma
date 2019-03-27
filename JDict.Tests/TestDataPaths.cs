@@ -58,5 +58,7 @@ namespace JDict.Tests
         public static readonly string Kana = Path.Combine(BaseDir, @"character\kana.txt");
 
         public static readonly string EasilyConfused = Path.Combine(BaseDir, @"character\confused.txt");
+
+        public static readonly string KanjiAliveRadicals = Path.Combine(BaseDir, "character", "japanese-radicals.csv");
     }
 }

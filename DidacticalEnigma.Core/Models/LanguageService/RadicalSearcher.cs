@@ -93,8 +93,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public Option<RadicalSearcherResult> Match((int start, int length, string text) input)
         {
             var cp = char.ConvertToUtf32(input.text, 0);
-            return lookup.GetValueOrNone(cp)
-                .Else(names.GetValueOrNone(input.text))
+            return names.GetValueOrNone(input.text)
+                .Else(lookup.GetValueOrNone(cp))
                 .Map(radical => new RadicalSearcherResult(input.start, input.length, input.text, radical));
         }
 
@@ -150,23 +150,20 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             foreach (var i in text.AsCodePointIndices())
             {
                 var cp = char.ConvertToUtf32(text, i);
-                if (char.IsWhiteSpace(text, i) || char.IsPunctuation(text, i))
+                var blockName = UnicodeInfo.GetBlockName(cp);
+                if (cp == '|' || cp == '｜' || blockName == "CJK Unified Ideographs")
                 {
-                    { if (Flush(i+1, out var token)) yield return token; }
+                    { if (Flush(i, out var token)) yield return token; }
+                    sb.AppendCodePoint(char.ConvertToUtf32(text, i));
+                    { if (Flush(i, out var token)) yield return token; }
+                }
+                else if (char.IsWhiteSpace(text, i) || char.IsPunctuation(text, i))
+                {
+                    { if (Flush(i + 1, out var token)) yield return token; }
                 }
                 else
                 {
-                    var blockName = UnicodeInfo.GetBlockName(cp);
-                    if (blockName == "CJK Unified Ideographs")
-                    {
-                        { if (Flush(i, out var token)) yield return token; }
-                        sb.AppendCodePoint(char.ConvertToUtf32(text, i));
-                        { if (Flush(i, out var token)) yield return token; }
-                    }
-                    else
-                    {
-                        sb.AppendCodePoint(char.ConvertToUtf32(text, i));
-                    }
+                    sb.AppendCodePoint(char.ConvertToUtf32(text, i));
                 }
             }
 
