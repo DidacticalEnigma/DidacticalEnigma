@@ -116,7 +116,7 @@ namespace JDict
                 {
                     yield return new KanjiAliveJapaneseRadicalInformation.Entry(
                         int.TryParse(components[strokeIndex], out var strokeCount) ? strokeCount : null as int?,
-                        components[radicalIndex],
+                        components[radicalIndex].Trim(),
                         components[meaningIndex].Split(',').Select(c => c.Trim()).ToList(),
                         components[readingJapaneseIndex].Split(',').Select(c => c.Trim()).ToList(),
                         components[readingRomajiIndex].Split(',').Select(c => c.Trim()).ToList(),

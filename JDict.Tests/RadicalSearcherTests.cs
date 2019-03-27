@@ -18,7 +18,9 @@ namespace JDict.Tests
         {
             kanjiDict = KanjiDict.Create(TestDataPaths.KanjiDic);
             lookup = new KanjiRadicalLookup(Radkfile.Parse(TestDataPaths.Radkfile), kanjiDict);
-            searcher = new RadicalSearcher(lookup.AllRadicals);
+            var entries = KanjiAliveJapaneseRadicalInformation.Parse(TestDataPaths.KanjiAliveRadicals);
+            var remapper = new RadkfileKanjiAliveCorrelator(TestDataPaths.RadkfileKanjiAliveRadicalInfoCorrelationData);
+            searcher = new RadicalSearcher(lookup.AllRadicals, entries, remapper);
         }
 
         private static TestCaseData[] basicTestCaseData = new TestCaseData[]

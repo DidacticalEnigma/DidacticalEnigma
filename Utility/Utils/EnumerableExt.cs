@@ -185,6 +185,39 @@ namespace Utility.Utils
             }
         }
 
+        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> entries)
+        {
+            // manual loop for better debugability
+            var dict = new Dictionary<TKey, TValue>();
+            foreach (var entry in entries)
+            {
+                dict.Add(entry.Key, entry.Value);
+            }
+
+            return dict;
+        }
+
+        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(
+            this IEnumerable<KeyValuePair<TKey, TValue>> entries,
+            Func<TKey, TValue, TValue, TValue> duplicateKeyResolver)
+        {
+            // manual loop for better debugability
+            var dict = new Dictionary<TKey, TValue>();
+            foreach (var entry in entries)
+            {
+                if (dict.TryGetValue(entry.Key, out var value))
+                {
+                    dict[entry.Key] = duplicateKeyResolver(entry.Key, value, entry.Value);
+                }
+                else
+                {
+                    dict[entry.Key] = entry.Value;
+                }
+            }
+
+            return dict;
+        }
+
         public static IEnumerable<(TElement element, int index)> Indexed<TElement>(this IEnumerable<TElement> input)
         {
             return input.Select((element, index) => (element, index));

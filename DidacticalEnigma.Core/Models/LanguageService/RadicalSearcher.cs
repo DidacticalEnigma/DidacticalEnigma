@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Unicode;
+using JDict;
 using Optional;
 using Optional.Collections;
 using Utility.Utils;
@@ -183,15 +184,24 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             }
         }
 
-        public RadicalSearcher(IEnumerable<CodePoint> radicals)
+        public RadicalSearcher(IEnumerable<CodePoint> radicals, IEnumerable<KanjiAliveJapaneseRadicalInformation.Entry> radicalInfoEntries, IReadOnlyDictionary<int, int> remapper)
         {
-            this.lookup = radicals.ToDictionary(r => r.Utf32, r => r);
-            this.names = new Dictionary<string, CodePoint>{
-                { "heart", CodePoint.FromInt('心')},
-                { "kokoro", CodePoint.FromInt('心')},
-                { "こころ", CodePoint.FromInt('心')}
+            radicals = radicals.Materialize();
 
-            };
+            this.lookup = radicals.ToDictionary(r => r.Utf32, r => r);
+            var correlated = radicals
+                .Join(
+                    radicalInfoEntries.Where(e => e.StrokeCount.HasValue),
+                    radical => remapper.GetValueOrNone(radical.Utf32).ValueOr(0),
+                    radicalInfo => char.ConvertToUtf32(radicalInfo.Literal, 0),
+                    (radical, radicalInfo) => (
+                        names: radicalInfo.Meanings.Concat(radicalInfo.JapaneseReadings)
+                            .Concat(radicalInfo.RomajiReadings),
+                        radical: radical));
+            var kvps = correlated
+                .SelectMany(p => p.names.Select(n => new KeyValuePair<string, CodePoint>(n, p.radical)));
+            this.names = kvps
+                .ToDictionary((k, ov, nv) => ov);
         }
     }
 }
