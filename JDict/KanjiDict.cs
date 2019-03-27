@@ -1,4 +1,5 @@
-﻿using JDict.Internal.XmlModels;
+﻿using System;
+using JDict.Internal.XmlModels;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -16,6 +17,8 @@ namespace JDict
 
         private Dictionary<string, KanjiEntry> root;
 
+        private Dictionary<int, KanjiEntry> codePointLookup;
+
         private KanjiDict Init(Stream stream)
         {
             var xmlSettings = new XmlReaderSettings
@@ -29,13 +32,21 @@ namespace JDict
             using (var xmlReader = XmlReader.Create(stream, xmlSettings))
             {
                 root = new Dictionary<string, KanjiEntry>();
-                var entries = ((KanjiDictRoot)serializer.Deserialize(xmlReader)).Characters;
-                foreach (var entry in entries)
+                codePointLookup = new Dictionary<int, KanjiEntry>();
+                var xmlEntries = ((KanjiDictRoot)serializer.Deserialize(xmlReader)).Characters;
+                foreach (var xmlEntry in xmlEntries)
                 {
-                    root.Add(entry.Literal, new KanjiEntry(entry));
+                    var entry = new KanjiEntry(xmlEntry);
+                    codePointLookup.Add(entry.CodePoint, entry);
+                    root.Add(entry.Literal, entry);
                 }
             }
             return this;
+        }
+
+        public Option<KanjiEntry> LookupCodePoint(int codePoint)
+        {
+            return codePointLookup.GetValueOrNone(codePoint);
         }
 
         public Option<KanjiEntry> Lookup(string v)
@@ -72,6 +83,8 @@ namespace JDict
     {
         public string Literal { get; }
 
+        public int CodePoint { get; }
+
         public int StrokeCount { get; }
 
         public int FrequencyRating { get; }
@@ -87,6 +100,7 @@ namespace JDict
         internal KanjiEntry(KanjiCharacter ch)
         {
             Literal = ch.Literal;
+            CodePoint = Convert.ToInt32(ch.CodePoints.CodePoints.First(c => c.Type == "ucs").Value, 16);
             StrokeCount = ch.Misc.StrokeCount[0];
             FrequencyRating = ch.Misc.FrequencyRating != 0
                 ? ch.Misc.FrequencyRating

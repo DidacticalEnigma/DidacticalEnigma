@@ -25,5 +25,20 @@ namespace JDict.Tests
                 Assert.Fail();
             });
         }
+
+        [Test]
+        public void Test2()
+        {
+            var kanjiDict = KanjiDict.Create(TestDataPaths.KanjiDic);
+            var entry = kanjiDict.LookupCodePoint('南');
+            entry.Match(e =>
+            {
+                CollectionAssert.AreEqual(new[] { "みなみ" }, e.KunReadings);
+                Assert.AreEqual(e.FrequencyRating, 341);
+            }, () =>
+            {
+                Assert.Fail();
+            });
+        }
     }
 }

@@ -64,6 +64,14 @@ namespace JDict
             }
         }
 
+        public static IEnumerable<Entry> Parse(string path)
+        {
+            using (var reader = File.OpenText(path))
+            {
+                return Parse(reader);
+            }
+        }
+
         public static IEnumerable<Entry> Parse(TextReader reader)
         {
             string line;
