@@ -133,7 +133,8 @@ namespace DidacticalEnigma
                 get.Get<ITextInsertCommand>()));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
                 get.Get<KanjiRadicalLookup>(),
-                get.Get<IKanjiProperties>()));
+                get.Get<IKanjiProperties>(),
+                get.Get<IRadicalSearcher>()));
             kernel.Bind<IRomaji, ModifiedHepburn>();
             kernel.BindFactory(get => new ModifiedHepburn(
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
@@ -182,6 +183,11 @@ namespace DidacticalEnigma
                 Path.Combine(dataDir, "dictionaries", "jgram"),
                 Path.Combine(dataDir, "dictionaries", "jgram_lookup"),
                 Path.Combine(dataDir, "dictionaries", "jgram.cache")));
+            kernel.BindFactory(get => new RadkfileKanjiAliveCorrelator(Path.Combine(dataDir, "character", "radkfile_kanjilive_correlation_data.txt")));
+            kernel.BindFactory<IRadicalSearcher>(get => new RadicalSearcher(
+                get.Get<KanjiRadicalLookup>().AllRadicals,
+                KanjiAliveJapaneseRadicalInformation.Parse(Path.Combine(dataDir, "character", "japanese-radicals.csv")),
+                get.Get<RadkfileKanjiAliveCorrelator>()));
 
             return kernel;
 

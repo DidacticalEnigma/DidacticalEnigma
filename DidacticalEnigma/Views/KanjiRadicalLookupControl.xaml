@@ -30,7 +30,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Click="ResetOnClick" Content="Reset" />
+            <Button Command="{Binding ResetCommand, RelativeSource={RelativeSource AncestorType={x:Type views:KanjiRadicalLookupControl}, Mode=FindAncestor}}" Content="Reset" />
             <CheckBox Grid.Column="1" IsChecked="{Binding HideNonMatchingRadicals}">
                 <TextBlock Text="Hide non-matching radicals" />
             </CheckBox>
@@ -41,10 +41,7 @@
             <TextBox Grid.Column="3" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
         <Grid Grid.Row="0" Grid.Column="1">
-            <ComboBox
-                ItemsSource="{Binding SortingCriteria}"
-                SelectedIndex="{Binding CurrentKanjiOrderingIndex}"
-                SelectionChanged="Selector_OnSelectionChanged" />
+            <ComboBox ItemsSource="{Binding SortingCriteria}" SelectedIndex="{Binding CurrentKanjiOrderingIndex}" />
         </Grid>
         <ListView
             x:Name="RadicalSelector"
@@ -52,7 +49,6 @@
             Grid.Column="0"
             ItemsSource="{Binding Radicals}"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            SelectionChanged="ListView_Selected"
             SelectionMode="Multiple">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -63,6 +59,7 @@
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="IsEnabled" Value="{Binding Enabled}" />
                     <Setter Property="Visibility" Value="{Binding Visible}" />
+                    <Setter Property="IsSelected" Value="{Binding Selected, Mode=TwoWay}" />
                 </Style>
 
             </ListView.ItemContainerStyle>

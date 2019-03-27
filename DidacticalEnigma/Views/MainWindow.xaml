@@ -139,7 +139,11 @@
                 <views:KanaBoard DataContext="{Binding HiraganaBoard}" KeyClickCommand="{Binding DataContext.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
             <TabItem Header="Kanji">
-                <views:KanjiRadicalLookupControl DataContext="{Binding KanjiLookupVM}" KeyClickCommand="{Binding DataContext.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
+                <views:KanjiRadicalLookupControl
+                    DataContext="{Binding KanjiLookupVM}"
+                    KeyClickCommand="{Binding DataContext.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
+                    Radicals="{Binding Radicals}"
+                    ResetCommand="{Binding Reset}" />
             </TabItem>
             <TabItem Header="Katakana">
                 <views:KanaBoard DataContext="{Binding KatakanaBoard}" KeyClickCommand="{Binding DataContext.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />

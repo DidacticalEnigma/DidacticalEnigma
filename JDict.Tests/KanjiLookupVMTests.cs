@@ -15,6 +15,7 @@ namespace JDict.Tests
         private static KanjiRadicalLookup lookup;
         private static KanjiDict kanjiDict;
         private static IKanjiProperties kanjiProperties;
+        private static IRadicalSearcher searcher;
 
         private KanjiRadicalLookupControlVM vm;
 
@@ -31,12 +32,17 @@ namespace JDict.Tests
                 new JDict.Kradfile(TestDataPaths.Kradfile, Encoding.UTF8),
                 new Radkfile(TestDataPaths.Radkfile, Encoding.UTF8),
                 null);
+            searcher = new RadicalSearcher(
+                lookup.AllRadicals,
+                KanjiAliveJapaneseRadicalInformation.Parse(TestDataPaths.KanjiAliveRadicals),
+                new RadkfileKanjiAliveCorrelator(TestDataPaths.RadkfileKanjiAliveRadicalInfoCorrelationData));
+
         }
 
         [SetUp]
         public void SetUp()
         {
-            vm = new KanjiRadicalLookupControlVM(lookup, kanjiProperties);
+            vm = new KanjiRadicalLookupControlVM(lookup, kanjiProperties, searcher);
         }
 
         [Ignore("the test itself is broken")]

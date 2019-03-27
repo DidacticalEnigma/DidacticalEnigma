@@ -67,7 +67,7 @@ namespace DidacticalEnigma.ViewModels
                 }
             }
 
-            public bool Highlighted => CodePoint.ToString() == lookupVm.SearchText?.Trim();
+            public bool Highlighted => false;
 
             private readonly KanjiRadicalLookupControlVM lookupVm;
 
@@ -83,11 +83,6 @@ namespace DidacticalEnigma.ViewModels
                     {
                         OnPropertyChanged(nameof(Visible));
                     }
-
-                    if (args.PropertyName == nameof(SearchText))
-                    {
-                        OnPropertyChanged(nameof(Highlighted));
-                    }
                 };
             }
 
@@ -101,6 +96,8 @@ namespace DidacticalEnigma.ViewModels
 
         private Task task = Task.CompletedTask;
         private CancellationTokenSource addingTaskCancellationToken = null;
+
+        public ICommand Reset { get; }
 
         public async void SetElements(IReadOnlyCollection<CodePoint> elements, Dispatcher dispatcher)
         {
@@ -206,7 +203,8 @@ namespace DidacticalEnigma.ViewModels
 
         public KanjiRadicalLookupControlVM(
             KanjiRadicalLookup lookup,
-            IKanjiProperties kanjiProperties)
+            IKanjiProperties kanjiProperties,
+            IRadicalSearcher searcher)
         {
             this.lookup = lookup;
             radicals.AddRange(lookup.AllRadicals.Join(
@@ -214,6 +212,7 @@ namespace DidacticalEnigma.ViewModels
                 c => c.Utf32,
                 r => r.CodePoint,
                 (c, r) => new RadicalVM(r, enabled: true, this)));
+
             var tb = new TextBlock
             {
                 FontSize = 24
@@ -231,6 +230,13 @@ namespace DidacticalEnigma.ViewModels
             Width += 25;
             Height = Math.Max(Width, Height);
             Width = Math.Max(Width, Height);
+            Reset = new RelayCommand(() =>
+            {
+                foreach (var radicalVm in Radicals)
+                {
+                    radicalVm.Selected = false;
+                }
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

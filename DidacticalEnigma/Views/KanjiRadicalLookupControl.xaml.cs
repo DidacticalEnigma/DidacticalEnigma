@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DidacticalEnigma.ViewModels;
+using Utility.Utils;
 
 namespace DidacticalEnigma.Views
 {
@@ -16,11 +19,15 @@ namespace DidacticalEnigma.Views
             InitializeComponent();
         }
 
-        private void ListView_Selected(object sender, RoutedEventArgs e)
+        public ICommand ResetCommand
         {
-            var vm = (KanjiRadicalLookupControlVM)DataContext;
-            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint), Dispatcher);
+            get { return (ICommand)GetValue(ResetCommandProperty); }
+            set { SetValue(ResetCommandProperty, value); }
         }
+
+        /// <summary>Identifies the <see cref="ResetCommand"/> dependency property.</summary>
+        public static readonly DependencyProperty ResetCommandProperty =
+            DependencyProperty.Register(nameof(ResetCommand), typeof(ICommand), typeof(KanjiRadicalLookupControl), new PropertyMetadata(null));
 
         public ICommand KeyClickCommand
         {
@@ -32,17 +39,63 @@ namespace DidacticalEnigma.Views
         public static readonly DependencyProperty KeyClickCommandProperty =
             DependencyProperty.Register(nameof(KeyClickCommand), typeof(ICommand), typeof(KanjiRadicalLookupControl), new PropertyMetadata(null));
 
-        private void ResetOnClick(object sender, RoutedEventArgs e)
+        public IEnumerable<KanjiRadicalLookupControlVM.RadicalVM> Radicals
         {
-            var vm = (KanjiRadicalLookupControlVM)DataContext;
-            RadicalSelector.SelectedItems.Clear();
-            vm.SelectRadicals(Enumerable.Empty<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint), Dispatcher);
+            get { return (IEnumerable<KanjiRadicalLookupControlVM.RadicalVM>)GetValue(RadicalsProperty); }
+            set { SetValue(RadicalsProperty, value); }
         }
 
-        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        public static readonly DependencyProperty RadicalsProperty =
+            DependencyProperty.Register(nameof(Radicals), typeof(IEnumerable<KanjiRadicalLookupControlVM.RadicalVM>), typeof(KanjiRadicalLookupControl), new PropertyMetadata(new PropertyChangedCallback(RadicalsPropertyChanged)));
+
+        private List<KanjiRadicalLookupControlVM.RadicalVM> radicals = new List<KanjiRadicalLookupControlVM.RadicalVM>();
+
+        private static void RadicalsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var vm = (KanjiRadicalLookupControlVM)DataContext;
-            vm.SelectRadicals(RadicalSelector.SelectedItems.Cast<KanjiRadicalLookupControlVM.RadicalVM>().Select(r => r.CodePoint), Dispatcher);
+            var self = (KanjiRadicalLookupControl)d;
+            foreach (var radical in self.radicals)
+            {
+                radical.PropertyChanged -= self.Callback;
+            }
+            self.radicals.Clear();
+            var newValue = (IEnumerable<KanjiRadicalLookupControlVM.RadicalVM>)e.NewValue;
+            foreach (var radical in newValue)
+            {
+                radical.PropertyChanged += self.Callback;
+                self.radicals.Add(radical);
+            }
+        }
+
+        private class RadicalVMComparer : IEqualityComparer<KanjiRadicalLookupControlVM.RadicalVM>
+        {
+            public bool Equals(KanjiRadicalLookupControlVM.RadicalVM x, KanjiRadicalLookupControlVM.RadicalVM y)
+            {
+                return x.CodePoint.Utf32 == y.CodePoint.Utf32;
+            }
+
+            public int GetHashCode(KanjiRadicalLookupControlVM.RadicalVM obj)
+            {
+                return obj.CodePoint.Utf32.GetHashCode();
+            }
+        }
+
+        private HashSet<KanjiRadicalLookupControlVM.RadicalVM> selected = new HashSet<KanjiRadicalLookupControlVM.RadicalVM>(new RadicalVMComparer());
+
+        private void Callback(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(KanjiRadicalLookupControlVM.RadicalVM.Selected))
+            {
+                var actual = (KanjiRadicalLookupControlVM.RadicalVM)sender;
+                if (actual.Selected)
+                {
+                    selected.Add(actual);
+                }
+                else
+                {
+                    selected.Remove(actual);
+                }
+                (DataContext as KanjiRadicalLookupControlVM)?.SelectRadicals(selected.Select(r => r.CodePoint), Dispatcher);
+            }
         }
     }
 }
