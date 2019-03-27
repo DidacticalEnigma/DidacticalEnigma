@@ -131,13 +131,28 @@ namespace JDict.Tests
         };
 
         [TestCaseSource(nameof(TestCases))]
-        public void Basic(string input, IEnumerable<GlossNote> expected)
+        public void DoesntCrash(string input, IEnumerable<GlossNote> expected)
         {
             var notes = glosser.Gloss(input).ToList();
             Console.WriteLine(string.Join("\n", notes.Select(x => x.ToString())));
-            // we eventually want these to pass, but for now we're content with it
-            // just *presenting* anything and not crashing
-            //CollectionAssert.AreEqual(expected, notes);
+        }
+
+        [Ignore("see commit 8a9a4be79bcf20ffdb48721696839e6a6c7ac2c2")]
+        [TestCaseSource(nameof(TestCases))]
+        public void LengthsAreEqual(string input, IEnumerable<GlossNote> expected)
+        {
+            var notes = glosser.Gloss(input).ToList();
+            Console.WriteLine(string.Join("\n", notes.Select(x => x.ToString())));
+            Assert.AreEqual(expected.Count(), notes.Count);
+        }
+
+        [Ignore("see commit 8a9a4be79bcf20ffdb48721696839e6a6c7ac2c2")]
+        [TestCaseSource(nameof(TestCases))]
+        public void ContentsAreEqual(string input, IEnumerable<GlossNote> expected)
+        {
+            var notes = glosser.Gloss(input).ToList();
+            Console.WriteLine(string.Join("\n", notes.Select(x => x.ToString())));
+            CollectionAssert.AreEqual(expected, notes);
         }
 
         [OneTimeSetUp]

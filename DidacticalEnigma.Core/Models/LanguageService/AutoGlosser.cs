@@ -125,6 +125,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private static string CreateDescription(JMDictSense sense)
         {
+            if (sense == null)
+                return null;
             return string.Join("/", sense.Glosses);
         }
     }
