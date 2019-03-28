@@ -55,9 +55,11 @@ namespace JDict.Tests
                 "籥鑰龠瀹爚禴籲鸙龡龢龣龥".AsCodePoints().Select(CodePoint.FromInt),
                 lookup.SelectRadical(new[]{ CodePoint.FromString("龠")})
                     .Kanji);
+            Console.WriteLine($"Expected: {string.Join(",", "龥籲".AsCodePoints())}");
+            Console.WriteLine($"Actual: {string.Join(",", lookup.SelectRadical(new[] { CodePoint.FromString("龠"), CodePoint.FromString("ハ") }).Kanji.Select(k => k.Utf32))}");
             CollectionAssert.AreEquivalent(
                 "龥籲".AsCodePoints().Select(CodePoint.FromInt),
-            lookup.SelectRadical(new[]{CodePoint.FromString("龠"), CodePoint.FromString("ハ")})
+                lookup.SelectRadical(new[]{CodePoint.FromString("龠"), CodePoint.FromString("ハ")})
                 .Kanji);
             CollectionAssert.AreEquivalent(
                 "一｜亅个ハ冂口目冊竹貝頁龠廾".AsCodePoints().Select(CodePoint.FromInt),

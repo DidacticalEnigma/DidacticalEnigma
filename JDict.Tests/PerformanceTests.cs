@@ -30,7 +30,7 @@ namespace JDict.Tests
             kradfile = new JDict.Kradfile(TestDataPaths.Kradfile, Encoding.UTF8);
             radkfile = new Radkfile(TestDataPaths.Radkfile, Encoding.UTF8);
             kanjiProperties = new KanjiProperties(kanjiDict, kradfile, radkfile, new RadicalRemapper(kradfile, radkfile));
-            radicalCodePoint = radicalCodePoint = new[]{CodePoint.FromString("一") };
+            radicalCodePoint = new[]{CodePoint.FromString("一") };
             ordering = kanjiProperties.KanjiOrderings.First();
             radicalSearcher = new RadicalSearcher(
                 lookup.AllRadicals,
