@@ -90,7 +90,7 @@ namespace JDict.Tests
             using (var jmdict = JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache))
             {
                 var watch = Stopwatch.StartNew();
-                var lookup = new PartialWordLookup(jmdict, radicalSearcher, this.lookup);
+                var wordLookup = new PartialWordLookup(jmdict, radicalSearcher, lookup);
                 var elapsed = watch.Elapsed;
                 Assert.Less(elapsed, TimeSpan.FromSeconds(1));
             }
