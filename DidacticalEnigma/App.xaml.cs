@@ -173,7 +173,7 @@ namespace DidacticalEnigma
             });
             kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
             kernel.BindFactory(get => new IdiomDetector(get.Get<JMDict>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
-            kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDict>()));
+            kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDict>(), get.Get<IRadicalSearcher>(), get.Get<KanjiRadicalLookup>()));
             kernel.BindFactory(get =>
             {
                 using(var reader = File.OpenText(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8")))

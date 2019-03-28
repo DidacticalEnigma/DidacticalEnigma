@@ -7,7 +7,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class PartialWordLookup
     {
-        private string allWords;
+        private readonly IRadicalSearcher searcher;
+
+        private readonly KanjiRadicalLookup lookup;
+
+        private readonly string allWords;
 
         private static readonly char start = '\x0002';
 
@@ -17,8 +21,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private static readonly char[] endArr = { end };
 
-        public PartialWordLookup(JMDict jmDict)
+        private static Regex groupMatcher = new Regex(@"\\\[(.*?)\]");
+
+        public PartialWordLookup(JMDict jmDict, IRadicalSearcher searcher, KanjiRadicalLookup lookup)
         {
+            this.searcher = searcher;
+            this.lookup = lookup;
             allWords = string.Join("", jmDict.AllEntries()
                 .SelectMany(entry => entry.Kanji.Concat(entry.Readings))
                 .Distinct()
@@ -27,8 +35,15 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<string> LookupWords(string input)
         {
+            var escaped = Regex.Escape(start + input + end);
+            var groupsReplaced = groupMatcher.Replace(escaped, match =>
+            {
+                var text = match.Groups[1].Value;
+                var kanjiCandidates = lookup.SelectRadical(searcher.Search(text).Select(r => r.Radical)).Kanji;
+                return "(" + string.Join("|", kanjiCandidates.Select(k => k.ToString())) + ")";
+            });
             var regex = new Regex(
-                Regex.Escape(start + input + end)
+                groupsReplaced
                     .Replace(@"\?", ".")
                     .Replace(@"？", ".")
                     .Replace(@"\*", ".*?")

@@ -42,7 +42,7 @@ namespace JDict.Tests
         [SetUp]
         public void SetUp()
         {
-            vm = new KanjiRadicalLookupControlVM(lookup, kanjiProperties, searcher, searcher.RadicalTextForm);
+            vm = new KanjiRadicalLookupControlVM(lookup, kanjiProperties, searcher, lookup.AllRadicals.ToDictionary(r => r, r => r.ToString()));
         }
 
         [Ignore("the test itself is broken")]
