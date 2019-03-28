@@ -257,6 +257,10 @@ namespace DidacticalEnigma.ViewModels
 
         public void Dispose()
         {
+            foreach (var usageDataSourcePreviewVm in UsageDataSourceVMs)
+            {
+                usageDataSourcePreviewVm.Dispose();
+            }
             hook.Dispose();
         }
 
