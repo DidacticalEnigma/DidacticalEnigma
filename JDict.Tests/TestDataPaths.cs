@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace JDict.Tests
 {
@@ -7,11 +8,13 @@ namespace JDict.Tests
         // FIX THIS PATH SO IT POINTS TO THE ACTUAL DIRECTORY YOUR DATA IS
         // Various test runners put the executables in unrelated places,
         // and also make the current directory unrelated.
-        public static readonly string BaseDir = @"D:\DidacticalEnigma-Data";
+        public static readonly string BaseDir = Environment.GetEnvironmentVariable("APPVEYOR_BUILD_FOLDER") != null
+            ? Path.Combine(Environment.GetEnvironmentVariable("APPVEYOR_BUILD_FOLDER"), "Data")
+            : @"D:\DidacticalEnigma-Data";
 
         // POINT THIS TO A yomichan-import CREATED ZIP FILE FROM "研究社　新和英大辞典　第５版" EPWING DICTIONARY
         // Can't attach this in a repo for obvious copyright reasons
-        public static readonly string Kenkyusha5 = @"D:\DidacticalEnigma-Data\epwing\kenkyusha5.zip";
+        public static readonly string Kenkyusha5 = Path.Combine(BaseDir, "epwing", "kenkyusha5.zip");
 
         // sanity check for above path, SHA256 hash of the file
         public static readonly string Kenkyusha5Hash =

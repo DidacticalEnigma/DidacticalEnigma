@@ -8,6 +8,7 @@ namespace JDict.Tests
     [TestFixture]
     class ZipTests
     {
+        [DependentOnKenkyuusha]
         [Test]
         public void Test()
         {

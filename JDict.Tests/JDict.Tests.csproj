@@ -189,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoGlosserTests.cs" />
+    <Compile Include="DependentOnKenkyuushaAttribute.cs" />
     <Compile Include="EnumerableExt.cs" />
     <Compile Include="IdiomDetectorTests.cs" />
     <Compile Include="Index.cs" />

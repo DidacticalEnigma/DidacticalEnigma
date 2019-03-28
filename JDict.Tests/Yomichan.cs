@@ -81,18 +81,10 @@ namespace JDict.Tests
             CollectionAssert.AreEqual(l.Glossary, r.Glossary);
         }
 
+        [DependentOnKenkyuusha]
         [Test]
         public void Dictionary()
         {
-            byte[] hash;
-            using (var file = File.OpenRead(TestDataPaths.Kenkyusha5))
-            using (var sha = new SHA256Managed())
-            {
-                hash = sha.ComputeHash(file);
-            }
-            Assert.AreEqual(
-                TestDataPaths.Kenkyusha5Hash.ToUpperInvariant(),
-                BitConverter.ToString(hash).Replace("-", "").ToUpperInvariant());
             using (var dict = new YomichanTermDictionary(TestDataPaths.Kenkyusha5, TestDataPaths.Kenkyusha5 + ".cache"))
             {
                 var entries = dict.Lookup("発行市場");
