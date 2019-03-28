@@ -32,14 +32,14 @@ namespace JDict.Tests
             kanjiProperties = new KanjiProperties(kanjiDict, kradfile, radkfile, new RadicalRemapper(kradfile, radkfile));
             radicalCodePoint = new[]{CodePoint.FromString("一") };
             ordering = kanjiProperties.KanjiOrderings.First();
-            radicalSearcher = new RadicalSearcher(
-                lookup.AllRadicals,
-                KanjiAliveJapaneseRadicalInformation.Parse(TestDataPaths.KanjiAliveRadicals),
-                new RadkfileKanjiAliveCorrelator(TestDataPaths.RadkfileKanjiAliveRadicalInfoCorrelationData));
             using (var reader = File.OpenText(TestDataPaths.Radkfile))
             {
                 lookup = new KanjiRadicalLookup(Radkfile.Parse(reader), kanjiDict);
             }
+            radicalSearcher = new RadicalSearcher(
+                lookup.AllRadicals,
+                KanjiAliveJapaneseRadicalInformation.Parse(TestDataPaths.KanjiAliveRadicals),
+                new RadkfileKanjiAliveCorrelator(TestDataPaths.RadkfileKanjiAliveRadicalInfoCorrelationData));
         }
 
         [Explicit]
