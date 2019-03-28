@@ -6,3 +6,4 @@ REM I - If the destination does not exist and copying more than one file, assume
 REM Y - Suppresses prompting to confirm you want to overwrite an existing destination file.
 REM D - copy only files newer than the destination
 xcopy /s /I /Y /D %DataDir% %OutputDir%
+rm %OutputDir%\.gitignore
