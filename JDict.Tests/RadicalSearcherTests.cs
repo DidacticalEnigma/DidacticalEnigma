@@ -31,7 +31,11 @@ namespace JDict.Tests
             new TestCaseData("  龠ハ  ", new[]{ new RadicalSearcherResult(2, 1, "龠", CodePoint.FromInt('龠')), new RadicalSearcherResult(3, 1, "ハ", CodePoint.FromInt('ハ')) }),
             new TestCaseData("  龠;ハ  ", new[]{ new RadicalSearcherResult(2, 1, "龠", CodePoint.FromInt('龠')), new RadicalSearcherResult(4, 1, "ハ", CodePoint.FromInt('ハ')) }),
             new TestCaseData("  龠; ;ハ  ", new[]{ new RadicalSearcherResult(2, 1, "龠", CodePoint.FromInt('龠')), new RadicalSearcherResult(6, 1, "ハ", CodePoint.FromInt('ハ')) }),
-            new TestCaseData("heart ハ  ", new[]{ new RadicalSearcherResult(0, 5, "heart", CodePoint.FromInt('心')), new RadicalSearcherResult(7, 1, "ハ", CodePoint.FromInt('ハ')) }),
+            new TestCaseData("heart ハ  ", new[]{ new RadicalSearcherResult(0, 5, "heart", CodePoint.FromInt('心')), new RadicalSearcherResult(6, 1, "ハ", CodePoint.FromInt('ハ')) }),
+            new TestCaseData("子", new[]{ new RadicalSearcherResult(0, 1, "子", CodePoint.FromInt('子'))}),
+            new TestCaseData(" 子 子", new[]{ new RadicalSearcherResult(1, 1, "子", CodePoint.FromInt('子')), new RadicalSearcherResult(3, 1, "子", CodePoint.FromInt('子'))}),
+            new TestCaseData(" 子子", new[]{ new RadicalSearcherResult(1, 1, "子", CodePoint.FromInt('子')), new RadicalSearcherResult(2, 1, "子", CodePoint.FromInt('子'))}),
+            new TestCaseData("ko ko", new[]{ new RadicalSearcherResult(0, 2, "ko", CodePoint.FromInt('子')), new RadicalSearcherResult(3, 2, "ko", CodePoint.FromInt('子'))}),
         };
 
         [Test]

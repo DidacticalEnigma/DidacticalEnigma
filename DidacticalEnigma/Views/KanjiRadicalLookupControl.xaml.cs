@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using DidacticalEnigma.ViewModels;
 using Utility.Utils;
@@ -47,6 +48,16 @@ namespace DidacticalEnigma.Views
 
         public static readonly DependencyProperty RadicalsProperty =
             DependencyProperty.Register(nameof(Radicals), typeof(IEnumerable<KanjiRadicalLookupControlVM.RadicalVM>), typeof(KanjiRadicalLookupControl), new PropertyMetadata(new PropertyChangedCallback(RadicalsPropertyChanged)));
+
+        public string SearchText
+        {
+            get { return (string)GetValue(SearchTextProperty); }
+            set { SetValue(SearchTextProperty, value); }
+        }
+
+        /// <summary>Identifies the <see cref="SearchText"/> dependency property.</summary>
+        public static readonly DependencyProperty SearchTextProperty =
+            DependencyProperty.Register(nameof(SearchText), typeof(string), typeof(KanjiRadicalLookupControl), new PropertyMetadata(null));
 
         private List<KanjiRadicalLookupControlVM.RadicalVM> radicals = new List<KanjiRadicalLookupControlVM.RadicalVM>();
 
@@ -95,6 +106,19 @@ namespace DidacticalEnigma.Views
                     selected.Remove(actual);
                 }
                 (DataContext as KanjiRadicalLookupControlVM)?.SelectRadicals(selected.Select(r => r.CodePoint), Dispatcher);
+            }
+        }
+
+        private void OnKeyPressedDown(object sender, KeyEventArgs e)
+        {
+            var bindingExpression = BindingOperations.GetBindingExpression((TextBox)sender, TextBox.TextProperty);
+            if (e.Key == Key.Enter)
+            {
+                bindingExpression?.UpdateSource();
+            }
+            if (e.Key == Key.Escape)
+            {
+                bindingExpression?.UpdateTarget();
             }
         }
     }

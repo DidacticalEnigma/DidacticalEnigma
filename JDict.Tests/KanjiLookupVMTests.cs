@@ -15,7 +15,7 @@ namespace JDict.Tests
         private static KanjiRadicalLookup lookup;
         private static KanjiDict kanjiDict;
         private static IKanjiProperties kanjiProperties;
-        private static IRadicalSearcher searcher;
+        private static RadicalSearcher searcher;
 
         private KanjiRadicalLookupControlVM vm;
 
@@ -42,7 +42,7 @@ namespace JDict.Tests
         [SetUp]
         public void SetUp()
         {
-            vm = new KanjiRadicalLookupControlVM(lookup, kanjiProperties, searcher);
+            vm = new KanjiRadicalLookupControlVM(lookup, kanjiProperties, searcher, searcher.RadicalTextForm);
         }
 
         [Ignore("the test itself is broken")]

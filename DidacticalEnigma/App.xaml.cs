@@ -14,6 +14,7 @@ using DidacticalEnigma.Views;
 using Gu.Inject;
 using JDict;
 using NMeCab;
+using Optional.Collections;
 using Sentry;
 
 namespace DidacticalEnigma
@@ -134,7 +135,8 @@ namespace DidacticalEnigma
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
                 get.Get<KanjiRadicalLookup>(),
                 get.Get<IKanjiProperties>(),
-                get.Get<IRadicalSearcher>()));
+                get.Get<IRadicalSearcher>(),
+                CreateTextRadicalMappings(get.Get<KanjiRadicalLookup>().AllRadicals, get.Get<RadkfileKanjiAliveCorrelator>())));
             kernel.Bind<IRomaji, ModifiedHepburn>();
             kernel.BindFactory(get => new ModifiedHepburn(
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
@@ -184,12 +186,49 @@ namespace DidacticalEnigma
                 Path.Combine(dataDir, "dictionaries", "jgram_lookup"),
                 Path.Combine(dataDir, "dictionaries", "jgram.cache")));
             kernel.BindFactory(get => new RadkfileKanjiAliveCorrelator(Path.Combine(dataDir, "character", "radkfile_kanjilive_correlation_data.txt")));
-            kernel.BindFactory<IRadicalSearcher>(get => new RadicalSearcher(
+            kernel.Bind<IRadicalSearcher, RadicalSearcher>();
+            kernel.BindFactory(get => new RadicalSearcher(
                 get.Get<KanjiRadicalLookup>().AllRadicals,
                 KanjiAliveJapaneseRadicalInformation.Parse(Path.Combine(dataDir, "character", "japanese-radicals.csv")),
                 get.Get<RadkfileKanjiAliveCorrelator>()));
 
             return kernel;
+
+            IReadOnlyDictionary<CodePoint, string> CreateTextRadicalMappings(IEnumerable<CodePoint> radicals, IReadOnlyDictionary<int, int> remapper)
+            {
+                var dict = radicals.ToDictionary(
+                    r => r,
+                    r => char.ConvertFromUtf32(remapper.GetValueOrNone(r.Utf32).ValueOr(r.Utf32)));
+                /*var d = new Dictionary<int, int>
+                {
+                    {'化', '⺅'},
+                    {'刈', '⺉'},
+                    {'込', '⻌'},
+                    {'汁', '氵'},
+                    {'初', '衤'},
+                    {'尚', '⺌'},
+                    {'買', '罒'},
+                    {'犯', '犭'},
+                    {'忙', '忄'},
+                    {'礼', '礻'},
+                    {'个', 131490},
+                    {'老', '⺹'},
+                    {'扎', '扌'},
+                    {'杰', '灬'},
+                    {'疔', '疒'},
+                    {'禹', '禸'},
+                    {'艾', '⺾'},
+                    //{'邦', '⻏'},
+                    //{'阡', '⻖'},
+                    // 并 none available - upside-down ハ
+                };*/
+                dict[CodePoint.FromInt('邦')] = "邦";
+                dict[CodePoint.FromInt('阡')] = "阡";
+                dict[CodePoint.FromInt('老')] = "⺹";
+                dict[CodePoint.FromInt('并')] = "丷";
+                dict[CodePoint.FromInt('乞')] = "𠂉";
+                return dict;
+            }
 
             EpwingDictionaries CreateEpwing(string targetPath)
             {

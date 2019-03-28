@@ -22,8 +22,7 @@ namespace DidacticalEnigma.ViewModels
 
             public int StrokeCount { get; }
 
-            // dumb workaround for the name showing with the same color as disabled
-            public string Name => CodePoint.ToString() == "｜" ? "|" : CodePoint.ToString();
+            public string Name { get; }
 
             public Visibility Visible
             {
@@ -71,12 +70,13 @@ namespace DidacticalEnigma.ViewModels
 
             private readonly KanjiRadicalLookupControlVM lookupVm;
 
-            public RadicalVM(JDict.Radical radical, bool enabled, KanjiRadicalLookupControlVM lookupVm)
+            public RadicalVM(JDict.Radical radical, bool enabled, KanjiRadicalLookupControlVM lookupVm, string name)
             {
                 CodePoint = CodePoint.FromInt(radical.CodePoint);
                 StrokeCount = radical.StrokeCount;
                 this.enabled = enabled;
                 this.lookupVm = lookupVm;
+                Name = name;
                 lookupVm.PropertyChanged += (sender, args) =>
                 {
                     if (args.PropertyName == nameof(HideNonMatchingRadicals))
@@ -177,19 +177,64 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        private string searchText;
+        private string searchQueryText;
 
-        public string SearchText
+        public string SearchQueryText
         {
-            get => searchText;
+            get => searchQueryText;
             set
             {
-                if (searchText == value)
+                if (searchQueryText == value)
                     return;
-                searchText = value;
+
+                searchQueryText = value;
                 OnPropertyChanged();
+                QueryTextToSelection(value);
             }
         }
+
+        private void QueryTextToSelection(string text)
+        {
+            results.Clear();
+            results.AddRange(searcher.Search(SearchQueryText));
+            
+            foreach (var radicalVm in radicals)
+            {
+                radicalVm.Selected = results.Any(r => r.Radical == radicalVm.CodePoint);
+            }
+        }
+
+        private void RadicalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var radical = (RadicalVM) sender;
+            if (e.PropertyName == nameof(RadicalVM.Selected))
+            {
+                if (radical.Selected)
+                {
+                    if (results.All(r => r.Radical != radical.CodePoint))
+                    {
+                        searchQueryText = searchQueryText + " " + radical.CodePoint;
+                    }
+                }
+                else
+                {
+                    for (int i = results.Count - 1; i >= 0; i--)
+                    {
+                        if (results[i].Radical == radical.CodePoint)
+                        {
+                            searchQueryText = searchQueryText.Remove(results[i].Start, results[i].Length);
+                        }
+                    }
+                }
+
+                searchQueryText = searchQueryText.Trim();
+                OnPropertyChanged(nameof(SearchQueryText));
+                results.Clear();
+                results.AddRange(searcher.Search(SearchQueryText));
+            }
+        }
+
+        private List<RadicalSearcherResult> results = new List<RadicalSearcherResult>();
 
         public double Width { get; }
 
@@ -204,14 +249,17 @@ namespace DidacticalEnigma.ViewModels
         public KanjiRadicalLookupControlVM(
             KanjiRadicalLookup lookup,
             IKanjiProperties kanjiProperties,
-            IRadicalSearcher searcher)
+            IRadicalSearcher searcher,
+            IReadOnlyDictionary<CodePoint, string> textForms)
         {
             this.lookup = lookup;
+            this.searcher = searcher;
             radicals.AddRange(lookup.AllRadicals.Join(
                 kanjiProperties.Radicals,
                 c => c.Utf32,
                 r => r.CodePoint,
-                (c, r) => new RadicalVM(r, enabled: true, this)));
+                (c, r) => new RadicalVM(r, enabled: true, this, textForms[c])));
+            this.radicalCodePointLookup = radicals.ToDictionary(r => r.CodePoint, r => r);
 
             var tb = new TextBlock
             {
@@ -230,13 +278,12 @@ namespace DidacticalEnigma.ViewModels
             Width += 25;
             Height = Math.Max(Width, Height);
             Width = Math.Max(Width, Height);
-            Reset = new RelayCommand(() =>
+            Reset = new RelayCommand(() => { SearchQueryText = ""; });
+
+            foreach (var k in Radicals)
             {
-                foreach (var radicalVm in Radicals)
-                {
-                    radicalVm.Selected = false;
-                }
-            });
+                k.PropertyChanged += RadicalOnPropertyChanged;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -249,6 +296,8 @@ namespace DidacticalEnigma.ViewModels
         public IEnumerable<IKanjiOrdering> SortingCriteria => lookup.SortingCriteria;
 
         private readonly KanjiRadicalLookup lookup;
+        private readonly IRadicalSearcher searcher;
+        private IReadOnlyDictionary<CodePoint, RadicalVM> radicalCodePointLookup;
 
         public int CurrentKanjiOrderingIndex
         {

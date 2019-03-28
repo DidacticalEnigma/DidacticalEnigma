@@ -82,6 +82,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private readonly Dictionary<int, CodePoint> lookup;
 
+        private readonly IReadOnlyDictionary<int, int> remapper;
+
         public IReadOnlyList<RadicalSearcherResult> Search(string text)
         {
             var entries = Split(text);
@@ -148,38 +150,55 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             int currentState = 0;
             var sb = new StringBuilder();
             text += " "; // sentinel value
+            var prev = -1;
             foreach (var i in text.AsCodePointIndices())
             {
+                var previousCp = prev == -1 ? 0 : char.ConvertToUtf32(text, prev);
                 var cp = char.ConvertToUtf32(text, i);
-                var blockName = UnicodeInfo.GetBlockName(cp);
-                if (cp == '|' || cp == '｜' || blockName == "CJK Unified Ideographs")
+
+                if (prev != -1)
                 {
-                    { if (Flush(i, out var token)) yield return token; }
-                    sb.AppendCodePoint(char.ConvertToUtf32(text, i));
-                    { if (Flush(i, out var token)) yield return token; }
+                    sb.AppendCodePoint(previousCp);
                 }
-                else if (char.IsWhiteSpace(text, i) || char.IsPunctuation(text, i))
+                if (prev != -1 && IsBoundary(text, prev, i, previousCp, cp))
                 {
-                    { if (Flush(i + 1, out var token)) yield return token; }
+                    (int start, int length, string text) token = (currentState, sb.Length, sb.ToString());
+                    currentState += sb.Length;
+                    sb.Clear();
+                    if(ShouldEmit(token.text))
+                        yield return token;
                 }
-                else
-                {
-                    sb.AppendCodePoint(char.ConvertToUtf32(text, i));
-                }
+
+                prev = i;
             }
 
-            bool Flush(int i, out (int start, int length, string text) v)
+            bool IsBoundary(string t, int previousIndex, int currentIndex, int previousCodePoint, int currentCodePoint)
             {
-                v = default;
-                if (sb.Length == 0)
+                if (previousCodePoint == '|' || previousCodePoint == '｜' || UnicodeInfo.GetBlockName(previousCodePoint) == "CJK Unified Ideographs")
+                    return true;
+
+                if (currentCodePoint == '|' || currentCodePoint == '｜' || UnicodeInfo.GetBlockName(currentCodePoint) == "CJK Unified Ideographs")
+                    return true;
+
+                if ((char.IsPunctuation(t, previousIndex) || char.IsWhiteSpace(t, previousIndex)) &&
+                    !(char.IsPunctuation(t, currentIndex) || char.IsWhiteSpace(t, currentIndex)))
                 {
-                    currentState = i;
-                    return false;
+                    return true;
                 }
 
-                v = (currentState, sb.Length, sb.ToString());
-                currentState = i+1;
-                sb.Clear();
+                if (!(char.IsPunctuation(t, previousIndex) || char.IsWhiteSpace(t, previousIndex)) &&
+                    (char.IsPunctuation(t, currentIndex) || char.IsWhiteSpace(t, currentIndex)))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            bool ShouldEmit(string t)
+            {
+                if (t.AsCodePointIndices().Any(i => char.IsPunctuation(t, i) || char.IsWhiteSpace(t, i)))
+                    return false;
                 return true;
             }
         }
@@ -187,7 +206,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public RadicalSearcher(IEnumerable<CodePoint> radicals, IEnumerable<KanjiAliveJapaneseRadicalInformation.Entry> radicalInfoEntries, IReadOnlyDictionary<int, int> remapper)
         {
             radicals = radicals.Materialize();
-
+            this.remapper = remapper;
             this.lookup = radicals.ToDictionary(r => r.Utf32, r => r);
             var correlated = radicals
                 .Join(
@@ -196,7 +215,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     radicalInfo => char.ConvertToUtf32(radicalInfo.Literal, 0),
                     (radical, radicalInfo) => (
                         names: radicalInfo.Meanings.Concat(radicalInfo.JapaneseReadings)
-                            .Concat(radicalInfo.RomajiReadings),
+                            .Concat(radicalInfo.RomajiReadings).Concat(new []{radicalInfo.Literal}),
                         radical: radical));
             var kvps = correlated
                 .SelectMany(p => p.names.Select(n => new KeyValuePair<string, CodePoint>(n, p.radical)));
