@@ -60,10 +60,9 @@ namespace JDict.Tests
         public void BasicCompatibility(string sentence, IEnumerable<IEntry> expectedEntries)
         {
             var ipadicEntries = ipadicMecab.ParseToEntries(sentence).Where(e => e.IsRegular);
-            var unidicEntries = unidicMecab.ParseToEntries(sentence).Where(e => e.IsRegular);
             // this is to make test cases fail in case the number of expecteds is less than the number of actuals
             var nullDummyEntry = new DummyEntry();
-            foreach (var (i, u, e) in ipadicEntries.Zip(unidicEntries, expectedEntries.Concat(Utility.Utils.EnumerableExt.Repeat(nullDummyEntry))))
+            foreach (var (i, e) in ipadicEntries.Zip(expectedEntries.Concat(Utility.Utils.EnumerableExt.Repeat(nullDummyEntry))))
             {
                 //Assert.AreEqual(e.ConjugatedForm, i.ConjugatedForm);
                 //Assert.AreEqual(e.Inflection, i.Inflection);
@@ -72,20 +71,10 @@ namespace JDict.Tests
                 Assert.AreEqual(e.Pronunciation, i.Pronunciation);
                 Assert.AreEqual(e.Reading, i.Reading);
                 Assert.AreEqual(e.DictionaryForm, i.DictionaryForm);
-
-                //Assert.AreEqual(e.ConjugatedForm, u.ConjugatedForm);
-                //Assert.AreEqual(e.Inflection, u.Inflection);
-                Assert.AreEqual(e.SurfaceForm, u.SurfaceForm);
-                //Assert.AreEqual(e.PartOfSpeechString, u.PartOfSpeechString);
-                Assert.AreEqual(e.Pronunciation, u.Pronunciation);
-                Assert.AreEqual(e.Reading, u.Reading);
-                Assert.AreEqual(e.DictionaryForm, u.DictionaryForm);
             }
         }
 
         private static IMorphologicalAnalyzer<IEntry> ipadicMecab;
-
-        private static IMorphologicalAnalyzer<IEntry> unidicMecab;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -94,17 +83,12 @@ namespace JDict.Tests
             {
                 DicDir = TestDataPaths.Ipadic
             });
-            unidicMecab = new MeCabUnidic(new MeCabParam
-            {
-                DicDir = TestDataPaths.Unidic
-            });
         }
 
         [OneTimeTearDown]
         public void TearDown()
         {
             ipadicMecab.Dispose();
-            unidicMecab.Dispose();
         }
     }
 

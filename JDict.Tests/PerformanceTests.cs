@@ -14,16 +14,17 @@ namespace JDict.Tests
     [TestFixture]
     class PerformanceTests
     {
-        private KanjiDict kanjiDict;
-        private JDict.Kradfile kradfile;
-        private Radkfile radkfile;
-        private KanjiProperties kanjiProperties;
-        private CodePoint[] radicalCodePoint;
-        private IKanjiOrdering ordering;
-        private RadicalSearcher radicalSearcher;
-        private KanjiRadicalLookup lookup;
+        private static KanjiDict kanjiDict;
+        private static JDict.Kradfile kradfile;
+        private static Radkfile radkfile;
+        private static KanjiProperties kanjiProperties;
+        private static CodePoint[] radicalCodePoint;
+        private static IKanjiOrdering ordering;
+        private static RadicalSearcher radicalSearcher;
+        private static KanjiRadicalLookup lookup;
 
-        public PerformanceTests()
+        [OneTimeSetUp]
+        public void SetUp()
         {
             kanjiDict = JDict.KanjiDict.Create(TestDataPaths.KanjiDic);
             kradfile = new JDict.Kradfile(TestDataPaths.Kradfile, Encoding.UTF8);
