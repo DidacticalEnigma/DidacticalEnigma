@@ -74,29 +74,18 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 var r = new Vector<ulong>[kanjiCount * elementSize];
                 foreach (var kanji in kanjiCodePoints)
                 {
-                    var v = new Vector<ulong>[1];
+                    var v = new Vector<ulong>[elementSize];
                     var kanjiIndex = kanjiToIndex[x][kanji];
+                    var vec = AsScalarSpan(v);
+                    foreach (var radical in kradMapping[kanji])
+                    {
+                        var radicalIndex = radicalToIndex[radical];
+                        vec[radicalIndex / ulongBitCount] |= (ulong)(1UL << radicalIndex);
+                    }
+
                     for (int i = 0; i < elementSize; ++i)
                     {
-                        var vec = AsScalarSpan(v);
-                        var radicalIndex = 0;
-                        for (int j = 0; j < vec.Length; ++j)
-                        {
-                            ulong z = 0;
-                            for (int k = 0; k < ulongBitCount; ++k)
-                            {
-                                if (kradMapping[kanji].Contains(indexToRadical[radicalIndex]))
-                                    z |= (ulong)(1UL << k);
-                                ++radicalIndex;
-                                if (radicalIndex == radicalCount)
-                                    break;
-                            }
-
-                            vec[j] = z;
-                            if (radicalIndex == radicalCount)
-                                break;
-                        }
-                        r[kanjiIndex * elementSize + i] = v[0];
+                        r[kanjiIndex * elementSize + i] = v[i];
                     }
                 }
 
@@ -166,7 +155,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             }
 
             var possibleUlong = AsScalarSpan(possible);
-            for(int radicalIndex = 0; radicalIndex < radicalCount; ++radicalIndex)
+            for (int radicalIndex = 0; radicalIndex < radicalCount; ++radicalIndex)
             {
                 var mask = (ulong)(1UL << radicalIndex);
                 bool isPresent = (possibleUlong[radicalIndex / ulongBitCount] & mask) == mask;
