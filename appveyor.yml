@@ -16,7 +16,6 @@ artifacts:
     type: zip
 deploy:
   tag: $(APPVEYOR_REPO_TAG_NAME)
-  release: latest
   description: 'This is the full program, with all the files needed for it to work.'
   provider: GitHub
   auth_token:
