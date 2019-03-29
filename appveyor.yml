@@ -14,4 +14,17 @@ artifacts:
   - path: DidacticalEnigma.zip
     name: Full program
     type: zip
+deploy:
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  release: latest
+  description: 'This is the full program, with all the files needed for it to work.'
+  provider: GitHub
+  auth_token:
+    secure: fzqkckOMapDGnWMt0ZWxBM4k+pxuAQtdO7H4sUj3nqqk65Cm+UYKUf7f6I3AqQIM
+  artifact: DidacticalEnigma.zip
+  draft: false
+  prerelease: false
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
 
