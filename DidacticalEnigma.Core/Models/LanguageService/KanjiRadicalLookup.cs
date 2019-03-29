@@ -74,10 +74,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 var r = new Vector<ulong>[kanjiCount * elementSize];
                 foreach (var kanji in kanjiCodePoints)
                 {
+                    var v = new Vector<ulong>[1];
                     var kanjiIndex = kanjiToIndex[x][kanji];
                     for (int i = 0; i < elementSize; ++i)
                     {
-                        var vec = new ulong[Vector<ulong>.Count];
+                        var vec = AsScalarSpan(v);
                         var radicalIndex = 0;
                         for (int j = 0; j < vec.Length; ++j)
                         {
@@ -85,7 +86,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                             for (int k = 0; k < ulongBitCount; ++k)
                             {
                                 if (kradMapping[kanji].Contains(indexToRadical[radicalIndex]))
-                                    z |= 1UL << k;
+                                    z |= (ulong)(1UL << k);
                                 ++radicalIndex;
                                 if (radicalIndex == radicalCount)
                                     break;
@@ -95,7 +96,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                             if (radicalIndex == radicalCount)
                                 break;
                         }
-                        r[kanjiIndex * elementSize + i] = new Vector<ulong>(vec);
+                        r[kanjiIndex * elementSize + i] = v[0];
                     }
                 }
 
@@ -130,7 +131,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             foreach (var radical in radicals)
             {
                 var radicalIndex = radicalToIndex[radical.Utf32];
-                vec[radicalIndex / ulongBitCount] |= (1UL << radicalIndex % ulongBitCount);
+                vec[radicalIndex / ulongBitCount] |= (ulong)(1UL << radicalIndex);
             }
 
             var s = SortingCriteria.SelectedIndex;
@@ -150,7 +151,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 bool isPresent = true;
                 for (int j = 0; j < elementSize; ++j)
                 {
-                    if (!Vector.EqualsAll(target[i * elementSize + j], key[j]))
+                    if (target[i * elementSize + j] != key[j])
                         isPresent = false;
                 }
 
@@ -167,7 +168,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             var possibleUlong = AsScalarSpan(possible);
             for(int radicalIndex = 0; radicalIndex < radicalCount; ++radicalIndex)
             {
-                var mask = (1UL << radicalIndex % ulongBitCount);
+                var mask = (ulong)(1UL << radicalIndex);
                 bool isPresent = (possibleUlong[radicalIndex / ulongBitCount] & mask) == mask;
                 possibleRadicals[radicalIndex] = new KeyValuePair<CodePoint, bool>(CodePoint.FromInt(indexToRadical[radicalIndex]), isPresent);
             }
