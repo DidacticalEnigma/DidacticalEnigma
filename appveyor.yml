@@ -8,7 +8,7 @@ install:
   - git submodule update --init --recursive
   - nuget restore
 artifacts:
-  - path: $(APPVEYOR_BUILD_FOLDER)/DidacticalEnigma/bin/Release/*
+  - path: DidacticalEnigma/bin/Release/*
     name: Release
     type: zip
 
