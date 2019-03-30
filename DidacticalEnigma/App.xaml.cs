@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
@@ -16,6 +17,7 @@ using JDict;
 using NMeCab;
 using Optional.Collections;
 using Sentry;
+using SplashScreen = DidacticalEnigma.Views.SplashScreen;
 
 namespace DidacticalEnigma
 {
@@ -245,7 +247,15 @@ namespace DidacticalEnigma
                 }
                 catch (DirectoryNotFoundException)
                 {
-                    
+
+                }
+                catch (InvalidOperationException ex)
+                {
+                    MessageBox.Show(
+                        ex.Message + "\nIt was not possible to load the EPWING external dictionary.",
+                        "Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
                 }
 
                 return dictionaries;

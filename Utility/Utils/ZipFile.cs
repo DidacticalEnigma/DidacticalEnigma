@@ -51,6 +51,7 @@ namespace Utility.Utils
         {
             tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString().Replace("-", ""));
             Directory.CreateDirectory(tempDir);
+            bool success = false;
             foreach (var executable in executableCandidates)
             {
                 try
@@ -67,6 +68,7 @@ namespace Utility.Utils
                         int exitCode = process?.ExitCode ?? 255;
                         if (exitCode == 0)
                         {
+                            success = true;
                             break;
                         }
                     }
@@ -75,6 +77,11 @@ namespace Utility.Utils
                 {
                     Console.Error.WriteLine(e.Message);
                 }
+            }
+
+            if (!success)
+            {
+                throw new InvalidOperationException("7zip is not installed on this computer");
             }
         }
     }
