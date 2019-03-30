@@ -14,7 +14,7 @@ namespace DidacticalEnigma.Converters
             if (!(value is Selectable<DataSourceVM>))
                 return value;
             var v = (Selectable<DataSourceVM>)value;
-            return v.Entity.Descriptor.Name;
+            return v.Entity.Description;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -39,6 +39,8 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
+        public string Kind { get; }
+
         public async Task<Option<RichFormatting>> Answer(Request request)
         {
             var dataSource = await dataSourceTask.ConfigureAwait(false);
@@ -71,12 +73,13 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return await dataSource.UpdateLocalDataSource(cancellation);
         }
 
-        public AsyncDataSource(Func<Task<IDataSource>> dataSource, Type type)
+        public AsyncDataSource(Task<IDataSource> dataSource, Type type, string kind)
         {
             if (type.GetProperty("Descriptor", BindingFlags.Static | BindingFlags.Public)?.GetValue(null) is DataSourceDescriptor descriptor)
             {
                 Descriptor = descriptor;
-                dataSourceTask = dataSource();
+                dataSourceTask = dataSource;
+                Kind = kind ?? "";
             }
             else
             {

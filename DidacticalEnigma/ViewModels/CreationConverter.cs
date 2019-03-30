@@ -59,7 +59,7 @@ namespace DidacticalEnigma.ViewModels
         {
             if (value is DataSourcePreviewVM o)
             {
-                writer.WriteValue(o.SelectedDataSource?.Entity.Descriptor.Guid);
+                writer.WriteValue(o.SelectedDataSource?.Entity.Memento);
             }
         }
 
@@ -67,10 +67,9 @@ namespace DidacticalEnigma.ViewModels
         {
             var o = (DataSourcePreviewVM)existingValue;
             var input = (string)reader.Value;
-            var guid = input != null ? Guid.Parse(input) : (Guid?)null;
             var dataSourceIndex = o.Parent.DataSources
                 .Select((d, i) => (d, i))
-                .Where(p => p.d.Entity.Descriptor.Guid == guid)
+                .Where(p => p.d.Entity.Memento == input)
                 .Select(p => p.i)
                 .SingleOrNone()
                 .ValueOr(-1);

@@ -15,7 +15,7 @@ namespace JDict
     // 
     public class YomichanTermDictionary : IDisposable
     {
-        private static readonly Guid Version = new Guid("F7D29471-7532-4CFC-AD18-75F26BFE406F");
+        private static readonly Guid Version = new Guid("91DF97D4-2B81-4357-846E-84A996D809F6");
 
         private Database db;
 
@@ -25,16 +25,48 @@ namespace JDict
 
         private static readonly Regex termMatcher = new Regex(@"^term_bank_\d+.json$");
 
+        private YomichanDictionaryVersion version;
+
+        public string Revision => version.Revision;
+
+        public string Title => version.Title;
+
         public YomichanTermDictionary(string pathToZip, string cachePath)
         {
-            using (var zip = new ZipFile(pathToZip))
+            var zip = new Lazy<IZipFile>(() => new ZipFile(pathToZip));
+            try
             {
                 Init(zip, cachePath);
             }
+            finally
+            {
+                if (zip.IsValueCreated)
+                    zip.Value.Dispose();
+            }
         }
 
-        private void Init(IZipFile zip, string cachePath)
+        private void Init(Lazy<IZipFile> zip, string cachePath)
         {
+            var headerSerializer = Serializer.ForComposite()
+                .With(Serializer.ForStringAsUTF8())
+                .With(Serializer.ForInt())
+                .With(Serializer.ForStringAsUTF8())
+                .With(Serializer.ForInt().Mapping(raw => raw != 0, b => b ? 1 : 0))
+                .Create()
+                .Mapping(raw => new YomichanDictionaryVersion()
+                {
+                    Title = (string)raw[0],
+                    Format = (int)raw[1],
+                    Revision = (string)raw[2],
+                    Sequenced = (bool)raw[3]
+                },
+                    obj => new object[]
+                    {
+                            obj.Title,
+                            obj.Format,
+                            obj.Revision,
+                            obj.Sequenced
+                    });
             var entrySerializer = Serializer.ForComposite()
                 .With(Serializer.ForStringAsUTF8())
                 .With(Serializer.ForStringAsUTF8())
@@ -59,29 +91,35 @@ namespace JDict
                     },
                     obj => new object[]
                     {
-                        obj.Expression,
-                        obj.Reading,
-                        obj.DefinitionTags,
-                        obj.Rules,
-                        obj.Score,
-                        obj.Glossary,
-                        obj.Sequence,
-                        obj.TermTags
+                            obj.Expression,
+                            obj.Reading,
+                            obj.DefinitionTags,
+                            obj.Rules,
+                            obj.Score,
+                            obj.Glossary,
+                            obj.Sequence,
+                            obj.TermTags
                     });
 
             var indexSerializer = Serializer.ForKeyValuePair(
                 Serializer.ForStringAsUTF8(),
                 Serializer.ForReadOnlyList(Serializer.ForLong()));
 
-            var lazyRoot = new Lazy<List<YomichanDictionaryEntry>>(() => ParseEntriesFromZip(zip).ToList());
+            var lazyHeaderInfo =
+                new Lazy<(YomichanDictionaryVersion version, IEnumerable<string> dataFilePaths)>(() =>
+                    GetHeaderInfo(zip.Value));
+            var lazyRoot = new Lazy<List<YomichanDictionaryEntry>>(() => ParseEntriesFromZip(lazyHeaderInfo.Value.dataFilePaths, zip.Value).ToList());
 
             db = Database.CreateOrOpen(cachePath, Version)
                 .AddIndirectArray(entrySerializer, () => lazyRoot.Value)
                 .AddIndirectArray(indexSerializer, () => Index(lazyRoot.Value), kvp => kvp.Key)
+                .AddIndirectArray(headerSerializer, () => EnumerableExt.OfSingle(lazyHeaderInfo.Value.version))
                 .Build();
 
             entries = db.Get<YomichanDictionaryEntry>(0);
             index = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
+            this.version = db.Get<YomichanDictionaryVersion>(2).LinearScan().First();
+
         }
 
         private static IEnumerable<KeyValuePair<string, IReadOnlyList<long>>> Index(
@@ -101,7 +139,7 @@ namespace JDict
                 .Select(x => new KeyValuePair<string, IReadOnlyList<long>>(x.Key, x.ToList()));
         }
 
-        private IEnumerable<YomichanDictionaryEntry> ParseEntriesFromZip(IZipFile zip)
+        (YomichanDictionaryVersion version, IEnumerable<string> dataFilePaths) GetHeaderInfo(IZipFile zip)
         {
             var groups = zip.Files.ToLookup(f =>
             {
@@ -113,20 +151,24 @@ namespace JDict
             });
             var indexPath = groups[0].SingleOrDefault() ?? throw new InvalidDataException("not a valid yomichan dictionary");
             var dataFilePaths = groups[1].ToList();
-            YomichanDictionaryVersion version;
             var serializer = new JsonSerializer();
             using (var stream = zip.OpenFile(indexPath))
             using (var reader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(reader))
             {
-                version = serializer.Deserialize<YomichanDictionaryVersion>(jsonReader);
-            }
+                var version = serializer.Deserialize<YomichanDictionaryVersion>(jsonReader);
+                if (version.Format != 3)
+                {
+                    throw new InvalidDataException("unsupported format");
+                }
 
-            if (version.Format != 3)
-            {
-                throw new InvalidDataException("unsupported format");
+                return (version, dataFilePaths);
             }
+        }
 
+        private IEnumerable<YomichanDictionaryEntry> ParseEntriesFromZip(IEnumerable<string> dataFilePaths, IZipFile zip)
+        {
+            var serializer = new JsonSerializer();
             foreach (var filePath in dataFilePaths)
             {
                 using (var dataFile = zip.OpenFile(filePath))
@@ -144,7 +186,7 @@ namespace JDict
 
         public YomichanTermDictionary(IZipFile zipFile, string cachePath)
         {
-            Init(zipFile, cachePath);
+            Init(new Lazy<IZipFile>(() => zipFile), cachePath);
         }
 
         public IEnumerable<Entry> Lookup(string key)

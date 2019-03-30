@@ -38,7 +38,19 @@ namespace DidacticalEnigma.ViewModels
 
         public FlowDocument Document => documentRenderer.Render(FormattedResult);
 
-        public DataSourceDescriptor Descriptor => dataSource.Descriptor;
+        public string Description => dataSource.Descriptor.Name + " " + dataSource.Kind;
+
+        public string Memento
+        {
+            get
+            {
+                var s = dataSource.Descriptor.Guid.ToString();
+                if (!string.IsNullOrEmpty(dataSource.Kind))
+                    s += "|" + dataSource.Kind;
+                return s;
+            }
+        }
+
 
         private bool isProcessing;
 
@@ -75,17 +87,16 @@ namespace DidacticalEnigma.ViewModels
             IsProcessing = false;
         }
 
-        public DataSourceVM(IDataSource dataSource, IFlowDocumentRichFormattingRenderer documentRenderer) :
-            this(Task.FromResult(dataSource), dataSource.GetType(), documentRenderer)
+        public DataSourceVM(IDataSource dataSource, IFlowDocumentRichFormattingRenderer documentRenderer, string kind = null) :
+            this(Task.FromResult(dataSource), dataSource.GetType(), documentRenderer, kind)
         {
 
         }
 
-        public DataSourceVM(Task<IDataSource> dataSource, Type type, IFlowDocumentRichFormattingRenderer documentRenderer)
+        public DataSourceVM(Task<IDataSource> dataSource, Type type, IFlowDocumentRichFormattingRenderer documentRenderer, string kind = null)
         {
             this.documentRenderer = documentRenderer;
-            this.dataSource = new AsyncDataSource(
-                () => dataSource, type);
+            this.dataSource = new AsyncDataSource(dataSource, type, kind);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

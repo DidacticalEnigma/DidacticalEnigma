@@ -159,7 +159,7 @@ namespace DidacticalEnigma
                 new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<PartialWordLookup>(), get.Get<FrequencyList>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new RomajiDataSource(get.Get<IRomaji>()), get.Get<IFlowDocumentRichFormattingRenderer>())
-            }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new DataSourceVM(new EpwingDataSource(dict, get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()))));
+            }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new DataSourceVM(new EpwingDataSource(dict, get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>(), dict.Revision))));
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
             kernel.BindFactory(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
@@ -238,7 +238,6 @@ namespace DidacticalEnigma
                 try
                 {
                     var dicts = Directory.EnumerateFiles(targetPath, "*.zip")
-                        .Take(1) // we need to ensure our capability to handle multiple data sources with the same GUID
                         .Select(file => new YomichanTermDictionary(file, file + ".cache"));
                     foreach (var dict in dicts)
                     {
