@@ -3,16 +3,10 @@ Didactical Enigma [![Build status](https://ci.appveyor.com/api/projects/status/q
 
 This tool's goal is to assist in translation from Japanese to English.
 
-Interface
+Introduction
 ---------
 
-![UI](Docs/interface_overview.png)
-
-![UI](Docs/interface_overview_2.png)
-
-![UI](Docs/interface_overview_3.png)
-
-![UI](Docs/interface_overview_4.png)
+[See here.](Docs/index.md)
 
 
 Data sources
