@@ -24,7 +24,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
-        public Task<Option<RichFormatting>> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var rich = new RichFormatting();
             var sentences = be.SearchByJapaneseText(request.QueryText);

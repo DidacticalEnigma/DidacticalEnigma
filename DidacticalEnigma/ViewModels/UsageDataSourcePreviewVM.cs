@@ -65,7 +65,7 @@ namespace DidacticalEnigma.ViewModels
                 OnPropertyChanged();
                 tokenSource.Cancel();
                 var t = new CancellationTokenSource();
-                Task.Run(() => Search(request), t.Token);
+                Task.Run(() => Search(request, t.Token), t.Token);
                 tokenSource = t;
             }
         }
@@ -74,14 +74,16 @@ namespace DidacticalEnigma.ViewModels
 
         private long id = 0;
 
-        public Task Search(Request req)
+        public Task Search(Request req, CancellationToken token)
         {
             var tasks = new List<Task>();
             var id = Interlocked.Increment(ref this.id);
             foreach(var dataSource in DataSources)
             {
+                if (token.IsCancellationRequested)
+                    break;
                 if(dataSource.Selected)
-                    tasks.Add(dataSource.Entity.Search(req, id));
+                    tasks.Add(dataSource.Entity.Search(req, id, token));
             }
             return Task.WhenAll(tasks);
         }

@@ -17,7 +17,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "Transcription of Japanese text to romaji",
             null);
 
-        public Task<Option<RichFormatting>> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var rich = new RichFormatting();
             var p = new TextParagraph();

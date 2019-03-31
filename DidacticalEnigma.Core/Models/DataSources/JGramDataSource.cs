@@ -20,7 +20,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "JGram: The Japanese Grammar Database",
             new Uri("http://www.jgram.org/"));
 
-        public Task<Option<RichFormatting>> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var rich = new RichFormatting();
 

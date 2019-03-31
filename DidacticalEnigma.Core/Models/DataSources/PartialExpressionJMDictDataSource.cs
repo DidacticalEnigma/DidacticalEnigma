@@ -20,7 +20,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "The data JMdict by Electronic Dictionary Research and Development Group",
             new Uri("http://www.edrdg.org/jmdict/j_jmdict.html"));
 
-        public Task<Option<RichFormatting>> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var rich = new RichFormatting();
             var lookup = LookAhead(request);

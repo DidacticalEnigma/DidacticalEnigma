@@ -21,11 +21,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "These sentences are from Tanaka Corpus",
             new Uri("http://www.edrdg.org/wiki/index.php/Tanaka_Corpus"));
 
-        public async Task<Option<RichFormatting>> Answer(Request request)
+        public async Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var rich = new RichFormatting();
             var sentences = tanaka.SearchByJapaneseTextAsync(request.QueryText);
-            foreach (var sentence in (await sentences.Take(100).ToListAsync()).OrderBy(s => s.JapaneseSentence.Length).Take(20))
+            foreach (var sentence in (await sentences.Take(100).ToListAsync(token)).OrderBy(s => s.JapaneseSentence.Length).Take(20))
             {
                 var paragraph = new TextParagraph();
                 foreach (var (text, highlight) in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))
@@ -70,7 +70,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "NOTE: This functionality is completely untested and may result in horribly broken glosses",
             null);
 
-        public Task<Option<RichFormatting>> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var rich = new RichFormatting();
             var text = request.AllText();

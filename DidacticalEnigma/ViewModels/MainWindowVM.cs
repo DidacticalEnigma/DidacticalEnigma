@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using DidacticalEnigma.Core.Models;
@@ -153,7 +154,7 @@ namespace DidacticalEnigma.ViewModels
             });
             DataSourceForceRefresh = new RelayCommand(() =>
             {
-                UsageDataSourceVM.Search(UsageDataSourceVM.Request);
+                UsageDataSourceVM.Search(UsageDataSourceVM.Request, CancellationToken.None);
             });
         }
 

@@ -31,7 +31,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             
         }
 
-        public Task<Option<RichFormatting>> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var entry = lookup.LookupWords(request.Word.RawWord.Trim());
             var rich = new RichFormatting();

@@ -20,7 +20,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "...",
             null);
 
-        public Task<Option<RichFormatting>> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             return DictUtils.Lookup(
                 request,

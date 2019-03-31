@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using DidacticalEnigma.Core.Models.DataSources;
@@ -71,13 +72,13 @@ namespace DidacticalEnigma.ViewModels
 
         public bool HasFound => FormattedResult != null;
 
-        public async Task Search(Request request, long id)
+        public async Task Search(Request request, long id, CancellationToken token)
         {
             if (request == null)
                 return;
             this.id = id;
             IsProcessing = true;
-            var result = await dataSource.Answer(request);
+            var result = await dataSource.Answer(request, token);
             if (this.id > id)
             {
                 return;

@@ -25,11 +25,11 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
-        public async Task<Option<RichFormatting>> Answer(Request request)
+        public async Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var rich = new RichFormatting();
             var sentences = jesc.SearchByJapaneseTextAsync(request.QueryText);
-            foreach (var sentence in (await sentences.Take(100).ToListAsync()).OrderByDescending(s => s.JapaneseSentence.Length).Take(20))
+            foreach (var sentence in (await sentences.Take(100).ToListAsync(token)).OrderByDescending(s => s.JapaneseSentence.Length).Take(20))
             {
                 var paragraph = new TextParagraph();
                 foreach (var (text, highlight) in StringExt.HighlightWords(sentence.JapaneseSentence, request.QueryText))

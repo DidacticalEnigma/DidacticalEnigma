@@ -8,7 +8,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 {
     public interface IDataSource : IDisposable
     {
-        Task<Option<RichFormatting>> Answer(Request request);
+        Task<Option<RichFormatting>> Answer(Request request, CancellationToken token);
 
         Task<UpdateResult> UpdateLocalDataSource(
             CancellationToken cancellation = default(CancellationToken));

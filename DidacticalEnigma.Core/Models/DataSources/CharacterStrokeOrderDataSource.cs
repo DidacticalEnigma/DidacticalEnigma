@@ -19,7 +19,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             "Provides the stroke order information from the Kanji stroke order font",
             new Uri("http://www.nihilist.org.uk/"));
 
-        public Task<Option<RichFormatting>> Answer(Request request)
+        public Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var ch = request.Character;
             var rich = new RichFormatting();

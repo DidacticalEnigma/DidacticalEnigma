@@ -26,7 +26,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         }
 
-        public async Task<Option<RichFormatting>> Answer(Request request)
+        public async Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                             StringExt.HighlightWords(paragraph, request.QueryText)
                                 .Select(p => new Text(p.text, emphasis: p.highlight)));
                         rich.Paragraphs.Add(text);
-                    });
+                    }, token);
                     return Option.Some(rich);
                 }
             }

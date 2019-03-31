@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Formatting;
@@ -35,7 +36,8 @@ namespace JDict.Tests
                 "落",
                 new WordInfo("落ち着ける"),
                 "落ち着ける",
-                () => "落ち着ける"));
+                () => "落ち着ける"),
+                CancellationToken.None);
             var boolOpt = result.Map(x => x.Paragraphs.Any(p => p is TextParagraph t && t.Content.Any(a => a.Content.Contains("落ち着けて"))));
             Assert.AreEqual(true.Some(), boolOpt);
         }

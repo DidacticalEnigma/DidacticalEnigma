@@ -41,10 +41,10 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         public string Kind { get; }
 
-        public async Task<Option<RichFormatting>> Answer(Request request)
+        public async Task<Option<RichFormatting>> Answer(Request request, CancellationToken token)
         {
             var dataSource = await dataSourceTask.ConfigureAwait(false);
-            var result = await dataSource.Answer(request);
+            var result = await dataSource.Answer(request, token);
             return result;
         }
 
