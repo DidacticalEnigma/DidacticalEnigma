@@ -30,11 +30,18 @@ namespace JDict.Tests
         [Test]
         public void Lookup()
         {
-            using(var lookup = new JGramLookup(TestDataPaths.JGram, TestDataPaths.JGramLookup, TestDataPaths.JGramCache))
+            using (var lookup =
+                new JGramLookup(TestDataPaths.JGram, TestDataPaths.JGramLookup, TestDataPaths.JGramCache))
             {
-                var entries = lookup.Lookup("くせに");
-                var entry = entries.First();
-                Assert.AreEqual(112, entry.Id);
+                {
+                    var entries = lookup.Lookup("くせに");
+                    var entry = entries.First();
+                    Assert.AreEqual(112, entry.Id);
+                }
+                {
+                    var entries = lookup.Lookup("食べる");
+                    CollectionAssert.IsEmpty(entries);
+                }
             }
         }
 
