@@ -24,6 +24,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyIndex", "TinyIndex\Tiny
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzySharp", "FuzzySharp\FuzzySharp\FuzzySharp.csproj", "{9258628C-D4E8-4FFD-BD86-D8B599A7A27A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanjiRecognition.Core", "KanjiRecognition.Core\KanjiRecognition.Core.csproj", "{5BD6F215-64F0-462B-B454-0ED1FA01C9FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanjiRecognition.TestApp", "KanjiRecognition.TestApp\KanjiRecognition.TestApp.csproj", "{FF35515D-8454-4FFA-B18E-B7CBC4077195}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +66,14 @@ Global
 		{9258628C-D4E8-4FFD-BD86-D8B599A7A27A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9258628C-D4E8-4FFD-BD86-D8B599A7A27A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9258628C-D4E8-4FFD-BD86-D8B599A7A27A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BD6F215-64F0-462B-B454-0ED1FA01C9FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BD6F215-64F0-462B-B454-0ED1FA01C9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BD6F215-64F0-462B-B454-0ED1FA01C9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BD6F215-64F0-462B-B454-0ED1FA01C9FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF35515D-8454-4FFA-B18E-B7CBC4077195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF35515D-8454-4FFA-B18E-B7CBC4077195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF35515D-8454-4FFA-B18E-B7CBC4077195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF35515D-8454-4FFA-B18E-B7CBC4077195}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
