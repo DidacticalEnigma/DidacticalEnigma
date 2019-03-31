@@ -1,4 +1,5 @@
-Didactical Enigma
+Didactical Enigma [![Build status](https://ci.appveyor.com/api/projects/status/qt81054k5n9f1t2h/branch/master?svg=true)](https://ci.appveyor.com/project/milleniumbug/didacticalenigma/branch/master)
+
 =================
 
 This tool's goal is to assist in translation from Japanese to English.
