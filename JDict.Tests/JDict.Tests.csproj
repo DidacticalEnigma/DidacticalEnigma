@@ -209,7 +209,9 @@
     <Compile Include="Index.cs" />
     <Compile Include="JGramTests.cs" />
     <Compile Include="JMDictTests.cs" />
+    <Compile Include="JMDictXml.cs" />
     <Compile Include="JnedictTests.cs" />
+    <Compile Include="JNedictXml.cs" />
     <Compile Include="KanaPropertiesTests.cs" />
     <Compile Include="KanjiAliveJapaneseRadicalInformationTests.cs" />
     <Compile Include="KanjiDictTests.cs" />

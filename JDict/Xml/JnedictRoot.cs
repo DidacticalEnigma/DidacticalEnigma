@@ -9,6 +9,7 @@ namespace JDict.Internal.XmlModels
         public NeEntry[] Entries { get; set; }
     }
 
+    [XmlRoot("entry")]
     public class NeEntry
     {
         [XmlElement("ent_seq")]

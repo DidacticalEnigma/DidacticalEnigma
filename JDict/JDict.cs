@@ -24,7 +24,7 @@ namespace JDict
     // represents a lookup over an JMdict file
     public class JMDict : IDisposable
     {
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicRoot));
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicEntry));
 
         private static readonly Guid Version = new Guid("2DC4D47E-8306-4E4F-BC3E-970599812E76");
 
@@ -129,9 +129,43 @@ namespace JDict
             };
             using (var xmlReader = XmlReader.Create(stream, xmlSettings))
             {
-                foreach (var entry in ((JdicRoot)serializer.Deserialize(xmlReader)).Entries)
+                while (xmlReader.Read())
                 {
-                    yield return entry;
+                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "JMdict")
+                    {
+                        while (xmlReader.Read())
+                        {
+                            if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "entry")
+                            {
+                                using (
+                                    var elementReader =
+                                        new StringReader(xmlReader.ReadOuterXml()))
+                                {
+                                    var entry = (JdicEntry)serializer.Deserialize(elementReader);
+                                    foreach (var s in entry.Senses ?? Array.Empty<Sense>())
+                                    {
+                                        foreach (var gloss in s.Glosses ?? Array.Empty<Gloss>())
+                                        {
+                                            if (gloss.Lang == null)
+                                            {
+                                                gloss.Lang = "eng";
+                                            }
+                                        }
+
+                                        foreach (var loanSource in s.LoanWordSource ?? Array.Empty<LoanSource>())
+                                        {
+                                            if (loanSource.Lang == null)
+                                            {
+                                                loanSource.Lang = "eng";
+                                            }
+                                        }
+                                    }
+
+                                    yield return entry;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

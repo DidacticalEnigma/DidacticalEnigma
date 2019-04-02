@@ -12,6 +12,7 @@ namespace JDict.Internal.XmlModels
         public JdicEntry[] Entries { get; set; }
     }
 
+    [XmlRoot("entry")]
     public class JdicEntry
     {
         [XmlElement("ent_seq")]

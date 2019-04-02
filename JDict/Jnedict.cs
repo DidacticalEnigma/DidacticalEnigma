@@ -18,7 +18,7 @@ namespace JDict
 {
     public class Jnedict : IDisposable
     {
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JMNedictRoot));
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(NeEntry));
 
         private static readonly Guid Version = new Guid("C4A8A3D3-92F3-4E33-A00F-7BF7DBECDD03");
 
@@ -66,38 +66,38 @@ namespace JDict
                     });
 
 
-            var lazyRoot = new Lazy<JMNedictRoot>(() => ReadFromXml(stream));
+            var lazyRoot = new Lazy<IEnumerable<JnedictEntry>>(() => ReadFromXml(stream)
+                .Select(xmlEntry =>
+                    new JnedictEntry(
+                        xmlEntry.SequenceNumber,
+                        (xmlEntry.KanjiElements ?? Array.Empty<KanjiElement>()).Select(k => k.Key),
+                        (xmlEntry.ReadingElements ?? Array.Empty<ReadingElement>()).Select(r => r.Reb),
+                        (xmlEntry.TranslationalEquivalents ?? Array.Empty<NeTranslationalEquivalent>()).Select(tr =>
+                            new JnedictTranslation(
+                                (tr.Types ?? Array.Empty<string>())
+                                .Select(t => JnedictTypeUtils.FromDescription(t))
+                                .Values(),
+                                (tr.Translation ?? Array.Empty<NeTranslation>())
+                                .Where(t => t.Lang == null || t.Lang == "eng")
+                                .Select(t => t.Text)))))
+                .ToList());
 
             db = Database.CreateOrOpen(cache, Version)
-                .AddIndirectArray(entrySerializer, () => lazyRoot.Value.Entries.Select(
-                    xmlEntry =>
-                        new JnedictEntry(
-                            xmlEntry.SequenceNumber,
-                            (xmlEntry.KanjiElements ?? Array.Empty<KanjiElement>()).Select(k => k.Key),
-                            (xmlEntry.ReadingElements ?? Array.Empty<ReadingElement>()).Select(r => r.Reb),
-                            (xmlEntry.TranslationalEquivalents ?? Array.Empty<NeTranslationalEquivalent>()).Select(tr =>
-                                new JnedictTranslation(
-                                    (tr.Types ?? Array.Empty<string>())
-                                    .Select(t => JnedictTypeUtils.FromDescription(t))
-                                    .Values(),
-                                    (tr.Translation ?? Array.Empty<NeTranslation>())
-                                    .Where(t => t.Lang == null || t.Lang == "eng")
-                                    .Select(t => t.Text))))),
-                    x => x.SequenceNumber)
+                .AddIndirectArray(entrySerializer, () => lazyRoot.Value, x => x.SequenceNumber)
                 .AddIndirectArray(Serializer.ForKeyValuePair(Serializer.ForStringAsUTF8(), Serializer.ForReadOnlyList(Serializer.ForLong())), () =>
                     {
                         IEnumerable<KeyValuePair<long, string>> It()
                         {
-                            foreach (var e in lazyRoot.Value.Entries)
+                            foreach (var e in lazyRoot.Value)
                             {
-                                foreach (var r in (e.KanjiElements ?? Array.Empty<KanjiElement>()))
+                                foreach (var r in e.Reading)
                                 {
-                                    yield return new KeyValuePair<long, string>(e.SequenceNumber, r.Key);
+                                    yield return new KeyValuePair<long, string>(e.SequenceNumber, r);
                                 }
 
-                                foreach (var r in (e.ReadingElements))
+                                foreach (var k in e.Kanji)
                                 {
-                                    yield return new KeyValuePair<long, string>(e.SequenceNumber, r.Reb);
+                                    yield return new KeyValuePair<long, string>(e.SequenceNumber, k);
                                 }
                             }
                         }
@@ -139,7 +139,7 @@ namespace JDict
             }
         }
 
-        private JMNedictRoot ReadFromXml(Stream stream)
+        private IEnumerable<NeEntry> ReadFromXml(Stream stream)
         {
             var xmlSettings = new XmlReaderSettings
             {
@@ -151,7 +151,25 @@ namespace JDict
             };
             using (var xmlReader = XmlReader.Create(stream, xmlSettings))
             {
-                return ((JMNedictRoot)serializer.Deserialize(xmlReader));
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "JMnedict")
+                    {
+                        while (xmlReader.Read())
+                        {
+                            if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "entry")
+                            {
+                                using (
+                                    var elementReader =
+                                        new StringReader(xmlReader.ReadOuterXml()))
+                                {
+                                    var entry = (NeEntry)serializer.Deserialize(elementReader);
+                                    yield return entry;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
