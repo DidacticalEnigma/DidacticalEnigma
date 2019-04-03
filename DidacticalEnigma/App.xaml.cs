@@ -150,6 +150,7 @@ namespace DidacticalEnigma
                 new DataSourceVM(new JMDictDataSource(get.Get<JMDict>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JNeDictDataSource(get.Get<Jnedict>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDict>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new WordFrequencyRatingDataSource(get.Get<FrequencyList>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JGramDataSource(get.Get<IJGramLookup>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new AutoGlosserDataSource(get.Get<AutoGlosser>()), get.Get<IFlowDocumentRichFormattingRenderer>()),

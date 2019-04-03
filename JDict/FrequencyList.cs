@@ -20,6 +20,9 @@ namespace JDict
                 .ToDictionary(i => i[2], i => double.Parse(i[1], CultureInfo.InvariantCulture));
         }
 
+        public IEnumerable<KeyValuePair<string, double>> GetAllWords() =>
+            frequency.OrderByDescending(kvp => kvp.Value);
+
         public double RateFrequency(string s)
         {
             if (frequency.TryGetValue(s, out var value))
