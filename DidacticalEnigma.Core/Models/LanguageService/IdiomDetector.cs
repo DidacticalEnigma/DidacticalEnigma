@@ -181,7 +181,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             entries = db.Get<KeyValuePair<string, long>>(0);
         }
 
-        private IEnumerable<KeyValuePair<string, long>> CreateEntries()
+        private IEnumerable<KeyValuePair<string, long>> CreateEntries(Database db)
         {
             var exprs = jmDict.AllEntries()
                 .Where(entry =>

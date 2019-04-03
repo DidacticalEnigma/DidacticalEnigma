@@ -22,13 +22,13 @@ namespace JDict
 
         private static readonly Guid Version = new Guid("C4A8A3D3-92F3-4E33-A00F-7BF7DBECDD03");
 
-        private Database db;
+        private Database database;
         private IReadOnlyDiskArray<JnedictEntry> entries;
         private IReadOnlyDiskArray<KeyValuePair<string, IReadOnlyList<long>>> kvps;
 
         public void Dispose()
         {
-            db.Dispose();
+            database.Dispose();
         }
 
         private Jnedict Init(Stream stream, string cache)
@@ -82,9 +82,9 @@ namespace JDict
                                 .Select(t => t.Text)))))
                 .ToList());
 
-            db = Database.CreateOrOpen(cache, Version)
-                .AddIndirectArray(entrySerializer, () => lazyRoot.Value, x => x.SequenceNumber)
-                .AddIndirectArray(Serializer.ForKeyValuePair(Serializer.ForStringAsUTF8(), Serializer.ForReadOnlyList(Serializer.ForLong())), () =>
+            database = Database.CreateOrOpen(cache, Version)
+                .AddIndirectArray(entrySerializer, db => lazyRoot.Value, x => x.SequenceNumber)
+                .AddIndirectArray(Serializer.ForKeyValuePair(Serializer.ForStringAsUTF8(), Serializer.ForReadOnlyList(Serializer.ForLong())), db =>
                     {
                         IEnumerable<KeyValuePair<long, string>> It()
                         {
@@ -109,8 +109,8 @@ namespace JDict
                     x => x.Key)
                 .Build();
 
-            entries = db.Get<JnedictEntry>(0);
-            kvps = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
+            entries = database.Get<JnedictEntry>(0);
+            kvps = database.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
 
             return this;
         }

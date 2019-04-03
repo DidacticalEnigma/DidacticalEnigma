@@ -173,9 +173,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     obj => new object[] {obj.JapaneseSentence, obj.EnglishSentence});
 
             db = Database.CreateOrOpen(cachePath, Version)
-                .AddIndirectArray(sentenceSerializer, sentenceFactory)
+                .AddIndirectArray(sentenceSerializer, db => sentenceFactory())
                 .AddIndirectArray(Serializer.ForKeyValuePair(Serializer.ForStringAsUTF8(), Serializer.ForLong()),
-                    () => CreateIndex(sentenceFactory()), kvp => kvp.Key)
+                    db => CreateIndex(sentenceFactory()), kvp => kvp.Key)
                 .Build();
 
             entries = db.Get<Sentence>(0);

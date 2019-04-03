@@ -86,8 +86,8 @@ namespace JDict
                 .ToList());
 
             db = TinyIndex.Database.CreateOrOpen(cache, Version)
-                .AddIndirectArray(entrySerializer, () => lazyRoot.Value, x => x.SequenceNumber)
-                .AddIndirectArray(TinyIndex.Serializer.ForKeyValuePair(TinyIndex.Serializer.ForStringAsUTF8(), TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForLong())), () =>
+                .AddIndirectArray(entrySerializer, db => lazyRoot.Value, x => x.SequenceNumber)
+                .AddIndirectArray(TinyIndex.Serializer.ForKeyValuePair(TinyIndex.Serializer.ForStringAsUTF8(), TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForLong())), db =>
                     {
                         IEnumerable<KeyValuePair<long, string>> It()
                         {

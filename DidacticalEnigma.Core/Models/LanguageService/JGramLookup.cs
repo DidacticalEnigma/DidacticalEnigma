@@ -112,8 +112,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 Serializer.ForLong());
 
             db = Database.CreateOrOpen(cachePath, Version)
-                .AddIndirectArray(entrySerializer, () => JGram.Parse(jgramPath, Encoding.UTF8), e => e.Id)
-                .AddIndirectArray(indexSerializer, () => LoadIndexEntries(jgramLookupPath), kvp => kvp.Key)
+                .AddIndirectArray(entrySerializer, db => JGram.Parse(jgramPath, Encoding.UTF8), e => e.Id)
+                .AddIndirectArray(indexSerializer, db => LoadIndexEntries(jgramLookupPath), kvp => kvp.Key)
                 .Build();
 
             entries = db.Get<JGram.Entry>(0);

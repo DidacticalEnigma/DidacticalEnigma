@@ -111,9 +111,9 @@ namespace JDict
             var lazyRoot = new Lazy<List<YomichanDictionaryEntry>>(() => ParseEntriesFromZip(lazyHeaderInfo.Value.dataFilePaths, zip.Value).ToList());
 
             db = Database.CreateOrOpen(cachePath, Version)
-                .AddIndirectArray(entrySerializer, () => lazyRoot.Value)
-                .AddIndirectArray(indexSerializer, () => Index(lazyRoot.Value), kvp => kvp.Key)
-                .AddIndirectArray(headerSerializer, () => EnumerableExt.OfSingle(lazyHeaderInfo.Value.version))
+                .AddIndirectArray(entrySerializer, db => lazyRoot.Value)
+                .AddIndirectArray(indexSerializer, db => Index(lazyRoot.Value), kvp => kvp.Key)
+                .AddIndirectArray(headerSerializer, db => EnumerableExt.OfSingle(lazyHeaderInfo.Value.version))
                 .Build();
 
             entries = db.Get<YomichanDictionaryEntry>(0);
