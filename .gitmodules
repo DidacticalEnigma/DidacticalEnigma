@@ -7,3 +7,6 @@
 [submodule "FuzzySharp"]
 	path = FuzzySharp
 	url = git@github.com:milleniumbug/FuzzySharp.git
+[submodule "LibJpConjSharp"]
+	path = LibJpConjSharp
+	url = git@github.com:milleniumbug/LibJpConjSharp.git

@@ -24,9 +24,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinyIndex", "TinyIndex\Tiny
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzySharp", "FuzzySharp\FuzzySharp\FuzzySharp.csproj", "{9258628C-D4E8-4FFD-BD86-D8B599A7A27A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanjiRecognition.Core", "KanjiRecognition.Core\KanjiRecognition.Core.csproj", "{5BD6F215-64F0-462B-B454-0ED1FA01C9FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KanjiRecognition.Core", "KanjiRecognition.Core\KanjiRecognition.Core.csproj", "{5BD6F215-64F0-462B-B454-0ED1FA01C9FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanjiRecognition.TestApp", "KanjiRecognition.TestApp\KanjiRecognition.TestApp.csproj", "{FF35515D-8454-4FFA-B18E-B7CBC4077195}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyIndex.Tests", "TinyIndex\TinyIndex.Tests\TinyIndex.Tests.csproj", "{0AF2807A-5A24-430E-B58D-13B40723CC6B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzySharp.Test", "FuzzySharp\FuzzySharp.Test\FuzzySharp.Test.csproj", "{F58EAF76-38E9-45B5-A2B2-B9CE8F9EAD7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibJpConjSharp.Tests", "LibJpConjSharp\LibJpConjSharp.Tests\LibJpConjSharp.Tests.csproj", "{3D07A3F9-DDB3-4D46-8C06-1E550910D260}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibJpConjSharp", "LibJpConjSharp\LibJpConjSharp\LibJpConjSharp.csproj", "{864580C0-B166-4FDB-BA2B-286FD7944192}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +82,22 @@ Global
 		{FF35515D-8454-4FFA-B18E-B7CBC4077195}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF35515D-8454-4FFA-B18E-B7CBC4077195}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF35515D-8454-4FFA-B18E-B7CBC4077195}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AF2807A-5A24-430E-B58D-13B40723CC6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AF2807A-5A24-430E-B58D-13B40723CC6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AF2807A-5A24-430E-B58D-13B40723CC6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AF2807A-5A24-430E-B58D-13B40723CC6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F58EAF76-38E9-45B5-A2B2-B9CE8F9EAD7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F58EAF76-38E9-45B5-A2B2-B9CE8F9EAD7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F58EAF76-38E9-45B5-A2B2-B9CE8F9EAD7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F58EAF76-38E9-45B5-A2B2-B9CE8F9EAD7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D07A3F9-DDB3-4D46-8C06-1E550910D260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D07A3F9-DDB3-4D46-8C06-1E550910D260}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D07A3F9-DDB3-4D46-8C06-1E550910D260}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D07A3F9-DDB3-4D46-8C06-1E550910D260}.Release|Any CPU.Build.0 = Release|Any CPU
+		{864580C0-B166-4FDB-BA2B-286FD7944192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{864580C0-B166-4FDB-BA2B-286FD7944192}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{864580C0-B166-4FDB-BA2B-286FD7944192}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{864580C0-B166-4FDB-BA2B-286FD7944192}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
