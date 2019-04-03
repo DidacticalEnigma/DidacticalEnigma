@@ -109,8 +109,8 @@ namespace JDict
                     x => x.Key)
                 .Build();
 
-            entries = database.Get<JnedictEntry>(0);
-            kvps = database.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
+            entries = database.Get<JnedictEntry>(0, new LruCache<long, JnedictEntry>(64));
+            kvps = database.Get<KeyValuePair<string, IReadOnlyList<long>>>(1, new LruCache<long, KeyValuePair<string, IReadOnlyList<long>>>(64));
 
             return this;
         }

@@ -110,8 +110,8 @@ namespace JDict
                     },
                     x => x.Key)
                 .Build();
-            entries = db.Get<JMDictEntry>(0);
-            kvps = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
+            entries = db.Get<JMDictEntry>(0, new LruCache<long, JMDictEntry>(128));
+            kvps = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1, new LruCache<long, KeyValuePair<string, IReadOnlyList<long>>>(128));
 
             return this;
         }

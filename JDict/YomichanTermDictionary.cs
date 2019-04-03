@@ -116,8 +116,8 @@ namespace JDict
                 .AddIndirectArray(headerSerializer, db => EnumerableExt.OfSingle(lazyHeaderInfo.Value.version))
                 .Build();
 
-            entries = db.Get<YomichanDictionaryEntry>(0);
-            index = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1);
+            entries = db.Get<YomichanDictionaryEntry>(0, new LruCache<long, YomichanDictionaryEntry>(16));
+            index = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1, new LruCache<long, KeyValuePair<string, IReadOnlyList<long>>>(32));
             this.version = db.Get<YomichanDictionaryVersion>(2).LinearScan().First();
 
         }

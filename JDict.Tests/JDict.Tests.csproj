@@ -223,6 +223,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadicalSearcherTests.cs" />
     <Compile Include="Romaji.cs" />
+    <Compile Include="Sandbox.cs" />
     <Compile Include="SerializerExtTests.cs" />
     <Compile Include="StringExtTests.cs" />
     <Compile Include="Tagger.cs" />
