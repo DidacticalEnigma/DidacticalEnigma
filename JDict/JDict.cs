@@ -77,21 +77,19 @@ namespace JDict
                         obj.Senses
                     });
 
-            var lazyRoot = new Lazy<List<JMDictEntry>>(() => Deserialize(stream)
-                .Select(xmlEntry => new JMDictEntry(
-                    xmlEntry.Number,
-                    xmlEntry.ReadingElements.Select(r => r.Reb).ToList(),
-                    (xmlEntry.KanjiElements?.Select(k => k.Key) ?? Enumerable.Empty<string>()).ToList(),
-                    CreateSenses(xmlEntry)))
-                .ToList());
-
             db = TinyIndex.Database.CreateOrOpen(cache, Version)
-                .AddIndirectArray(entrySerializer, db => lazyRoot.Value, x => x.SequenceNumber)
+                .AddIndirectArray(entrySerializer, db => Deserialize(stream)
+                    .Select(xmlEntry => new JMDictEntry(
+                        xmlEntry.Number,
+                        xmlEntry.ReadingElements.Select(r => r.Reb).ToList(),
+                        (xmlEntry.KanjiElements?.Select(k => k.Key) ?? Enumerable.Empty<string>()).ToList(),
+                        CreateSenses(xmlEntry))),
+                        x => x.SequenceNumber)
                 .AddIndirectArray(TinyIndex.Serializer.ForKeyValuePair(TinyIndex.Serializer.ForStringAsUTF8(), TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForLong())), db =>
                     {
-                        IEnumerable<KeyValuePair<long, string>> It()
+                        IEnumerable<KeyValuePair<long, string>> It(IEnumerable<JMDictEntry> entries)
                         {
-                            foreach (var e in lazyRoot.Value)
+                            foreach (var e in entries)
                             {
                                 foreach (var r in e.Kanji)
                                 {
@@ -105,7 +103,8 @@ namespace JDict
                             }
                         }
 
-                        return It()
+                        return It(db.Get<JMDictEntry>(0)
+                            .LinearScan())
                             .GroupBy(kvp => kvp.Value, kvp => kvp.Key)
                             .Select(x => new KeyValuePair<string, IReadOnlyList<long>>(x.Key, x.ToList()));
                     },

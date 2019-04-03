@@ -66,29 +66,29 @@ namespace JDict
                     });
 
 
-            var lazyRoot = new Lazy<IEnumerable<JnedictEntry>>(() => ReadFromXml(stream)
-                .Select(xmlEntry =>
-                    new JnedictEntry(
-                        xmlEntry.SequenceNumber,
-                        (xmlEntry.KanjiElements ?? Array.Empty<KanjiElement>()).Select(k => k.Key),
-                        (xmlEntry.ReadingElements ?? Array.Empty<ReadingElement>()).Select(r => r.Reb),
-                        (xmlEntry.TranslationalEquivalents ?? Array.Empty<NeTranslationalEquivalent>()).Select(tr =>
-                            new JnedictTranslation(
-                                (tr.Types ?? Array.Empty<string>())
-                                .Select(t => JnedictTypeUtils.FromDescription(t))
-                                .Values(),
-                                (tr.Translation ?? Array.Empty<NeTranslation>())
-                                .Where(t => t.Lang == null || t.Lang == "eng")
-                                .Select(t => t.Text)))))
-                .ToList());
-
             database = Database.CreateOrOpen(cache, Version)
-                .AddIndirectArray(entrySerializer, db => lazyRoot.Value, x => x.SequenceNumber)
+                .AddIndirectArray(
+                    entrySerializer,
+                    db => ReadFromXml(stream)
+                        .Select(xmlEntry =>
+                            new JnedictEntry(
+                                xmlEntry.SequenceNumber,
+                                (xmlEntry.KanjiElements ?? Array.Empty<KanjiElement>()).Select(k => k.Key),
+                                (xmlEntry.ReadingElements ?? Array.Empty<ReadingElement>()).Select(r => r.Reb),
+                                (xmlEntry.TranslationalEquivalents ?? Array.Empty<NeTranslationalEquivalent>()).Select(tr =>
+                                    new JnedictTranslation(
+                                        (tr.Types ?? Array.Empty<string>())
+                                        .Select(t => JnedictTypeUtils.FromDescription(t))
+                                        .Values(),
+                                        (tr.Translation ?? Array.Empty<NeTranslation>())
+                                        .Where(t => t.Lang == null || t.Lang == "eng")
+                                        .Select(t => t.Text))))),
+                    x => x.SequenceNumber)
                 .AddIndirectArray(Serializer.ForKeyValuePair(Serializer.ForStringAsUTF8(), Serializer.ForReadOnlyList(Serializer.ForLong())), db =>
                     {
-                        IEnumerable<KeyValuePair<long, string>> It()
+                        IEnumerable<KeyValuePair<long, string>> It(IEnumerable<JnedictEntry> entries)
                         {
-                            foreach (var e in lazyRoot.Value)
+                            foreach (var e in entries)
                             {
                                 foreach (var r in e.Reading)
                                 {
@@ -102,7 +102,7 @@ namespace JDict
                             }
                         }
 
-                        return It()
+                        return It(db.Get<JnedictEntry>(0).LinearScan())
                             .GroupBy(kvp => kvp.Value, kvp => kvp.Key)
                             .Select(x => new KeyValuePair<string, IReadOnlyList<long>>(x.Key, x.ToList()));
                     },

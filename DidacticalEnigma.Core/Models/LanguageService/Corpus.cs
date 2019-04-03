@@ -175,7 +175,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             db = Database.CreateOrOpen(cachePath, Version)
                 .AddIndirectArray(sentenceSerializer, db => sentenceFactory())
                 .AddIndirectArray(Serializer.ForKeyValuePair(Serializer.ForStringAsUTF8(), Serializer.ForLong()),
-                    db => CreateIndex(sentenceFactory()), kvp => kvp.Key)
+                    db => CreateIndex(db.Get<Sentence>(0).LinearScan()), kvp => kvp.Key)
                 .Build();
 
             entries = db.Get<Sentence>(0);

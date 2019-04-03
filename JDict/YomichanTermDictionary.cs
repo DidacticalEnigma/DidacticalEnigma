@@ -108,11 +108,11 @@ namespace JDict
             var lazyHeaderInfo =
                 new Lazy<(YomichanDictionaryVersion version, IEnumerable<string> dataFilePaths)>(() =>
                     GetHeaderInfo(zip.Value));
-            var lazyRoot = new Lazy<List<YomichanDictionaryEntry>>(() => ParseEntriesFromZip(lazyHeaderInfo.Value.dataFilePaths, zip.Value).ToList());
+            var lazyRoot = new Lazy<IEnumerable<YomichanDictionaryEntry>>(() => ParseEntriesFromZip(lazyHeaderInfo.Value.dataFilePaths, zip.Value));
 
             db = Database.CreateOrOpen(cachePath, Version)
                 .AddIndirectArray(entrySerializer, db => lazyRoot.Value)
-                .AddIndirectArray(indexSerializer, db => Index(lazyRoot.Value), kvp => kvp.Key)
+                .AddIndirectArray(indexSerializer, db => Index(db.Get<YomichanDictionaryEntry>(0).LinearScan()), kvp => kvp.Key)
                 .AddIndirectArray(headerSerializer, db => EnumerableExt.OfSingle(lazyHeaderInfo.Value.version))
                 .Build();
 
@@ -123,7 +123,7 @@ namespace JDict
         }
 
         private static IEnumerable<KeyValuePair<string, IReadOnlyList<long>>> Index(
-            IReadOnlyList<YomichanDictionaryEntry> entries)
+            IEnumerable<YomichanDictionaryEntry> entries)
         {
             IEnumerable<KeyValuePair<long, string>> It()
             {
