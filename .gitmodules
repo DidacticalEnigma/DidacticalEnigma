@@ -6,4 +6,4 @@
 	url = https://github.com/milleniumbug/TinyIndex
 [submodule "FuzzySharp"]
 	path = FuzzySharp
-	url = https://github.com/milleniumbug/FuzzySharp
+	url = git@github.com:milleniumbug/FuzzySharp.git
