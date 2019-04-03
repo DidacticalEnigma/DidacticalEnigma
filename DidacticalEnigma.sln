@@ -32,10 +32,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyIndex.Tests", "TinyInde
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzySharp.Test", "FuzzySharp\FuzzySharp.Test\FuzzySharp.Test.csproj", "{F58EAF76-38E9-45B5-A2B2-B9CE8F9EAD7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibJpConjSharp.Tests", "LibJpConjSharp\LibJpConjSharp.Tests\LibJpConjSharp.Tests.csproj", "{3D07A3F9-DDB3-4D46-8C06-1E550910D260}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibJpConjSharp", "LibJpConjSharp\LibJpConjSharp\LibJpConjSharp.csproj", "{864580C0-B166-4FDB-BA2B-286FD7944192}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,14 +86,6 @@ Global
 		{F58EAF76-38E9-45B5-A2B2-B9CE8F9EAD7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F58EAF76-38E9-45B5-A2B2-B9CE8F9EAD7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F58EAF76-38E9-45B5-A2B2-B9CE8F9EAD7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D07A3F9-DDB3-4D46-8C06-1E550910D260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D07A3F9-DDB3-4D46-8C06-1E550910D260}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D07A3F9-DDB3-4D46-8C06-1E550910D260}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D07A3F9-DDB3-4D46-8C06-1E550910D260}.Release|Any CPU.Build.0 = Release|Any CPU
-		{864580C0-B166-4FDB-BA2B-286FD7944192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{864580C0-B166-4FDB-BA2B-286FD7944192}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{864580C0-B166-4FDB-BA2B-286FD7944192}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{864580C0-B166-4FDB-BA2B-286FD7944192}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
