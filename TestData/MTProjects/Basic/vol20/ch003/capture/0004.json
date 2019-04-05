@@ -1,0 +1,25 @@
+{
+	"captureId": 1,
+	"captures": [
+		{
+			"position": {
+				"x": 152.75,
+				"y": 171
+			},
+			"size": {
+				"x": 189,
+				"y": 111
+			},
+			"text": "終わり",
+			"translation": "The end",
+			"notes": [
+				[
+					"終わり",
+					"the end"
+				]
+			],
+			"character": "unknown",
+			"id": 0
+		}
+	]
+}

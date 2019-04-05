@@ -1,0 +1,25 @@
+{
+	"captureId": 2,
+	"captures": [
+		{
+			"position": {
+				"x": 135,
+				"y": 132
+			},
+			"size": {
+				"x": 397,
+				"y": 233
+			},
+			"text": "考えて",
+			"translation": "Think",
+			"notes": [
+				[
+					"",
+					""
+				]
+			],
+			"character": "chapter-title",
+			"id": 0
+		}
+	]
+}

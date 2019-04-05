@@ -1,0 +1,53 @@
+{
+	"captureId": 2,
+	"captures": [
+		{
+			"position": {
+				"x": 105,
+				"y": 85
+			},
+			"size": {
+				"x": 208,
+				"y": 42
+			},
+			"text": "無敵なパワー!!",
+			"translation": "UNLIMITED POWER!!",
+			"notes": [
+				[
+					"無敵",
+					"invincible/unrivaled/unrivalled"
+				],
+				[
+					"な",
+					"applies the na-adjective 無敵 on パワー"
+				],
+				[
+					"パワー",
+					"power"
+				]
+			],
+			"character": 31,
+			"id": 0
+		},
+		{
+			"position": {
+				"x": 36,
+				"y": 199
+			},
+			"size": {
+				"x": 573,
+				"y": 325
+			},
+			"text": "ゴゴゴゴ",
+			"translation": "menacing",
+			"notes": [
+				[
+					"",
+					"obvious reference to more famous works"
+				]
+			],
+			"character": "sfx",
+			"id": 1
+		}
+	]
+}

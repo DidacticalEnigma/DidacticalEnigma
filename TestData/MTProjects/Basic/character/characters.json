@@ -1,0 +1,13 @@
+{
+	"characterId": 33,
+	"characters": [
+		{
+			"id": 31,
+			"name": "Invincible Super Hero"
+		},
+		{
+			"id": 32,
+			"name": "Lame Guy"
+		}
+	]
+}
