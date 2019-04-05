@@ -7,7 +7,7 @@ namespace DidacticalEnigma.ViewModels
 {
     class TranslationVM : INotifyPropertyChanged
     {
-        private ITranslation model;
+        private Translation model;
 
         private string originalText = "";
         public string OriginalText

@@ -6,13 +6,16 @@ namespace DidacticalEnigma.Core.Models.Project
 {
     public class TranslationChangedEventArgs : EventArgs
     {
-        public ITranslation Changed { get; }
+        public ITranslationContext Context { get; }
+
+        public Translation Translation { get; }
 
         public TranslationChangedReason Reason { get; }
 
-        public TranslationChangedEventArgs(ITranslation changed, TranslationChangedReason reason)
+        public TranslationChangedEventArgs(ITranslationContext context, Translation translation, TranslationChangedReason reason)
         {
-            Changed = changed;
+            Context = context;
+            Translation = translation;
             Reason = reason;
         }
     }

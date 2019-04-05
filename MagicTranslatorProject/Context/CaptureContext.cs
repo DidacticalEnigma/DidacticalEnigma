@@ -15,9 +15,9 @@ namespace MagicTranslatorProject
             this.Translation = translation;
         }
 
-        public ITranslation Translation { get; private set; }
+        public DidacticalEnigma.Core.Models.Project.Translation Translation { get; private set; }
 
-        public ModificationResult Modify(ITranslation translation)
+        public ModificationResult Modify(DidacticalEnigma.Core.Models.Project.Translation translation)
         {
             var r = saveAction(((Translation)translation).Capture);
             if(r.IsSuccessful)

@@ -363,5 +363,46 @@ namespace Utility.Utils
         {
             return GroupConsecutive(input, keySelector, Comparer<TKey>.Default);
         }
+
+        public static int LexicographicalCompare<T>(
+            this IEnumerable<T> left,
+            IEnumerable<T> right,
+            IComparer<T> comparer = null)
+        {
+            comparer = comparer ?? Comparer<T>.Default;
+            using (var l = left.GetEnumerator())
+            using (var r = right.GetEnumerator())
+            {
+                bool leftHasMoreElements = true;
+                bool rightHasMoreElements = true;
+                while (true)
+                {
+                    leftHasMoreElements = l.MoveNext();
+                    rightHasMoreElements = r.MoveNext();
+                    if (!leftHasMoreElements || !rightHasMoreElements)
+                    {
+                        break;
+                    }
+
+                    var result = comparer.Compare(l.Current, r.Current);
+                    if (result != 0)
+                    {
+                        return result;
+                    }
+                }
+
+                if (leftHasMoreElements)
+                {
+                    return 1;
+                }
+
+                if (rightHasMoreElements)
+                {
+                    return -1;
+                }
+
+                return 0;
+            }
+        }
     }
 }

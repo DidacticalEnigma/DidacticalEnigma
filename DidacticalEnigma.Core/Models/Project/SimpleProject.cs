@@ -36,9 +36,9 @@ namespace DidacticalEnigma.Core.Models.Project
         {
             if (fullRefresh)
             {
-                foreach (var translation in ((ContextList)Root).Children.Select(c => c.Translation))
+                foreach (var context in ((ContextList)Root).Children)
                 {
-                    OnTranslationChanged(new TranslationChangedEventArgs(translation, TranslationChangedReason.Unknown));
+                    OnTranslationChanged(new TranslationChangedEventArgs(context, context.Translation, TranslationChangedReason.Unknown));
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace DidacticalEnigma.Core.Models.Project
                 var tl = new Translation(Guid.NewGuid());
                 var c = new Context(tl, project);
                 children.Add(c);
-                project.OnTranslationChanged(new TranslationChangedEventArgs(tl, TranslationChangedReason.New));
+                project.OnTranslationChanged(new TranslationChangedEventArgs(c, tl, TranslationChangedReason.New));
                 return c;
             }
 
@@ -140,7 +140,7 @@ namespace DidacticalEnigma.Core.Models.Project
                     {
                         var (element, index) = c;
                         children.RemoveAt(index);
-                        project.OnTranslationChanged(new TranslationChangedEventArgs(element.Translation, TranslationChangedReason.Removed));
+                        project.OnTranslationChanged(new TranslationChangedEventArgs(element, element.Translation, TranslationChangedReason.Removed));
                         return true;
                     }, () => false);
             }
@@ -186,15 +186,15 @@ namespace DidacticalEnigma.Core.Models.Project
 
             public IEnumerable<ITranslationContext> Children => Enumerable.Empty<ITranslationContext>();
 
-            public ITranslation Translation { get; private set; }
+            public Project.Translation Translation { get; private set; }
 
-            public ModificationResult Modify(ITranslation translation)
+            public ModificationResult Modify(Project.Translation translation)
             {
                 if (translation is Translation t)
                 {
                     this.Translation = t;
                     project.Save();
-                    project.OnTranslationChanged(new TranslationChangedEventArgs(t, TranslationChangedReason.InPlaceModification));
+                    project.OnTranslationChanged(new TranslationChangedEventArgs(this, t, TranslationChangedReason.InPlaceModification));
                     return ModificationResult.WithSuccess(Translation);
                 }
                 else
@@ -203,23 +203,23 @@ namespace DidacticalEnigma.Core.Models.Project
                 }
             }
 
-            public Context(ITranslation translation, SimpleProject project)
+            public Context(Project.Translation translation, SimpleProject project)
             {
                 this.project = project;
                 this.Translation = translation;
             }
         }
 
-        private class Translation : ITranslation
+        public class Translation : Project.Translation
         {
-            public Option<Guid> Guid { get; }
-            public string OriginalText { get; }
-            public string TranslatedText { get; }
-            public IEnumerable<GlossNote> Glosses { get; }
-            public IEnumerable<TranslatorNote> Notes { get; }
-            public IEnumerable<TranslatedText> AlternativeTranslations { get; }
+            public override Option<Guid> Guid { get; }
+            public override string OriginalText { get; }
+            public override string TranslatedText { get; }
+            public override IEnumerable<GlossNote> Glosses { get; }
+            public override IEnumerable<TranslatorNote> Notes { get; }
+            public override IEnumerable<TranslatedText> AlternativeTranslations { get; }
 
-            public ITranslation With(
+            public override Project.Translation With(
                 string originalText = null,
                 string translatedText = null,
                 IEnumerable<GlossNote> glosses = null,

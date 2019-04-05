@@ -5,16 +5,16 @@ using Optional;
 
 namespace DidacticalEnigma.Core.Models.Project
 {
-    public interface ITranslation
+    public abstract class Translation
     {
-        Option<Guid> Guid { get; }
-        string OriginalText { get; }
-        string TranslatedText { get; }
-        IEnumerable<GlossNote> Glosses { get; }
-        IEnumerable<TranslatorNote> Notes { get; }
-        IEnumerable<TranslatedText> AlternativeTranslations { get; }
+        public abstract Option<Guid> Guid { get; }
+        public abstract string OriginalText { get; }
+        public abstract string TranslatedText { get; }
+        public abstract IEnumerable<GlossNote> Glosses { get; }
+        public abstract IEnumerable<TranslatorNote> Notes { get; }
+        public abstract IEnumerable<TranslatedText> AlternativeTranslations { get; }
 
-        ITranslation With(
+        public abstract Translation With(
             string originalText = null,
             string translatedText = null,
             IEnumerable<GlossNote> glosses = null,

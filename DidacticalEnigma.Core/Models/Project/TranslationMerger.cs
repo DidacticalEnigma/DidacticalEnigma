@@ -50,13 +50,13 @@ namespace DidacticalEnigma.Core.Models.Project
 
         public IList<TranslatedText> AlternativeTranslations => alternativeTranslations;
 
-        private Option<ITranslation> modifiedTranslation;
+        private Option<Translation> modifiedTranslation;
         
         private readonly ObservableBatchCollection<TranslatorNote> notes = new ObservableBatchCollection<TranslatorNote>();
         private readonly ObservableBatchCollection<GlossNote> glosses = new ObservableBatchCollection<GlossNote>();
         private readonly ObservableBatchCollection<TranslatedText> alternativeTranslations = new ObservableBatchCollection<TranslatedText>();
 
-        public Option<ITranslation> ModifiedTranslation
+        public Option<Translation> ModifiedTranslation
         {
             get => modifiedTranslation;
             set
@@ -92,7 +92,7 @@ namespace DidacticalEnigma.Core.Models.Project
 
         }
 
-        public Option<ITranslation> Create()
+        public Option<Translation> Create()
         {
             return ModifiedTranslation.Map(translation =>
                 translation.With(originalText, translatedText, Glosses, Notes, AlternativeTranslations));

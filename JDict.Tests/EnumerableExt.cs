@@ -9,6 +9,17 @@ namespace JDict.Tests
     class EnumerableExt
     {
         [Test]
+        public void Lexicographical()
+        {
+            Assert.True("".LexicographicalCompare("") == 0);
+            Assert.True("".LexicographicalCompare("a") < 0);
+            Assert.True("a".LexicographicalCompare("") > 0);
+            Assert.True("hello".LexicographicalCompare("world") < 0);
+            Assert.True("hello".LexicographicalCompare("hellow") < 0);
+            Assert.True("hellow".LexicographicalCompare("hellox") < 0);
+        }
+
+        [Test]
         public void Intersperse()
         {
             var input = new[]

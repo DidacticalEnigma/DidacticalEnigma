@@ -42,7 +42,22 @@ namespace MagicTranslatorProject
 
         public void Refresh(bool fullRefresh = false)
         {
-            
+            if (fullRefresh)
+            {
+                foreach (var volume in Root.Children)
+                {
+                    foreach (var chapter in volume.Children)
+                    {
+                        foreach (var page in chapter.Children)
+                        {
+                            foreach (var capture in page.Children)
+                            {
+                                OnTranslationChanged(new TranslationChangedEventArgs(capture, capture.Translation, TranslationChangedReason.Unknown));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public event EventHandler<TranslationChangedEventArgs> TranslationChanged;
@@ -71,6 +86,11 @@ namespace MagicTranslatorProject
                 throw new ArgumentException(nameof(path));
 
             Root = new MangaContext(path);
+        }
+
+        protected virtual void OnTranslationChanged(TranslationChangedEventArgs e)
+        {
+            TranslationChanged?.Invoke(this, e);
         }
     }
 }

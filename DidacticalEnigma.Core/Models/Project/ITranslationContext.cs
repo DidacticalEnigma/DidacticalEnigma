@@ -38,9 +38,9 @@ namespace DidacticalEnigma.Core.Models.Project
 
     public interface IEditableTranslation : ITranslationContext
     {
-        ITranslation Translation { get; }
+        Translation Translation { get; }
 
-        ModificationResult Modify(ITranslation translation);
+        ModificationResult Modify(Translation translation);
     }
 
     public interface IEditableTranslation<out TContext> : ITranslationContext<TContext>, IEditableTranslation
