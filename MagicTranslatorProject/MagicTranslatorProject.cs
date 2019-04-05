@@ -2,7 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.Project;
+using Optional;
 
 namespace MagicTranslatorProject
 {
@@ -38,30 +40,37 @@ namespace MagicTranslatorProject
 
         public MangaContext Root { get; }
 
-        public void Refresh()
+        public void Refresh(bool fullRefresh = false)
         {
             
         }
 
         public event EventHandler<TranslationChangedEventArgs> TranslationChanged;
 
-        private static readonly Regex volumeNumberMatcher = new Regex("^vol([0-9]{2})$");
+        public RichFormatting Render(ITranslationContext context, RenderingVerbosity verbosity)
+        {
+            switch (context)
+            {
+                case MangaContext m:
+                    break;
+                case VolumeContext v:
+                    break;
+                case ChapterContext c:
+                    break;
+                case PageContext p:
+                    break;
+                case CaptureContext cap:
+                    break;
+            }
+            return new RichFormatting();
+        }
 
         public MagicTranslatorProject(string path)
         {
             if(!Registration.IsValid(path))
                 throw new ArgumentException(nameof(path));
 
-            var dirs = new DirectoryInfo(path)
-                .EnumerateDirectories();
-
-            var chapterNumbers = dirs
-                .OrderBy(dir => dir.Name)
-                .Select(dir => volumeNumberMatcher.Match(dir.Name))
-                .Where(match => match.Success)
-                .Select(match => int.Parse(match.Groups[1].Value));
-
-            Root = new MangaContext(path, chapterNumbers);
+            Root = new MangaContext(path);
         }
     }
 }

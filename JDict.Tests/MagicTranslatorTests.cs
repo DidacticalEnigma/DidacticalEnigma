@@ -22,7 +22,7 @@ namespace JDict.Tests
                 var volume = manga.Children.First();
                 var chapter = volume.Children.First();
                 var page = chapter.Children.First();
-                var note = page.Translations.Single();
+                var note = page.Children.Single().Translation;
                 Assert.AreEqual(note.OriginalText, "考えて");
                 Assert.AreEqual(note.TranslatedText, "Think");
             }

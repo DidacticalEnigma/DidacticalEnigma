@@ -10,17 +10,16 @@ namespace MagicTranslatorProject
 
         public override void WriteJson(JsonWriter writer, CharacterType value, JsonSerializer serializer)
         {
-            if (value is BasicCharacter basic)
+            switch (value)
             {
-                serializer.Serialize(writer, basic.Kind);
-            }
-            else if (value is NamedCharacter named)
-            {
-                serializer.Serialize(writer, nameMapping.Inverse[named.Name]);
-            }
-            else
-            {
-                throw new JsonSerializationException();
+                case BasicCharacter basic:
+                    serializer.Serialize(writer, basic.Kind);
+                    break;
+                case NamedCharacter named:
+                    serializer.Serialize(writer, nameMapping.Inverse[named.Name]);
+                    break;
+                default:
+                    throw new JsonSerializationException();
             }
         }
 
@@ -28,17 +27,14 @@ namespace MagicTranslatorProject
             JsonSerializer serializer)
         {
             var o = serializer.Deserialize(reader);
-            if (o is long i)
+            switch (o)
             {
-                return new NamedCharacter(nameMapping[i]);
-            }
-            else if(o is string s)
-            {
-                return new BasicCharacter(s);
-            }
-            else
-            {
-                throw new JsonSerializationException();
+                case long i:
+                    return new NamedCharacter(nameMapping[i]);
+                case string s:
+                    return new BasicCharacter(s);
+                default:
+                    throw new JsonSerializationException();
             }
         }
 

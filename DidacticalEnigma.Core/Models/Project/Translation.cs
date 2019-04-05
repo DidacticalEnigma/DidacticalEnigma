@@ -19,7 +19,6 @@ namespace DidacticalEnigma.Core.Models.Project
             string translatedText = null,
             IEnumerable<GlossNote> glosses = null,
             IEnumerable<TranslatorNote> notes = null,
-            IEnumerable<TranslatedText> alternativeTranslations = null,
-            Option<Option<Guid>> guid = default);
+            IEnumerable<TranslatedText> alternativeTranslations = null);
     }
 }

@@ -1,28 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DidacticalEnigma.Core.Models.Formatting;
 
 namespace DidacticalEnigma.Core.Models.Project
 {
     public interface ITranslationContext
     {
-        bool IsAddSupported(ITranslation translation);
-
         IEnumerable<ITranslationContext> Children { get; }
-
-        ModificationResult Modify(ITranslation translation);
-
-        IEnumerable<ITranslation> Translations { get; }
-
-        void Add(ITranslation translation);
-
-        RichFormatting Render();
-
-        RichFormatting Render(ITranslation translation);
     }
 
     public interface ITranslationContext<out TContext> : ITranslationContext
         where TContext : ITranslationContext
     {
         new IEnumerable<TContext> Children { get; }
+    }
+
+    public interface IModifiableTranslationContext : ITranslationContext
+    {
+        new IReadOnlyList<ITranslationContext> Children { get; }
+
+        ITranslationContext AppendEmpty();
+
+        bool Remove(Guid guid);
+
+        void Reorder(Guid translationId, Guid moveAt);
+    }
+
+    public interface IModifiableTranslationContext<out TContext> :
+        ITranslationContext<TContext>,
+        IModifiableTranslationContext
+        where TContext : ITranslationContext
+    {
+        new IReadOnlyList<TContext> Children { get; }
+
+        new TContext AppendEmpty();
+    }
+
+    public interface IEditableTranslation : ITranslationContext
+    {
+        ITranslation Translation { get; }
+
+        ModificationResult Modify(ITranslation translation);
+    }
+
+    public interface IEditableTranslation<out TContext> : ITranslationContext<TContext>, IEditableTranslation
+        where TContext : ITranslationContext
+    {
+        
     }
 }
