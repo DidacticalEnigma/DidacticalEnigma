@@ -204,6 +204,7 @@
   <ItemGroup>
     <Compile Include="AutoGlosserTests.cs" />
     <Compile Include="DependentOnKenkyuushaAttribute.cs" />
+    <Compile Include="DualDictionaryTests.cs" />
     <Compile Include="EnumerableExt.cs" />
     <Compile Include="IdiomDetectorTests.cs" />
     <Compile Include="Index.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="KanjiLookupVMTests.cs" />
     <Compile Include="KanjiRadicalLookupTests.cs" />
     <Compile Include="Kradfile.cs" />
+    <Compile Include="MagicTranslatorTests.cs" />
     <Compile Include="MeCab.cs" />
     <Compile Include="PerformanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -248,6 +250,10 @@
     <ProjectReference Include="..\JDict\JDict.csproj">
       <Project>{82e18376-40e8-4f9d-bc46-e166354bccb3}</Project>
       <Name>JDict</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MagicTranslatorProject\MagicTranslatorProject.csproj">
+      <Project>{3d793ba8-3c55-48a2-9dbf-2e0755f0eb17}</Project>
+      <Name>MagicTranslatorProject</Name>
     </ProjectReference>
     <ProjectReference Include="..\TinyIndex\TinyIndex\TinyIndex.csproj">
       <Project>{41b81c6b-c466-4c3f-8460-3ef2288a33d8}</Project>

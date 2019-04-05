@@ -18,4 +18,12 @@ namespace DidacticalEnigma.Core.Models.Formatting
             Paragraphs = new List<Paragraph>(paragraphs);
         }
     }
+
+    public static class RichFormattingExt
+    {
+        public static RichFormatting ConcatenateDocuments(IEnumerable<RichFormatting> documents)
+        {
+            return new RichFormatting(documents.SelectMany(document => document.Paragraphs));
+        }
+    }
 }

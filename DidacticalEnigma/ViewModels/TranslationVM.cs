@@ -7,30 +7,32 @@ namespace DidacticalEnigma.ViewModels
 {
     class TranslationVM : INotifyPropertyChanged
     {
-        private Translation model;
+        private ITranslation model;
 
+        private string originalText = "";
         public string OriginalText
         {
-            get => model.OriginalText;
+            get => originalText;
             set
             {
-                if (model.OriginalText == value)
+                if (originalText == value)
                     return;
 
-                model.OriginalText = value;
+                originalText = value;
                 OnPropertyChanged();
             }
         }
 
+        private string translatedText;
         public string TranslatedText
         {
-            get => model.TranslatedText;
+            get => translatedText;
             set
             {
-                if(model.TranslatedText == value)
+                if(translatedText == value)
                     return;
 
-                model.TranslatedText = value;
+                translatedText = value;
                 OnPropertyChanged();
             }
         }

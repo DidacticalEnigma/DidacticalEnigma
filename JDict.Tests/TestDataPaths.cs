@@ -12,6 +12,10 @@ namespace JDict.Tests
             ? Path.Combine(Environment.GetEnvironmentVariable("APPVEYOR_BUILD_FOLDER"), "Data")
             : @"D:\DidacticalEnigma-Data";
 
+        public static readonly string TestDir = Environment.GetEnvironmentVariable("APPVEYOR_BUILD_FOLDER") != null
+            ? Path.Combine(Environment.GetEnvironmentVariable("APPVEYOR_BUILD_FOLDER"), "TestData")
+            : @"D:\DidacticalEnigma-TestData";
+
         // POINT THIS TO A yomichan-import CREATED ZIP FILE FROM "研究社　新和英大辞典　第５版" EPWING DICTIONARY
         // Can't attach this in a repo for obvious copyright reasons
         public static readonly string Kenkyusha5 = Path.Combine(BaseDir, "epwing", "kenkyusha5.zip");
@@ -19,6 +23,8 @@ namespace JDict.Tests
         // sanity check for above path, SHA256 hash of the file
         public static readonly string Kenkyusha5Hash =
             "C12FE5AE242F299DB11DBC53FC05FDF44BEFC81303E92B19BCC5B4D758EF234C";
+
+        public static readonly string MagicTranslatorTestDir = Path.Combine(TestDir, "MTProjects");
 
         public static readonly string Ipadic = Path.Combine(BaseDir, "mecab", "ipadic");
 
