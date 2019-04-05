@@ -58,39 +58,6 @@ namespace DidacticalEnigma.Core.Models.Project
             }
         }
 
-        private RichFormatting Render(ContextList l, RenderingVerbosity verbosity)
-        {
-            if (verbosity.IsAtLeast(RenderingVerbosity.Full))
-                return RichFormattingExt.ConcatenateDocuments(l.Children.Select(c =>
-                    Render(c, RenderingVerbosity.Full)));
-            if (verbosity.IsAtLeast(RenderingVerbosity.Normal))
-                return RichFormattingExt.ConcatenateDocuments(l.Children.Select(c =>
-                    Render(c, RenderingVerbosity.Minimal)));
-            return new RichFormatting(
-                EnumerableExt.OfSingle(
-                    new TextParagraph(
-                        EnumerableExt.OfSingle(new Text(path)))));
-        }
-
-        private RichFormatting Render(Context c, RenderingVerbosity verbosity)
-        {
-            var r = new RichFormatting();
-            var t = c.Translation;
-            IEnumerable<Text> text = new Text[]
-            {
-                new Text($"{t.OriginalText}\n"),
-                new Text($"{t.TranslatedText}\n")
-            };
-            if (verbosity.IsAtLeast(RenderingVerbosity.Normal))
-                text = text.Concat(t.AlternativeTranslations.Select(tl => new Text($"TL by {tl.Author}: {tl.Text}\n")));
-            if (verbosity.IsAtLeast(RenderingVerbosity.Full))
-                text = text.Concat(t.Glosses.Select(g => new Text($"- {g.Foreign}: {g.Text}\n")));
-            if (verbosity.IsAtLeast(RenderingVerbosity.Full))
-                text = text.Concat(t.Notes.Select(n => new Text($"- {n.Text}\n")));
-            r.Paragraphs.Add(new TextParagraph(text));
-            return r;
-        }
-
         public SimpleProject(string path)
         {
             this.path = path;
@@ -104,13 +71,14 @@ namespace DidacticalEnigma.Core.Models.Project
             {
                 tls = Enumerable.Empty<Context>();
             }
-            Root = new ContextList(tls, this);
+            Root = new ContextList(path, tls, this);
         }
 
         private class ContextList : IModifiableTranslationContext<Context>
         {
             private readonly SimpleProject project;
             private readonly ObservableBatchCollection<Context> children;
+            private readonly string rootPath;
 
             IEnumerable<ITranslationContext> ITranslationContext.Children => children;
 
@@ -173,10 +141,25 @@ namespace DidacticalEnigma.Core.Models.Project
 
             IReadOnlyList<ITranslationContext> IModifiableTranslationContext.Children => children;
 
-            public ContextList(IEnumerable<Context> children, SimpleProject project)
+            public ContextList(string rootPath, IEnumerable<Context> children, SimpleProject project)
             {
+                this.rootPath = rootPath;
                 this.project = project;
                 this.children = new ObservableBatchCollection<Context>(children);
+            }
+
+            public RichFormatting Render(RenderingVerbosity verbosity)
+            {
+                if (verbosity.IsAtLeast(RenderingVerbosity.Full))
+                    return RichFormattingExt.ConcatenateDocuments(Children.Select(c => 
+                        c.Render(RenderingVerbosity.Full)));
+                if (verbosity.IsAtLeast(RenderingVerbosity.Normal))
+                    return RichFormattingExt.ConcatenateDocuments(Children.Select(c =>
+                        c.Render(RenderingVerbosity.Minimal)));
+                return new RichFormatting(
+                    EnumerableExt.OfSingle(
+                        new TextParagraph(
+                            EnumerableExt.OfSingle(new Text(rootPath)))));
             }
         }
 
@@ -201,6 +184,25 @@ namespace DidacticalEnigma.Core.Models.Project
                 {
                     return ModificationResult.WithUnsupported("attempted to save translation with extra data");
                 }
+            }
+
+            public RichFormatting Render(RenderingVerbosity verbosity)
+            {
+                var r = new RichFormatting();
+                var t = Translation;
+                IEnumerable<Text> text = new Text[]
+                {
+                    new Text($"{t.OriginalText}\n"),
+                    new Text($"{t.TranslatedText}\n")
+                };
+                if (verbosity.IsAtLeast(RenderingVerbosity.Normal))
+                    text = text.Concat(t.AlternativeTranslations.Select(tl => new Text($"TL by {tl.Author}: {tl.Text}\n")));
+                if (verbosity.IsAtLeast(RenderingVerbosity.Full))
+                    text = text.Concat(t.Glosses.Select(g => new Text($"- {g.Foreign}: {g.Text}\n")));
+                if (verbosity.IsAtLeast(RenderingVerbosity.Full))
+                    text = text.Concat(t.Notes.Select(n => new Text($"- {n.Text}\n")));
+                r.Paragraphs.Add(new TextParagraph(text));
+                return r;
             }
 
             public Context(Project.Translation translation, SimpleProject project)

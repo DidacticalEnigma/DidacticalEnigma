@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.Project;
 
 namespace MagicTranslatorProject
@@ -26,5 +27,10 @@ namespace MagicTranslatorProject
         }
 
         public IEnumerable<ITranslationContext> Children => Enumerable.Empty<ITranslationContext>();
+
+        public RichFormatting Render(RenderingVerbosity verbosity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

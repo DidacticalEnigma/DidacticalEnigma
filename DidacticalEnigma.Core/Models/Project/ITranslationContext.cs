@@ -7,6 +7,8 @@ namespace DidacticalEnigma.Core.Models.Project
     public interface ITranslationContext
     {
         IEnumerable<ITranslationContext> Children { get; }
+
+        RichFormatting Render(RenderingVerbosity verbosity);
     }
 
     public interface ITranslationContext<out TContext> : ITranslationContext

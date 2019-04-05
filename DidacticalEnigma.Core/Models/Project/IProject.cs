@@ -10,8 +10,6 @@ namespace DidacticalEnigma.Core.Models.Project
         void Refresh(bool fullRefresh = false);
 
         event EventHandler<TranslationChangedEventArgs> TranslationChanged;
-
-        RichFormatting Render(ITranslationContext context, RenderingVerbosity verbosity);
     }
 
     public enum RenderingVerbosity

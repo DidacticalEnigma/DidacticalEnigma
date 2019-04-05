@@ -33,6 +33,11 @@ namespace DidacticalEnigma.Core.Models.Project
         private class Context : ITranslationContext
         {
             public IEnumerable<ITranslationContext> Children => Enumerable.Empty<ITranslationContext>();
+
+            public RichFormatting Render(RenderingVerbosity verbosity)
+            {
+                return new RichFormatting();
+            }
         }
     }
 }

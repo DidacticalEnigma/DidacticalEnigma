@@ -14,6 +14,11 @@ namespace MagicTranslatorProject
     {
         IEnumerable<ITranslationContext> ITranslationContext.Children => captures;
 
+        public RichFormatting Render(RenderingVerbosity verbosity)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public RichFormatting Render()
         {
             return new RichFormatting(new Paragraph[]

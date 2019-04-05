@@ -30,6 +30,11 @@ namespace MagicTranslatorProject
             }
         }
 
+        public RichFormatting Render(RenderingVerbosity verbosity)
+        {
+            throw new NotImplementedException();
+        }
+
         IEnumerable<ITranslationContext> ITranslationContext.Children => Children;
 
         private WeakReference<IReadOnlyCollection<VolumeContext>> volumes = new WeakReference<IReadOnlyCollection<VolumeContext>>(null);

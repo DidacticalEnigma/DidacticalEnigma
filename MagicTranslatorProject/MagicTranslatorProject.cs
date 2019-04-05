@@ -62,24 +62,6 @@ namespace MagicTranslatorProject
 
         public event EventHandler<TranslationChangedEventArgs> TranslationChanged;
 
-        public RichFormatting Render(ITranslationContext context, RenderingVerbosity verbosity)
-        {
-            switch (context)
-            {
-                case MangaContext m:
-                    break;
-                case VolumeContext v:
-                    break;
-                case ChapterContext c:
-                    break;
-                case PageContext p:
-                    break;
-                case CaptureContext cap:
-                    break;
-            }
-            return new RichFormatting();
-        }
-
         public MagicTranslatorProject(string path)
         {
             if(!Registration.IsValid(path))
