@@ -40,6 +40,7 @@ namespace MagicTranslatorProject
         }
 
         IEnumerable<ITranslationContext> ITranslationContext.Children => Children;
+
         public RichFormatting Render(RenderingVerbosity verbosity)
         {
             throw new NotImplementedException();
