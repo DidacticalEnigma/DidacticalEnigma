@@ -227,6 +227,7 @@
     <Compile Include="Romaji.cs" />
     <Compile Include="Sandbox.cs" />
     <Compile Include="SerializerExtTests.cs" />
+    <Compile Include="SimpleProjectTests.cs" />
     <Compile Include="StringExtTests.cs" />
     <Compile Include="Tagger.cs" />
     <Compile Include="TestDataPaths.cs" />

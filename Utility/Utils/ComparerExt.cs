@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Utility
+namespace Utility.Utils
 {
     public static class ComparerExt
     {
@@ -18,9 +17,9 @@ namespace Utility
                 return comparer.GetHashCode(selector(obj));
             }
 
-            private IEqualityComparer<TKey> comparer;
+            private readonly IEqualityComparer<TKey> comparer;
 
-            private Func<T, TKey> selector;
+            private readonly Func<T, TKey> selector;
 
             public ProjectingEqualityComparer(Func<T, TKey> selector, IEqualityComparer<TKey> comparer)
             {

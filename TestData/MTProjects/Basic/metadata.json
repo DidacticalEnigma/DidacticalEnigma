@@ -1,0 +1,12 @@
+{
+	"name": "Test project",
+	"structure": {
+		"volume": "vol##",
+		"chapter": "ch###",
+		"page": "####",
+		"raw": "{volume}/{chapter}/raw/{page}.png",
+		"translated": "{volume}/{chapter}/translated/{page}.png",
+		"capture": "{volume}/{chapter}/capture/{page}",
+		"save": "{volume}/{chapter}/save/{page}"
+	}
+}

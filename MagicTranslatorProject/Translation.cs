@@ -35,16 +35,34 @@ namespace MagicTranslatorProject
             this.Capture = capture ?? throw new ArgumentNullException(nameof(capture));
         }
 
-        public override DidacticalEnigma.Core.Models.Project.Translation With(string originalText = null,
+        public override DidacticalEnigma.Core.Models.Project.Translation With(
+            string originalText = null,
             string translatedText = null,
             IEnumerable<GlossNote> glosses = null,
             IEnumerable<TranslatorNote> notes = null,
             IEnumerable<TranslatedText> alternativeTranslations = null)
         {
-            var other = new Translation(JsonConvert.DeserializeObject<CaptureJson>(ToJson()), Option.None<Guid>());
+            return With(
+                JsonConvert.DeserializeObject<CaptureJson>(ToJson()),
+                originalText,
+                translatedText,
+                glosses,
+                notes,
+                alternativeTranslations);
+        }
+
+        internal Translation With(
+            CaptureJson json,
+            string originalText = null,
+            string translatedText = null,
+            IEnumerable<GlossNote> glosses = null,
+            IEnumerable<TranslatorNote> notes = null,
+            IEnumerable<TranslatedText> alternativeTranslations = null)
+        {
+            var other = new Translation(json, this.Guid);
             other.Capture.Text = originalText ?? this.OriginalText;
             other.Capture.Translation = translatedText ?? this.TranslatedText;
-            other.Capture.Notes = (glosses ?? this.Glosses).Select(g => new[] {g.Foreign, g.Text}).ToList();
+            other.Capture.Notes = (glosses ?? this.Glosses).Select(g => new[] { g.Foreign, g.Text }).ToList();
             return other;
         }
 

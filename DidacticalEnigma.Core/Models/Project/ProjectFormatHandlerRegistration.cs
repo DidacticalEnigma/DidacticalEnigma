@@ -1,12 +1,11 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace DidacticalEnigma.Core.Models.Project
 {
     public abstract class ProjectFormatHandlerRegistration
     {
-        public abstract bool IsValid(string path);
-
-        public abstract IProject Open(string path);
+        public abstract bool TryOpen([NotNull] string path, out IProject project, out string failureReason);
 
         public string FormatName { get; }
 
@@ -14,7 +13,7 @@ namespace DidacticalEnigma.Core.Models.Project
 
         public bool IsDirectory { get; }
 
-        protected ProjectFormatHandlerRegistration(string formatName, string extensionFilter, bool isDirectory)
+        protected ProjectFormatHandlerRegistration([NotNull] string formatName, [NotNull] string extensionFilter, bool isDirectory)
         {
             FormatName = formatName ?? throw new ArgumentNullException(nameof(formatName));
             ExtensionFilter = extensionFilter ?? throw new ArgumentNullException(nameof(extensionFilter));

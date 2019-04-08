@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.Project;
+using MagicTranslatorProject.Json;
 using Newtonsoft.Json;
 using Utility.Utils;
 
@@ -35,14 +36,16 @@ namespace MagicTranslatorProject
             throw new NotImplementedException();
         }
 
+        public string ShortDescription => Name;
+
         IEnumerable<ITranslationContext> ITranslationContext.Children => Children;
 
         private WeakReference<IReadOnlyCollection<VolumeContext>> volumes = new WeakReference<IReadOnlyCollection<VolumeContext>>(null);
 
-        private static readonly Regex volumeNumberMatcher = new Regex("^vol([0-9]{2})$");
-
-        internal MangaContext(string rootPath)
+        internal MangaContext(MetadataJson metadata, string rootPath, ProjectDirectoryListingProvider listing)
         {
+            this.listing = listing;
+            this.metadata = metadata;
             RootPath = rootPath;
             IdNameMapping = new DualDictionary<long, string>(JsonConvert.DeserializeObject<CharactersJson>(
                 File.ReadAllText(Path.Combine(rootPath, "character", "characters.json")))
@@ -50,42 +53,34 @@ namespace MagicTranslatorProject
                 .ToDictionary(c => c.Id, c => c.Name));
         }
 
+        private readonly MetadataJson metadata;
+
         private IReadOnlyCollection<VolumeContext> Load()
         {
-            return new DirectoryInfo(RootPath)
-                .EnumerateDirectories()
-                .Select(dir => volumeNumberMatcher.Match(dir.Name))
-                .Where(match => match.Success)
-                .Select(match => int.Parse(match.Groups[1].Value))
-                .OrderBy(vol => vol)
+            return listing.EnumerateVolumes()
                 .Select(vol =>
                 {
-                    return new VolumeContext(this, vol);
+                    return new VolumeContext(this, vol, listing);
                 })
                 .ToList();
         }
 
         internal IReadOnlyDualDictionary<long, string> IdNameMapping { get; }
 
-        internal Guid Map(int volumeNumber, int chapterNumber, int pageNumber, long captureId)
+        internal Guid Map(PageId page, long captureId)
         {
             return guidMap.GetOrAdd(
-                (volumeNumber, chapterNumber, pageNumber, captureId),
+                (page, captureId),
                 x => Guid.NewGuid());
         }
 
-        private ConcurrentDictionary<(int volumeNumber, int chapterNumber, int pageNumber, long captureId), Guid> guidMap =
-            new ConcurrentDictionary<(int volumeNumber, int chapterNumber, int pageNumber, long captureId), Guid>();
+        private ConcurrentDictionary<(PageId page, long captureId), Guid> guidMap =
+            new ConcurrentDictionary<(PageId page, long captureId), Guid>();
+
+        private readonly ProjectDirectoryListingProvider listing;
 
         public string RootPath { get; }
 
-        public string Name
-        {
-            get
-            {
-                // TODO
-                return "manga";
-            }
-        }
+        public string Name => metadata.Name;
     }
 }

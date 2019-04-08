@@ -45,19 +45,6 @@ namespace DidacticalEnigma.Core.Models.Project
 
         public event EventHandler<TranslationChangedEventArgs> TranslationChanged;
 
-        public RichFormatting Render(ITranslationContext context, RenderingVerbosity verbosity)
-        {
-            switch (context)
-            {
-                case ContextList l:
-                    return Render(l, verbosity);
-                case Context c:
-                    return Render(c, verbosity);
-                default:
-                    throw new ArgumentException(nameof(context));
-            }
-        }
-
         public SimpleProject(string path)
         {
             this.path = path;
@@ -113,28 +100,25 @@ namespace DidacticalEnigma.Core.Models.Project
                     }, () => false);
             }
 
-            public void Reorder(Guid translationId, Guid moveAt)
+            public bool Reorder(Guid translationId, Guid moveAt)
             {
                 var sourceIndexOrNone = children
                     .Indexed()
                     .Where(c => c.element.Translation.Guid == translationId.Some())
                     .FirstOrNone()
                     .Map(m => m.index);
-                sourceIndexOrNone
-                    .MatchNone(() => throw new ArgumentException(nameof(translationId)));
                 var destinationIndexOrNone = children
                     .Indexed()
                     .Where(c => c.element.Translation.Guid == translationId.Some())
                     .FirstOrNone()
                     .Map(m => m.index);
-                destinationIndexOrNone
-                    .MatchNone(() => throw new ArgumentException(nameof(moveAt)));
-                sourceIndexOrNone
+                return sourceIndexOrNone
                     .FlatMap(s => destinationIndexOrNone.Map(d => (source: s, destination: d)))
-                    .MatchSome(c =>
+                    .Match(c =>
                     {
                         children.Move(c.source, c.destination);
-                    });
+                        return true;
+                    }, () => false);
             }
 
             public IEnumerable<Context> Children => children;
@@ -161,6 +145,8 @@ namespace DidacticalEnigma.Core.Models.Project
                         new TextParagraph(
                             EnumerableExt.OfSingle(new Text(rootPath)))));
             }
+
+            public string ShortDescription => rootPath;
         }
 
         private class Context : IEditableTranslation
@@ -205,6 +191,8 @@ namespace DidacticalEnigma.Core.Models.Project
                 return r;
             }
 
+            public string ShortDescription => "";
+
             public Context(Project.Translation translation, SimpleProject project)
             {
                 this.project = project;
@@ -228,7 +216,7 @@ namespace DidacticalEnigma.Core.Models.Project
                 IEnumerable<TranslatorNote> notes = null, IEnumerable<TranslatedText> alternativeTranslations = null)
             {
                 return new Translation(
-                    Option.None<Guid>(),
+                    this.Guid,
                     originalText ?? this.OriginalText,
                     translatedText ?? this.TranslatedText,
                     glosses ?? this.Glosses,

@@ -18,28 +18,28 @@ namespace JDict.Tests
         [Test]
         public void Basic()
         {
-            using (var project =
+            using (var tester = new ProjectApiInvariantsTester<MagicTranslatorProject.MagicTranslatorProject>(
                 new MagicTranslatorProject.MagicTranslatorProject(Path.Combine(
                     TestDataPaths.MagicTranslatorTestDir,
-                    "Basic")))
+                    "Basic"))))
             {
-                var manga = project.Root;
-                var volume = manga.Children.First();
-                var chapter = volume.Children.First();
-                var page = chapter.Children.First();
-                var note = page.Children.Single().Translation;
+                var manga = tester.WithProject(p => p.Root);
+                var volume = tester.WithProject(_ => manga.Children.First());
+                var chapter = tester.WithProject(_ => volume.Children.First());
+                var page = tester.WithProject(_ => chapter.Children.First());
+                var note = tester.WithProject(_ => page.Children.Single().Translation);
                 Assert.AreEqual(note.OriginalText, "考えて");
                 Assert.AreEqual(note.TranslatedText, "Think");
 
                 var actual = new List<Translation>();
-                project.TranslationChanged += (sender, args) => { actual.Add(args.Translation); };
+                tester.WithProject(p => p.TranslationChanged += (sender, args) => { actual.Add(args.Translation); });
 
-                project.Refresh(fullRefresh: true);
+                tester.WithProject(p => p.Refresh(fullRefresh: true));
                 var expected = new List<SimpleProject.Translation>
                 {
                     new SimpleProject.Translation(
                         Option.None<Guid>(),
-                        "考えて", 
+                        "考えて",
                         "Think",
                         new GlossNote[]{ new GlossNote("", "") },
                         Enumerable.Empty<TranslatorNote>(),
@@ -50,8 +50,8 @@ namespace JDict.Tests
                         "UNLIMITED POWER!!",
                         new GlossNote[]{
                             new GlossNote("無敵", "invincible/unrivaled/unrivalled"),
-                            new GlossNote("な","applies the na-adjective 無敵 on パワー"), 
-                            new GlossNote("パワー", "power"), 
+                            new GlossNote("な","applies the na-adjective 無敵 on パワー"),
+                            new GlossNote("パワー", "power"),
                         },
                         Enumerable.Empty<TranslatorNote>(),
                         Enumerable.Empty<TranslatedText>()),

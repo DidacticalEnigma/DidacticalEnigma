@@ -9,9 +9,17 @@ namespace MagicTranslatorProject
     public class CaptureContext : IEditableTranslation
     {
         private readonly Func<CaptureJson, ModificationResult> saveAction;
+        private readonly PageContext pageContext;
+        private readonly CaptureJson json;
 
-        internal CaptureContext(CaptureJson json, Func<CaptureJson, ModificationResult> saveAction, Translation translation)
+        internal CaptureContext(
+            PageContext pageContext,
+            CaptureJson json,
+            Func<CaptureJson, ModificationResult> saveAction,
+            Translation translation)
         {
+            this.pageContext = pageContext;
+            this.json = json;
             this.saveAction = saveAction;
             this.Translation = translation;
         }
@@ -20,7 +28,8 @@ namespace MagicTranslatorProject
 
         public ModificationResult Modify(DidacticalEnigma.Core.Models.Project.Translation translation)
         {
-            var r = saveAction(((Translation)translation).Capture);
+            var input = ((Translation) translation);
+            var r = saveAction(input.With(json).Capture);
             if(r.IsSuccessful)
                 Translation = translation;
             return r;
@@ -32,5 +41,7 @@ namespace MagicTranslatorProject
         {
             throw new NotImplementedException();
         }
+
+        public string ShortDescription => $"{pageContext.ShortDescription}. {json.Character}";
     }
 }

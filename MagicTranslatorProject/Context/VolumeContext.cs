@@ -11,32 +11,29 @@ namespace MagicTranslatorProject
 {
     public class VolumeContext : ITranslationContext<ChapterContext>
     {
-        private static readonly Regex chapterNumberMatcher = new Regex("^ch([0-9]{3})$");
         private MangaContext root;
-        private int volumeNumber;
 
-        internal VolumeContext(MangaContext root, int volumeNumber)
+        internal VolumeContext(MangaContext root, VolumeId volume, ProjectDirectoryListingProvider listing)
         {
-            this.volumeNumber = volumeNumber;
+            this.volume = volume;
             this.root = root;
+            this.listing = listing;
         }
 
         private IReadOnlyCollection<ChapterContext> Load()
         {
-            return new DirectoryInfo(Path.Combine(root.RootPath, $"vol{volumeNumber:D2}"))
-                .EnumerateDirectories()
-                .Select(dir => chapterNumberMatcher.Match(dir.Name))
-                .Where(match => match.Success)
-                .Select(match => int.Parse(match.Groups[1].Value))
-                .OrderBy(ch => ch)
+            return listing.EnumerateChapters(volume)
                 .Select(ch =>
                 {
-                    return new ChapterContext(root, volumeNumber, ch);
+                    return new ChapterContext(root, ch, listing);
                 })
                 .ToList();
         }
 
         private readonly WeakReference<IReadOnlyCollection<ChapterContext>> children = new WeakReference<IReadOnlyCollection<ChapterContext>>(null);
+
+        private VolumeId volume;
+        private ProjectDirectoryListingProvider listing;
 
         public IEnumerable<ChapterContext> Children
         {
@@ -54,6 +51,13 @@ namespace MagicTranslatorProject
                 }
             }
         }
+
+        public RichFormatting Render(RenderingVerbosity verbosity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ShortDescription => $"{root.Name}: Volume {volume.VolumeNumber}";
 
         IEnumerable<ITranslationContext> ITranslationContext.Children => Children;
     }

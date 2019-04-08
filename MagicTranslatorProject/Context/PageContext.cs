@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.Project;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Optional;
 using Utility;
@@ -19,31 +21,18 @@ namespace MagicTranslatorProject
             throw new System.NotImplementedException();
         }
 
-        public RichFormatting Render()
-        {
-            return new RichFormatting(new Paragraph[]
-            {
-                new TextParagraph(EnumerableExt.OfSingle(new Text($"Volume {volumeNumber}, Chapter {chapterNumber}, Page {pageNumber}"))),
-                new ImageParagraph(),
-            });
-        }
+        public string ShortDescription => $"{name}: Volume {page.Chapter.Volume.VolumeNumber}, Chapter {page.Chapter.ChapterNumber}, Page {page.PageNumber}";
 
-        internal PageContext(MangaContext root, int volumeNumber, int chapterNumber, int pageNumber)
+        internal PageContext([NotNull] MangaContext root, [NotNull] ProjectDirectoryListingProvider listing, [NotNull] PageId page)
         {
-            this.volumeNumber = volumeNumber;
-            this.chapterNumber = chapterNumber;
-            this.pageNumber = pageNumber;
-            pageJson = JsonConvert.DeserializeObject<PageJson>(File.ReadAllText(Path.Combine(
-                root.RootPath,
-                $"vol{volumeNumber:D2}",
-                $"ch{chapterNumber:D3}",
-                "capture",
-                $"{pageNumber:D4}.json")), new CharacterTypeConverter(root.IdNameMapping));
+            this.name = root.Name;
+            this.page = page;
+            var pageJson = JsonConvert.DeserializeObject<PageJson>(File.ReadAllText(listing.GetCapturePath(page)), new CharacterTypeConverter(root.IdNameMapping));
             captures = pageJson.Captures
                 .Select((c, i) =>
                 {
-                    var guid = root.Map(volumeNumber, chapterNumber, pageNumber, c.Id).Some();
-                    return new CaptureContext(c, j =>
+                    var guid = root.Map(page, c.Id).Some();
+                    return new CaptureContext(this, c, j =>
                     {
                         pageJson.Captures[i] = j;
                         return ModificationResult.WithSuccess(new Translation(c, guid));
@@ -52,15 +41,11 @@ namespace MagicTranslatorProject
                 .ToList();
         }
 
-        private readonly PageJson pageJson;
-
-        private readonly int pageNumber;
-
-        private readonly int chapterNumber;
-
-        private readonly int volumeNumber;
-
         private readonly IList<CaptureContext> captures;
+
+        private readonly string name;
+
+        private PageId page;
 
         public IEnumerable<CaptureContext> Children => captures;
     }

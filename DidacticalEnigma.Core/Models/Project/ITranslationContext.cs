@@ -9,6 +9,8 @@ namespace DidacticalEnigma.Core.Models.Project
         IEnumerable<ITranslationContext> Children { get; }
 
         RichFormatting Render(RenderingVerbosity verbosity);
+
+        string ShortDescription { get; }
     }
 
     public interface ITranslationContext<out TContext> : ITranslationContext
@@ -25,7 +27,7 @@ namespace DidacticalEnigma.Core.Models.Project
 
         bool Remove(Guid guid);
 
-        void Reorder(Guid translationId, Guid moveAt);
+        bool Reorder(Guid translationId, Guid moveAt);
     }
 
     public interface IModifiableTranslationContext<out TContext> :

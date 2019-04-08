@@ -38,6 +38,8 @@ namespace DidacticalEnigma.Core.Models.Project
             {
                 return new RichFormatting();
             }
+
+            public string ShortDescription => "";
         }
     }
 }

@@ -11,31 +11,19 @@ namespace MagicTranslatorProject
 {
     public class ChapterContext : ITranslationContext<PageContext>
     {
-        private static readonly Regex pageNumberMatcher = new Regex("^([0-9]{4}).png$");
-        private readonly int chapterNumber;
         private readonly MangaContext root;
-        private readonly int volumeNumber;
 
-        internal ChapterContext(MangaContext root, int volumeNumber, int chapterNumber)
+        internal ChapterContext(MangaContext root, ChapterId chapter, ProjectDirectoryListingProvider listing)
         {
             this.root = root;
-            this.volumeNumber = volumeNumber;
-            this.chapterNumber = chapterNumber;
+            this.chapter = chapter;
+            this.listing = listing;
         }
 
         private IReadOnlyCollection<PageContext> Load()
         {
-            return new DirectoryInfo(Path.Combine(
-                    root.RootPath,
-                    $"vol{volumeNumber:D2}",
-                    $"ch{chapterNumber:D3}",
-                    "raw"))
-                .EnumerateFiles()
-                .OrderBy(f => f.Name)
-                .Select(f => pageNumberMatcher.Match(f.Name))
-                .Where(match => match.Success)
-                .Select(match => int.Parse(match.Groups[1].Value))
-                .Select(page => new PageContext(root, volumeNumber, chapterNumber, page))
+            return listing.EnumeratePages(chapter)
+                .Select(page => new PageContext(root, listing, page))
                 .ToList();
         }
 
@@ -46,7 +34,11 @@ namespace MagicTranslatorProject
             throw new NotImplementedException();
         }
 
+        public string ShortDescription => $"{root.Name}: Volume {chapter.Volume.VolumeNumber}, Chapter {chapter.ChapterNumber}";
+
         private readonly WeakReference<IReadOnlyCollection<PageContext>> children = new WeakReference<IReadOnlyCollection<PageContext>>(null);
+        private ProjectDirectoryListingProvider listing;
+        private ChapterId chapter;
 
         public IEnumerable<PageContext> Children
         {
