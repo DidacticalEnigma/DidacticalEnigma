@@ -18,7 +18,7 @@ namespace JDict.Tests
                 using (var file = zip.OpenFile(l[0]))
                 using (var reader = new StreamReader(file))
                 {
-                    reader.ReadToEnd();
+                    _ = reader.ReadToEnd();
                 }
             }
         }

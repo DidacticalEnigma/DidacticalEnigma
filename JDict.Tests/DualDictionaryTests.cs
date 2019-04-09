@@ -43,8 +43,14 @@ namespace JDict.Tests
         [Test]
         public void Basic2()
         {
-            Assert.Throws<ArgumentNullException>(() => _ = dict.Key[null]);
-            Assert.Throws<ArgumentNullException>(() => _ = dict.Value[null]);
+            _ = Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = dict.Key[null];
+            });
+            _ = Assert.Throws<ArgumentNullException>(() =>
+            {
+                _ = dict.Value[null];
+            });
             dict.Key["a"] = "a";
             var expected = CreateDictionary(d => { d.Add("a", "a"); });
             CollectionAssert.AreEquivalent(expected, dict);

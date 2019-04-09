@@ -47,7 +47,7 @@ namespace DidacticalEnigma.Views
         }
 
         public static readonly DependencyProperty RadicalsProperty =
-            DependencyProperty.Register(nameof(Radicals), typeof(IEnumerable<KanjiRadicalLookupControlVM.RadicalVM>), typeof(KanjiRadicalLookupControl), new PropertyMetadata(new PropertyChangedCallback(RadicalsPropertyChanged)));
+            DependencyProperty.Register(nameof(Radicals), typeof(IEnumerable<KanjiRadicalLookupControlVM.RadicalVM>), typeof(KanjiRadicalLookupControl), new PropertyMetadata(new PropertyChangedCallback(OnRadicalsChanged)));
 
         public string SearchText
         {
@@ -61,7 +61,7 @@ namespace DidacticalEnigma.Views
 
         private List<KanjiRadicalLookupControlVM.RadicalVM> radicals = new List<KanjiRadicalLookupControlVM.RadicalVM>();
 
-        private static void RadicalsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnRadicalsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var self = (KanjiRadicalLookupControl)d;
             foreach (var radical in self.radicals)

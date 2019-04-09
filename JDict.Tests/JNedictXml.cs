@@ -58,7 +58,6 @@ namespace JDict.Tests
         public void Z(Func<Stream, IEnumerable<NeEntry>> factory)
         {
             //var previous = dotMemory.Check();
-            int i = 0;
             using (var stream = File.OpenRead(TestDataPaths.JMDict))
             using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
             {
