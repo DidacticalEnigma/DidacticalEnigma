@@ -48,7 +48,7 @@ namespace MagicTranslatorProject
             this.metadata = metadata;
             RootPath = rootPath;
             IdNameMapping = new DualDictionary<long, string>(JsonConvert.DeserializeObject<CharactersJson>(
-                File.ReadAllText(Path.Combine(rootPath, "character", "characters.json")))
+                File.ReadAllText(listing.GetCharactersPath())))
                 .Characters
                 .ToDictionary(c => c.Id, c => c.Name));
         }

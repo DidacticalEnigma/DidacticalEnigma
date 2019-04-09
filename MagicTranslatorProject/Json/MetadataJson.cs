@@ -36,5 +36,8 @@ namespace MagicTranslatorProject.Json
 
         [JsonProperty("save")]
         public string Save { get; set; }
+
+        [JsonProperty("characters")]
+        public string Characters { get; set; }
     }
 }

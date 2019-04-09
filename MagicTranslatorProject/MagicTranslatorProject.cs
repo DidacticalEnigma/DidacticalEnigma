@@ -237,6 +237,11 @@ namespace MagicTranslatorProject
             this.metadata = metadata;
             this.rootPath = rootPath;
         }
+
+        public string GetCharactersPath()
+        {
+            return Path.Combine(rootPath, metadata.Structure.Characters ?? "character", "characters.json");
+        }
     }
 
     internal class VolumeId : IEquatable<VolumeId>
