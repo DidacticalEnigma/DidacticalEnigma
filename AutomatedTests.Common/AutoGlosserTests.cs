@@ -127,7 +127,11 @@ namespace JDict.Tests
                 new GlossNote("ない", ""),
                 new GlossNote("アイテム", ""),
                 new GlossNote("です", "")
-            }), 
+            }),
+            new TestCaseData("セーラー服", new[]
+            {
+                new GlossNote("セーラー服", "sailor suit/middy uniform"),
+            }),
         };
 
         [TestCaseSource(nameof(TestCases))]
@@ -146,7 +150,7 @@ namespace JDict.Tests
             Assert.AreEqual(expected.Count(), notes.Count);
         }
 
-        [Ignore("see commit 8a9a4be79bcf20ffdb48721696839e6a6c7ac2c2")]
+        [Explicit("see commit 8a9a4be79bcf20ffdb48721696839e6a6c7ac2c2")]
         [TestCaseSource(nameof(TestCases))]
         public void ContentsAreEqual(string input, IEnumerable<GlossNote> expected)
         {

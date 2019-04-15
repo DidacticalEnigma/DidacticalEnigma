@@ -9,7 +9,6 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
-using JetBrains.dotMemoryUnit;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -46,7 +45,6 @@ namespace JDict.Tests
             CollectionAssert.AreEqual(first.Select(x => SerializeToString(x)), second.Select(x => SerializeToString(x)));
         }
 
-        [DotMemoryUnit(CollectAllocations = true)]
         [Explicit]
         [Test]
         public void A()
@@ -54,32 +52,11 @@ namespace JDict.Tests
             Z(Deserialize);
         }
 
-        [DotMemoryUnit(CollectAllocations = true)]
         [Explicit]
         [Test]
         public void B()
         {
             Z(DeserializeNewImpl);
-        }
-
-        [DotMemoryUnit(CollectAllocations = true)]
-        [Explicit]
-        [Test]
-        public void C()
-        {
-            var previous = dotMemory.Check();
-
-            var n = new List<int>(32768 * 1024);
-
-            previous = dotMemory.Check(m =>
-            {
-                Assert.Greater(m.GetTrafficFrom(previous).AllocatedMemory.SizeInBytes, 32L * 1024 * 1024 * sizeof(int));
-            });
-
-            previous = dotMemory.Check(m =>
-            {
-                Assert.Less(m.GetTrafficFrom(previous).AllocatedMemory.SizeInBytes, 1024L * 1024);
-            });
         }
 
         public void Z(Func<Stream, IEnumerable<JdicEntry>> factory)

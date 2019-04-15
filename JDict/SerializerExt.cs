@@ -3,7 +3,8 @@ using System.Runtime.CompilerServices;
 using Optional;
 using TinyIndex;
 
-[assembly: InternalsVisibleTo("JDict.Tests")]
+[assembly: InternalsVisibleTo("AutomatedTests.NetCore")]
+[assembly: InternalsVisibleTo("AutomatedTests.NetFramework")]
 
 namespace JDict
 {

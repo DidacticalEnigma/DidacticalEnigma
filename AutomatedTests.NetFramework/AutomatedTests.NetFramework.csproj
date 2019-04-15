@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NUnit.3.11.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.11.0\build\NUnit.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{12D1829B-C437-46AA-B2BE-587B913F4AF7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AutomatedTests.NetFramework</RootNamespace>
+    <AssemblyName>AutomatedTests.NetFramework</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AsyncEnumerable, Version=2.2.2.0, Culture=neutral, PublicKeyToken=0426b068161bd1d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncEnumerator.2.2.2\lib\net45\AsyncEnumerable.dll</HintPath>
+    </Reference>
+    <Reference Include="Gu.Inject, Version=0.1.0.0, Culture=neutral, PublicKeyToken=84247aff6de990f8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Gu.Inject.0.1.0-dev\lib\net452\Gu.Inject.dll</HintPath>
+    </Reference>
+    <Reference Include="LibJpConjSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LibJpConjSharp.0.5.8\lib\netstandard2.0\LibJpConjSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="LibNMeCabNetStandard, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NMeCabNetStandard.0.7.0\lib\netstandard2.0\LibNMeCabNetStandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Optional, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Optional.4.0.0\lib\net45\Optional.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.3.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.2\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnicodeInformation, Version=2.3.0.26, Culture=neutral, PublicKeyToken=e54dbbddfea2ed0e, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnicodeInformation.2.3.0.26\lib\netstandard2.0\UnicodeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AutomatedTests.Common\AutoGlosserTests.cs">
+      <Link>AutoGlosserTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\CLITests.cs">
+      <Link>CLITests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\DependentOnKenkyuushaAttribute.cs">
+      <Link>DependentOnKenkyuushaAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\DualDictionaryTests.cs">
+      <Link>DualDictionaryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\EnumerableExt.cs">
+      <Link>EnumerableExt.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\ExpectactionTester.cs">
+      <Link>ExpectactionTester.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\IdiomDetectorTests.cs">
+      <Link>IdiomDetectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\Index.cs">
+      <Link>Index.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\JGramTests.cs">
+      <Link>JGramTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\JMDictTests.cs">
+      <Link>JMDictTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\JMDictXml.cs">
+      <Link>JMDictXml.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\JnedictTests.cs">
+      <Link>JnedictTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\JNedictXml.cs">
+      <Link>JNedictXml.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\KanaPropertiesTests.cs">
+      <Link>KanaPropertiesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\KanjiAliveJapaneseRadicalInformationTests.cs">
+      <Link>KanjiAliveJapaneseRadicalInformationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\KanjiDictTests.cs">
+      <Link>KanjiDictTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\KanjiLookupVMTests.cs">
+      <Link>KanjiLookupVMTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\KanjiRadicalLookupTests.cs">
+      <Link>KanjiRadicalLookupTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\Kradfile.cs">
+      <Link>Kradfile.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\MagicTranslatorTests.cs">
+      <Link>MagicTranslatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\MeCab.cs">
+      <Link>MeCab.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\PartialWordLookupTests.cs">
+      <Link>PartialWordLookupTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\PerformanceTests.cs">
+      <Link>PerformanceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\ProgramStartupPerformaceTests.cs">
+      <Link>ProgramStartupPerformaceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\RadicalSearcherTests.cs">
+      <Link>RadicalSearcherTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\Romaji.cs">
+      <Link>Romaji.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\Sandbox.cs">
+      <Link>Sandbox.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\SerializerExtTests.cs">
+      <Link>SerializerExtTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\SimpleProjectTests.cs">
+      <Link>SimpleProjectTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\StringExtTests.cs">
+      <Link>StringExtTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\Tagger.cs">
+      <Link>Tagger.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\TestDataPaths.cs">
+      <Link>TestDataPaths.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\VerbInflecterDataSourceTests.cs">
+      <Link>VerbInflecterDataSourceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\Yomichan.cs">
+      <Link>Yomichan.cs</Link>
+    </Compile>
+    <Compile Include="..\AutomatedTests.Common\ZipTests.cs">
+      <Link>ZipTests.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DidacticalEnigma.CLI.Common\DidacticalEnigma.CLI.Common.csproj">
+      <Project>{bef3d58e-a11e-4806-a8a8-70ac26b561db}</Project>
+      <Name>DidacticalEnigma.CLI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DidacticalEnigma.Core\DidacticalEnigma.Core.csproj">
+      <Project>{72613547-03d0-4cde-ae3e-946451e99726}</Project>
+      <Name>DidacticalEnigma.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DidacticalEnigma\DidacticalEnigma.WPF.csproj">
+      <Project>{ba5b8792-eaf8-4a87-b58e-225290fd14a0}</Project>
+      <Name>DidacticalEnigma.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JDict\JDict.csproj">
+      <Project>{82e18376-40e8-4f9d-bc46-e166354bccb3}</Project>
+      <Name>JDict</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MagicTranslatorProject\MagicTranslatorProject.csproj">
+      <Project>{3d793ba8-3c55-48a2-9dbf-2e0755f0eb17}</Project>
+      <Name>MagicTranslatorProject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TinyIndex\TinyIndex\TinyIndex.csproj">
+      <Project>{41b81c6b-c466-4c3f-8460-3ef2288a33d8}</Project>
+      <Name>TinyIndex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{6014edb7-3375-4d85-90a5-4db7638d7b39}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NUnit.3.11.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.11.0\build\NUnit.props'))" />
+  </Target>
+</Project>

@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma", "DidacticalEnigma\DidacticalEnigma.csproj", "{BA5B8792-EAF8-4A87-B58E-225290FD14A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma.WPF", "DidacticalEnigma\DidacticalEnigma.WPF.csproj", "{BA5B8792-EAF8-4A87-B58E-225290FD14A0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JDict", "JDict\JDict.csproj", "{82E18376-40E8-4F9D-BC46-E166354BCCB3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatedTests", "JDict.Tests\AutomatedTests.csproj", "{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.Core", "DidacticalEnigma.Core\DidacticalEnigma.Core.csproj", "{72613547-03D0-4CDE-AE3E-946451E99726}"
 EndProject
@@ -30,11 +28,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanjiRecognition.TestApp", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicTranslatorProject", "MagicTranslatorProject\MagicTranslatorProject.csproj", "{3D793BA8-3C55-48A2-9DBF-2E0755F0EB17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma.CLI.Common", "DidacticalEnigma.CLI.Common\DidacticalEnigma.CLI.Common.csproj", "{BEF3D58E-A11E-4806-A8A8-70AC26B561DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.CLI.Common", "DidacticalEnigma.CLI.Common\DidacticalEnigma.CLI.Common.csproj", "{BEF3D58E-A11E-4806-A8A8-70AC26B561DB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma.CLI.NetFramework", "DidacticalEnigma.CLI.NetFramework\DidacticalEnigma.CLI.NetFramework.csproj", "{2138B507-6129-4352-97DC-6038F52E9B1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma.CLI.NetCore", "DidacticalEnigma.CLI.NetCore\DidacticalEnigma.CLI.NetCore.csproj", "{652197DA-5695-469B-9252-6A28A194152F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.CLI.NetCore", "DidacticalEnigma.CLI.NetCore\DidacticalEnigma.CLI.NetCore.csproj", "{652197DA-5695-469B-9252-6A28A194152F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatedTests.NetCore", "AutomatedTests.NetCore\AutomatedTests.NetCore.csproj", "{3D3F7BF1-2C20-46BB-BB0F-BF3EC6C8AE7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatedTests.NetFramework", "AutomatedTests.NetFramework\AutomatedTests.NetFramework.csproj", "{12D1829B-C437-46AA-B2BE-587B913F4AF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,10 +52,6 @@ Global
 		{82E18376-40E8-4F9D-BC46-E166354BCCB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82E18376-40E8-4F9D-BC46-E166354BCCB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82E18376-40E8-4F9D-BC46-E166354BCCB3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8AC3ADD-FE61-4961-8663-0C6E90F7F033}.Release|Any CPU.Build.0 = Release|Any CPU
 		{72613547-03D0-4CDE-AE3E-946451E99726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72613547-03D0-4CDE-AE3E-946451E99726}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72613547-03D0-4CDE-AE3E-946451E99726}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -98,6 +96,14 @@ Global
 		{652197DA-5695-469B-9252-6A28A194152F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{652197DA-5695-469B-9252-6A28A194152F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{652197DA-5695-469B-9252-6A28A194152F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D3F7BF1-2C20-46BB-BB0F-BF3EC6C8AE7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D3F7BF1-2C20-46BB-BB0F-BF3EC6C8AE7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D3F7BF1-2C20-46BB-BB0F-BF3EC6C8AE7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D3F7BF1-2C20-46BB-BB0F-BF3EC6C8AE7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12D1829B-C437-46AA-B2BE-587B913F4AF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12D1829B-C437-46AA-B2BE-587B913F4AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12D1829B-C437-46AA-B2BE-587B913F4AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12D1829B-C437-46AA-B2BE-587B913F4AF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

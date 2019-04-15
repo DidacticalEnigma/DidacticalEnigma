@@ -9,7 +9,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
 using JDict.Tests;
-using JetBrains.dotMemoryUnit;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -39,7 +38,6 @@ namespace JDict.Tests
             CollectionAssert.AreEqual(first.Select(x => SerializeToString(x)), second.Select(x => SerializeToString(x)));
         }
 
-        [DotMemoryUnit(CollectAllocations = true)]
         [Explicit]
         [Test]
         public void A()
@@ -47,7 +45,6 @@ namespace JDict.Tests
             Z(Deserialize);
         }
 
-        [DotMemoryUnit(CollectAllocations = true)]
         [Explicit]
         [Test]
         public void B()

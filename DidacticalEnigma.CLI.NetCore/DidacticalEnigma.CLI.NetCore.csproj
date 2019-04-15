@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NMeCabNetStandard" Version="0.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DidacticalEnigma.CLI.Common\DidacticalEnigma.CLI.Common.csproj" />
   </ItemGroup>
 
