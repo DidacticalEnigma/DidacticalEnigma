@@ -10,7 +10,7 @@ using NUnit.Framework;
 using Optional;
 using Utility.Utils;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class MagicTranslatorTests

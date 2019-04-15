@@ -4,9 +4,10 @@ using System.Text;
 using System.Threading;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.ViewModels;
+using JDict;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [RequiresThread(ApartmentState.STA)]
     [TestFixture]

@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.LanguageService;
+using JDict;
 using NMeCab;
 using NUnit.Framework;
 using Utility.Utils;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class IdiomDetectorTests

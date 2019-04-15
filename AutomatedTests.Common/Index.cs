@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     public class Index

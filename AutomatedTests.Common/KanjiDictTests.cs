@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DidacticalEnigma.Core.Models.LanguageService;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using JDict;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class KanjiDictTests

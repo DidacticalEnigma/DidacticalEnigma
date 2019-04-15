@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Formatting;
 using DidacticalEnigma.Core.Models.LanguageService;
+using JDict;
 using NUnit.Framework;
 using Optional;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class VerbInflecterDataSourceTests

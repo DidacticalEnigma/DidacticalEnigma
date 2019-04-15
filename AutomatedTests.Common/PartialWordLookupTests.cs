@@ -8,11 +8,12 @@ using DidacticalEnigma;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
 using Gu.Inject;
+using JDict;
 using NMeCab;
 using NUnit.Framework;
 using Optional.Collections;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class PartialWordLookupTests

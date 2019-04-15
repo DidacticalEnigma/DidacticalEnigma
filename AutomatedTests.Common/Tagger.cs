@@ -7,8 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using DidacticalEnigma.Core.Models.LanguageService;
+using JDict;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     public class Tagger

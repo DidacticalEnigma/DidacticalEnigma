@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutomatedTests;
 using DidacticalEnigma.Core.Models.LanguageService;
+using JDict;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class JGramTests

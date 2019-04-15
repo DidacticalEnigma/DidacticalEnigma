@@ -12,7 +12,7 @@ using JDict.Internal.XmlModels;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class JMDictXml

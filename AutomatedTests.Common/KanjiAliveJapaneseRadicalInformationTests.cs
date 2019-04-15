@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using JDict;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class KanjiAliveJapaneseRadicalInformationTests

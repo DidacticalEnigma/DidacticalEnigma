@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class Kradfile

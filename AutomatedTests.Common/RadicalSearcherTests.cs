@@ -4,7 +4,7 @@ using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class RadicalSearcherTests

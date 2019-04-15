@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Models.Project;
+using JDict;
 using NMeCab;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class AutoGlosserTests

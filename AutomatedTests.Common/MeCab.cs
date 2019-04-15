@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DidacticalEnigma.Core.Models.LanguageService;
+using JDict;
 using NMeCab;
 using NUnit.Framework;
 using Optional;
 using Utility.Utils;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class MeCab

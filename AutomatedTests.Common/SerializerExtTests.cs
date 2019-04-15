@@ -3,8 +3,9 @@ using System.IO;
 using NUnit.Framework;
 using Optional;
 using TinyIndex;
+using JDict;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class SerializerExtTests

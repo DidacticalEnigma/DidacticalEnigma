@@ -3,7 +3,7 @@ using System.IO;
 using DidacticalEnigma.CLI.Common;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class CLITests

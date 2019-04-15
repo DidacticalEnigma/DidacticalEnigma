@@ -8,7 +8,7 @@ using DidacticalEnigma.Core.Models.Project;
 using NUnit.Framework;
 using Optional;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     class ProjectApiInvariantsTester<TProject> : IDisposable
         where TProject : IProject

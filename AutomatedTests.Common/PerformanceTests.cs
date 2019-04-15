@@ -5,9 +5,10 @@ using System.Linq;
 using System.Text;
 using DidacticalEnigma;
 using DidacticalEnigma.Core.Models.LanguageService;
+using JDict;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class PerformanceTests

@@ -2,7 +2,7 @@
 using DidacticalEnigma.Core.Models.LanguageService;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class KanaPropertiesTests

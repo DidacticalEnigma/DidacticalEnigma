@@ -5,7 +5,7 @@ using DidacticalEnigma;
 using DidacticalEnigma.ViewModels;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [RequiresThread(ApartmentState.STA)]
     public class ProgramStartupPerformanceTests

@@ -3,7 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using Utility.Utils;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class ZipTests

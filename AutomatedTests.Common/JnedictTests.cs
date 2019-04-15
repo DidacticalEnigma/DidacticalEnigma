@@ -1,7 +1,8 @@
 ﻿using System.Linq;
+using JDict;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class JnedictTests

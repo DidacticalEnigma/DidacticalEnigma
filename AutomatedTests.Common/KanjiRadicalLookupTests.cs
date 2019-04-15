@@ -3,10 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Unicode;
 using DidacticalEnigma.Core.Models.LanguageService;
+using JDict;
 using NUnit.Framework;
 using Utility.Utils;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class KanjiRadicalLookupTests

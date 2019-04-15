@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Utility.Utils;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     [TestFixture]
     class EnumerableExt

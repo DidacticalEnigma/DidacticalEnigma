@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using JDict.Internal.XmlModels;
-using JDict.Tests;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     class JNedictXml
     {

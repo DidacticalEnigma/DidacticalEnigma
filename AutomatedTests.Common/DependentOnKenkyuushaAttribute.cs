@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace JDict.Tests
+namespace AutomatedTests
 {
     class DependentOnKenkyuushaAttribute : Attribute, ITestAction
     {
