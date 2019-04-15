@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "DidacticalEnigma.CLI.NetCore": {
+      "commandName": "Project"
+    }
+  }
+}
