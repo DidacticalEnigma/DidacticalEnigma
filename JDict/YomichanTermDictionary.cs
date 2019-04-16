@@ -15,7 +15,7 @@ namespace JDict
     // 
     public class YomichanTermDictionary : IDisposable
     {
-        private static readonly Guid Version = new Guid("91DF97D4-2B81-4357-846E-84A996D809F6");
+        private static readonly Guid Version = new Guid("B545423A-5CE6-498E-8D77-8A6742C4546F");
 
         private Database db;
 

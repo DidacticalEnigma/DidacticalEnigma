@@ -20,7 +20,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(NeEntry));
 
-        private static readonly Guid Version = new Guid("C4A8A3D3-92F3-4E33-A00F-7BF7DBECDD03");
+        private static readonly Guid Version = new Guid("54A7E92F-5D38-4A5A-890A-F67FA57C11C1");
 
         private Database database;
         private IReadOnlyDiskArray<JnedictEntry> entries;

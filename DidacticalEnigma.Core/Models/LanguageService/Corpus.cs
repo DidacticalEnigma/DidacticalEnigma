@@ -11,7 +11,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class Corpus : IDisposable
     {
-        private static readonly Guid Version = new Guid("AD0D9CAD-73B8-438C-9190-A8F5A9C6FA14");
+        private static readonly Guid Version = new Guid("1E350DD3-1F74-4F23-8C95-46BA3BB4BD1E");
 
         private readonly IMorphologicalAnalyzer<IpadicEntry> analyzer;
 

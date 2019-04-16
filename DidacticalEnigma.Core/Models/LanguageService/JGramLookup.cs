@@ -18,7 +18,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
     public class JGramLookup : IJGramLookup
     {
-        private static readonly Guid Version = new Guid("8B0B7D21-C47F-467B-BDDA-921B3F947ED7");
+        private static readonly Guid Version = new Guid("2A7D5BC6-9ECA-47FE-B00A-6A08D225CA81");
 
         private readonly IReadOnlyDiskArray<JGram.Entry> entries;
 

@@ -26,7 +26,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicEntry));
 
-        private static readonly Guid Version = new Guid("2DC4D47E-8306-4E4F-BC3E-970599812E76");
+        private static readonly Guid Version = new Guid("4FA572C1-9426-41C5-B2C7-F7C559067796");
 
         private TinyIndex.Database db;
 

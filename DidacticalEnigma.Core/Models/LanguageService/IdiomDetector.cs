@@ -12,7 +12,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     public class IdiomDetector : IDisposable
     {
-        private static readonly Guid Version = new Guid("F77023E1-ED66-4844-B2E2-2A0203DEA665");
+        private static readonly Guid Version = new Guid("2CAE16ED-6325-40A3-91FA-71A7348A2EC1");
 
         private JMDict jmDict;
 

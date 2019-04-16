@@ -16,7 +16,7 @@ namespace AutomatedTests
             {
                 var textWriter = new StringWriter();
                 Console.SetOut(textWriter);
-                var exitCode = EntryPoint.Main(new[] {"autoglosser", TestDataPaths.BaseDir, "セーラー服"});
+                var exitCode = EntryPoint.Main(new[] { TestDataPaths.BaseDir, "autoglosser", "セーラー服" });
                 Assert.AreEqual(0, exitCode);
                 Assert.AreEqual("[{\"word\":\"セーラー服\",\"definitions\":[\"sailor suit/middy uniform\"]}]", textWriter.ToString().Trim());
             }
