@@ -7,6 +7,8 @@ install:
   - cd %APPVEYOR_BUILD_FOLDER%
   - git submodule update --init --recursive
   - nuget restore
+  - dotnet publish MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o %APPVEYOR_BUILD_FOLDER%\DidacticalEnigma\bin\Release\MagicTranslatorGlosser
+  - dotnet publish MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o %APPVEYOR_BUILD_FOLDER%\DidacticalEnigma\bin\Release\MagicTranslatorGlosser
 after_build:
   - ren %APPVEYOR_BUILD_FOLDER%\DidacticalEnigma\bin\Release DidacticalEnigma
   - 7z a -r DidacticalEnigma.zip %APPVEYOR_BUILD_FOLDER%\DidacticalEnigma\bin\DidacticalEnigma
