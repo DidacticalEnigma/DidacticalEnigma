@@ -80,9 +80,9 @@ namespace JDict
             List<int> kanji = null;
             while ((line = reader.ReadLine()) != null)
             {
-                if (line.StartsWith("#"))
+                if (line.StartsWith("#", StringComparison.Ordinal))
                     continue;
-                if (line.StartsWith("$"))
+                if (line.StartsWith("$", StringComparison.Ordinal))
                 {
                     if(kanji != null)
                         result.Add(new Entry(radical, kanji));
@@ -128,9 +128,9 @@ namespace JDict
             List<int> current = null;
             while ((line = reader.ReadLine()) != null)
             {
-                if (line.StartsWith("#"))
+                if (line.StartsWith("#", StringComparison.Ordinal))
                     continue;
-                if (line.StartsWith("$"))
+                if (line.StartsWith("$", StringComparison.Ordinal))
                 {
                     line = line.Remove(0, 2);
                     var components = line.Split(' ');

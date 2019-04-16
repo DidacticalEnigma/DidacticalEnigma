@@ -66,7 +66,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             return new EasilyConfusedKana(
                 File.ReadLines(path, Encoding.UTF8)
-                    .Where(line => !line.StartsWith("#"))
+                    .Where(line => !line.StartsWith("#", StringComparison.Ordinal))
                     .Select(line => line.AsCodePoints().Select(cp => CodePoint.FromInt(cp))));
             
         }

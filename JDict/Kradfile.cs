@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace JDict
             string line;
             while((line = reader.ReadLine()) != null)
             {
-                if (line.StartsWith("#"))
+                if (line.StartsWith("#", StringComparison.Ordinal))
                     continue;
                 var parts = line.Split(':');
                 var kanji = parts[0].Trim();
@@ -59,7 +60,7 @@ namespace JDict
             var result = new List<Entry>();
             while ((line = reader.ReadLine()) != null)
             {
-                if (line.StartsWith("#"))
+                if (line.StartsWith("#", StringComparison.Ordinal))
                     continue;
                 var parts = line.Split(':');
                 var kanji = char.ConvertToUtf32(parts[0].Trim(), 0);

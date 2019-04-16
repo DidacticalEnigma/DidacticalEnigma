@@ -189,7 +189,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .SelectMany(e =>
                     StringExt.AllRotationsOf(e.element.JapaneseSentence + "\0")
                         .Select(r => new KeyValuePair<string, long>(r, e.index))
-                        .Where(kvp => !kvp.Key.StartsWith("\0")));
+                        .Where(kvp => !kvp.Key.StartsWith("\0", StringComparison.Ordinal)));
             return rotations;
         }
 

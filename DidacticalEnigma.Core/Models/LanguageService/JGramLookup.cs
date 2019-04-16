@@ -30,7 +30,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         {
             foreach (var line in File.ReadLines(path, Encoding.UTF8))
             {
-                if (line.StartsWith("？") || line.StartsWith("#") || string.IsNullOrWhiteSpace(line))
+                if (line.StartsWith("？", StringComparison.Ordinal) || line.StartsWith("#", StringComparison.Ordinal) || string.IsNullOrWhiteSpace(line))
                     continue;
 
                 var components = line.Split('\t');

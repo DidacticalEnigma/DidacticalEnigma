@@ -25,7 +25,7 @@ namespace JDict
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (line.StartsWith("B:"))
+                    if (line.StartsWith("B:", StringComparison.Ordinal))
                         continue;
 
                     yield return SentenceFromLine(line);
@@ -42,7 +42,7 @@ namespace JDict
                     string line;
                     while ((line = await reader.ReadLineAsync()) != null)
                     {
-                        if (line.StartsWith("B:"))
+                        if (line.StartsWith("B:", StringComparison.Ordinal))
                             continue;
 
                         await yield.ReturnAsync(SentenceFromLine(line));

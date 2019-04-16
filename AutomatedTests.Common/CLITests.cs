@@ -18,7 +18,7 @@ namespace AutomatedTests
                 Console.SetOut(textWriter);
                 var exitCode = EntryPoint.Main(new[] {"autoglosser", TestDataPaths.BaseDir, "セーラー服"});
                 Assert.AreEqual(0, exitCode);
-                Assert.AreEqual("[{\"word\":\"セーラー服\",\"definitions\":[\"sailor suit/middy uniform\"]}]\r\n", textWriter.ToString());
+                Assert.AreEqual("[{\"word\":\"セーラー服\",\"definitions\":[\"sailor suit/middy uniform\"]}]", textWriter.ToString().Trim());
             }
             finally
             {

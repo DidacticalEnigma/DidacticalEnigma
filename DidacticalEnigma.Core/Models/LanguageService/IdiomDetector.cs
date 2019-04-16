@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using JDict;
 using Optional;
@@ -191,8 +192,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             var rotations = exprs
                 .SelectMany(e =>
                     StringExt.AllRotationsOf(e.Key + "\0")
-                    .Select(r => new KeyValuePair<string, long>(r, e.Value))
-                .Where(kvp => !kvp.Key.StartsWith("\0")));
+                    .Select(r => new KeyValuePair<string, long>(r, e.Value)))
+                    .Where(kvp => !kvp.Key.StartsWith("\0", StringComparison.Ordinal));
             return rotations;
         }
 

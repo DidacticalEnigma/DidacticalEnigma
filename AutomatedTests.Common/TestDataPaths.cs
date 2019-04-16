@@ -56,17 +56,17 @@ namespace AutomatedTests
 
         public static readonly string JESC = Path.Combine(BaseDir, "corpora", "jesc_raw");
 
-        public static readonly string Hiragana = Path.Combine(BaseDir, @"character\hiragana_romaji.txt");
+        public static readonly string Hiragana = Path.Combine(BaseDir, "character", "hiragana_romaji.txt");
 
-        public static readonly string Katakana = Path.Combine(BaseDir, @"character\katakana_romaji.txt");
+        public static readonly string Katakana = Path.Combine(BaseDir, @"character", "katakana_romaji.txt");
 
-        public static readonly string HiraganaKatakana = Path.Combine(BaseDir, @"character\hiragana_katakana.txt");
+        public static readonly string HiraganaKatakana = Path.Combine(BaseDir, @"character", "hiragana_katakana.txt");
 
-        public static readonly string KanaRelated = Path.Combine(BaseDir, @"character\kana_related.txt");
+        public static readonly string KanaRelated = Path.Combine(BaseDir, @"character", "kana_related.txt");
 
-        public static readonly string Kana = Path.Combine(BaseDir, @"character\kana.txt");
+        public static readonly string Kana = Path.Combine(BaseDir, @"character", "kana.txt");
 
-        public static readonly string EasilyConfused = Path.Combine(BaseDir, @"character\confused.txt");
+        public static readonly string EasilyConfused = Path.Combine(BaseDir, @"character", "confused.txt");
 
         public static readonly string KanjiAliveRadicals = Path.Combine(BaseDir, "character", "japanese-radicals.csv");
 

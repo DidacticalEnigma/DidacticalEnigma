@@ -50,7 +50,7 @@ namespace JDict
             string line;
             while ((line = reader.ReadLine()) != null)
             {
-                if(line.StartsWith("？") || string.IsNullOrWhiteSpace(line))
+                if(line.StartsWith("？", StringComparison.Ordinal) || string.IsNullOrWhiteSpace(line))
                     continue;
 
                 long id = 0;
@@ -67,23 +67,23 @@ namespace JDict
                     {
                         continue;
                     }
-                    if (component.StartsWith(idStart))
+                    if (component.StartsWith(idStart, StringComparison.Ordinal))
                     {
                         long.TryParse(component.Remove(0, idStart.Length), out id);
                     }
-                    else if (component.StartsWith("/"))
+                    else if (component.StartsWith("/", StringComparison.Ordinal))
                     {
                         translation = component.TrimStart('/').TrimEnd('/');
                     }
-                    else if(component.StartsWith("\""))
+                    else if(component.StartsWith("\"", StringComparison.Ordinal))
                     {
                         example = component.TrimStart('\"').TrimEnd('\"');
                     }
-                    else if(reading != null && component.StartsWith("["))
+                    else if(reading != null && component.StartsWith("[", StringComparison.Ordinal))
                     {
                         romaji = component.TrimStart('[').TrimEnd(']');
                     }
-                    else if(component.StartsWith("["))
+                    else if(component.StartsWith("[", StringComparison.Ordinal))
                     {
                         reading = component.TrimStart('[').TrimEnd(']');
                     }
