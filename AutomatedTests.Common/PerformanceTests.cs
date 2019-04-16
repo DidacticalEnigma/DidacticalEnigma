@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DidacticalEnigma;
+using DidacticalEnigma.CLI.Common;
 using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using NUnit.Framework;
@@ -39,6 +40,17 @@ namespace AutomatedTests
                 lookup.AllRadicals,
                 KanjiAliveJapaneseRadicalInformation.Parse(TestDataPaths.KanjiAliveRadicals),
                 new RadkfileKanjiAliveCorrelator(TestDataPaths.RadkfileKanjiAliveRadicalInfoCorrelationData));
+        }
+
+        [Explicit]
+        [Test]
+        public void CLIPerformace()
+        {
+            var args = new string[] {"autoglosser", TestDataPaths.BaseDir, "セーラー服"};
+            var watch = Stopwatch.StartNew();
+            EntryPoint.Main(args);
+            var elapsed = watch.Elapsed;
+            Assert.Less(elapsed, TimeSpan.FromMilliseconds(200));
         }
 
         [Explicit]
