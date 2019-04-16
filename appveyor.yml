@@ -2,22 +2,33 @@ image:
   - Visual Studio 2017
   - Ubuntu
 configuration: Release
-build:
-  project: DidacticalEnigma.sln
-  verbosity: minimal
 install:
   - ps: cd $env:APPVEYOR_BUILD_FOLDER
-  - ps: git submodule update --init --recursive
+  - git submodule update --init --recursive
+build_script:
   - ps: nuget restore
   - ps: dotnet publish MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release/MagicTranslatorGlosser
   - ps: dotnet publish MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release/MagicTranslatorGlosser
+  - ps: if($isWindows) { msbuild -verbosity:minimal DidacticalEnigma.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"; }
+  - ps: if($isLinux) { dotnet build $env:APPVEYOR_BUILD_FOLDER/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj }
 after_build:
-  - ps: mv $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/DidacticalEnigma
-  - ps: 7z a -r DidacticalEnigma.zip $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/DidacticalEnigma
+  - ps: if($isWindows) { mv $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/DidacticalEnigma; }
+  - ps: if($isWindows) { 7z a -r DidacticalEnigma.zip $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/DidacticalEnigma; }
 artifacts:
   - path: DidacticalEnigma.zip
     name: Full program
     type: zip
+
+
+for:
+-
+  matrix:
+    only:
+      - image: Ubuntu
+
+  test_script:
+  - ps: dotnet test $env:APPVEYOR_BUILD_FOLDER/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj
+
 deploy:
   tag: $(APPVEYOR_REPO_TAG_NAME)
   description: 'This is the full program, with all the files needed for it to work.'
@@ -30,4 +41,5 @@ deploy:
   on:
     branch: master
     APPVEYOR_REPO_TAG: true
+    CI_WINDOWS: true
 
