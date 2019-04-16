@@ -116,26 +116,33 @@ namespace DidacticalEnigma.ViewModels
 
             var tcs = new TaskCompletionSource<bool>();
             task = tcs.Task;
-#pragma warning disable 4014
-            Task.Run(() =>
-#pragma warning restore 4014
+            if (dispatcher != null)
             {
-                try
+#pragma warning disable 4014
+                Task.Run(() =>
+#pragma warning restore 4014
                 {
-                    foreach (var chunk in elements.Skip(n).ChunkBy(400))
+                    try
                     {
-                        if (token.IsCancellationRequested)
-                            break;
-                        dispatcher.Invoke(() => { sortedKanji.AddRange(chunk); },
-                            DispatcherPriority.ApplicationIdle,
-                            token);
+                        foreach (var chunk in elements.Skip(n).ChunkBy(400))
+                        {
+                            if (token.IsCancellationRequested)
+                                break;
+                            dispatcher.Invoke(() => { sortedKanji.AddRange(chunk); },
+                                DispatcherPriority.ApplicationIdle,
+                                token);
+                        }
                     }
-                }
-                finally
-                {
-                    tcs.SetResult(true);
-                }
-            });
+                    finally
+                    {
+                        tcs.SetResult(true);
+                    }
+                });
+            }
+            else
+            {
+                sortedKanji.AddRange(elements.Skip(n));
+            }
         }
 
         public void SelectRadicals(IEnumerable<CodePoint> codePoints, Dispatcher dispatcher)

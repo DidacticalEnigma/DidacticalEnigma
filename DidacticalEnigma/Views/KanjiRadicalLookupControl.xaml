@@ -44,7 +44,7 @@
                 Text="{Binding SearchText, RelativeSource={RelativeSource AncestorType={x:Type views:KanjiRadicalLookupControl}, Mode=FindAncestor}, UpdateSourceTrigger=Explicit}" />
         </Grid>
         <Grid Grid.Row="0" Grid.Column="1">
-            <ComboBox ItemsSource="{Binding SortingCriteria}" SelectedIndex="{Binding CurrentKanjiOrderingIndex}" />
+            <ComboBox ItemsSource="{Binding SortingCriteria}" SelectedIndex="{Binding CurrentKanjiOrderingIndex}" SelectionChanged="Selector_OnSelectionChanged" />
         </Grid>
         <ListView
             x:Name="RadicalSelector"

@@ -121,5 +121,10 @@ namespace DidacticalEnigma.Views
                 bindingExpression?.UpdateTarget();
             }
         }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            (DataContext as KanjiRadicalLookupControlVM)?.SelectRadicals(selected.Select(r => r.CodePoint), Dispatcher);
+        }
     }
 }
