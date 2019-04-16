@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using NUnit.Framework;
 using JDict;
 using Optional;
@@ -46,6 +50,25 @@ namespace AutomatedTests
             {
                 var entries = jmdict.Lookup("私");
                 Assert.False(entries.Any(e => e.Senses.Any(s => s.Glosses.Contains("south"))));
+            }
+        }
+
+        [Test]
+        public void IsIndependentFromLocale()
+        {
+            var previousCulture = CultureInfo.CurrentCulture;
+            try
+            {
+                foreach (var culture in CultureInfo.GetCultures(CultureTypes.AllCultures).Concat(new []{previousCulture}))
+                {
+                    CultureInfo.CurrentCulture = culture;
+                    var entries = jmdict.Lookup("セーラー服");
+                    Assert.True(entries.Any(e => e.Senses.Any(s => s.Glosses.Contains("sailor suit"))));
+                }
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = previousCulture;
             }
         }
 
