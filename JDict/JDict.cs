@@ -26,7 +26,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicEntry));
 
-        private static readonly Guid Version = new Guid("4FA572C1-9426-41C5-B2C7-F7C559067796");
+        private static readonly Guid Version = new Guid("3E448317-AE2D-4D7C-A135-3AB18F0288C0");
 
         private TinyIndex.Database db;
 
@@ -108,7 +108,7 @@ namespace JDict
                             .GroupBy(kvp => kvp.Value, kvp => kvp.Key)
                             .Select(x => new KeyValuePair<string, IReadOnlyList<long>>(x.Key, x.ToList()));
                     },
-                    x => x.Key)
+                    x => x.Key, StringComparer.Ordinal)
                 .Build();
             entries = db.Get<JMDictEntry>(0, new LruCache<long, JMDictEntry>(128));
             kvps = db.Get<KeyValuePair<string, IReadOnlyList<long>>>(1, new LruCache<long, KeyValuePair<string, IReadOnlyList<long>>>(128));
@@ -217,7 +217,7 @@ namespace JDict
 
         public IEnumerable<JMDictEntry> Lookup(string key)
         {
-            var res = kvps.BinarySearch(key, kvp => kvp.Key);
+            var res = kvps.BinarySearch(key, kvp => kvp.Key, StringComparer.Ordinal);
             if (res.id == -1)
             {
                 return null;

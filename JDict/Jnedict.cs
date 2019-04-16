@@ -20,7 +20,7 @@ namespace JDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(NeEntry));
 
-        private static readonly Guid Version = new Guid("54A7E92F-5D38-4A5A-890A-F67FA57C11C1");
+        private static readonly Guid Version = new Guid("69868AEF-829D-4BE5-98A5-2FF9FF2D63EB");
 
         private Database database;
         private IReadOnlyDiskArray<JnedictEntry> entries;
@@ -106,7 +106,7 @@ namespace JDict
                             .GroupBy(kvp => kvp.Value, kvp => kvp.Key)
                             .Select(x => new KeyValuePair<string, IReadOnlyList<long>>(x.Key, x.ToList()));
                     },
-                    x => x.Key)
+                    x => x.Key, StringComparer.Ordinal)
                 .Build();
 
             entries = database.Get<JnedictEntry>(0, new LruCache<long, JnedictEntry>(64));
@@ -117,7 +117,7 @@ namespace JDict
 
         public IEnumerable<JnedictEntry> Lookup(string key)
         {
-            var res = kvps.BinarySearch(key, kvp => kvp.Key);
+            var res = kvps.BinarySearch(key, kvp => kvp.Key, StringComparer.Ordinal);
             if (res.id == -1)
             {
                 return null;

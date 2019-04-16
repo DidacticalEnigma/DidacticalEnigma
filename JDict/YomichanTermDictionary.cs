@@ -15,7 +15,7 @@ namespace JDict
     // 
     public class YomichanTermDictionary : IDisposable
     {
-        private static readonly Guid Version = new Guid("B545423A-5CE6-498E-8D77-8A6742C4546F");
+        private static readonly Guid Version = new Guid("41ED8A49-6061-4C6E-96D7-D837FCDE022F");
 
         private Database db;
 
@@ -112,7 +112,7 @@ namespace JDict
 
             db = Database.CreateOrOpen(cachePath, Version)
                 .AddIndirectArray(entrySerializer, db => lazyRoot.Value)
-                .AddIndirectArray(indexSerializer, db => Index(db.Get<YomichanDictionaryEntry>(0).LinearScan()), kvp => kvp.Key)
+                .AddIndirectArray(indexSerializer, db => Index(db.Get<YomichanDictionaryEntry>(0).LinearScan()), kvp => kvp.Key, StringComparer.Ordinal)
                 .AddIndirectArray(headerSerializer, db => EnumerableExt.OfSingle(lazyHeaderInfo.Value.version))
                 .Build();
 
@@ -191,7 +191,7 @@ namespace JDict
 
         public IEnumerable<Entry> Lookup(string key)
         {
-            var result = index.BinarySearch(key, kvp => kvp.Key);
+            var result = index.BinarySearch(key, kvp => kvp.Key, StringComparer.Ordinal);
             if (result.id == -1)
                 return null;
 
