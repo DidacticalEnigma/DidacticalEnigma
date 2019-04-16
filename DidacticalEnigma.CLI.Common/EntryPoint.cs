@@ -20,7 +20,7 @@ namespace DidacticalEnigma.CLI.Common
             {
                 DisplayHelp();
             }
-            switch (args[0])
+            switch (args[1])
             {
                 case "help":
                 case "-h":
@@ -29,7 +29,7 @@ namespace DidacticalEnigma.CLI.Common
                     DisplayHelp();
                     break;
                 case "autoglosser":
-                    RunAutomaticGlossing(args[1], args[2]);
+                    RunAutomaticGlossing(args[0], args[2]);
                     break;
             }
             return 0;
