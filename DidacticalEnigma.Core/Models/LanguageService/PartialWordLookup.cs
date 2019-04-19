@@ -46,8 +46,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 groupsReplaced
                     .Replace(@"\?", ".")
                     .Replace(@"？", ".")
-                    .Replace(@"\*", ".*?")
-                    .Replace(@"＊", ".*?"));
+                    .Replace(@"\*", $"[^{end}]*?")
+                    .Replace(@"＊", $"[^{end}]*?"));
             return regex.Matches(allWords)
                 .Cast<Match>()
                 .Select(m => m.Value.TrimStart(startArr).TrimEnd(endArr))
