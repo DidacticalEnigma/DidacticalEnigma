@@ -47,6 +47,17 @@ namespace AutomatedTests
                 new GlossNote("は", "Particle は - topic marker particle"),
                 new GlossNote("私", "I/me"),
             }),
+            new TestCaseData("今日はありがとう", new[]
+            {
+                new GlossNote("今日", "today/this day"),
+                new GlossNote("は", "Particle は - topic marker particle"),
+                new GlossNote("ありがとう", "Thank you/Thanks"),
+            }),
+            new TestCaseData("かける言葉が見付からない", new[]
+            {
+                new GlossNote("かける", "to hang up (e.g. a picture on the wall)/to let hang/to suspend (from)/to hoist (e.g. sail)/to raise (e.g. flag)"),
+                new GlossNote("言葉 が 見付から ない", "at a loss for words/stumped for words"),
+            }), 
             new TestCaseData("それは問題ね", new[]
             {
                 new GlossNote("それ", ""),
