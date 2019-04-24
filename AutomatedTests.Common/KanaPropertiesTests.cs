@@ -9,7 +9,8 @@ namespace AutomatedTests
     {
         public static readonly TestCaseData[] HiraganaConversion =
         {
-            new TestCaseData("ドキドキ", "どきどき"), 
+            new TestCaseData("ドキドキ", "どきどき"),
+            new TestCaseData("キョウ", "きょう"),
         };
 
         public static IKanaProperties kana;

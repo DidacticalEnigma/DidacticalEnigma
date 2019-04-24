@@ -78,7 +78,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     var large = OppositeSizedVersionOf(c);
                     if (large.HasValue && hiraganaKatakanaMap.TryGetKey(large.Value, out hiraganaCodePoint))
                     {
-                        return OppositeSizedVersionOf(large.Value).Value;
+                        return OppositeSizedVersionOf(hiraganaCodePoint).Value;
                     }
                     else
                     {

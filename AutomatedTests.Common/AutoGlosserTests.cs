@@ -144,6 +144,11 @@ namespace AutomatedTests
             {
                 new AutoGlosserNote("セーラー服", new[]{"sailor suit/middy uniform"}),
             }),
+            new TestCaseData("それもそうか", new[]
+            {
+                new AutoGlosserNote("それ も", new[]{"and in addition to that/even so"}),
+                new AutoGlosserNote("そう か", new[]{"is that so? (generally rhetorical)"}),
+            })
         };
 
         [TestCaseSource(nameof(TestCases))]

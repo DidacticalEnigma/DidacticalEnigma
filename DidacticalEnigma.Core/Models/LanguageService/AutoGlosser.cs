@@ -24,6 +24,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             GlossCandidates = GlossCandidates.ToList();
         }
 
+        public GlossNote ToGlossNote()
+        {
+            return new GlossNote(Foreign, GlossCandidates.FirstOrDefault() ?? "");
+        }
+
         public bool Equals(AutoGlosserNote other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -36,7 +41,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((AutoGlosserNote) obj);
+            return Equals((AutoGlosserNote)obj);
         }
 
         public override int GetHashCode()
@@ -110,19 +115,19 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     continue;
                 }
 
-                if(greedySelection.Count > 1)
+                if (greedySelection.Count > 1)
                 {
                     var greedyLookup = dict.Lookup(string.Concat(greedySelection.Select(w => w.RawWord))).Materialize();
                     glosses.Add(new AutoGlosserNote(
                         string.Join(" ", greedySelection.Select(w => w.RawWord)),
-                        greedyLookup.SelectMany(e => FilterOutInapplicableSenses(e.Senses, greedySelection).Select(FormatSense))));
+                        OrderSenses(FilterOutInapplicableSenses(greedyLookup, greedySelection)).Select(FormatSense)));
 
                     i += greedySelection.Count - 1; // -1 because iteration will result in one extra increase
                     continue;
                 }
-                else if(lookup != null)
+                else if (lookup != null)
                 {
-                    glosses.Add(new AutoGlosserNote(word.RawWord, lookup.SelectMany(e => FilterOutInapplicableSenses(e.Senses, word).Select(FormatSense))));
+                    glosses.Add(new AutoGlosserNote(word.RawWord, OrderSenses(FilterOutInapplicableSenses(lookup, word)).Select(FormatSense)));
                 }
                 else
                 {
@@ -164,27 +169,52 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return sb.ToString();
         }
 
+        private IEnumerable<JMDictSense> OrderSenses(IEnumerable<JMDictSense> senses)
+        {
+            return senses.OrderBy(s =>
+            {
+                if (s.PartOfSpeechInfo.Contains(EdictPartOfSpeech.exp))
+                    return 0;
+                return 1;
+            });
+        }
+
         private IEnumerable<JMDictSense> FilterOutInapplicableSenses(
-            IEnumerable<JMDictSense> senses,
+            IEnumerable<JMDictEntry> entries,
             WordInfo wordInfo)
         {
-            foreach (var sense in senses)
+            foreach (var entry in entries)
             {
-                if (wordInfo.EstimatedPartOfSpeech == PartOfSpeech.Particle &&
-                    !sense.PartOfSpeechInfo.Contains(EdictPartOfSpeech.prt))
-                    continue;
+                if (wordInfo.DictionaryForm == null || wordInfo.DictionaryForm == wordInfo.RawWord)
+                {
+                    var wordReading = kana.ToHiragana(wordInfo.Reading);
+                    if (entry.Readings.All(r => wordReading != kana.ToHiragana(r)))
+                    {
+                        continue;
+                    }
+                }
 
-                yield return sense;
+                foreach (var sense in entry.Senses)
+                {
+                    if (wordInfo.EstimatedPartOfSpeech == PartOfSpeech.Particle &&
+                        !sense.PartOfSpeechInfo.Contains(EdictPartOfSpeech.prt))
+                        continue;
+
+                    yield return sense;
+                }
             }
         }
 
         private IEnumerable<JMDictSense> FilterOutInapplicableSenses(
-            IEnumerable<JMDictSense> senses,
+            IEnumerable<JMDictEntry> entries,
             IReadOnlyCollection<WordInfo> wordInfos)
         {
-            foreach (var sense in senses)
+            foreach (var entry in entries)
             {
-                yield return sense;
+                foreach (var sense in entry.Senses)
+                {
+                    yield return sense;
+                }
             }
         }
     }
@@ -208,7 +238,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
             var glosses = new List<GlossNote>();
 
-            for(int i = 0; i < words.Count; i++)
+            for (int i = 0; i < words.Count; i++)
             {
                 var word = words[i];
                 var greedySelection = words.Skip(i).Select(w => w.RawWord).Greedy(s =>
@@ -236,7 +266,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     var description = CreateDescription((lookup
                         ?.SelectMany(entry => entry.Senses)
                         .FirstOrDefault(s => s.Type.HasValue && s.Type == Option.Some(edictType))));
-                    if((description == null || word.Type == Option.Some(EdictPartOfSpeech.cop_da)) && greedySelection.Count > 1)
+                    if ((description == null || word.Type == Option.Some(EdictPartOfSpeech.cop_da)) && greedySelection.Count > 1)
                     {
                         var greedyWord = String.Join("", greedySelection);
                         var greedyEntries = dict.Lookup(greedyWord);
@@ -284,7 +314,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         private GlossNote CreateGloss(WordInfo foreign, string format, IEnumerable<JMDictEntry> notInflected)
         {
             string senseString = "";
-            if(notInflected != null)
+            if (notInflected != null)
             {
                 notInflected = notInflected.Materialize();
                 JMDictSense sense = notInflected.SelectMany(e => e.Senses).FirstOrDefault(e => e.Type.HasValue && e.Type == foreign.Type);
