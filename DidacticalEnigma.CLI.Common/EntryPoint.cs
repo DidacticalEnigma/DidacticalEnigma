@@ -70,7 +70,8 @@ namespace DidacticalEnigma.CLI.Common
             kernel.BindFactory(() => new BasicExpressionsCorpus(Path.Combine(dataDir, "corpora", "JEC_basic_sentence_v1-2.csv"), Encoding.UTF8));
             kernel.BindFactory<IMorphologicalAnalyzer<IpadicEntry>>(() => new MeCabIpadic(new MeCabParam
             {
-                DicDir = Path.Combine(dataDir, "mecab", "ipadic")
+                DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
+                UseMemoryMappedFile = true
             }));
             kernel.Bind<IMorphologicalAnalyzer<IEntry>, IMorphologicalAnalyzer<IpadicEntry>>();
             kernel.BindFactory(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));

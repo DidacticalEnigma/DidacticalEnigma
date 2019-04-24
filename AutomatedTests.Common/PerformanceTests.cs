@@ -44,9 +44,9 @@ namespace AutomatedTests
 
         [Explicit]
         [Test]
-        public void CLIPerformace()
+        public void CLIPerformance()
         {
-            var args = new string[] {"autoglosser", TestDataPaths.BaseDir, "セーラー服"};
+            var args = new string[] {TestDataPaths.BaseDir, "autoglosser", "セーラー服" };
             var watch = Stopwatch.StartNew();
             EntryPoint.Main(args);
             var elapsed = watch.Elapsed;

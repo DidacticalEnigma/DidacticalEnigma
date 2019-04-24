@@ -11,10 +11,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="JetBrains.Annotations" Version="10.2.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
     <PackageReference Include="LibJpConjSharp" Version="0.5.8" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="NMeCabNetStandard" Version="0.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NMeCabNetStandard" Version="0.7.2" />
     <PackageReference Include="Optional" Version="4.0.0" />
     <PackageReference Include="System.Memory" Version="4.5.2" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />

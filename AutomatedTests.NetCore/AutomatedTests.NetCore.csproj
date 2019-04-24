@@ -46,11 +46,11 @@
 
   <ItemGroup>
     <PackageReference Include="Gu.Inject" Version="0.1.0-dev" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="NMeCabNetStandard" Version="0.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NMeCabNetStandard" Version="0.7.2" />
     <PackageReference Include="nunit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="Optional" Version="4.0.0" />
     <PackageReference Include="System.Memory" Version="4.5.2" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
