@@ -42,12 +42,20 @@ namespace DidacticalEnigma.CLI.Common
             {
                 var glosser = new AutoGlosser(mecab, dict);
                 var glosses = glosser.Gloss(input);
-                var jsonGlosses = glosses.Select(g => new ExpectedGloss()
+                var jsonWriter = new JsonTextWriter(Console.Out);
+                jsonWriter.WriteStartArray();
+                foreach (var gloss in glosses)
                 {
-                    Definitions = new string[] { g.Text },
-                    Word = g.Foreign
-                });
-                Console.WriteLine(JsonConvert.SerializeObject(jsonGlosses));
+                    jsonWriter.WriteStartObject();
+                    jsonWriter.WritePropertyName("word");
+                    jsonWriter.WriteValue(gloss.Foreign);
+                    jsonWriter.WritePropertyName("definitions");
+                    jsonWriter.WriteStartArray();
+                    jsonWriter.WriteValue(gloss.Text);
+                    jsonWriter.WriteEndArray();
+                    jsonWriter.WriteEndObject();
+                }
+                jsonWriter.WriteEndArray();
             }
         }
 
