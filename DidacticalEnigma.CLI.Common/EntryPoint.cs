@@ -37,8 +37,15 @@ namespace DidacticalEnigma.CLI.Common
 
         private static void RunAutomaticGlossing(string dataDir, string input)
         {
-            var kernel = Configure(dataDir);
-            var glosser = kernel.Get<AutoGlosser>();
+            var mecab = new MeCabIpadic(new MeCabParam
+            {
+                DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
+                UseMemoryMappedFile = true
+            });
+            var dict = JMDict.Create(
+                Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"),
+                Path.Combine(dataDir, "dictionaries", "JMdict_e.cache"));
+            var glosser = new AutoGlosser(mecab, dict);
             var glosses = glosser.Gloss(input);
             var jsonGlosses = glosses.Select(g => new ExpectedGloss()
             {
