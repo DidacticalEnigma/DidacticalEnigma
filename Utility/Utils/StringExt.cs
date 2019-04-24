@@ -87,6 +87,23 @@ namespace Utility.Utils
             return sb.ToString();
         }
 
+        public static bool TryGetPrefix(this string input, string prefix, out string tail)
+        {
+            return TryGetPrefix(input, prefix, StringComparison.Ordinal, out tail);
+        }
+
+        public static bool TryGetPrefix(this string input, string prefix, StringComparison comparison, out string tail)
+        {
+            if (input.StartsWith(prefix, comparison))
+            {
+                tail = input.Substring(prefix.Length);
+                return true;
+            }
+
+            tail = "";
+            return false;
+        }
+
         public static IEnumerable<string> SplitWithQuotes(string input, char delimiter, char quote)
         {
             var sb = new StringBuilder();

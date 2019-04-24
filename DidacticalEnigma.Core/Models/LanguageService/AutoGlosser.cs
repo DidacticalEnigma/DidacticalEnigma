@@ -1,15 +1,195 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using DidacticalEnigma.Core.Models.Project;
 using DidacticalEnigma.Core.Utils;
 using JDict;
+using JetBrains.Annotations;
 using Optional;
 using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public class AutoGlosser
+    public class AutoGlosserNote : IEquatable<AutoGlosserNote>
+    {
+        [NotNull] public string Foreign { get; }
+
+        [NotNull] public IEnumerable<string> GlossCandidates { get; }
+
+        public AutoGlosserNote([NotNull] string foreign, [NotNull] IEnumerable<string> glossCandidates)
+        {
+            Foreign = foreign ?? throw new ArgumentNullException(nameof(foreign));
+            GlossCandidates = glossCandidates ?? throw new ArgumentNullException(nameof(glossCandidates));
+            GlossCandidates = GlossCandidates.ToList();
+        }
+
+        public bool Equals(AutoGlosserNote other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return string.Equals(Foreign, other.Foreign) && GlossCandidates.SequenceEqual(other.GlossCandidates);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((AutoGlosserNote) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Foreign.GetHashCode() * 397) ^ GlossCandidates.DefaultIfEmpty("").Aggregate(0, (h, s) => h * 397 + s.GetHashCode());
+            }
+        }
+
+        public static bool operator ==(AutoGlosserNote left, AutoGlosserNote right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(AutoGlosserNote left, AutoGlosserNote right)
+        {
+            return !Equals(left, right);
+        }
+    }
+
+    public interface IAutoGlosser
+    {
+        IEnumerable<AutoGlosserNote> Gloss(string inputText);
+    }
+
+    public class AutoGlosserNext : IAutoGlosser
+    {
+        private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
+        private readonly JMDict dict;
+        private readonly IKanaProperties kana;
+
+        public AutoGlosserNext(IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer, JMDict dict, IKanaProperties kana)
+        {
+            this.morphologicalAnalyzer = morphologicalAnalyzer;
+            this.dict = dict;
+            this.kana = kana;
+        }
+
+        public IEnumerable<AutoGlosserNote> Gloss(string inputText)
+        {
+            var words = morphologicalAnalyzer.BreakIntoSentences(inputText)
+                .SelectMany(x => x)
+                .ToList();
+
+            var glosses = new List<AutoGlosserNote>();
+
+            for (int i = 0; i < words.Count; i++)
+            {
+                var word = words[i];
+                var greedySelection = words.Skip(i).Greedy(wordInfos =>
+                {
+                    var entireExpression = string.Concat(wordInfos.Select(w => w.RawWord));
+                    var l = dict.Lookup(entireExpression);
+                    if (l == null)
+                        return false;
+
+                    var entireReading = kana.ToHiragana(string.Concat(wordInfos.Select(w => w.Reading)));
+                    if (l.Any(e => e.Readings.Any(r => entireReading == kana.ToHiragana(r))))
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }).ToList();
+                var lookup = dict.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();
+
+                if (word.RawWord.All(c => ".!?？！⁉、".IndexOf(c) != -1))
+                {
+                    // skip punctuation
+                    continue;
+                }
+
+                if(greedySelection.Count > 1)
+                {
+                    var greedyLookup = dict.Lookup(string.Concat(greedySelection.Select(w => w.RawWord))).Materialize();
+                    glosses.Add(new AutoGlosserNote(
+                        string.Join(" ", greedySelection.Select(w => w.RawWord)),
+                        greedyLookup.SelectMany(e => FilterOutInapplicableSenses(e.Senses, greedySelection).Select(FormatSense))));
+
+                    i += greedySelection.Count - 1; // -1 because iteration will result in one extra increase
+                    continue;
+                }
+                else if(lookup != null)
+                {
+                    glosses.Add(new AutoGlosserNote(word.RawWord, lookup.SelectMany(e => FilterOutInapplicableSenses(e.Senses, word).Select(FormatSense))));
+                }
+                else
+                {
+                    glosses.Add(new AutoGlosserNote(word.RawWord, new string[0]));
+                }
+            }
+
+            return glosses;
+        }
+
+        private string FormatSense(JMDictSense s)
+        {
+            var sb = new StringBuilder();
+            if (s.Informational.Any())
+            {
+                sb.Append("(");
+                bool first = true;
+                foreach (var info in s.Informational)
+                {
+                    if (!first)
+                        sb.Append("/");
+                    sb.Append(info);
+                    first = false;
+                }
+
+                sb.Append(") ");
+            }
+
+            {
+                bool first = true;
+                foreach (var gloss in s.Glosses)
+                {
+                    if (!first)
+                        sb.Append("/");
+                    sb.Append(gloss);
+                    first = false;
+                }
+            }
+            return sb.ToString();
+        }
+
+        private IEnumerable<JMDictSense> FilterOutInapplicableSenses(
+            IEnumerable<JMDictSense> senses,
+            WordInfo wordInfo)
+        {
+            foreach (var sense in senses)
+            {
+                if (wordInfo.EstimatedPartOfSpeech == PartOfSpeech.Particle &&
+                    !sense.PartOfSpeechInfo.Contains(EdictPartOfSpeech.prt))
+                    continue;
+
+                yield return sense;
+            }
+        }
+
+        private IEnumerable<JMDictSense> FilterOutInapplicableSenses(
+            IEnumerable<JMDictSense> senses,
+            IReadOnlyCollection<WordInfo> wordInfos)
+        {
+            foreach (var sense in senses)
+            {
+                yield return sense;
+            }
+        }
+    }
+
+    public class AutoGlosser : IAutoGlosser
     {
         private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
         private readonly JMDict dict;
@@ -20,7 +200,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             { PartOfSpeech.AuxiliaryVerb, EdictPartOfSpeech.aux_v }
         };
 
-        public IEnumerable<GlossNote> Gloss(string inputText)
+        public IEnumerable<AutoGlosserNote> Gloss(string inputText)
         {
             var words = morphologicalAnalyzer.BreakIntoSentences(inputText)
                 .SelectMany(x => x)
@@ -98,7 +278,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 }
             }
 
-            return glosses;
+            return glosses.Select(g => new AutoGlosserNote(g.Foreign, EnumerableExt.OfSingle(g.Text)));
         }
 
         private GlossNote CreateGloss(WordInfo foreign, string format, IEnumerable<JMDictEntry> notInflected)

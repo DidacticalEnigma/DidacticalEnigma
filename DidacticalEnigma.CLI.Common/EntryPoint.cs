@@ -51,7 +51,10 @@ namespace DidacticalEnigma.CLI.Common
                     jsonWriter.WriteValue(gloss.Foreign);
                     jsonWriter.WritePropertyName("definitions");
                     jsonWriter.WriteStartArray();
-                    jsonWriter.WriteValue(gloss.Text);
+                    foreach (var glossCandidate in gloss.GlossCandidates)
+                    {
+                        jsonWriter.WriteValue(glossCandidate);
+                    }
                     jsonWriter.WriteEndArray();
                     jsonWriter.WriteEndObject();
                 }
