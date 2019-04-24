@@ -37,22 +37,18 @@ namespace DidacticalEnigma.CLI.Common
 
         private static void RunAutomaticGlossing(string dataDir, string input)
         {
-            var mecab = new MeCabIpadic(new MeCabParam
+            using (var mecab = new MeCabIpadic(new MeCabParam { DicDir = Path.Combine(dataDir, "mecab", "ipadic"), UseMemoryMappedFile = true }))
+            using (var dict = JMDict.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")))
             {
-                DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
-                UseMemoryMappedFile = true
-            });
-            var dict = JMDict.Create(
-                Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"),
-                Path.Combine(dataDir, "dictionaries", "JMdict_e.cache"));
-            var glosser = new AutoGlosser(mecab, dict);
-            var glosses = glosser.Gloss(input);
-            var jsonGlosses = glosses.Select(g => new ExpectedGloss()
-            {
-                Definitions = new string[] { g.Text },
-                Word = g.Foreign
-            });
-            Console.WriteLine(JsonConvert.SerializeObject(jsonGlosses));
+                var glosser = new AutoGlosser(mecab, dict);
+                var glosses = glosser.Gloss(input);
+                var jsonGlosses = glosses.Select(g => new ExpectedGloss()
+                {
+                    Definitions = new string[] { g.Text },
+                    Word = g.Foreign
+                });
+                Console.WriteLine(JsonConvert.SerializeObject(jsonGlosses));
+            }
         }
 
         private static void DisplayHelp()
@@ -127,7 +123,7 @@ namespace DidacticalEnigma.CLI.Common
             {
                 var dict = radicals.ToDictionary(
                     r => r,
-                    r => char.ConvertFromUtf32(remapper.GetValueOrNone(r.Utf32).ValueOr((int) r.Utf32)));
+                    r => char.ConvertFromUtf32(remapper.GetValueOrNone(r.Utf32).ValueOr((int)r.Utf32)));
                 /*var d = new Dictionary<int, int>
                 {
                     {'化', '⺅'},
