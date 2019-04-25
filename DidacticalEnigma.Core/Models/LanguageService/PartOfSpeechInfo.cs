@@ -5,5 +5,7 @@
         Unknown,
         Pronoun,
         CopulaDa,
+        Counter,
+        SentenceEndingParticle
     }
 }

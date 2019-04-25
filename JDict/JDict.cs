@@ -451,6 +451,20 @@ namespace JDict
         }
     }
 
+    public class JMDictReading
+    {
+        public string Reading { get; }
+
+        public bool NotATrueReading { get; }
+    }
+
+    public class JMDictKanji
+    {
+        public string Kanji { get; }
+
+        public IEnumerable<string> Informational { get; }
+    }
+
     public class JMDictEntry
     {
         public long SequenceNumber { get; }

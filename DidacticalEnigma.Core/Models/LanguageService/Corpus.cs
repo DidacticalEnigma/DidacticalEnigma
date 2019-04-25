@@ -13,7 +13,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     {
         private static readonly Guid Version = new Guid("1E350DD3-1F74-4F23-8C95-46BA3BB4BD1E");
 
-        private readonly IMorphologicalAnalyzer<IpadicEntry> analyzer;
+        private readonly IMorphologicalAnalyzer<IEntry> analyzer;
 
         private Database db;
 
@@ -52,7 +52,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return sentence.JapaneseSentence;
         }
 
-        private double Similarity(IpadicEntry left, IpadicEntry right)
+        private double Similarity(IEntry left, IEntry right)
         {
             if (left.SurfaceForm == right.SurfaceForm)
             {
@@ -67,7 +67,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         }
 
         private Result Rate(
-            IReadOnlyList<IpadicEntry> queryMorphemes,
+            IReadOnlyList<IEntry> queryMorphemes,
             string candidate,
             long candidateId)
         {
@@ -158,6 +158,8 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .OrderByDescending(r => r.Similarity);
         }
 
+        // there is no reason why Corpus requires IPADIC
+        // outside of normalization consistency between program runs
         public Corpus(
             Func<IEnumerable<Sentence>> sentenceFactory,
             IMorphologicalAnalyzer<IpadicEntry> analyzer,
@@ -199,14 +201,14 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return Normalize(morphemes);
         }
 
-        private string Normalize(IEnumerable<IpadicEntry> morphemes)
+        private string Normalize(IEnumerable<IEntry> morphemes)
         {
             return string.Join("", morphemes
                 .Where(e => e.PartOfSpeech != PartOfSpeech.Particle)
                 .Select(m => m.DictionaryForm));
         }
 
-        private IReadOnlyList<IpadicEntry> Analyze(string s)
+        private IReadOnlyList<IEntry> Analyze(string s)
         {
             var morphemes = analyzer.ParseToEntries(s)
                 .Where(e => e.IsRegular)

@@ -95,13 +95,24 @@ namespace AutomatedTests
 
     public class DummyEntry : IEntry
     {
+        private IEnumerable<PartOfSpeechInfo> partOfSpeechInfo;
         public string ConjugatedForm { get; set; }
         public string Inflection { get; set; }
         public bool? IsIndependent { get; set; }
         public bool IsRegular { get; set; } = true;
         public string SurfaceForm { get; set; }
         public PartOfSpeech PartOfSpeech { get; set; }
-        public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo { get; set; }
+
+        public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo
+        {
+            set { partOfSpeechInfo = value; }
+        }
+
+        public IEnumerable<PartOfSpeechInfo> GetPartOfSpeechInfo()
+        {
+            return partOfSpeechInfo;
+        }
+
         public IEnumerable<string> PartOfSpeechSections { get; set; }
         public string Pronunciation { get; set; }
         public string Reading { get; set; }

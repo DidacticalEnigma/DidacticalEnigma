@@ -23,8 +23,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         bool IsRegular { get; }
         [Obsolete]
         PartOfSpeech PartOfSpeech { get; }
-        [Obsolete]
-        IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo { get; }
+
         [Obsolete]
         IEnumerable<string> PartOfSpeechSections { get; }
         [Obsolete]

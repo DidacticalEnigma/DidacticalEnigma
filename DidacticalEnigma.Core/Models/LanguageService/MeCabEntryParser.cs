@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using JDict;
 using Optional;
 
@@ -6,7 +7,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 {
     internal static class MeCabEntryParser
     {
-        public static Option<EdictPartOfSpeech> TypeFromString(string s)
+        internal static Option<EdictPartOfSpeech> TypeFromString(string s)
         {
             switch (s)
             {
@@ -115,7 +116,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             }
         }
 
-        public static bool? IsIndependentFromSections(IEnumerable<string> sections)
+        internal static bool? IsIndependentFromSections(IEnumerable<string> sections)
         {
             foreach(var s in sections)
             {
@@ -133,7 +134,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return null;
         }
 
-        public static PartOfSpeech PartOfSpeechFromString(string s)
+        internal static PartOfSpeech PartOfSpeechFromString(string s)
         {
             switch(s)
             {
@@ -170,7 +171,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             }
         }
 
-        public static PartOfSpeechInfo PartOfSpeechInfoFromString(string arg)
+        internal static PartOfSpeechInfo PartOfSpeechInfoFromString(string arg)
         {
             switch(arg)
             {
@@ -188,7 +189,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     return PartOfSpeechInfo.Unknown;
                 // counters for various categories/counter suffix
                 case "助数詞":
-                    return PartOfSpeechInfo.Unknown;
+                    return PartOfSpeechInfo.Counter;
                 // case-marking particle
                 case "格助詞":
                     return PartOfSpeechInfo.Unknown;
@@ -218,7 +219,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     return PartOfSpeechInfo.Unknown;
                 // sentence-ending particle (yo, ne, kashi, etc.)
                 case "終助詞":
-                    return PartOfSpeechInfo.Unknown;
+                    return PartOfSpeechInfo.SentenceEndingParticle;
                 // pronoun
                 case "代名詞":
                     return PartOfSpeechInfo.Pronoun;
@@ -365,9 +366,12 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             }
         }
 
-        public static string OrNull(string[] input, int index)
+        internal static string OrNull(string[] input, int index)
         {
             return index >= input.Length || input[index] == "*" ? null : input[index];
         }
+
+        public static IEnumerable<PartOfSpeechInfo> GetPartOfSpeechInfo(this IEntry entry) =>
+            entry.PartOfSpeechSections.Select(MeCabEntryParser.PartOfSpeechInfoFromString);
     }
 }

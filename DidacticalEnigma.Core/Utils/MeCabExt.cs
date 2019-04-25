@@ -35,7 +35,7 @@ namespace DidacticalEnigma.Core.Utils
                             word.SurfaceForm,
                             word.PartOfSpeech,
                             word.DictionaryForm,
-                            word.PartOfSpeechInfo.Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictPartOfSpeech.pn) : word.Type,
+                            word.GetPartOfSpeechInfo().Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictPartOfSpeech.pn) : word.Type,
                             word.Reading));
                 });
         }

@@ -39,8 +39,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public bool IsRegular { get; }
         public string SurfaceForm { get; }
         public PartOfSpeech PartOfSpeech { get; }
-        public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo =>
-            PartOfSpeechSections.Select(MeCabEntryParser.PartOfSpeechInfoFromString);
+
         public IEnumerable<string> PartOfSpeechSections { get; }
         public string Pronunciation { get; }
         public string Reading { get; }

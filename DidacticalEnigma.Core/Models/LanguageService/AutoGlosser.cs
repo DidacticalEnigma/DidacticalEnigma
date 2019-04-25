@@ -15,13 +15,13 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     {
         [NotNull] public string Foreign { get; }
 
-        [NotNull] public IEnumerable<string> GlossCandidates { get; }
+        [NotNull] public IReadOnlyCollection<string> GlossCandidates { get; }
 
         public AutoGlosserNote([NotNull] string foreign, [NotNull] IEnumerable<string> glossCandidates)
         {
             Foreign = foreign ?? throw new ArgumentNullException(nameof(foreign));
-            GlossCandidates = glossCandidates ?? throw new ArgumentNullException(nameof(glossCandidates));
-            GlossCandidates = GlossCandidates.ToList();
+            var glosses = glossCandidates ?? throw new ArgumentNullException(nameof(glossCandidates));
+            GlossCandidates = glosses.ToList();
         }
 
         public bool Equals(AutoGlosserNote other)

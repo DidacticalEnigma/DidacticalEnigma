@@ -6,7 +6,7 @@ using Utility.Utils;
 namespace AutomatedTests
 {
     [TestFixture]
-    class EnumerableExt
+    class EnumerableExtTests
     {
         [Test]
         public void Lexicographical()

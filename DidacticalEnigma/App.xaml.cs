@@ -111,9 +111,28 @@ namespace DidacticalEnigma
             kernel.BindFactory<IFontResolver>(() => new DefaultFontResolver(Path.Combine(dataDir, "character", "KanjiStrokeOrders")));
             kernel.BindFactory<IMorphologicalAnalyzer<IpadicEntry>>(() => new MeCabIpadic(new MeCabParam
             {
-                DicDir = Path.Combine(dataDir, "mecab", "ipadic")
+                DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
+                UseMemoryMappedFile = true
             }));
-            kernel.Bind<IMorphologicalAnalyzer<IEntry>, IMorphologicalAnalyzer<IpadicEntry>>();
+            kernel.BindFactory<IMorphologicalAnalyzer<UnidicEntry>>(() => new MeCabUnidic(new MeCabParam
+            {
+                DicDir = Path.Combine(dataDir, "mecab", "unidic"),
+                UseMemoryMappedFile = true
+            }));
+            kernel.BindFactory<IMorphologicalAnalyzer<IEntry>>(get =>
+            {
+                // not sure if objects created this way will be disposed twice
+                // probably doesn't matter (IDisposable.Dispose's contract says
+                // it's not a problem), but still
+                try
+                {
+                    return get.Get<IMorphologicalAnalyzer<UnidicEntry>>();
+                }
+                catch (Exception)
+                {
+                    return get.Get<IMorphologicalAnalyzer<IpadicEntry>>();
+                }
+            });
             kernel.BindFactory(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
             kernel.BindFactory(get => EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")));
             kernel.Bind<IKanjiProperties, KanjiProperties>();

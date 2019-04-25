@@ -41,8 +41,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<string> PartOfSpeechSections { get; }
 
-        public IEnumerable<PartOfSpeechInfo> PartOfSpeechInfo =>
-            PartOfSpeechSections.Select(MeCabEntryParser.PartOfSpeechInfoFromString);
+        public IEnumerable<PartOfSpeechInfo> GetPartOfSpeechInfo() => PartOfSpeechSections.Select(MeCabEntryParser.PartOfSpeechInfoFromString);
 
         public string ConjugatedForm { get; }
 

@@ -16,7 +16,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private JMDictLookup jmDict;
 
-        private readonly IMorphologicalAnalyzer<IpadicEntry> analyzer;
+        private readonly IMorphologicalAnalyzer<IEntry> analyzer;
 
         private Database db;
 
@@ -56,7 +56,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .ValueOr(normalized);
         }
 
-        private double Similarity(IpadicEntry left, IpadicEntry right)
+        private double Similarity(IEntry left, IEntry right)
         {
             if (left.SurfaceForm == right.SurfaceForm)
             {
@@ -71,7 +71,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         }
 
         private Option<Result> Rate(
-            IReadOnlyList<IpadicEntry> queryMorphemes,
+            IReadOnlyList<IEntry> queryMorphemes,
             string candidate,
             long candidateId)
         {
@@ -203,14 +203,14 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return Normalize(morphemes);
         }
 
-        private string Normalize(IEnumerable<IpadicEntry> morphemes)
+        private string Normalize(IEnumerable<IEntry> morphemes)
         {
             return string.Join("", morphemes
                 .Where(e => e.PartOfSpeech != PartOfSpeech.Particle)
                 .Select(m => m.DictionaryForm));
         }
 
-        private IReadOnlyList<IpadicEntry> Analyze(string s)
+        private IReadOnlyList<IEntry> Analyze(string s)
         {
             var morphemes = analyzer.ParseToEntries(s)
                 .Where(e => e.IsRegular)
