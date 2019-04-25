@@ -37,10 +37,11 @@ namespace DidacticalEnigma.CLI.Common
 
         private static void RunAutomaticGlossing(string dataDir, string input)
         {
+            var kana = new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8);
             using (var mecab = new MeCabIpadic(new MeCabParam { DicDir = Path.Combine(dataDir, "mecab", "ipadic"), UseMemoryMappedFile = true }))
             using (var dict = JMDictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")))
             {
-                var glosser = new AutoGlosser(mecab, dict);
+                var glosser = new AutoGlosserNext(mecab, dict, kana);
                 var glosses = glosser.Gloss(input);
                 var jsonWriter = new JsonTextWriter(Console.Out);
                 jsonWriter.WriteStartArray();
@@ -100,7 +101,7 @@ namespace DidacticalEnigma.CLI.Common
             kernel.BindFactory(get => new ModifiedHepburn(
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
                 get.Get<IKanaProperties>()));
-            kernel.BindFactory(get => new AutoGlosser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>()));
+            kernel.BindFactory(get => new AutoGlosserNext(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>(), get.Get<IKanaProperties>()));
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
             kernel.BindFactory(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));

@@ -31,7 +31,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .Where(f => f != "*")
                 .ToList()
                 .AsReadOnly();
-            IsIndependent = MeCabEntryParser.IsIndependentFromSections(PartOfSpeechSections);
         }
 
         public Option<EdictPartOfSpeech> Type { get; }
@@ -54,7 +53,5 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         public string DictionaryForm { get; }
 
         public string Pronunciation { get; }
-
-        public bool? IsIndependent { get; }
     }
 }

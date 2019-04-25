@@ -19,8 +19,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         string DictionaryForm { get; }
         string ConjugatedForm { get; }
         string Inflection { get; }
-        [Obsolete]
-        bool? IsIndependent { get; }
 
         bool IsRegular { get; }
         [Obsolete]

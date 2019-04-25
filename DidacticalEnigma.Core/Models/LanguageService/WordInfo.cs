@@ -16,8 +16,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         public IEnumerable<CodePoint> CodePoints { get; }
 
-        public bool? Independent { get; }
-
         public Option<EdictPartOfSpeech> Type { get; }
 
         public string Reading { get; }
@@ -26,7 +24,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             string word,
             PartOfSpeech partOfSpeech = PartOfSpeech.Unknown,
             string dictionaryForm = null,
-            bool? isIndependent = null,
             Option<EdictPartOfSpeech> type = default,
             string reading = null)
         {
@@ -35,7 +32,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 word.AsCodePoints().Select(cp => CodePoint.FromInt(cp)));
             EstimatedPartOfSpeech = partOfSpeech;
             DictionaryForm = dictionaryForm;
-            Independent = isIndependent;
             Type = type;
             Reading = reading;
         }

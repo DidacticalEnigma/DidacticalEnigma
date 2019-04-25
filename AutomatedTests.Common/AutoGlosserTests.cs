@@ -130,7 +130,7 @@ namespace AutomatedTests
                 new AutoGlosserNote("何もかも", new[]{"anything and everything/just about everything"}),
                 new AutoGlosserNote("手 に し た", new[]{"to hold (in one's hand)/to take (into one's hand)/to own/to obtain + inflections"}),
                 new AutoGlosserNote("気 で い た", new[]{""}),
-                new AutoGlosserNote("んだ", new []{ "" })
+                new AutoGlosserNote("ん だ", new []{ "" })
             }),
             new TestCaseData("募集できないアイテムです", new[]
             {
@@ -189,8 +189,8 @@ namespace AutomatedTests
             {
                 DicDir = TestDataPaths.Ipadic,
             });
-            this.jmdict = JDict.JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
-            glosser = new AutoGlosser(mecab, jmdict);
+            this.jmdict = JDict.JMDictLookup.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
+            glosser = new AutoGlosserNext(mecab, jmdict, kanaProperties);
         }
 
         [OneTimeTearDown]

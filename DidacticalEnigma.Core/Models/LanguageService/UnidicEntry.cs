@@ -32,12 +32,10 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .Where(f => f != "*")
                 .ToList()
                 .AsReadOnly();
-            IsIndependent = MeCabEntryParser.IsIndependentFromSections(PartOfSpeechSections);
         }
 
         public string ConjugatedForm { get; }
         public string Inflection { get; }
-        public bool? IsIndependent { get; }
         public bool IsRegular { get; }
         public string SurfaceForm { get; }
         public PartOfSpeech PartOfSpeech { get; }
