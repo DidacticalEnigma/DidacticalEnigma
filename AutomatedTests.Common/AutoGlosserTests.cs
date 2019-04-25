@@ -14,7 +14,7 @@ namespace AutomatedTests
     class AutoGlosserTests
     {
         private static IAutoGlosser glosser;
-        private JMDict jmdict;
+        private JMDictLookup jmdict;
         private IMorphologicalAnalyzer<IEntry> mecab;
 
         private static readonly TestCaseData[] TestCases =

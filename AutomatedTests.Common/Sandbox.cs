@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
+using JDict.Xml;
 using NUnit.Framework;
 
 namespace AutomatedTests
@@ -14,14 +18,13 @@ namespace AutomatedTests
         [Test]
         public void Sandbox()
         {
-            var l = Enumerable.Range(0, 1000000).ToList();
-            var counter = 0;
-            l.Sort(Comparer<int>.Create((left, right) =>
+            var serializer = new XmlSerializer(typeof(JdicEntry));
+            using (var stringWriter = new StringWriter())
+            using (var xmlWriter = XmlWriter.Create(stringWriter))
             {
-                counter++;
-                return Comparer<int>.Default.Compare(left, right);
-            }));
-            Console.WriteLine(counter);
+                serializer.Serialize(xmlWriter, new JdicEntry(){ KanjiElements = new KanjiElement[0]});
+                Console.WriteLine(stringWriter.ToString());
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using JDict.Internal.XmlModels;
+using JDict.Xml;
 using Optional;
 using Optional.Collections;
 using TinyIndex;

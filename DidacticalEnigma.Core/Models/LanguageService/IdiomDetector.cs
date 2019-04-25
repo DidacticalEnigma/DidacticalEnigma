@@ -14,7 +14,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     {
         private static readonly Guid Version = new Guid("2CAE16ED-6325-40A3-91FA-71A7348A2EC1");
 
-        private JMDict jmDict;
+        private JMDictLookup jmDict;
 
         private readonly IMorphologicalAnalyzer<IpadicEntry> analyzer;
 
@@ -168,7 +168,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         }
 
         public IdiomDetector(
-            JMDict jmDict,
+            JMDictLookup jmDict,
             IMorphologicalAnalyzer<IpadicEntry> analyzer,
             string cachePath)
         {

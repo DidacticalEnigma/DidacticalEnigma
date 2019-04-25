@@ -1,8 +1,7 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
-// I have to make these classes public because otherwise XML serialization complains
-// But they aren't really for public use
-namespace JDict.Internal.XmlModels
+namespace JDict.Xml
 {
     
     [XmlRoot("JMdict")]
@@ -19,49 +18,49 @@ namespace JDict.Internal.XmlModels
         public long Number { get; set; }
 
         [XmlElement("k_ele")]
-        public KanjiElement[] KanjiElements { get; set; }
+        public KanjiElement[] KanjiElements { get; set; } = Array.Empty<KanjiElement>();
 
         [XmlElement("r_ele")]
-        public ReadingElement[] ReadingElements { get; set; }
+        public ReadingElement[] ReadingElements { get; set; } = Array.Empty<ReadingElement>();
 
         [XmlElement("sense")]
-        public Sense[] Senses { get; set; }
+        public Sense[] Senses { get; set; } = Array.Empty<Sense>();
     }
 
     public class Sense
     {
         [XmlElement("stagk")]
-        public string[] Stagk { get; set; }
+        public string[] Stagk { get; set; } = Array.Empty<string>();
 
         [XmlElement("stagr")]
-        public string[] Stagkr { get; set; }
+        public string[] Stagkr { get; set; } = Array.Empty<string>();
 
         [XmlElement("pos")]
-        public string[] PartOfSpeech { get; set; }
+        public string[] PartOfSpeech { get; set; } = Array.Empty<string>();
 
         [XmlElement("xref")]
-        public string[] CrossRef { get; set; }
+        public string[] CrossRef { get; set; } = Array.Empty<string>();
 
         [XmlElement("ant")]
-        public string[] Antonym { get; set; }
+        public string[] Antonym { get; set; } = Array.Empty<string>();
 
         [XmlElement("field")]
-        public string[] Field { get; set; }
+        public string[] Field { get; set; } = Array.Empty<string>();
 
         [XmlElement("misc")]
-        public string[] Misc { get; set; }
+        public string[] Misc { get; set; } = Array.Empty<string>();
 
         [XmlElement("s_inf")]
-        public string[] Information { get; set; }
+        public string[] Information { get; set; } = Array.Empty<string>();
 
         [XmlElement("lsource")]
-        public LoanSource[] LoanWordSource { get; set; }
+        public LoanSource[] LoanWordSource { get; set; } = Array.Empty<LoanSource>();
 
         [XmlElement("dial")]
-        public string[] Dialect { get; set; }
+        public string[] Dialect { get; set; } = Array.Empty<string>();
 
         [XmlElement("gloss")]
-        public Gloss[] Glosses { get; set; }
+        public Gloss[] Glosses { get; set; } = Array.Empty<Gloss>();
 
     }
 
@@ -104,13 +103,13 @@ namespace JDict.Internal.XmlModels
         public string NoKanji { get; set; }
 
         [XmlElement("re_restr")]
-        public string[] Restr { get; set; }
+        public string[] Restr { get; set; } = Array.Empty<string>();
 
         [XmlElement("re_inf")]
-        public string[] Inf { get; set; }
+        public string[] Inf { get; set; } = Array.Empty<string>();
 
         [XmlElement("re_pri")]
-        public string[] Pri { get; set; }
+        public string[] Pri { get; set; } = Array.Empty<string>();
     }
 
     public class KanjiElement
@@ -119,9 +118,9 @@ namespace JDict.Internal.XmlModels
         public string Key { get; set; }
 
         [XmlElement("ke_inf")]
-        public string[] Inf { get; set; }
+        public string[] Inf { get; set; } = Array.Empty<string>();
 
         [XmlElement("ke_pri")]
-        public string[] Pri { get; set; }
+        public string[] Pri { get; set; } = Array.Empty<string>();
     }   
 }

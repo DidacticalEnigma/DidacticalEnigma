@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using JDict.Internal.XmlModels;
+using JDict.Xml;
 using Optional;
 using Optional.Collections;
 using Optional.Unsafe;
@@ -21,11 +22,108 @@ using FileMode = System.IO.FileMode;
 
 namespace JDict
 {
-    // represents a lookup over an JMdict file
-    public class JMDict : IDisposable
+    public static class JMDict
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(JdicEntry));
 
+        private static readonly XmlReaderSettings xmlSettings = new XmlReaderSettings
+        {
+            CloseInput = false,
+            DtdProcessing = DtdProcessing.Parse, // we have local entities
+            XmlResolver = null, // we don't want to resolve against external entities
+            MaxCharactersFromEntities = 64 * 1024 * 1024 / 2, // 64 MB
+            MaxCharactersInDocument = 256 * 1024 * 1024 / 2, // 256 MB
+            IgnoreComments = false
+        };
+
+        public static DateTime? GetVersion(Stream stream)
+        {
+            using (var xmlReader = XmlReader.Create(stream, xmlSettings))
+            {
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.NodeType == XmlNodeType.Comment)
+                    {
+                        var commentText = xmlReader.Value.Trim();
+                        if (commentText.StartsWith("JMdict created:", StringComparison.Ordinal))
+                        {
+                            var generationDate = commentText.Split(':').ElementAtOrDefault(1)?.Trim();
+                            if (DateTime.TryParseExact(generationDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var date))
+                            {
+                                return date;
+                            }
+
+                            return null;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static IEnumerable<JdicEntry> ParseEntries(Stream stream)
+        {
+            using (var xmlReader = XmlReader.Create(stream, xmlSettings))
+            {
+                while (xmlReader.Read())
+                {
+                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "JMdict")
+                    {
+                        while (xmlReader.Read())
+                        {
+                            if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "entry")
+                            {
+                                using (
+                                    var elementReader =
+                                        new StringReader(xmlReader.ReadOuterXml()))
+                                {
+                                    var entry = (JdicEntry)serializer.Deserialize(elementReader);
+                                    entry.Senses = entry.Senses ?? Array.Empty<Sense>();
+                                    entry.KanjiElements = entry.KanjiElements ?? Array.Empty<KanjiElement>();
+                                    entry.ReadingElements = entry.ReadingElements ?? Array.Empty<ReadingElement>();
+                                    foreach (var s in entry.Senses)
+                                    {
+                                        s.Glosses = s.Glosses ?? Array.Empty<Gloss>();
+                                        s.PartOfSpeech = s.PartOfSpeech ?? Array.Empty<string>();
+                                        s.Antonym = s.Antonym ?? Array.Empty<string>();
+                                        s.CrossRef = s.CrossRef ?? Array.Empty<string>();
+                                        s.Dialect = s.Dialect ?? Array.Empty<string>();
+                                        s.Field = s.Field ?? Array.Empty<string>();
+                                        s.Information = s.Information ?? Array.Empty<string>();
+                                        s.LoanWordSource = s.LoanWordSource ?? Array.Empty<LoanSource>();
+                                        s.Misc = s.Misc ?? Array.Empty<string>();
+                                        s.Stagk = s.Stagk ?? Array.Empty<string>();
+                                        s.Stagkr = s.Stagkr ?? Array.Empty<string>();
+                                        foreach (var gloss in s.Glosses)
+                                        {
+                                            if (gloss.Lang == null)
+                                            {
+                                                gloss.Lang = "eng";
+                                            }
+                                        }
+
+                                        foreach (var loanSource in s.LoanWordSource)
+                                        {
+                                            if (loanSource.Lang == null)
+                                            {
+                                                loanSource.Lang = "eng";
+                                            }
+                                        }
+                                    }
+
+                                    yield return entry;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // represents a lookup over an JMdict file
+    public class JMDictLookup : IDisposable
+    {
         private static readonly Guid Version = new Guid("3E448317-AE2D-4D7C-A135-3AB18F0288C0");
 
         private TinyIndex.Database db;
@@ -34,7 +132,7 @@ namespace JDict
 
         private IReadOnlyDiskArray<JMDictEntry> entries;
 
-        private JMDict Init(Stream stream, string cache)
+        private JMDictLookup Init(Stream stream, string cache)
         {
             var entrySerializer = TinyIndex.Serializer.ForComposite()
                 .With(Serializer.ForLong())
@@ -78,7 +176,7 @@ namespace JDict
                     });
 
             db = TinyIndex.Database.CreateOrOpen(cache, Version)
-                .AddIndirectArray(entrySerializer, db => Deserialize(stream)
+                .AddIndirectArray(entrySerializer, db => JMDict.ParseEntries(stream)
                     .Select(CreateEntry),
                         x => x.SequenceNumber)
                 .AddIndirectArray(TinyIndex.Serializer.ForKeyValuePair(TinyIndex.Serializer.ForStringAsUTF8(), TinyIndex.Serializer.ForReadOnlyList(TinyIndex.Serializer.ForLong())), db =>
@@ -112,101 +210,44 @@ namespace JDict
             return this;
         }
 
-        private IEnumerable<JdicEntry> Deserialize(Stream stream)
-        {
-            var xmlSettings = new XmlReaderSettings
-            {
-                CloseInput = false,
-                DtdProcessing = DtdProcessing.Parse, // we have local entities
-                XmlResolver = null, // we don't want to resolve against external entities
-                MaxCharactersFromEntities = 64 * 1024 * 1024 / 2, // 64 MB
-                MaxCharactersInDocument = 256 * 1024 * 1024 / 2, // 256 MB
-                IgnoreComments = false
-            };
-            using (var xmlReader = XmlReader.Create(stream, xmlSettings))
-            {
-                while (xmlReader.Read())
-                {
-                    if (xmlReader.NodeType == XmlNodeType.Comment)
-                    {
-                        var commentText = xmlReader.Value.Trim();
-                        if (commentText.StartsWith("JMdict created:", StringComparison.Ordinal))
-                        {
-                            var generationDate = commentText.Split(':').ElementAtOrDefault(1)?.Trim();
-                        }
-                    }
-                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "JMdict")
-                    {
-                        while (xmlReader.Read())
-                        {
-                            if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "entry")
-                            {
-                                using (
-                                    var elementReader =
-                                        new StringReader(xmlReader.ReadOuterXml()))
-                                {
-                                    var entry = (JdicEntry)serializer.Deserialize(elementReader);
-                                    foreach (var s in entry.Senses ?? Array.Empty<Sense>())
-                                    {
-                                        foreach (var gloss in s.Glosses ?? Array.Empty<Gloss>())
-                                        {
-                                            if (gloss.Lang == null)
-                                            {
-                                                gloss.Lang = "eng";
-                                            }
-                                        }
-
-                                        foreach (var loanSource in s.LoanWordSource ?? Array.Empty<LoanSource>())
-                                        {
-                                            if (loanSource.Lang == null)
-                                            {
-                                                loanSource.Lang = "eng";
-                                            }
-                                        }
-                                    }
-
-                                    yield return entry;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         private JMDictEntry CreateEntry(JdicEntry xmlEntry)
         {
             return new JMDictEntry(
                 xmlEntry.Number,
                 xmlEntry.ReadingElements.Select(r => r.Reb).ToList(),
-                (xmlEntry.KanjiElements?.Select(k => k.Key) ?? Enumerable.Empty<string>()).ToList(),
+                xmlEntry.KanjiElements.Select(k => k.Key).ToList(),
                 CreateSenses(xmlEntry));
         }
 
         private IReadOnlyCollection<JMDictSense> CreateSenses(JdicEntry xmlEntry)
         {
             var sense = new List<JMDictSense>();
-            string[] previousPartOfSpeech = null;
+            string[] partOfSpeech = Array.Empty<string>();
+            var typedPartOfSpeech = new List<EdictPartOfSpeech>();
             foreach (var s in xmlEntry.Senses)
             {
-                var partOfSpeech = s.PartOfSpeech ?? previousPartOfSpeech ?? Array.Empty<string>();
-                sense.Add(new JMDictSense(
-                    EdictTypeUtils.FromDescription(partOfSpeech?.FirstOrNone(pos => EdictTypeUtils.FromDescription(pos).HasValue).ValueOr("")),
-                    partOfSpeech.Select(posStr => EdictTypeUtils.FromDescription(posStr).ValueOr(() =>
+                if (s.PartOfSpeech.Length > 0)
+                {
+                    partOfSpeech = s.PartOfSpeech;
+                    typedPartOfSpeech = partOfSpeech.Select(posStr => EdictTypeUtils.FromDescription(posStr).ValueOr(() =>
                     {
                         Debug.WriteLine($"{posStr} unknown");
                         return default(EdictPartOfSpeech);
-                    })).ToList(),
-                    (s.Dialect ?? Array.Empty<string>()).Select(EdictDialectUtils.FromDescription).Values().ToList(),
+                    })).ToList();
+                }
+
+                sense.Add(new JMDictSense(
+                    partOfSpeech.Select(EdictTypeUtils.FromDescription).FirstOrNone().Flatten(),
+                    typedPartOfSpeech,
+                    s.Dialect.Select(EdictDialectUtils.FromDescription).Values().ToList(),
                     s.Glosses.Select(g => g.Text.Trim()).ToList(),
-                    s.Information?.ToList() ?? new List<string>()));
-                previousPartOfSpeech = partOfSpeech;
+                    s.Information.ToList()));
             }
 
             return sense;
         }
 
-        private async Task<JMDict> InitAsync(Stream stream, string cache)
+        private async Task<JMDictLookup> InitAsync(Stream stream, string cache)
         {
             // TODO: not a lazy way
             await Task.Run(() => Init(stream, cache));
@@ -255,7 +296,7 @@ namespace JDict
             }
         }
 
-        private async Task<JMDict> InitAsync(string path, string cache)
+        private async Task<JMDictLookup> InitAsync(string path, string cache)
         {
             using (var file = File.OpenRead(path))
             using (var gzip = new GZipStream(file, CompressionMode.Decompress))
@@ -264,7 +305,7 @@ namespace JDict
             }
         }
 
-        private JMDict Init(string path, string cache)
+        private JMDictLookup Init(string path, string cache)
         {
             using (var file = File.OpenRead(path))
             using (var gzip = new GZipStream(file, CompressionMode.Decompress))
@@ -273,35 +314,35 @@ namespace JDict
             }
         }
 
-        private JMDict()
+        private JMDictLookup()
         {
 
         }
 
-        public static JMDict Create(string path, string cache)
+        public static JMDictLookup Create(string path, string cache)
         {
-            return new JMDict().Init(
+            return new JMDictLookup().Init(
                 path,
                 cache);
         }
 
-        public static JMDict Create(Stream stream, string cache)
+        public static JMDictLookup Create(Stream stream, string cache)
         {
-            return new JMDict().Init(
+            return new JMDictLookup().Init(
                 stream,
                 cache);
         }
 
-        public static async Task<JMDict> CreateAsync(string path, string cache)
+        public static async Task<JMDictLookup> CreateAsync(string path, string cache)
         {
-            return await new JMDict().InitAsync(
+            return await new JMDictLookup().InitAsync(
                 path,
                 cache);
         }
 
-        public static async Task<JMDict> CreateAsync(Stream stream, string cache)
+        public static async Task<JMDictLookup> CreateAsync(Stream stream, string cache)
         {
-            return await new JMDict().InitAsync(
+            return await new JMDictLookup().InitAsync(
                 stream,
                 cache);
         }

@@ -14,7 +14,7 @@ namespace AutomatedTests
     [TestFixture]
     class IdiomDetectorTests
     {
-        private static JMDict jmdict;
+        private static JMDictLookup jmdict;
 
         private static IMorphologicalAnalyzer<IpadicEntry> ipadicMecab;
 
@@ -23,7 +23,7 @@ namespace AutomatedTests
         [OneTimeSetUp]
         public void SetUp()
         {
-            jmdict = JDict.JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
+            jmdict = JDict.JMDictLookup.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
             ipadicMecab = new MeCabIpadic(new MeCabParam
             {
                 DicDir = TestDataPaths.Ipadic

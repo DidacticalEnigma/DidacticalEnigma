@@ -71,13 +71,13 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     public class AutoGlosserNext : IAutoGlosser
     {
         private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
-        private readonly JMDict dict;
+        private readonly JMDictLookup dictLookup;
         private readonly IKanaProperties kana;
 
-        public AutoGlosserNext(IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer, JMDict dict, IKanaProperties kana)
+        public AutoGlosserNext(IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer, JMDictLookup dictLookup, IKanaProperties kana)
         {
             this.morphologicalAnalyzer = morphologicalAnalyzer;
-            this.dict = dict;
+            this.dictLookup = dictLookup;
             this.kana = kana;
         }
 
@@ -95,7 +95,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 var greedySelection = words.Skip(i).Greedy(wordInfos =>
                 {
                     var entireExpression = string.Concat(wordInfos.Select(w => w.RawWord));
-                    var l = dict.Lookup(entireExpression);
+                    var l = dictLookup.Lookup(entireExpression);
                     if (l == null)
                         return false;
 
@@ -107,7 +107,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
                     return false;
                 }).ToList();
-                var lookup = dict.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();
+                var lookup = dictLookup.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();
 
                 if (word.RawWord.All(c => ".!?？！⁉、".IndexOf(c) != -1))
                 {
@@ -117,7 +117,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
                 if (greedySelection.Count > 1)
                 {
-                    var greedyLookup = dict.Lookup(string.Concat(greedySelection.Select(w => w.RawWord))).Materialize();
+                    var greedyLookup = dictLookup.Lookup(string.Concat(greedySelection.Select(w => w.RawWord))).Materialize();
                     glosses.Add(new AutoGlosserNote(
                         string.Join(" ", greedySelection.Select(w => w.RawWord)),
                         OrderSenses(FilterOutInapplicableSenses(greedyLookup, greedySelection)).Select(FormatSense)));
@@ -222,7 +222,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
     public class AutoGlosser : IAutoGlosser
     {
         private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
-        private readonly JMDict dict;
+        private readonly JMDictLookup dictLookup;
 
         private static readonly IReadOnlyDictionary<PartOfSpeech, EdictPartOfSpeech> mapping = new Dictionary<PartOfSpeech, EdictPartOfSpeech>
         {
@@ -244,9 +244,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 var greedySelection = words.Skip(i).Select(w => w.RawWord).Greedy(s =>
                 {
                     var w = String.Join("", s);
-                    return dict.Lookup(w) != null;
+                    return dictLookup.Lookup(w) != null;
                 }).ToList();
-                var lookup = dict.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();
+                var lookup = dictLookup.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();
 
                 if (word.RawWord.All(c => ".!?？！⁉、".IndexOf(c) != -1))
                 {
@@ -269,7 +269,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                     if ((description == null || word.Type == Option.Some(EdictPartOfSpeech.cop_da)) && greedySelection.Count > 1)
                     {
                         var greedyWord = String.Join("", greedySelection);
-                        var greedyEntries = dict.Lookup(greedyWord);
+                        var greedyEntries = dictLookup.Lookup(greedyWord);
 
                         var splitGreedyWord = String.Join(" ", morphologicalAnalyzer.BreakIntoSentences(greedyWord).SelectMany(x => x).Select(x => x.RawWord));
                         glosses.Add(CreateGloss(new WordInfo(splitGreedyWord), "{0}", greedyEntries));
@@ -327,10 +327,10 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 (string.Format(format, senseString) + (foreign.RawWord != foreign.DictionaryForm && foreign.DictionaryForm != null ? " + inflections" : "")).Trim());
         }
 
-        public AutoGlosser(IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer, JMDict dict)
+        public AutoGlosser(IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer, JMDictLookup dictLookup)
         {
             this.morphologicalAnalyzer = morphologicalAnalyzer;
-            this.dict = dict;
+            this.dictLookup = dictLookup;
         }
 
         private static string CreateDescription(JMDictSense sense)

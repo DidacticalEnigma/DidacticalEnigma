@@ -86,7 +86,7 @@ namespace DidacticalEnigma
         public void Preload(IProgress<string> reporter)
         {
             reporter.Report("Initializing JMdict dictionary (first time may take up to several minutes)");
-            kernel.Get<JMDict>();
+            kernel.Get<JMDictLookup>();
             reporter.Report("Initializing JMnedict dictionary (first time may take up to several minutes)");
             kernel.Get<Jnedict>();
             reporter.Report("Initializing MeCab");
@@ -101,7 +101,7 @@ namespace DidacticalEnigma
             kernel.BindFactory(() => KanjiDict.Create(Path.Combine(dataDir, "character", "kanjidic2.xml.gz")));
             kernel.BindFactory(() => new Kradfile(Path.Combine(dataDir, "character", "kradfile1_plus_2_utf8"), Encoding.UTF8));
             kernel.BindFactory(() => new Radkfile(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8"), Encoding.UTF8));
-            kernel.BindFactory(() => JMDict.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")));
+            kernel.BindFactory(() => JMDictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")));
             kernel.BindFactory(() => Jnedict.Create(Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache")));
             kernel.BindFactory(() =>
                 new FrequencyList(Path.Combine(dataDir, "other", "word_form_frequency_list.txt"), Encoding.UTF8));
@@ -143,13 +143,13 @@ namespace DidacticalEnigma
             kernel.BindFactory(get => new ModifiedHepburn(
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
                 get.Get<IKanaProperties>()));
-            kernel.BindFactory(get => new AutoGlosser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDict>()));
+            kernel.BindFactory(get => new AutoGlosser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>()));
             kernel.BindFactory(get => new[] {
                 new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFlowDocumentRichFormattingRenderer>()),
-                new DataSourceVM(new JMDictDataSource(get.Get<JMDict>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new JMDictDataSource(get.Get<JMDictLookup>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JNeDictDataSource(get.Get<Jnedict>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
-                new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDict>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDictLookup>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new WordFrequencyRatingDataSource(get.Get<FrequencyList>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JGramDataSource(get.Get<IJGramLookup>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
@@ -176,8 +176,8 @@ namespace DidacticalEnigma
                 new UsageDataSourcePreviewVM(get.Get<IEnumerable<DataSourceVM>>(), "view_3.config")
             });
             kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
-            kernel.BindFactory(get => new IdiomDetector(get.Get<JMDict>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
-            kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDict>(), get.Get<IRadicalSearcher>(), get.Get<KanjiRadicalLookup>()));
+            kernel.BindFactory(get => new IdiomDetector(get.Get<JMDictLookup>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
+            kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDictLookup>(), get.Get<IRadicalSearcher>(), get.Get<KanjiRadicalLookup>()));
             kernel.BindFactory(get =>
             {
                 using(var reader = File.OpenText(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8")))

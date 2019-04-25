@@ -23,11 +23,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private static Regex groupMatcher = new Regex(@"\\\[(.*?)\]");
 
-        public PartialWordLookup(JMDict jmDict, IRadicalSearcher searcher, KanjiRadicalLookup lookup)
+        public PartialWordLookup(JMDictLookup jmDictLookup, IRadicalSearcher searcher, KanjiRadicalLookup lookup)
         {
             this.searcher = searcher;
             this.lookup = lookup;
-            allWords = string.Join("", jmDict.AllEntries()
+            allWords = string.Join("", jmDictLookup.AllEntries()
                 .SelectMany(entry => entry.Kanji.Concat(entry.Readings))
                 .Distinct()
                 .Select(word => start + word + end));

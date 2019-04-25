@@ -12,7 +12,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class JMDictDataSource : IDataSource
     {
-        private readonly JMDict jdict;
+        private readonly JMDictLookup jdict;
         private readonly IKanaProperties kana;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
@@ -108,7 +108,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public JMDictDataSource(JMDict jdict, IKanaProperties kana)
+        public JMDictDataSource(JMDictLookup jdict, IKanaProperties kana)
         {
             this.jdict = jdict;
             this.kana = kana;

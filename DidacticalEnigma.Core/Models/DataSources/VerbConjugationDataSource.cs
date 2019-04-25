@@ -14,7 +14,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
 {
     public class VerbConjugationDataSource : IDataSource
     {
-        private readonly JMDict jdict;
+        private readonly JMDictLookup jdict;
 
         public static DataSourceDescriptor Descriptor { get; } = new DataSourceDescriptor(
             new Guid("4D25D667-D7FC-4F37-9FF5-364DFAD46028"),
@@ -127,7 +127,7 @@ Te - Te Form
             return Task.FromResult(UpdateResult.NotSupported);
         }
 
-        public VerbConjugationDataSource(JMDict jdict)
+        public VerbConjugationDataSource(JMDictLookup jdict)
         {
             this.jdict = jdict;
         }

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace JDict.Internal.XmlModels
+namespace JDict.Xml
 {
     [XmlRoot("JMnedict")]
     public class JMNedictRoot

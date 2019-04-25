@@ -38,7 +38,7 @@ namespace DidacticalEnigma.CLI.Common
         private static void RunAutomaticGlossing(string dataDir, string input)
         {
             using (var mecab = new MeCabIpadic(new MeCabParam { DicDir = Path.Combine(dataDir, "mecab", "ipadic"), UseMemoryMappedFile = true }))
-            using (var dict = JMDict.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")))
+            using (var dict = JMDictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")))
             {
                 var glosser = new AutoGlosser(mecab, dict);
                 var glosses = glosser.Gloss(input);
@@ -75,7 +75,7 @@ namespace DidacticalEnigma.CLI.Common
             kernel.BindFactory(() => KanjiDict.Create(Path.Combine(dataDir, "character", "kanjidic2.xml.gz")));
             kernel.BindFactory(() => new Kradfile(Path.Combine(dataDir, "character", "kradfile1_plus_2_utf8"), Encoding.UTF8));
             kernel.BindFactory(() => new Radkfile(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8"), Encoding.UTF8));
-            kernel.BindFactory(() => JMDict.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")));
+            kernel.BindFactory(() => JMDictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")));
             kernel.BindFactory(() => Jnedict.Create(Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache")));
             kernel.BindFactory(() =>
                 new FrequencyList(Path.Combine(dataDir, "other", "word_form_frequency_list.txt"), Encoding.UTF8));
@@ -100,7 +100,7 @@ namespace DidacticalEnigma.CLI.Common
             kernel.BindFactory(get => new ModifiedHepburn(
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
                 get.Get<IKanaProperties>()));
-            kernel.BindFactory(get => new AutoGlosser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDict>()));
+            kernel.BindFactory(get => new AutoGlosser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>()));
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
             kernel.BindFactory(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
@@ -110,8 +110,8 @@ namespace DidacticalEnigma.CLI.Common
                     get.Get<EasilyConfusedKana>(),
                     get.Get<SimilarKanji>()));
             kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
-            kernel.BindFactory(get => new IdiomDetector(get.Get<JMDict>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
-            kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDict>(), get.Get<IRadicalSearcher>(), get.Get<KanjiRadicalLookup>()));
+            kernel.BindFactory(get => new IdiomDetector(get.Get<JMDictLookup>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
+            kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDictLookup>(), get.Get<IRadicalSearcher>(), get.Get<KanjiRadicalLookup>()));
             kernel.BindFactory(get =>
             {
                 using (var reader = File.OpenText(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8")))

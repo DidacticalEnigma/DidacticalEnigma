@@ -57,7 +57,7 @@ namespace AutomatedTests
         [Test]
         public void JmdictAllEntriesPerformance()
         {
-            using (var jmdict = JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache))
+            using (var jmdict = JMDictLookup.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache))
             {
                 var watch = Stopwatch.StartNew();
                 var list = jmdict.AllEntries().ToList();
@@ -77,7 +77,7 @@ namespace AutomatedTests
                 //var baseline = dotMemory.Check();
                 var watch = Stopwatch.StartNew();
 
-                using (var jdict = JMDict.Create(TestDataPaths.JMDict, cache))
+                using (var jdict = JMDictLookup.Create(TestDataPaths.JMDict, cache))
                 {
                     var elapsed = watch.Elapsed;
                     /*var _ = dotMemory.Check(m =>
@@ -98,7 +98,7 @@ namespace AutomatedTests
         [Test]
         public void PartialLookupCreation()
         {
-            using (var jmdict = JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache))
+            using (var jmdict = JMDictLookup.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache))
             {
                 var watch = Stopwatch.StartNew();
                 var wordLookup = new PartialWordLookup(jmdict, radicalSearcher, lookup);

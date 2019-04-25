@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace JDict.Internal.XmlModels
+namespace JDict.Xml
 {
     [XmlRoot("kanjidic2")]
     public class KanjiDictRoot
@@ -10,7 +10,7 @@ namespace JDict.Internal.XmlModels
         public KanjiDictHeader Header { get; set; }
 
         [XmlElement("character")]
-        public KanjiCharacter[] Characters { get; set; }
+        public KanjiCharacter[] Characters { get; set; } = Array.Empty<KanjiCharacter>();
     }
 
     public class KanjiDictHeader
@@ -52,7 +52,7 @@ namespace JDict.Internal.XmlModels
     public class KanjiDictionaryNumbers
     {
         [XmlElement("dic_ref")]
-        public KanjiDictionaryReference[] References { get; set; }
+        public KanjiDictionaryReference[] References { get; set; } = Array.Empty<KanjiDictionaryReference>();
     }
 
     public class KanjiDictionaryReference
@@ -73,7 +73,7 @@ namespace JDict.Internal.XmlModels
     public class KanjiCodePoints
     {
         [XmlElement("cp_value")]
-        public KanjiCodePoint[] CodePoints { get; set; }
+        public KanjiCodePoint[] CodePoints { get; set; } = Array.Empty<KanjiCodePoint>();
     }
 
     public class KanjiCodePoint
@@ -88,7 +88,7 @@ namespace JDict.Internal.XmlModels
     public class KanjiQueryCodes
     {
         [XmlElement("q_code")]
-        public KanjiQueryCode[] Codes { get; set; }
+        public KanjiQueryCode[] Codes { get; set; } = Array.Empty<KanjiQueryCode>();
     }
 
     public class KanjiQueryCode
@@ -106,19 +106,19 @@ namespace JDict.Internal.XmlModels
     public class KanjiReadingMeaning
     {
         [XmlElement("rmgroup")]
-        public KanjiRmGroup[] Groups { get; set; }
+        public KanjiRmGroup[] Groups { get; set; } = Array.Empty<KanjiRmGroup>();
 
         [XmlElement("nanori")]
-        public KanjiNanori[] Nanori { get; set; }
+        public KanjiNanori[] Nanori { get; set; } = Array.Empty<KanjiNanori>();
     }
 
     public class KanjiRmGroup
     {
         [XmlElement("reading")]
-        public KanjiReading[] Readings { get; set; }
+        public KanjiReading[] Readings { get; set; } = Array.Empty<KanjiReading>();
 
         [XmlElement("meaning")]
-        public KanjiMeaning[] Meanings { get; set; }
+        public KanjiMeaning[] Meanings { get; set; } = Array.Empty<KanjiMeaning>();
     }
 
     public class KanjiReading
@@ -148,7 +148,7 @@ namespace JDict.Internal.XmlModels
     public class KanjiRadical
     {
         [XmlElement("rad_value")]
-        public int[] Value { get; set; }
+        public int[] Value { get; set; } = Array.Empty<int>();
 
         [XmlAttribute("rad_type")]
         public string Type { get; set; }
@@ -161,17 +161,17 @@ namespace JDict.Internal.XmlModels
 
         /// "If more than one, the first is considered the accepted count, while subsequent ones are common miscounts."
         [XmlElement("stroke_count")]
-        public int[] StrokeCount { get; set; }
+        public int[] StrokeCount { get; set; } = Array.Empty<int>();
 
         // Variant
         [XmlElement("variant")]
-        public KanjiVariant[] Variants { get; set; }
+        public KanjiVariant[] Variants { get; set; } = Array.Empty<KanjiVariant>();
 
         [XmlElement("freq")]
         public int FrequencyRating { get; set; }
 
         [XmlElement("rad_name")]
-        public string[] RadicalName { get; set; }
+        public string[] RadicalName { get; set; } = Array.Empty<string>();
 
         [XmlElement("jlpt")]
         public int JlptLevel { get; set; }

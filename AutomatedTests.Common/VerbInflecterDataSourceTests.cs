@@ -15,12 +15,12 @@ namespace AutomatedTests
     {
         private static VerbConjugationDataSource dataSource;
 
-        private static JMDict jmdict;
+        private static JMDictLookup jmdict;
 
         [OneTimeSetUp]
         public void SetUp()
         {
-            jmdict = JDict.JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
+            jmdict = JDict.JMDictLookup.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
             dataSource = new VerbConjugationDataSource(jmdict);
         }
 

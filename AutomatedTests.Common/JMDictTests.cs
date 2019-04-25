@@ -12,12 +12,12 @@ namespace AutomatedTests
     [TestFixture]
     class JMDictTests
     {
-        private static JMDict jmdict;
+        private static JMDictLookup jmdict;
 
         [OneTimeSetUp]
         public void SetUp()
         {
-            jmdict = JDict.JMDict.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
+            jmdict = JDict.JMDictLookup.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
         }
 
         [OneTimeTearDown]

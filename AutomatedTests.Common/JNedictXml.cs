@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using JDict.Internal.XmlModels;
+using JDict.Xml;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
