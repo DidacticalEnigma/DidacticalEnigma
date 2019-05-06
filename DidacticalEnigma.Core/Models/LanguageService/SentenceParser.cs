@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using Optional;
 
-namespace DidacticalEnigma.Core.Models.LanguageService
+namespace DidacticalEnigma.Core.Models
 {
     public class SentenceParser : ISentenceParser
     {
@@ -31,7 +32,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                             word.PartOfSpeech,
                             word.DictionaryForm,
                             word.GetPartOfSpeechInfo().Contains(PartOfSpeechInfo.Pronoun) ? Option.Some(EdictPartOfSpeech.pn) : word.Type,
-                            word.Reading ?? lookup.Lookup(word.DictionaryForm ?? word.SurfaceForm).First().Readings.First()));
+                            word.Reading ?? lookup.Lookup(word.DictionaryForm ?? word.SurfaceForm)?.FirstOrDefault()?.Readings.First()));
                 });
         }
     }

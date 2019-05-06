@@ -102,13 +102,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
                     return false;
                 }).ToList();
-                var lookup = dictLookup.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();
-
-                if (word.RawWord.All(c => ".!?？！⁉、".IndexOf(c) != -1))
-                {
-                    // skip punctuation
-                    continue;
-                }
+                var lookup = dictLookup.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();               
 
                 if (greedySelection.Count > 1)
                 {

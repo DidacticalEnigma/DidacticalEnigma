@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
 using JDict;
 using NMeCab;
@@ -158,6 +159,13 @@ namespace AutomatedTests
             {
                 new AutoGlosserNote("それ も", new[]{"and in addition to that/even so"}),
                 new AutoGlosserNote("そう か", new[]{"is that so? (generally rhetorical)"}),
+            }),
+            new TestCaseData("試着は できるのか?", new[]
+            {
+                new AutoGlosserNote("試着", new[]{"trying on clothes"}),
+                new AutoGlosserNote("は", new[]{"(pronounced わ in modern Japanese) topic marker particle"}),
+                new AutoGlosserNote("できる", new[]{"to be out of/to have no more at hand","to be able (in a position) to do/to be up to the task"}),
+                new AutoGlosserNote("の か", new[]{"(sentence ending particle) endorsing and questioning the preceding statement","(sentence ending particle) lamenting reflections on the preceding statement"}),
             })
         };
 
