@@ -54,7 +54,45 @@ namespace AutomatedTests
                     Pronunciation = "タ",
                     Reading = "タ"
                 }
-            }), 
+            }),
+            new TestCaseData("試着は できるのか", new[]
+            {
+                new DummyEntry
+                {
+                    SurfaceForm = "試着",
+                    DictionaryForm = null,
+                    Pronunciation = null,
+                    Reading = null
+                },
+                new DummyEntry
+                {
+                    SurfaceForm = "は",
+                    DictionaryForm = "は",
+                    Pronunciation = "ワ",
+                    Reading = "ハ"
+                },
+                new DummyEntry
+                {
+                    SurfaceForm = "できる",
+                    DictionaryForm = "できる",
+                    Pronunciation = "デキル",
+                    Reading = "デキル"
+                },
+                new DummyEntry
+                {
+                    SurfaceForm = "の",
+                    DictionaryForm = "の",
+                    Pronunciation = "ノ",
+                    Reading = "ノ"
+                },
+                new DummyEntry
+                {
+                    SurfaceForm = "か",
+                    DictionaryForm = "か",
+                    Pronunciation = "カ",
+                    Reading = "カ"
+                },
+            }),
         };
 
         [TestCaseSource(nameof(Test))]

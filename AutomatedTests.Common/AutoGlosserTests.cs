@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DidacticalEnigma.Core.Models.LanguageService;
-using DidacticalEnigma.Core.Models.Project;
 using JDict;
 using NMeCab;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
-using Utility.Utils;
 
 namespace AutomatedTests
 {
@@ -229,7 +227,8 @@ namespace AutomatedTests
                 UseMemoryMappedFile = true
             });
             this.jmdict = JDict.JMDictLookup.Create(TestDataPaths.JMDict, TestDataPaths.JMDictCache);
-            glosser = new AutoGlosserNext(mecab, jmdict, kanaProperties);
+            var parser = new SentenceParser(mecab, jmdict);
+            glosser = new AutoGlosserNext(parser, jmdict, kanaProperties);
         }
 
         [OneTimeTearDown]

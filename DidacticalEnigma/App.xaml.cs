@@ -142,7 +142,7 @@ namespace DidacticalEnigma
                 get.Get<Radkfile>(),
                 null));
             kernel.BindFactory(get => new MainWindowVM(
-                get.Get<IMorphologicalAnalyzer<IEntry>>(),
+                get.Get<ISentenceParser>(),
                 new KanaBoardVM(Path.Combine(dataDir, "character", "hiragana_romaji.txt"), Encoding.UTF8),
                 new KanaBoardVM(Path.Combine(dataDir, "character", "katakana_romaji.txt"), Encoding.UTF8),
                 get.Get<IEnumerable<UsageDataSourcePreviewVM>>(),
@@ -163,7 +163,7 @@ namespace DidacticalEnigma
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
                 get.Get<IKanaProperties>()));
             kernel.Bind<IAutoGlosser, AutoGlosserNext>();
-            kernel.BindFactory(get => new AutoGlosserNext(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>(), get.Get<IKanaProperties>()));
+            kernel.BindFactory(get => new AutoGlosserNext(get.Get<ISentenceParser>(), get.Get<JMDictLookup>(), get.Get<IKanaProperties>()));
             kernel.BindFactory(get => new[] {
                 new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFlowDocumentRichFormattingRenderer>()),
@@ -185,6 +185,8 @@ namespace DidacticalEnigma
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
             kernel.BindFactory(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
+            kernel.BindFactory(get => new SentenceParser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>()));
+            kernel.Bind<ISentenceParser, SentenceParser>();
             kernel.BindFactory<IRelated>(get =>
                 new CompositeRelated(
                     get.Get<KanaProperties2>(),

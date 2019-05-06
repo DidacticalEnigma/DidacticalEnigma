@@ -22,11 +22,12 @@ namespace AutomatedTests
         {
             MeCabParam mecabParam = new MeCabParam
             {
-                DicDir = TestDataPaths.Ipadic,
+                DicDir = TestDataPaths.Unidic,
+                UseMemoryMappedFile = true
             };
             tagger = MeCabTagger.Create(mecabParam);
             mecabParam.LatticeLevel = MeCabLatticeLevel.Zero;
-            mecabParam.OutputFormatType = "lattice";
+            mecabParam.OutputFormatType = "yomi";
             mecabParam.AllMorphs = false;
             mecabParam.Partial = true;
         }
@@ -35,31 +36,24 @@ namespace AutomatedTests
         [Test]
         public void Tanaka()
         {
-            var meCab = new MeCabUnidic(new MeCabParam
-            {
-                DicDir = TestDataPaths.Unidic,
-            });
             var sentences = new Tanaka(TestDataPaths.Tanaka, Encoding.UTF8).AllSentences();
             var features = new HashSet<string>();
             var sentencesFiltered = new HashSet<string>();
-            var count = 0;
-            var sum = 0;
-            var max = 0;
-            var permutermSizeEstimate = 0;
+            var n = 0;
             foreach(var rawSentence in sentences.Select(s => s.JapaneseSentence))
             {
-                var c = meCab
-                    .ParseToEntries(rawSentence)
-                    .Count(e => e.IsRegular);
-                count++;
-                sum += c;
-                max = Math.Max(c, max);
-                permutermSizeEstimate += (Encoding.UTF8.GetByteCount(rawSentence)+1) * c;
+                Console.WriteLine(tagger.Parse(rawSentence));
+                var c = tagger.ParseToNodes(rawSentence);
+                foreach (var morpheme in c)
+                {
+                    var feature = morpheme.Feature;
+                    if(feature != null)
+                        Console.WriteLine($"{morpheme.Surface} {feature}");
+                    n++;
+                    if (n == 20)
+                        Assert.Fail();
+                }
             }
-            Console.WriteLine($"Count: {count}");
-            Console.WriteLine($"Max: {max}");
-            Console.WriteLine($"Avg: {sum/count}");
-            Console.WriteLine($"Permuterm size UTF-8: {permutermSizeEstimate / 1024 / 1024}MB");
         }
 
         [TearDown]
@@ -76,6 +70,17 @@ namespace AutomatedTests
                 UriBuilder uri = new UriBuilder(codeBase);
                 string path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path);
+            }
+        }
+    }
+
+    internal static class MeCabExt
+    {
+        public static IEnumerable<MeCabNode> ParseToNodes(this MeCabTagger tagger, string text)
+        {
+            for (var node = tagger.ParseToNode(text); node != null; node = node.Next)
+            {
+                yield return node;
             }
         }
     }

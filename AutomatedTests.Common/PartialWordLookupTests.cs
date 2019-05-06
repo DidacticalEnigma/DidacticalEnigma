@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DidacticalEnigma;
+using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
 using Gu.Inject;
@@ -58,7 +59,7 @@ namespace AutomatedTests
             kernel.BindFactory(get => new ModifiedHepburn(
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
                 get.Get<IKanaProperties>()));
-            kernel.BindFactory(get => new AutoGlosserNext(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>(), get.Get<IKanaProperties>()));
+            kernel.BindFactory(get => new AutoGlosserNext(get.Get<ISentenceParser>(), get.Get<JMDictLookup>(), get.Get<IKanaProperties>()));
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
             kernel.BindFactory(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
@@ -82,6 +83,8 @@ namespace AutomatedTests
                 Path.Combine(dataDir, "dictionaries", "jgram.cache")));
             kernel.BindFactory(get => new RadkfileKanjiAliveCorrelator(Path.Combine(dataDir, "character", "radkfile_kanjilive_correlation_data.txt")));
             kernel.Bind<IRadicalSearcher, RadicalSearcher>();
+            kernel.BindFactory(get => new SentenceParser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>()));
+            kernel.Bind<ISentenceParser, SentenceParser>();
             kernel.BindFactory(get => new RadicalSearcher(
                 get.Get<KanjiRadicalLookup>().AllRadicals,
                 KanjiAliveJapaneseRadicalInformation.Parse(Path.Combine(dataDir, "character", "japanese-radicals.csv")),

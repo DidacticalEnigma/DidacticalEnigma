@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
 using Gu.Inject;
 using JDict;
@@ -41,7 +42,8 @@ namespace DidacticalEnigma.CLI.Common
             using (var mecab = new MeCabIpadic(new MeCabParam { DicDir = Path.Combine(dataDir, "mecab", "ipadic"), UseMemoryMappedFile = true }))
             using (var dict = JMDictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")))
             {
-                var glosser = new AutoGlosserNext(mecab, dict, kana);
+                var parser = new SentenceParser(mecab, dict);
+                var glosser = new AutoGlosserNext(parser, dict, kana);
                 var glosses = glosser.Gloss(input);
                 var jsonWriter = new JsonTextWriter(Console.Out);
                 jsonWriter.WriteStartArray();

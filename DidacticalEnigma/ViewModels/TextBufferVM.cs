@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
 using Utility.Utils;
@@ -15,7 +16,7 @@ namespace DidacticalEnigma.ViewModels
 
         private string rawOutput = "";
 
-        private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
+        private readonly ISentenceParser parser;
         private readonly IKanjiProperties kanji;
         private readonly IKanaProperties kana;
         private readonly IRelated related;
@@ -141,7 +142,7 @@ namespace DidacticalEnigma.ViewModels
         {
             Lines.Clear();
             Lines.AddRange(
-                morphologicalAnalyzer.BreakIntoSentences(unannotatedOutput)
+                parser.BreakIntoSentences(unannotatedOutput)
                     .Select(sentence => new LineVM(sentence.Select(word => new WordVM(word, kanji, kana, related)))));
             AddIteration();
             rawOutput = string.Join(
@@ -161,12 +162,12 @@ namespace DidacticalEnigma.ViewModels
 
         public TextBufferVM(
             string name,
-            IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer,
+            ISentenceParser parser,
             IKanjiProperties kanji,
             IKanaProperties kana,
             IRelated related)
         {
-            this.morphologicalAnalyzer = morphologicalAnalyzer;
+            this.parser = parser;
             this.kanji = kanji;
             this.kana = kana;
             this.related = related;

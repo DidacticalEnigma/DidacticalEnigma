@@ -83,7 +83,7 @@ namespace DidacticalEnigma.ViewModels
         private readonly int maxUsageIndex = 3;
 
         public MainWindowVM(
-            IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer,
+            ISentenceParser parser,
             KanaBoardVM hiraganaBoard,
             KanaBoardVM katakanaBoard,
             IEnumerable<UsageDataSourcePreviewVM> usageDataSourceVms,
@@ -100,9 +100,9 @@ namespace DidacticalEnigma.ViewModels
             InsertTextAtCaret = insertText;
             this.aboutTextProvider = aboutTextProvider;
             UsageDataSourceVMs = new ObservableBatchCollection<UsageDataSourcePreviewVM>(usageDataSourceVms);
-            TextBuffers.Add(new TextBufferVM("Scratchpad", morphologicalAnalyzer, kanjiProperties, kanaProperties, related));
-            TextBuffers.Add(new TextBufferVM("Main", morphologicalAnalyzer, kanjiProperties, kanaProperties, related));
-            ClipboardTextBuffer = new TextBufferVM("Clipboard", morphologicalAnalyzer, kanjiProperties, kanaProperties, related);
+            TextBuffers.Add(new TextBufferVM("Scratchpad", parser, kanjiProperties, kanaProperties, related));
+            TextBuffers.Add(new TextBufferVM("Main", parser, kanjiProperties, kanaProperties, related));
+            ClipboardTextBuffer = new TextBufferVM("Clipboard", parser, kanjiProperties, kanaProperties, related);
             TextBuffers.Add(ClipboardTextBuffer);
             KanjiLookupVM = kanjiLookupVm;
             hook = new ClipboardHook();

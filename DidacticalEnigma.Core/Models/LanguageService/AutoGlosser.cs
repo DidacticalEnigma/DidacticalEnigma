@@ -65,20 +65,20 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
     public class AutoGlosserNext : IAutoGlosser
     {
-        private readonly IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer;
+        private readonly ISentenceParser parser;
         private readonly JMDictLookup dictLookup;
         private readonly IKanaProperties kana;
 
-        public AutoGlosserNext(IMorphologicalAnalyzer<IEntry> morphologicalAnalyzer, JMDictLookup dictLookup, IKanaProperties kana)
+        public AutoGlosserNext(ISentenceParser parser, JMDictLookup dictLookup, IKanaProperties kana)
         {
-            this.morphologicalAnalyzer = morphologicalAnalyzer;
+            this.parser = parser;
             this.dictLookup = dictLookup;
             this.kana = kana;
         }
 
         public IEnumerable<AutoGlosserNote> Gloss(string inputText)
         {
-            var words = morphologicalAnalyzer.BreakIntoSentences(inputText)
+            var words = parser.BreakIntoSentences(inputText)
                 .SelectMany(x => x)
                 .ToList();
 

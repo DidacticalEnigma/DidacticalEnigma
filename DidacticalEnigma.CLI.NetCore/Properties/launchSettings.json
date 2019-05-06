@@ -1,7 +1,8 @@
 {
   "profiles": {
     "DidacticalEnigma.CLI.NetCore": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "D:\\DidacticalEnigma-Data autoglosser \"試着は できるのか?\""
     }
   }
 }

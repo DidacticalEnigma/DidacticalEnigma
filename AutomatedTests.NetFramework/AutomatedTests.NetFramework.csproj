@@ -195,6 +195,9 @@
     <Compile Include="..\AutomatedTests.Common\Sandbox.cs">
       <Link>Sandbox.cs</Link>
     </Compile>
+    <Compile Include="..\AutomatedTests.Common\SentenceParserTests.cs">
+      <Link>SentenceParserTests.cs</Link>
+    </Compile>
     <Compile Include="..\AutomatedTests.Common\SerializerExtTests.cs">
       <Link>SerializerExtTests.cs</Link>
     </Compile>
