@@ -8,6 +8,7 @@ using JDict;
 using NMeCab;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
+using Utility.Utils;
 
 namespace AutomatedTests
 {
@@ -210,6 +211,7 @@ namespace AutomatedTests
 
                 return true;
             };
+            expected = expected.Materialize();
             foreach (var expectedActualPair in expected.Zip(notes, (l, r) => (expected: l, actual: r)))
             {
                 Assert.True(
@@ -218,6 +220,7 @@ namespace AutomatedTests
                     StringFromGloss(expectedActualPair.expected),
                     StringFromGloss(expectedActualPair.actual));
             }
+            Assert.AreEqual(expected.Count(), notes.Count);
         }
 
         [OneTimeSetUp]
