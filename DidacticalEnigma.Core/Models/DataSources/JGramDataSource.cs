@@ -37,12 +37,14 @@ namespace DidacticalEnigma.Core.Models.DataSources
 
         private IEnumerable<Paragraph> Render(JGram.Entry entry)
         {
-            yield return new TextParagraph(new []
+            var text = new List<Text>()
             {
-                new Text( $"{entry.Key} [{entry.Reading}]\n"),
-                new Text(entry.Translation + "\n"),
-                new Text(entry.Example, fontSize: FontSize.Small)
-            });
+                new Text($"{entry.Key} [{entry.Reading}]\n"),
+                new Text(entry.Translation + "\n")
+            };
+            if(entry.Example != null)
+                text.Add(new Text(entry.Example, fontSize: FontSize.Small));
+            yield return new TextParagraph(text);
             yield return new LinkParagraph(new Uri("http://www.jgram.org/pages/viewOne.php?id=" + entry.Id), "more info");
         }
 

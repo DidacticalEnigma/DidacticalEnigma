@@ -1,0 +1,16 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div>
+    <form method="get" asp-action="./Index">
+        <textarea asp-for="UserInput"></textarea>
+        <input type="submit" value="Send"/>
+    </form>
+</div>
+
+<div id="Output">
+    @Html.Raw(Model.RenderedHtml)
+</div>

@@ -38,7 +38,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomatedTests.NetCore", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatedTests.NetFramework", "AutomatedTests.NetFramework\AutomatedTests.NetFramework.csproj", "{12D1829B-C437-46AA-B2BE-587B913F4AF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicTranslatorGlosser", "MagicTranslatorGlosser\MagicTranslatorGlosser.csproj", "{71C09B3B-35F5-4020-9AD0-2FDED60CA60B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicTranslatorGlosser", "MagicTranslatorGlosser\MagicTranslatorGlosser.csproj", "{71C09B3B-35F5-4020-9AD0-2FDED60CA60B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma.Web", "DidacticalEnigma.Web\DidacticalEnigma.Web.csproj", "{159F077C-D715-41BA-BFCA-D201A58C16E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,6 +112,10 @@ Global
 		{71C09B3B-35F5-4020-9AD0-2FDED60CA60B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71C09B3B-35F5-4020-9AD0-2FDED60CA60B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71C09B3B-35F5-4020-9AD0-2FDED60CA60B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{159F077C-D715-41BA-BFCA-D201A58C16E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{159F077C-D715-41BA-BFCA-D201A58C16E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{159F077C-D715-41BA-BFCA-D201A58C16E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{159F077C-D715-41BA-BFCA-D201A58C16E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
