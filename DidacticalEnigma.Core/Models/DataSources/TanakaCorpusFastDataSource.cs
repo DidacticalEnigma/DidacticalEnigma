@@ -35,7 +35,7 @@ namespace DidacticalEnigma.Core.Models.DataSources
                     l.RenderedHighlights
                         .Select(t => new Text(t.fragment, emphasis: t.highlight)));
                 textParagraph.Content.Add(new Text("\n"));
-                textParagraph.Content.Add(new Text(l.Sentence.EnglishSentence));
+                textParagraph.Content.Add(new Text(l.SentencePair.EnglishSentence));
                 rich.Paragraphs.Add(textParagraph);
             }
 

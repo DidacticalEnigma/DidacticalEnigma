@@ -17,22 +17,22 @@ namespace DidacticalEnigma.Core.Models.LanguageService
 
         private Database db;
 
-        private IReadOnlyDiskArray<Sentence> entries;
+        private IReadOnlyDiskArray<SentencePair> entries;
 
         private IReadOnlyDiskArray<KeyValuePair<string, long>> index;
 
         public class Result
         {
-            public Sentence Sentence { get; }
+            public SentencePair SentencePair { get; }
 
             public IEnumerable<(string fragment, bool highlight)> RenderedHighlights { get; }
 
             // arbitrary measure by which a specific result is "better" than other
             public double Similarity { get; }
 
-            public Result(Sentence sentence, IEnumerable<(string fragment, bool highlight)> renderedHighlights, double similarity)
+            public Result(SentencePair sentencePair, IEnumerable<(string fragment, bool highlight)> renderedHighlights, double similarity)
             {
-                Sentence = sentence;
+                SentencePair = sentencePair;
                 RenderedHighlights = renderedHighlights;
                 Similarity = similarity;
             }
@@ -47,9 +47,9 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .ToList();
         }
 
-        private string OriginalNotNormalized(string normalized, Sentence sentence)
+        private string OriginalNotNormalized(string normalized, SentencePair sentencePair)
         {
-            return sentence.JapaneseSentence;
+            return sentencePair.JapaneseSentence;
         }
 
         private double Similarity(IEntry left, IEntry right)
@@ -161,7 +161,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         // there is no reason why Corpus requires IPADIC
         // outside of normalization consistency between program runs
         public Corpus(
-            Func<IEnumerable<Sentence>> sentenceFactory,
+            Func<IEnumerable<SentencePair>> sentenceFactory,
             IMorphologicalAnalyzer<IpadicEntry> analyzer,
             string cachePath)
         {
@@ -171,20 +171,20 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 .With(Serializer.ForStringAsUTF8())
                 .Create()
                 .Mapping(
-                    raw => new Sentence((string) raw[0], (string) raw[1]),
+                    raw => new SentencePair((string) raw[0], (string) raw[1]),
                     obj => new object[] {obj.JapaneseSentence, obj.EnglishSentence});
 
             db = Database.CreateOrOpen(cachePath, Version)
                 .AddIndirectArray(sentenceSerializer, db => sentenceFactory())
                 .AddIndirectArray(Serializer.ForKeyValuePair(Serializer.ForStringAsUTF8(), Serializer.ForLong()),
-                    db => CreateIndex(db.Get<Sentence>(0).LinearScan()), kvp => kvp.Key)
+                    db => CreateIndex(db.Get<SentencePair>(0).LinearScan()), kvp => kvp.Key)
                 .Build();
 
-            entries = db.Get<Sentence>(0);
+            entries = db.Get<SentencePair>(0);
             index = db.Get<KeyValuePair<string, long>>(1);
         }
 
-        private IEnumerable<KeyValuePair<string, long>> CreateIndex(IEnumerable<Sentence> sentences)
+        private IEnumerable<KeyValuePair<string, long>> CreateIndex(IEnumerable<SentencePair> sentences)
         {
             var rotations = sentences
                 .Indexed()

@@ -10,15 +10,15 @@ namespace JDict
 {
     public class Tanaka
     {
-        private static Sentence SentenceFromLine(string line)
+        private static SentencePair SentenceFromLine(string line)
         {
             var components = line.Split('\t');
             var japaneseSentence = components[0].Remove(0, 3);
             var englishSentence = components[1].Remove(components[1].IndexOf("#ID", StringComparison.InvariantCulture));
-            return new Sentence(japaneseSentence, englishSentence);
+            return new SentencePair(japaneseSentence, englishSentence);
         }
 
-        private static IEnumerable<Sentence> Sentences(Func<TextReader> readerFactory)
+        private static IEnumerable<SentencePair> Sentences(Func<TextReader> readerFactory)
         {
             using (var reader = readerFactory())
             {
@@ -33,9 +33,9 @@ namespace JDict
             }
         }
 
-        private static IAsyncEnumerable<Sentence> SentencesAsync(Func<TextReader> readerFactory)
+        private static IAsyncEnumerable<SentencePair> SentencesAsync(Func<TextReader> readerFactory)
         {
-            return new AsyncEnumerable<Sentence>(async yield =>
+            return new AsyncEnumerable<SentencePair>(async yield =>
             {
                 using (var reader = readerFactory())
                 {
@@ -68,22 +68,22 @@ namespace JDict
                 encoding);
         }
 
-        public IEnumerable<Sentence> AllSentences()
+        public IEnumerable<SentencePair> AllSentences()
         {
             return Sentences(Reader);
         }
 
-        public IAsyncEnumerable<Sentence> AllSentencesAsync()
+        public IAsyncEnumerable<SentencePair> AllSentencesAsync()
         {
             return SentencesAsync(Reader);
         }
 
-        public IEnumerable<Sentence> SearchByJapaneseText(string text)
+        public IEnumerable<SentencePair> SearchByJapaneseText(string text)
         {
             return Sentences(Reader).Where(x => x.JapaneseSentence.Contains(text));
         }
 
-        public IAsyncEnumerable<Sentence> SearchByJapaneseTextAsync(string text)
+        public IAsyncEnumerable<SentencePair> SearchByJapaneseTextAsync(string text)
         {
             return SentencesAsync(Reader).Where(x => x.JapaneseSentence.Contains(text));
         }

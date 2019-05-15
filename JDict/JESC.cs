@@ -10,7 +10,7 @@ namespace JDict
 {
     public class JESC
     {
-        private IEnumerable<Sentence> Sentences(Func<string, TextReader> readerFactory)
+        private IEnumerable<SentencePair> Sentences(Func<string, TextReader> readerFactory)
         {
             using (var readerJp = readerFactory(pathJp))
             using (var readerEn = readerFactory(pathEn))
@@ -23,14 +23,14 @@ namespace JDict
                     string lineEn;
                     if ((lineEn = readerEn.ReadLine()) == null)
                         break;
-                    yield return new Sentence(lineJp, lineEn);
+                    yield return new SentencePair(lineJp, lineEn);
                 }
             }
         }
 
-        private IAsyncEnumerable<Sentence> SentencesAsync(Func<string, TextReader> readerFactory)
+        private IAsyncEnumerable<SentencePair> SentencesAsync(Func<string, TextReader> readerFactory)
         {
-            return new AsyncEnumerable<Sentence>(async yield =>
+            return new AsyncEnumerable<SentencePair>(async yield =>
             {
                 using (var readerJp = readerFactory(pathJp))
                 using (var readerEn = readerFactory(pathEn))
@@ -43,7 +43,7 @@ namespace JDict
                         string lineEn;
                         if ((lineEn = await readerEn.ReadLineAsync()) == null)
                             break;
-                        await yield.ReturnAsync(new Sentence(lineJp, lineEn));
+                        await yield.ReturnAsync(new SentencePair(lineJp, lineEn));
                     }
                 }
             });
@@ -69,22 +69,22 @@ namespace JDict
                 encoding);
         }
 
-        public IEnumerable<Sentence> AllSentences()
+        public IEnumerable<SentencePair> AllSentences()
         {
             return Sentences(Reader);
         }
 
-        public IAsyncEnumerable<Sentence> AllSentencesAsync()
+        public IAsyncEnumerable<SentencePair> AllSentencesAsync()
         {
             return SentencesAsync(Reader);
         }
 
-        public IEnumerable<Sentence> SearchByJapaneseText(string text)
+        public IEnumerable<SentencePair> SearchByJapaneseText(string text)
         {
             return Sentences(Reader).Where(x => x.JapaneseSentence.Contains(text));
         }
 
-        public IAsyncEnumerable<Sentence> SearchByJapaneseTextAsync(string text)
+        public IAsyncEnumerable<SentencePair> SearchByJapaneseTextAsync(string text)
         {
             return SentencesAsync(Reader).Where(x => x.JapaneseSentence.Contains(text));
         }
