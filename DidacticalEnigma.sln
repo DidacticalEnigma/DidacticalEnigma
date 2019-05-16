@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2042
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma.WPF", "DidacticalEnigma\DidacticalEnigma.WPF.csproj", "{BA5B8792-EAF8-4A87-B58E-225290FD14A0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JDict", "JDict\JDict.csproj", "{82E18376-40E8-4F9D-BC46-E166354BCCB3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DidacticalEnigma.Core", "DidacticalEnigma.Core\DidacticalEnigma.Core.csproj", "{72613547-03D0-4CDE-AE3E-946451E99726}"
@@ -23,8 +21,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzySharp", "FuzzySharp\FuzzySharp\FuzzySharp.csproj", "{9258628C-D4E8-4FFD-BD86-D8B599A7A27A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KanjiRecognition.Core", "KanjiRecognition.Core\KanjiRecognition.Core.csproj", "{5BD6F215-64F0-462B-B454-0ED1FA01C9FF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanjiRecognition.TestApp", "KanjiRecognition.TestApp\KanjiRecognition.TestApp.csproj", "{FF35515D-8454-4FFA-B18E-B7CBC4077195}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicTranslatorProject", "MagicTranslatorProject\MagicTranslatorProject.csproj", "{3D793BA8-3C55-48A2-9DBF-2E0755F0EB17}"
 EndProject
