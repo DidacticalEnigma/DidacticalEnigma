@@ -29,6 +29,7 @@ namespace AutomatedTests
             new TestCaseData("jun'ichi rou", "じゅんいちろう"), 
             new TestCaseData("ikiru ka shinu ka 、 sore ga mondai da", "生きるか死ぬか、それが問題だ"),
             new TestCaseData("issei", "一斉"),
+            new TestCaseData("shichaku wa dekiru no ka ?", "試着はできるのか?"), 
 
         };
 

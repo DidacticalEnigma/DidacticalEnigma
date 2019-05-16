@@ -21,9 +21,11 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return ToLongString();
         }
 
+        public string StringRepresentation => char.ConvertFromUtf32(Utf32);
+
         public override string ToString()
         {
-            return char.ConvertFromUtf32(Utf32);
+            return StringRepresentation;
         }
 
         internal CodePoint(int s)
