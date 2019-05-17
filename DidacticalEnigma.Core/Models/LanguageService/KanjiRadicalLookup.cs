@@ -8,7 +8,7 @@ using Utility.Utils;
 
 namespace DidacticalEnigma.Core.Models.LanguageService
 {
-    public class KanjiRadicalLookup
+    public class KanjiRadicalLookup : IKanjiRadicalLookup
     {
         public ReadOnlyListWithSelector<IKanjiOrdering> SortingCriteria { get; }
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.DataSources;
@@ -15,7 +17,26 @@ namespace DidacticalEnigma.Xam.Services
 {
     public class ServiceLocator
     {
+        private static readonly HttpClient httpClient = new HttpClient();
+
+        // TODO: replace with proper DI
         public static Kernel Locator { get; } = new Kernel();
+
+        public static void DownloadData(string dataDir)
+        {
+            if (File.Exists(Path.Combine(dataDir, "about.txt")))
+                return;
+
+            // TODO: fix hardcoded path
+            var url = "https://github.com/milleniumbug/DidacticalEnigma-Data/archive/master.zip";
+            // TODO: FIX .Result
+            var stream = httpClient.GetStreamAsync(url).Result;
+            using (var dest = File.OpenWrite(Path.Combine(dataDir, "data.zip")))
+            {
+                stream.CopyTo(dest);
+            }
+            ZipFile.ExtractToDirectory(Path.Combine(dataDir, "data.zip"), dataDir);
+        }
 
         public static void Configure(string dataDir, string cacheDir)
         {

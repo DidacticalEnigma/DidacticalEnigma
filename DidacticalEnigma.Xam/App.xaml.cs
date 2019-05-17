@@ -14,8 +14,6 @@ namespace DidacticalEnigma.Xam
         {
             InitializeComponent();
 
-            DependencyService.Register<MockDataStore>();
-
             MainPage = new MainPage();
         }
 
