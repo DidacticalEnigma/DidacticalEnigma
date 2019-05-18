@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DidacticalEnigma.Xam.Views.DataInitializationPage"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label>
+The data files must be downloaded. Pressing the button below will make the application do it for you.
+The app will ask for permission to access the internet. The size of the download is 150MB.
+            </Label>
+            <Button Text="Download the data files for me"></Button>
+            <Label>
+Alternatively you can follow the manual installation process:
+Download the files from this site
+            </Label>
+            <Label Text="Site here"></Label>
+            <Label>
+And place them in the following directory.
+            </Label>
+            <Label Text="Data path here"></Label>
+            <Label>
+Once you've done this, press the following button
+            </Label>
+            <Button Text="Yes, I have downloaded the data files"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

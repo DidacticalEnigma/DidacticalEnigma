@@ -23,12 +23,12 @@ namespace DidacticalEnigma.Xam.WPF
         {
             string dataDir = @"D:\DidacticalEnigma-Data";
             string cacheDir = @"C:\Users\IEUser\Desktop\cache";
-            //ServiceLocator.Configure(dataDir, cacheDir);
-            ServiceLocator.Locator.BindFactory(get =>
+            ServiceLocator.Configure(dataDir, cacheDir);
+            /*ServiceLocator.Locator.BindFactory(get =>
             {
                 return new KanjiRadicalLookupControlVM(new MockKanjiRadicalLookup(), new MockKanjiProperties(),
                     new MockRadicalSearcher(), new Dictionary<CodePoint, string>());
-            });
+            });*/
         }
     }
 }

@@ -13,8 +13,18 @@ namespace DidacticalEnigma.Xam
         public App()
         {
             InitializeComponent();
+            
 
-            MainPage = new MainPage();
+
+            bool isInitialized = true;
+            if (isInitialized)
+            {
+                MainPage = new MainPage();
+            }
+            else
+            {
+                MainPage = new DataInitializationPage();
+            }
         }
 
         protected override void OnStart()
