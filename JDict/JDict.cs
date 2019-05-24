@@ -124,7 +124,7 @@ namespace JDict
     // represents a lookup over an JMdict file
     public class JMDictLookup : IDisposable
     {
-        private static readonly Guid Version = new Guid("3E448317-AE2D-4D7C-A135-3AB18F0288C0");
+        private static readonly Guid Version = new Guid("9D67F5E5-99CB-4FB5-A44B-E27DE67F6684");
 
         private TinyIndex.Database db;
 
@@ -661,7 +661,7 @@ namespace JDict
         [Description("su verb - precursor to the modern suru")]
         vs_c = 25,
 
-        [Description("suru verb - irregular")]
+        [Description("suru verb - included")]
         vs_i = 26,
 
         [Description("suru verb - special class")]
