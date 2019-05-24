@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using DidacticalEnigma.Xam.Services;
 using DidacticalEnigma.Xam.Views;
+using Xamarin.Forms.PlatformConfiguration;
 
 namespace DidacticalEnigma.Xam
 {
@@ -13,8 +14,6 @@ namespace DidacticalEnigma.Xam
         public App()
         {
             InitializeComponent();
-            
-
 
             bool isInitialized = true;
             if (isInitialized)

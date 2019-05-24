@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:services="clr-namespace:DidacticalEnigma.Xam.Services;assembly=DidacticalEnigma.Xam"
+             x:Class="DidacticalEnigma.Xam.Views.ButtonWrapListView">
+    <ContentView.Content>
+        <ListView x:Name="M">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <FlexLayout Wrap="NoWrap" >
+                            <Button Text="{Binding [0].Text}" IsVisible="{Binding [0].IsEnabled}"></Button>
+                            <Button Text="{Binding [1].Text}" IsVisible="{Binding [1].IsEnabled}"></Button>
+                            <Button Text="{Binding [2].Text}" IsVisible="{Binding [2].IsEnabled}"></Button>
+                            <Button Text="{Binding [3].Text}" IsVisible="{Binding [3].IsEnabled}"></Button>
+                            <Button Text="{Binding [4].Text}" IsVisible="{Binding [4].IsEnabled}"></Button>
+                            <Button Text="{Binding [5].Text}" IsVisible="{Binding [5].IsEnabled}"></Button>
+                            <Button Text="{Binding [6].Text}" IsVisible="{Binding [6].IsEnabled}"></Button>
+                            <Button Text="{Binding [7].Text}" IsVisible="{Binding [7].IsEnabled}"></Button>
+                            <Button Text="{Binding [8].Text}" IsVisible="{Binding [8].IsEnabled}"></Button>
+                            <Button Text="{Binding [9].Text}" IsVisible="{Binding [9].IsEnabled}"></Button>
+                        </FlexLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentView.Content>
+</ContentView>

@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
 using Xamarin.Forms.Xaml;
 
 namespace DidacticalEnigma.Xam.Views
@@ -10,6 +11,7 @@ namespace DidacticalEnigma.Xam.Views
         public MainPage()
         {
             InitializeComponent();
+            
         }
     }
 }

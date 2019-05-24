@@ -21,6 +21,16 @@ namespace DidacticalEnigma.Xam.Views
         {
             InitializeComponent();
 
+            foreach (var i in Enumerable.Range(0, 200))
+            {
+                var label = new Label()
+                {
+                    Text = "魔"
+                };
+                label.FontSize *= 4;
+                Elements.Children.Add(label);
+            }
+
             BindingContext = viewModel = new ItemsViewModel();
         }
 
