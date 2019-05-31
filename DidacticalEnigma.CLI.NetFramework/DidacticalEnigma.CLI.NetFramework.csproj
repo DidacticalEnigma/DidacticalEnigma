@@ -42,8 +42,8 @@
     <Reference Include="LibJpConjSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LibJpConjSharp.0.5.8\lib\netstandard2.0\LibJpConjSharp.dll</HintPath>
     </Reference>
-    <Reference Include="LibNMeCabNetStandard, Version=0.7.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NMeCabNetStandard.0.7.2\lib\netstandard2.0\LibNMeCabNetStandard.dll</HintPath>
+    <Reference Include="LibNMeCabNetStandard, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NMeCabNetStandard.0.7.3\lib\netstandard2.0\LibNMeCabNetStandard.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
