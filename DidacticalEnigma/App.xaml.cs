@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -163,7 +165,13 @@ namespace DidacticalEnigma
                 get.Get<IKanjiProperties>(),
                 get.Get<IKanaProperties>(),
                 get.Get<IWebBrowser>(),
-                () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8),
+                () =>
+                {
+                    var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location)
+                        .ProductVersion;
+                    return
+                        $"Didactical Enigma {version}\n\n{File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)}";
+                },
                 get.Get<ITextInsertCommand>(),
                 get.Get<Models.Settings>()));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
