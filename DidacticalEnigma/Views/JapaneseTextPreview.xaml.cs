@@ -75,20 +75,21 @@ namespace DidacticalEnigma.Views
             if (clickedLetter == null)
                 return;
             var clickedWordPanel = FindAncestor<StackPanel>(clickedLetter);
+            var resources = Application.Current.Resources;
             if (clickedLetter != previousClickedLetter && clickedLetter.Text.Trim() != "")
             {
                 if (previousClickedLetter != null)
                 {
                     previousClickedLetter.Background = Brushes.Transparent;
                 }
-                clickedLetter.Background = Brushes.Yellow;
+                clickedLetter.Background = (Brush)resources["SelectedLetterBrush"];
                 if(clickedWordPanel != previousClickedWord)
                 {
                     if(previousClickedWord != null)
                     {
                         previousClickedWord.Background = Brushes.Transparent;
                     }
-                    clickedWordPanel.Background = Brushes.AntiqueWhite;
+                    clickedWordPanel.Background = (Brush)resources["SelectedWordBrush"];
                     previousClickedWord = clickedWordPanel;
                     wordVM = (WordVM)clickedWordPanel.DataContext;
                 }

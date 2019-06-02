@@ -219,6 +219,10 @@
     <Compile Include="Icons\RowSplitIcon.xaml.cs">
       <DependentUpon>RowSplitIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Themes\LeftMarginMultiplierConverter.cs" />
+    <Compile Include="Themes\TreeViewItemExtensions.cs" />
     <Compile Include="Utils\ClipboardHook.cs" />
     <Compile Include="Utils\ControlRenderCache.cs" />
     <Compile Include="ViewModels\CreationConverter.cs" />
@@ -293,6 +297,14 @@
     <Page Include="Icons\RowSplitIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Dark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\JapaneseTextPreview.xaml">
       <SubType>Designer</SubType>

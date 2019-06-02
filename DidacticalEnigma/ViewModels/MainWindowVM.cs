@@ -8,8 +8,11 @@ using System.Windows;
 using System.Windows.Input;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Models;
+using DidacticalEnigma.Properties;
 using DidacticalEnigma.Utils;
 using Utility.Utils;
+using Settings = DidacticalEnigma.Models.Settings;
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -93,8 +96,22 @@ namespace DidacticalEnigma.ViewModels
             IKanaProperties kanaProperties,
             IWebBrowser webBrowser,
             Func<string> aboutTextProvider,
-            ITextInsertCommand insertText)
+            ITextInsertCommand insertText,
+            Settings settings)
         {
+            this.settings = settings;
+            this.PropertyChanged += (sender, args) =>
+            {
+                switch (args.PropertyName)
+                {
+                    case nameof(Settings.ThemeType):
+                        OnPropertyChanged(nameof(ThemeType));
+                        return;
+                    case nameof(Settings.SearchEngines):
+                        OnPropertyChanged(nameof(SearchEngines));
+                        return;
+                }
+            };
             HiraganaBoard = hiraganaBoard;
             KatakanaBoard = katakanaBoard;
             InsertTextAtCaret = insertText;
@@ -190,26 +207,9 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        public ObservableBatchCollection<SearchEngine> SearchEngines { get; } = new ObservableBatchCollection<SearchEngine>
-        {
-            new SearchEngine("https://duckduckgo.com/?q=", "site:japanese.stackexchange.com", literal: true, comment: "Search Japanese Stack Exchange"),
-            new SearchEngine("https://duckduckgo.com/?q=", "site:maggiesensei.com", literal: true, comment: "Search Maggie Sensei website"),
-            new SearchEngine("https://duckduckgo.com/?q=", "site:www.japanesewithanime.com", literal: true, comment: "Search Japanese with Anime blog"),
-            new SearchEngine("https://duckduckgo.com/?q=", "とは", literal: true, comment: "What is...?"),
-            new SearchEngine("https://duckduckgo.com/?q=", "意味", literal: true, comment: "Meaning...?"),
-            new SearchEngine("https://duckduckgo.com/?q=", "英語", literal: true, comment: "English...?"),
-            new SearchEngine(
-                "http://www.nihongoresources.com/dictionaries/universal.html?type=sfx&query=",
-                null,
-                literal: false,
-                comment: "nihongoresources.com SFX search"),
-            new SearchEngine(
-                "http://thejadednetwork.com/sfx/search/?submitSearch=Search+SFX&x=&keyword=",
-                null,
-                literal: false,
-                comment: "The JADED Network SFX search"),
+        public ThemeType ThemeType => settings.ThemeType;
 
-        };
+        public IReadOnlyList<SearchEngine> SearchEngines => settings.SearchEngines;
 
         public TextBufferVM CurrentTextBuffer
         {
@@ -237,6 +237,9 @@ namespace DidacticalEnigma.ViewModels
         public ICommand InsertTextAtCaret { get; }
 
         private int tabIndex = 1;
+
+        private readonly Settings settings;
+
         public int TabIndex
         {
             get => tabIndex;

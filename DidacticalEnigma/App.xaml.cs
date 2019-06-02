@@ -14,6 +14,7 @@ using DidacticalEnigma.ViewModels;
 using DidacticalEnigma.Views;
 using Gu.Inject;
 using JDict;
+using Newtonsoft.Json;
 using NMeCab;
 using Optional.Collections;
 using Sentry;
@@ -133,6 +134,17 @@ namespace DidacticalEnigma
                     return get.Get<IMorphologicalAnalyzer<IpadicEntry>>();
                 }
             });
+            kernel.BindFactory<Models.Settings>(get =>
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<Models.Settings>(File.ReadAllText("settings.config"));
+                }
+                catch (FileNotFoundException)
+                {
+                    return Models.Settings.CreateDefault();
+                }
+            });
             kernel.BindFactory(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
             kernel.BindFactory(get => EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")));
             kernel.Bind<IKanjiProperties, KanjiProperties>();
@@ -152,7 +164,8 @@ namespace DidacticalEnigma
                 get.Get<IKanaProperties>(),
                 get.Get<IWebBrowser>(),
                 () => File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8),
-                get.Get<ITextInsertCommand>()));
+                get.Get<ITextInsertCommand>(),
+                get.Get<Models.Settings>()));
             kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
                 get.Get<KanjiRadicalLookup>(),
                 get.Get<IKanjiProperties>(),

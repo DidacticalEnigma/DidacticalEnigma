@@ -1,0 +1,51 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--<SolidColorBrush x:Key="{x:Static SystemColors.ActiveBorderBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionTextBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.AppWorkspaceBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkDarkBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightLightBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="White" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.DesktopBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.GradientActiveCaptionBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.GradientInactiveCaptionBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.GrayTextBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.HotTrackBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveBorderBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveCaptionBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveCaptionTextBrushKey}" Color="LightGray" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.InfoBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.InfoTextBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.MenuBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.MenuBarBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.MenuHighlightBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.ScrollBarBrushKey}" Color="Black" />
+    -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowFrameBrushKey}" Color="Black" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="White" />
+    <SolidColorBrush x:Key="SelectedLetterBrush" Color="Green"></SolidColorBrush>
+    <SolidColorBrush x:Key="SelectedWordBrush" Color="DarkOliveGreen"></SolidColorBrush>
+    <SolidColorBrush x:Key="NounTextHighlight" Color="PowderBlue"></SolidColorBrush>
+    <SolidColorBrush x:Key="VerbTextHighlight" Color="OrangeRed"></SolidColorBrush>
+    <SolidColorBrush x:Key="ParticleTextHighlight" Color="DeepSkyBlue"></SolidColorBrush>
+    <SolidColorBrush x:Key="NoTextHighlight" Color="White"></SolidColorBrush>
+    <Style x:Key="GridSplitterPreviewStyle">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Fill="#80000000"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,8 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using DidacticalEnigma.Core.Models.LanguageService;
+using Optional.Collections;
+using Utility.Utils;
+using Brush = System.Drawing.Brush;
+using Brushes = System.Windows.Media.Brushes;
+using SystemColors = System.Windows.SystemColors;
 
 namespace DidacticalEnigma.Converters
 {
@@ -16,16 +24,17 @@ namespace DidacticalEnigma.Converters
             if (value == null)
                 return null;
             var b = (PartOfSpeech)value;
-            switch(b)
+            var resources = Application.Current.Resources;
+            switch (b)
             {
                 case PartOfSpeech.Noun:
-                    return Brushes.DarkBlue;
+                    return resources["NounTextHighlight"] ?? Brushes.DarkBlue;
                 case PartOfSpeech.Verb:
-                    return Brushes.DarkRed;
+                    return resources["VerbTextHighlight"] ?? Brushes.DarkRed;
                 case PartOfSpeech.Particle:
-                    return Brushes.RoyalBlue;
+                    return resources["ParticleTextHighlight"] ?? Brushes.RoyalBlue;
                 default:
-                    return Brushes.Black;
+                    return resources["NoTextHighlight"];
             }
         }
 
