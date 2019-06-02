@@ -104,7 +104,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 }).ToList();
                 var lookup = dictLookup.Lookup(word.DictionaryForm ?? word.RawWord)?.ToList();
 
-                if (word.RawWord.All(c => ".!?？！⁉、".IndexOf(c) != -1))
+                if (word.RawWord.All(c => ".!?？！⁉、…。．".IndexOf(c) != -1))
                 {
                     // skip punctuation
                     continue;
