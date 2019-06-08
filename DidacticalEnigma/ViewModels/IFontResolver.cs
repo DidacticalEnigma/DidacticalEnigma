@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+#if AVALONIA
+using Avalonia.Media;
+#else
 using System.Windows.Media;
+#endif
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -27,7 +32,11 @@ namespace DidacticalEnigma.ViewModels
         {
             var kanjiFontFileName = Directory.EnumerateFiles(baseDirectory, "*.ttf").First();
             var kanjiFontFamily = "./#KanjiStrokeOrders";
+#if AVALONIA
+
+#else
             cache["kanji"] = new FontFamily(new Uri(Path.Combine(baseDirectory, kanjiFontFileName)), kanjiFontFamily);
+#endif
         }
     }
 }

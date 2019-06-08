@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.Project;
-using Microsoft.WindowsAPICodePack.Dialogs;
+//using Microsoft.WindowsAPICodePack.Dialogs;
 using Optional;
 
 namespace DidacticalEnigma.ViewModels
@@ -14,7 +14,7 @@ namespace DidacticalEnigma.ViewModels
         Option<IProject, string> SelectOpen(ProjectFormatHandlerRegistration registration);
     }
 
-    class ProjectOpeningService : IProjectOpeningService
+    /*class ProjectOpeningService : IProjectOpeningService
     {
         public Option<IProject, string> SelectOpen(ProjectFormatHandlerRegistration registration)
         {
@@ -36,7 +36,7 @@ namespace DidacticalEnigma.ViewModels
             }
             return Option.None<IProject>().WithException("Cancelled");
         }
-    }
+    }*/
 
     class ProjectCollection
     {

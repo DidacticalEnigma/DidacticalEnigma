@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using DidacticalEnigma.Core.Models.LanguageService;
@@ -34,27 +35,42 @@ namespace DidacticalEnigma.ViewModels
             }
         }
 
-        public ObservableBatchCollection<KanaVM> Kana { get; }
+        public ObservableBatchCollection<KanaVM> Kana { get; } = new ObservableBatchCollection<KanaVM>();
 
-        public int Width { get; }
+        public int Width { get; private set; }
 
-        public int Height { get; }
+        public int Height { get; private set; }
 
         public KanaBoardVM(string path, Encoding encoding)
         {
-            Kana = new ObservableBatchCollection<KanaVM>();
-            int x = 0;
-            int y = 0;
-            foreach (var lineColumn in File.ReadLines(path, encoding))
+            Init(File.ReadLines(path, encoding).Select(lineColumn =>
             {
                 var components = lineColumn.Split(' ');
                 if (components.Length > 1)
-                    Kana.Add(new KanaVM(this, CodePoint.FromString(components[0]), components[1], x, y));
+                    return new KanaCharacter(components[0], components[1]);
+                else
+                    return null;
+            }));
+        }
+
+        public KanaBoardVM(IEnumerable<KanaCharacter> kana)
+        {
+            Init(kana);
+        }
+
+        private void Init(IEnumerable<KanaCharacter> kana)
+        {
+            int x = 0;
+            int y = 0;
+            foreach (var k in kana)
+            {
+                if(k != null)
+                    Kana.Add(new KanaVM(this, CodePoint.FromString(k.Kana), k.Romaji, x, y));
                 else
                     Kana.Add(new KanaVM(this, null, null, x, y));
 
                 x++;
-                if(x == 5)
+                if (x == 5)
                 {
                     x = 0;
                     y++;
@@ -67,6 +83,19 @@ namespace DidacticalEnigma.ViewModels
             var contents = Kana.OrderBy(k => k.X * Width + -k.Y).ToList();
             Kana.Clear();
             Kana.AddRange(contents);
+        }
+    }
+
+    public class KanaCharacter
+    {
+        public string Kana { get; }
+
+        public string Romaji { get; }
+
+        public KanaCharacter(string kana, string romaji)
+        {
+            Kana = kana;
+            Romaji = romaji;
         }
     }
 }

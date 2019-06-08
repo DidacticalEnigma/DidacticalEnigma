@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
 using Newtonsoft.Json;
 using Utility.Utils;
+#if AVALONIA
+using Avalonia.Controls;
+#else
+using System.Windows;
+#endif
 
 namespace DidacticalEnigma.ViewModels
 {

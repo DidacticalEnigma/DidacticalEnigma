@@ -3,10 +3,26 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.Formatting;
 using Utility.Utils;
+
+#if AVALONIA
+using Avalonia;
+using Avalonia.Media;
+public class FlowDocument
+{
+    public Thickness PagePadding { get; set; }
+    public TextAlignment TextAlignment { get; set; }
+}
+
+public interface IFlowDocumentRichFormattingRenderer
+{
+    FlowDocument Render(RichFormatting richFormatting);
+}
+#else
+using System.Windows.Documents;
+#endif
 
 namespace DidacticalEnigma.ViewModels
 {

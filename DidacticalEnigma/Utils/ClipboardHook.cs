@@ -47,6 +47,11 @@ namespace DidacticalEnigma.Utils
             NativeMethods.AddClipboardFormatListener(hwndSource.Handle);
         }
 
+        public void SetText(string s)
+        {
+            Clipboard.SetText(s);
+        }
+
         public void Dispose()
         {
             if (disposed)

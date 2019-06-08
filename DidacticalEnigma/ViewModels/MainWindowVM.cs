@@ -9,10 +9,31 @@ using System.Windows.Input;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Models;
-using DidacticalEnigma.Properties;
 using DidacticalEnigma.Utils;
 using Utility.Utils;
 using Settings = DidacticalEnigma.Models.Settings;
+
+#if AVALONIA
+public class KanjiRadicalLookupControlVM
+{
+}
+
+internal class ClipboardHook : IDisposable
+{
+    public void Dispose()
+    {
+
+    }
+
+    public EventHandler<string> ClipboardChanged { get; set; }
+
+    public void SetText(string s)
+    {
+        
+    }
+}
+
+#endif
 
 namespace DidacticalEnigma.ViewModels
 {
@@ -127,7 +148,7 @@ namespace DidacticalEnigma.ViewModels
             PlaceInClipboard = new RelayCommand((p) =>
             {
                 var codePoint = (CodePoint)p;
-                Clipboard.SetText(codePoint.ToString());
+                hook.SetText(codePoint.ToString());
             });
             SearchWeb = new RelayCommand(query =>
             {

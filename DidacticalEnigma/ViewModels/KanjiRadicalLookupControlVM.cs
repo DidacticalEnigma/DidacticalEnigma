@@ -6,11 +6,18 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 using DidacticalEnigma.Core.Models.LanguageService;
 using Utility.Utils;
+
+#if AVALONIA
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Threading;
+#else
+using System.Windows.Controls;
+using System.Windows.Threading;
+#endif
 
 namespace DidacticalEnigma.ViewModels
 {
