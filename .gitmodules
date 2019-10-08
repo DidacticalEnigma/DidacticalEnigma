@@ -4,7 +4,3 @@
 [submodule "TinyIndex"]
 	path = TinyIndex
 	url = https://github.com/milleniumbug/TinyIndex
-[submodule "FuzzySharp"]
-	path = FuzzySharp
-	url = https://github.com/milleniumbug/FuzzySharp
-
