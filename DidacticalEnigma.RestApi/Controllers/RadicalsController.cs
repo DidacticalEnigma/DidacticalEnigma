@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.RestApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -15,10 +16,53 @@ namespace DidacticalEnigma.RestApi.Controllers
     {
         [HttpGet("list")]
         [SwaggerOperation(OperationId = "ListRadicals")]
-        public IEnumerable<string> ListRadicals(
+        public ActionResult<IEnumerable<string>> ListRadicals(
             [FromServices] IKanjiRadicalLookup radicalLookup)
         {
-            return radicalLookup.AllRadicals.Select(r => r.ToString());
+            return this.Ok(radicalLookup.AllRadicals.Select(r => r.ToString()));
+        }
+
+        [HttpGet("select")]
+        [SwaggerOperation(OperationId = "SelectRadicals")]
+        public ActionResult<KanjiLookupResult> SelectRadicals(
+            [FromQuery(Name = "radical")] string commaDelimitedRadicals,
+            [FromServices] IKanjiRadicalLookup radicalLookup)
+        {
+            commaDelimitedRadicals ??= "";
+            var rawRadicals = commaDelimitedRadicals
+                .Trim()
+                .Split(",", StringSplitOptions.RemoveEmptyEntries);
+            var radicals = rawRadicals
+                .Select(r => CodePoint.FromString(r))
+                .ToList();
+            if (!radicals.Any())
+            {
+                return this.Ok(new KanjiLookupResult
+                {
+                    Kanji = Array.Empty<string>(),
+                    PossibleRadicals = radicalLookup.AllRadicals
+                        .Select(r => r.ToString())
+                        .ToList()
+                });
+            }
+
+            if (radicals.Except(radicalLookup.AllRadicals).Any())
+            {
+                return this.BadRequest();
+            }
+
+            var result = radicalLookup.SelectRadical(radicals);
+            return this.Ok(new KanjiLookupResult
+            {
+                Kanji = result.Kanji
+                    .Select(k => k.ToString())
+                    .ToList(),
+                PossibleRadicals = result.PossibleRadicals
+                    .Where(r => r.Value)
+                    .Select(r => r.Key.ToString())
+                    .Concat(rawRadicals)
+                    .ToList()
+            });
         }
     }
 }
