@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DidacticalEnigma.Core.Models;
+using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
 using Gu.Inject;
 using JDict;
@@ -96,6 +97,27 @@ namespace DidacticalEnigma.RestApi
                 KanjiAliveJapaneseRadicalInformation.Parse(Path.Combine(dataDir, "character", "japanese-radicals.csv")),
                 get.Get<RadkfileKanjiAliveCorrelator>()));
             kernel.BindFactory(get => new Corpus(get.Get<Tanaka>().AllSentences, get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "corpora", "tanaka.cache")));
+
+            kernel.BindFactory(get => new IDataSource[] {
+                new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()),
+                new CharacterStrokeOrderDataSource(),
+                new JMDictDataSource(get.Get<JMDictLookup>(), get.Get<IKanaProperties>()),
+                new JNeDictDataSource(get.Get<Jnedict>()),
+                new VerbConjugationDataSource(get.Get<JMDictLookup>()),
+                new WordFrequencyRatingDataSource(get.Get<FrequencyList>()),
+                new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>()),
+                new JGramDataSource(get.Get<IJGramLookup>()),
+                new AutoGlosserDataSource(get.Get<IAutoGlosser>()),
+                new CustomNotesDataSource(Path.Combine(dataDir, "custom", "custom_notes.txt")),
+                new TanakaCorpusFastDataSource(get.Get<Corpus>()),
+                new TanakaCorpusDataSource(get.Get<Tanaka>()),
+                new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>()),
+                new PartialWordLookupJMDictDataSource(get.Get<PartialWordLookup>(), get.Get<FrequencyList>()),
+                new JESCDataSource(get.Get<JESC>()),
+                new RomajiDataSource(get.Get<IRomaji>())
+            }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new EpwingDataSource(dict, get.Get<IKanaProperties>()))));
+
+
             return kernel;
 
             IReadOnlyDictionary<CodePoint, string> CreateTextRadicalMappings(IEnumerable<CodePoint> radicals, IReadOnlyDictionary<int, int> remapper)

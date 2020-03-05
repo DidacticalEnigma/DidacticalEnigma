@@ -1,5 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
+using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.RestApi.InternalServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -37,9 +42,12 @@ namespace DidacticalEnigma.RestApi
             var dir = "D:\\DidacticalEnigma-Data";
             var kernel = ServiceConfiguration.Configure(dir);
 
+            services.AddSingleton<DataSourceDispatcher>(new DataSourceDispatcher(Enumerable.Empty<IDataSource>()));
+            services.AddSingleton<IStash<ParsedText>>(new Stash<ParsedText>(TimeSpan.FromMinutes(5)));
+            services.AddSingleton<IEnumerable<IDataSource>, IEnumerable<IDataSource>>(_ => kernel.Get<IEnumerable<IDataSource>>());
             services.AddSingleton<ISentenceParser, ISentenceParser>(_ => kernel.Get<ISentenceParser>());
-
             services.AddSingleton<IKanjiRadicalLookup, IKanjiRadicalLookup>(_ => kernel.Get<IKanjiRadicalLookup>());
+            services.AddSingleton<RichFormattingRenderer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
