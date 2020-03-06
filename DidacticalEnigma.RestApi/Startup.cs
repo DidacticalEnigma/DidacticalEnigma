@@ -42,9 +42,8 @@ namespace DidacticalEnigma.RestApi
             var dir = "D:\\DidacticalEnigma-Data";
             var kernel = ServiceConfiguration.Configure(dir);
 
-            services.AddSingleton<DataSourceDispatcher>(new DataSourceDispatcher(Enumerable.Empty<IDataSource>()));
+            services.AddSingleton<DataSourceDispatcher>(new DataSourceDispatcher(kernel.Get<IEnumerable<IDataSource>>()));
             services.AddSingleton<IStash<ParsedText>>(new Stash<ParsedText>(TimeSpan.FromMinutes(5)));
-            services.AddSingleton<IEnumerable<IDataSource>, IEnumerable<IDataSource>>(_ => kernel.Get<IEnumerable<IDataSource>>());
             services.AddSingleton<ISentenceParser, ISentenceParser>(_ => kernel.Get<ISentenceParser>());
             services.AddSingleton<IKanjiRadicalLookup, IKanjiRadicalLookup>(_ => kernel.Get<IKanjiRadicalLookup>());
             services.AddSingleton<RichFormattingRenderer>();

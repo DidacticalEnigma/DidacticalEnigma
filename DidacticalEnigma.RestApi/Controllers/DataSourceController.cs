@@ -7,7 +7,9 @@ using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.RestApi.InternalServices;
 using DidacticalEnigma.RestApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Optional.Unsafe;
 using Swashbuckle.AspNetCore.Annotations;
+using Utility.Utils;
 
 namespace DidacticalEnigma.RestApi.Controllers
 {
@@ -29,16 +31,28 @@ namespace DidacticalEnigma.RestApi.Controllers
 
         [HttpPost("request")]
         [SwaggerOperation(OperationId = "RequestInformationFromDataSources")]
-        public async Task<Dictionary<string, DataSourceParseResponse>> RequestInformation(
+        public async Task<ActionResult<Dictionary<string, DataSourceParseResponse>>> RequestInformation(
             [FromBody] DataSourceParseRequest request,
+            [FromServices] IStash<ParsedText> stash,
             [FromServices] RichFormattingRenderer renderer,
             [FromServices] DataSourceDispatcher dataSourceDispatcher)
         {
-            var result = request.RequestedDataSources
-                .ToDictionary(s => s, s => null as DataSourceParseResponse);
-            foreach (var identifier in result.Keys)
+            var parsedTextOpt = stash.Get(request.Id);
+            if (!parsedTextOpt.HasValue)
             {
-                var answerOpt = await dataSourceDispatcher.GetAnswer(identifier);
+                return this.Conflict();
+            }
+
+            var parsedText = parsedTextOpt.ValueOrFailure();
+            var dataSourceRequest = DataSourceRequestFromParsedText(parsedText, request.Position);
+
+            var requestedDataSources = request.RequestedDataSources.Distinct();
+            var result = new Dictionary<string, DataSourceParseResponse>();
+            foreach (var identifier in requestedDataSources)
+            {
+                var answerOpt = await dataSourceDispatcher.GetAnswer(
+                    identifier,
+                    dataSourceRequest);
                 result[identifier] = new DataSourceParseResponse()
                 {
                     Context = answerOpt
@@ -48,6 +62,30 @@ namespace DidacticalEnigma.RestApi.Controllers
             }
 
             return result;
+        }
+
+        private Request DataSourceRequestFromParsedText(ParsedText text, int position)
+        {
+            var (wordPosition, outerIndex, innerIndex) = text.GetIndicesAtPosition(position);
+            var wordInfo = text.WordInformation[outerIndex][innerIndex];
+
+            return new Request(
+                char.ConvertFromUtf32(wordInfo.RawWord.AsCodePoints().ElementAt(position - wordPosition)),
+                wordInfo,
+                wordInfo.RawWord,
+                () => text.FullText,
+                SubsequentWords());
+
+            IEnumerable<string> SubsequentWords()
+            {
+                for (int i = outerIndex; i < text.WordInformation.Count; i++)
+                {
+                    for (int j = (i == outerIndex) ? innerIndex : 0; j < text.WordInformation[i].Count; j++)
+                    {
+                        yield return text.WordInformation[i][j].RawWord;
+                    }
+                }
+            }
         }
     }
 }

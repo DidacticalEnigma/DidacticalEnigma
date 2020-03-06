@@ -37,12 +37,10 @@ namespace DidacticalEnigma.RestApi.Controllers
             [FromServices] ISentenceParser parser,
             [FromServices] IStash<ParsedText> stash)
         {
-            var parsedText = new ParsedText()
-            {
-                WordInformation = parser.BreakIntoSentences(fullText)
+            var parsedText = new ParsedText(fullText,
+                parser.BreakIntoSentences(fullText)
                     .Select(x => x.ToList())
-                    .ToList()
-            };
+                    .ToList());
             var identifier = stash.Put(parsedText);
             return new WordInfoResponse()
             {
