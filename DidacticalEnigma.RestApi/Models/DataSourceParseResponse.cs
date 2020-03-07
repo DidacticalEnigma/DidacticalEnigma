@@ -8,5 +8,7 @@ namespace DidacticalEnigma.RestApi.Models
     public class DataSourceParseResponse
     {
         public string Context { get; set; }
+
+        public string Error { get; set; }
     }
 }
