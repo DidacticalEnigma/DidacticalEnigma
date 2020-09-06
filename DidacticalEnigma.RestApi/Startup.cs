@@ -44,8 +44,9 @@ namespace DidacticalEnigma.RestApi
 
             services.AddSingleton<DataSourceDispatcher>(new DataSourceDispatcher(kernel.Get<IEnumerable<IDataSource>>()));
             services.AddSingleton<IStash<ParsedText>>(new Stash<ParsedText>(TimeSpan.FromMinutes(5)));
-            services.AddSingleton<ISentenceParser, ISentenceParser>(_ => kernel.Get<ISentenceParser>());
-            services.AddSingleton<IKanjiRadicalLookup, IKanjiRadicalLookup>(_ => kernel.Get<IKanjiRadicalLookup>());
+            services.AddSingleton(_ => kernel.Get<ISentenceParser>());
+            services.AddSingleton(_ => kernel.Get<IRadicalSearcher>());
+            services.AddSingleton(_ => kernel.Get<IKanjiRadicalLookup>());
             services.AddSingleton<RichFormattingRenderer>();
         }
 

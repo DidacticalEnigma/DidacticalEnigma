@@ -13,5 +13,8 @@ namespace DidacticalEnigma.RestApi.Models
 
         [Required]
         public IReadOnlyCollection<string> PossibleRadicals { get; set; }
+
+        [Required]
+        public IReadOnlyCollection<string> UsedRadicals { get; set; }
     }
 }

@@ -25,30 +25,26 @@ namespace DidacticalEnigma.RestApi.Controllers
         [HttpGet("select")]
         [SwaggerOperation(OperationId = "SelectRadicals")]
         public ActionResult<KanjiLookupResult> SelectRadicals(
-            [FromQuery(Name = "radical")] string commaDelimitedRadicals,
-            [FromServices] IKanjiRadicalLookup radicalLookup)
+            [FromQuery(Name = "query")] string query,
+            [FromServices] IKanjiRadicalLookup radicalLookup,
+            [FromServices] IRadicalSearcher radicalSearcher)
         {
-            commaDelimitedRadicals ??= "";
-            var rawRadicals = commaDelimitedRadicals
-                .Trim()
-                .Split(",", StringSplitOptions.RemoveEmptyEntries);
-            var radicals = rawRadicals
-                .Select(r => CodePoint.FromString(r))
+            query ??= "";
+            var radicalSearchResults = radicalSearcher.Search(query);
+            var radicals = radicalSearchResults
+                .Select(result => result.Radical)
                 .ToList();
-            if (!radicals.Any())
+
+            if(radicals.Count == 0)
             {
                 return this.Ok(new KanjiLookupResult
                 {
                     Kanji = Array.Empty<string>(),
                     PossibleRadicals = radicalLookup.AllRadicals
                         .Select(r => r.ToString())
-                        .ToList()
+                        .ToList(),
+                    UsedRadicals = Array.Empty<string>()
                 });
-            }
-
-            if (radicals.Except(radicalLookup.AllRadicals).Any())
-            {
-                return this.BadRequest();
             }
 
             var result = radicalLookup.SelectRadical(radicals);
@@ -60,7 +56,10 @@ namespace DidacticalEnigma.RestApi.Controllers
                 PossibleRadicals = result.PossibleRadicals
                     .Where(r => r.Value)
                     .Select(r => r.Key.ToString())
-                    .Concat(rawRadicals)
+                    .Concat(radicals.Select(x => x.ToString()))
+                    .ToList(),
+                UsedRadicals = radicals
+                    .Select(x => x.ToString())
                     .ToList()
             });
         }
