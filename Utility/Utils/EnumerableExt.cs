@@ -404,5 +404,18 @@ namespace Utility.Utils
                 return 0;
             }
         }
+
+        public static Option<int> FindIndexOrNone<TElement>(this IEnumerable<TElement> input, Func<TElement, bool> predicate)
+        {
+            foreach(var (element, index) in input.Indexed())
+            {
+                if(predicate(element))
+                {
+                    return index.Some();
+                }
+            }
+
+            return Option.None<int>();
+        }
     }
 }

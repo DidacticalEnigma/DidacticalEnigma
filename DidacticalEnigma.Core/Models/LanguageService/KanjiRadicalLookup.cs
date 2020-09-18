@@ -111,7 +111,14 @@ namespace DidacticalEnigma.Core.Models.LanguageService
             return MemoryMarshal.Cast<Vector<ulong>, ulong>(input);
         }
 
+        
+
         public Result SelectRadical(IEnumerable<CodePoint> radicals)
+        {
+            return SelectRadical(radicals, SortingCriteria.SelectedIndex);
+        }
+
+        public Result SelectRadical(IEnumerable<CodePoint> radicals, int sortingCriteriaIndex)
         {
             var result = new List<CodePoint>();
             var possibleRadicals = new KeyValuePair<CodePoint, bool>[radicalCount];
@@ -123,7 +130,7 @@ namespace DidacticalEnigma.Core.Models.LanguageService
                 vec[radicalIndex / ulongBitCount] |= (ulong)(1UL << radicalIndex);
             }
 
-            var s = SortingCriteria.SelectedIndex;
+            var s = sortingCriteriaIndex;
             var radk = radkinfo[s];
             var target = new Vector<ulong>[radk.Length];
             for (int i = 0; i < kanjiCount; ++i)

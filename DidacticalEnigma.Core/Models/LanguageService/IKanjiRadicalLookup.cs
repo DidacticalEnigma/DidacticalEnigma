@@ -9,5 +9,6 @@ namespace DidacticalEnigma.Core.Models.LanguageService
         IEnumerable<CodePoint> AllKanji { get; }
         IEnumerable<CodePoint> AllRadicals { get; }
         KanjiRadicalLookup.Result SelectRadical(IEnumerable<CodePoint> radicals);
+        KanjiRadicalLookup.Result SelectRadical(IEnumerable<CodePoint> radicals, int sortingCriteriaIndex);
     }
 }
