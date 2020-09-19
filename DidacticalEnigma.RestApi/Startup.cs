@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using DidacticalEnigma.Core.Models.DataSources;
@@ -39,8 +40,17 @@ namespace DidacticalEnigma.RestApi
                 c.EnableAnnotations();
             });
 
-            var dir = "D:\\DidacticalEnigma-Data";
-            var kernel = ServiceConfiguration.Configure(dir);
+            var rawConfig = Configuration.GetSection(ServiceConfiguration.ConfigurationName);
+            services.Configure<ServiceConfiguration>(rawConfig);
+
+            var config = rawConfig.Get<ServiceConfiguration>() ?? new ServiceConfiguration()
+            {
+                DataDirectory = Directory.Exists("/home/milleniumbug/dokumenty/PROJEKTY/DidacticalEnigma-Data/")
+                    ? "/home/milleniumbug/dokumenty/PROJEKTY/DidacticalEnigma-Data/"
+                    : "Z:\\DidacticalEnigma-Data"
+            };
+
+            var kernel = ServiceConfiguration.Configure(config.DataDirectory);
 
             services.AddSingleton<DataSourceDispatcher>(new DataSourceDispatcher(kernel.Get<IEnumerable<IDataSource>>()));
             services.AddSingleton<IStash<ParsedText>>(new Stash<ParsedText>(TimeSpan.FromMinutes(5)));

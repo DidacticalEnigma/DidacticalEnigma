@@ -35,12 +35,17 @@ namespace DidacticalEnigma.RestApi.InternalServices
 
         public (int wordPosition, int outerIndex, int innerIndex) GetIndicesAtPosition(int position)
         {
+            if(position < 0)
+                throw new ArgumentException(nameof(position));
+            
             var result = LowerBound(
                 i => positionInformation[i],
                 positionInformation.Count,
                 position,
                 kvp => kvp.Key,
                 Comparer<int>.Default);
+            if (position < positionInformation[result].Key)
+                result--;
             return (positionInformation[result].Key, positionInformation[result].Value.outerIndex, positionInformation[result].Value.innerIndex);
         }
 
