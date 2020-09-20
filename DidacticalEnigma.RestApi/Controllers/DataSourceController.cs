@@ -22,11 +22,7 @@ namespace DidacticalEnigma.RestApi.Controllers
         public IEnumerable<DataSourceInformation> List(
             [FromServices] DataSourceDispatcher dataSourceDispatcher)
         {
-            return dataSourceDispatcher.DataSourceIdentifiers
-                .Select(id => new DataSourceInformation
-                {
-                    Identifier = id
-                });
+            return dataSourceDispatcher.DataSourceIdentifiers;
         }
 
         [HttpPost("request")]

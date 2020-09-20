@@ -43,20 +43,16 @@ namespace DidacticalEnigma.RestApi
             var rawConfig = Configuration.GetSection(ServiceConfiguration.ConfigurationName);
             services.Configure<ServiceConfiguration>(rawConfig);
 
-            var config = rawConfig.Get<ServiceConfiguration>() ?? new ServiceConfiguration()
-            {
-                DataDirectory = Directory.Exists("/home/milleniumbug/dokumenty/PROJEKTY/DidacticalEnigma-Data/")
-                    ? "/home/milleniumbug/dokumenty/PROJEKTY/DidacticalEnigma-Data/"
-                    : "Z:\\DidacticalEnigma-Data"
-            };
+            var config = rawConfig.Get<ServiceConfiguration>();
 
             var kernel = ServiceConfiguration.Configure(config.DataDirectory);
 
-            services.AddSingleton<DataSourceDispatcher>(new DataSourceDispatcher(kernel.Get<IEnumerable<IDataSource>>()));
+            services.AddSingleton<DataSourceDispatcher>(new DataSourceDispatcher(kernel.Get<IEnumerable<KeyValuePair<string, IDataSource>>>()));
             services.AddSingleton<IStash<ParsedText>>(new Stash<ParsedText>(TimeSpan.FromMinutes(5)));
             services.AddSingleton(_ => kernel.Get<ISentenceParser>());
             services.AddSingleton(_ => kernel.Get<IRadicalSearcher>());
             services.AddSingleton(_ => kernel.Get<IKanjiRadicalLookup>());
+            services.AddSingleton(_ => kernel.Get<IAutoGlosser>());
             services.AddSingleton<RichFormattingRenderer>();
         }
 

@@ -10,5 +10,8 @@ namespace DidacticalEnigma.RestApi.Models
     {
         [Required]
         public string Identifier { get; set; }
+        
+        [Required]
+        public string FriendlyName { get; set; }
     }
 }

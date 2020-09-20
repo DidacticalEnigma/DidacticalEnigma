@@ -102,24 +102,24 @@ namespace DidacticalEnigma.RestApi
                 get.Get<RadkfileKanjiAliveCorrelator>()));
             kernel.BindFactory(get => new Corpus(get.Get<Tanaka>().AllSentences, get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "corpora", "tanaka.cache")));
 
-            kernel.BindFactory(get => new IDataSource[] {
-                new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()),
-                new CharacterStrokeOrderDataSource(),
-                new JMDictDataSource(get.Get<JMDictLookup>(), get.Get<IKanaProperties>()),
-                new JNeDictDataSource(get.Get<Jnedict>()),
-                new VerbConjugationDataSource(get.Get<JMDictLookup>()),
-                new WordFrequencyRatingDataSource(get.Get<FrequencyList>()),
-                new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>()),
-                new JGramDataSource(get.Get<IJGramLookup>()),
-                new AutoGlosserDataSource(get.Get<IAutoGlosser>()),
-                new CustomNotesDataSource(Path.Combine(dataDir, "custom", "custom_notes.txt")),
-                new TanakaCorpusFastDataSource(get.Get<Corpus>()),
-                new TanakaCorpusDataSource(get.Get<Tanaka>()),
-                new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>()),
-                new PartialWordLookupJMDictDataSource(get.Get<PartialWordLookup>(), get.Get<FrequencyList>()),
-                new JESCDataSource(get.Get<JESC>()),
-                new RomajiDataSource(get.Get<IRomaji>())
-            }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new EpwingDataSource(dict, get.Get<IKanaProperties>()))));
+            kernel.BindFactory(get => new KeyValuePair<string, IDataSource>[] {
+                new KeyValuePair<string, IDataSource>(null, new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>())),
+                new KeyValuePair<string, IDataSource>(null, new CharacterStrokeOrderDataSource()),
+                new KeyValuePair<string, IDataSource>(null, new JMDictDataSource(get.Get<JMDictLookup>(), get.Get<IKanaProperties>())),
+                new KeyValuePair<string, IDataSource>(null, new JNeDictDataSource(get.Get<Jnedict>())),
+                new KeyValuePair<string, IDataSource>(null, new VerbConjugationDataSource(get.Get<JMDictLookup>())),
+                new KeyValuePair<string, IDataSource>(null, new WordFrequencyRatingDataSource(get.Get<FrequencyList>())),
+                new KeyValuePair<string, IDataSource>(null, new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>())),
+                new KeyValuePair<string, IDataSource>(null, new JGramDataSource(get.Get<IJGramLookup>())),
+                new KeyValuePair<string, IDataSource>(null, new AutoGlosserDataSource(get.Get<IAutoGlosser>())),
+                new KeyValuePair<string, IDataSource>(null, new CustomNotesDataSource(Path.Combine(dataDir, "custom", "custom_notes.txt"))),
+                new KeyValuePair<string, IDataSource>(null, new TanakaCorpusFastDataSource(get.Get<Corpus>())),
+                new KeyValuePair<string, IDataSource>(null, new TanakaCorpusDataSource(get.Get<Tanaka>())),
+                new KeyValuePair<string, IDataSource>(null, new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>())),
+                new KeyValuePair<string, IDataSource>(null, new PartialWordLookupJMDictDataSource(get.Get<PartialWordLookup>(), get.Get<FrequencyList>())),
+                new KeyValuePair<string, IDataSource>(null, new JESCDataSource(get.Get<JESC>())),
+                new KeyValuePair<string, IDataSource>(null, new RomajiDataSource(get.Get<IRomaji>()))
+            }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new KeyValuePair<string, IDataSource>(dict.Revision, new EpwingDataSource(dict, get.Get<IKanaProperties>())))));
 
 
             return kernel;
