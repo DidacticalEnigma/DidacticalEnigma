@@ -37,13 +37,15 @@ namespace DidacticalEnigma.RestApi.InternalServices
         {
             if(position < 0)
                 throw new ArgumentException(nameof(position));
-            
+
             var result = LowerBound(
                 i => positionInformation[i],
                 positionInformation.Count,
                 position,
                 kvp => kvp.Key,
                 Comparer<int>.Default);
+            if (result >= positionInformation.Count)
+                result = positionInformation.Count - 1;
             if (position < positionInformation[result].Key)
                 result--;
             return (positionInformation[result].Key, positionInformation[result].Value.outerIndex, positionInformation[result].Value.innerIndex);
