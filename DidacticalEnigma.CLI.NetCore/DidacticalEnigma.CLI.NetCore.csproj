@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NMeCabNetStandard" Version="0.7.2" />
+    <PackageReference Include="NMeCabNetStandard" Version="0.7.3" />
   </ItemGroup>
 
   <ItemGroup>
