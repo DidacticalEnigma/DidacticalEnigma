@@ -3,6 +3,7 @@ using System.Linq;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.RestApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DidacticalEnigma.RestApi.Controllers
 {
@@ -11,6 +12,7 @@ namespace DidacticalEnigma.RestApi.Controllers
     public class AutoGlossController : ControllerBase
     {
         [HttpGet]
+        [SwaggerOperation(OperationId = "RunAutomaticGloss")]
         public ActionResult<AutoGlossResult> Gloss(
             [FromQuery] string input,
             [FromServices] IAutoGlosser autoGlosser)
