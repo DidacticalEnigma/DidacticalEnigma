@@ -924,6 +924,36 @@ namespace JDict
         zool,
         [Description("anatomical term")]
         anat,
+        [Description("Christian term")]
+        Christn,
+        [Description("Internet slang")]
+        net_sl,
+        [Description("dated term")]
+        dated,
+        [Description("historical term")]
+        hist,
+        [Description("literary or formal term")]
+        litf,
+        [Description("family or surname")]
+        surname,
+        [Description("place name")]
+        place,
+        [Description("unclassified name")]
+        unclass,
+        [Description("company name")]
+        company,
+        [Description("product name")]
+        product,
+        [Description("work of art, literature, music, etc. name")]
+        work,
+        [Description("full name of a particular person")]
+        person,
+        [Description("given name or forename, gender not specified")]
+        given,
+        [Description("railway station")]
+        station,
+        [Description("organization name")]
+        organization,
     }
 
     enum EdictMisc
