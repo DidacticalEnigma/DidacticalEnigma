@@ -49,7 +49,7 @@ namespace DidacticalEnigma.Utils
 
         public void SetText(string s)
         {
-            Clipboard.SetText(s);
+            Clipboard.SetDataObject(s);
         }
 
         public void Dispose()

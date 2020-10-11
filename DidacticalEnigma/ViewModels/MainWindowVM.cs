@@ -10,6 +10,7 @@ using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Models;
 using DidacticalEnigma.Utils;
+using Optional.Collections;
 using Utility.Utils;
 using Settings = DidacticalEnigma.Models.Settings;
 
@@ -145,10 +146,28 @@ namespace DidacticalEnigma.ViewModels
             KanjiLookupVM = kanjiLookupVm;
             hook = new ClipboardHook();
             hook.ClipboardChanged += SetContent;
-            PlaceInClipboard = new RelayCommand((p) =>
+            ChooseTheSimilarCharacter = new RelayCommand((p) =>
             {
                 var codePoint = (CodePoint)p;
-                hook.SetText(codePoint.ToString());
+                var characterVm = CurrentTextBuffer.SelectionInfo.Character;
+                var wordVm = CurrentTextBuffer.SelectionInfo.Word;
+                var indexOpt = wordVm.CodePoints.FindIndexOrNone(cp => object.ReferenceEquals(cp, characterVm));
+                indexOpt.MatchSome(index =>
+                {
+                    var stringPosOpt = wordVm.StringForm.AsCodePointIndices().ElementAtOrNone(index);
+                    stringPosOpt.MatchSome(stringPos =>
+                    {
+                        var codePoints = wordVm.StringForm.AsCodePoints().Take(stringPos).Concat(new[] {codePoint.Utf32})
+                            .Concat(wordVm.StringForm.AsCodePoints().Skip(stringPos + 1));
+                        var newWordOpt = CurrentTextBuffer.ReplaceWord(wordVm, StringExt.FromCodePoints(codePoints));
+                        newWordOpt.MatchSome(newWord =>
+                        {
+                            CurrentTextBuffer.SelectionInfo =
+                                CurrentTextBuffer.SelectionInfo.Clone(newWord.CodePoints.ElementAt(stringPos), newWord);
+                        });
+                        
+                    });
+                });
             });
             SearchWeb = new RelayCommand(query =>
             {
@@ -247,7 +266,7 @@ namespace DidacticalEnigma.ViewModels
 
         public TextBufferVM ClipboardTextBuffer { get; }
 
-        public RelayCommand PlaceInClipboard { get; }
+        public RelayCommand ChooseTheSimilarCharacter { get; }
 
         public RelayCommand SearchWeb { get; }
 

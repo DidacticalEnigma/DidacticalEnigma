@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
 using DidacticalEnigma.Core.Utils;
+using Optional;
 using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels
@@ -92,6 +93,34 @@ namespace DidacticalEnigma.ViewModels
         public RelayCommand InsertTextAtCaret { get; }
 
         public string Name { get; }
+
+        public Option<WordVM> ReplaceWord(WordVM oldWordVm, string newWord)
+        {
+            var lineIndexOpt = Lines.FindIndexOrNone(line => line.Words.Contains(oldWordVm));
+            return lineIndexOpt.FlatMap(lineIndex =>
+            {
+                var wordIndexOpt = Lines[lineIndex].Words.FindIndexOrNone(word => object.ReferenceEquals(oldWordVm, word));
+                return wordIndexOpt.Map(wordIndex =>
+                {
+                    var newWordVm = new WordVM(
+                        new WordInfo(newWord),
+                        kanji,
+                        kana,
+                        related);
+                    Lines[lineIndex].Words[wordIndex] = newWordVm;
+
+                    rawOutput = string.Join(
+                        "\n",
+                        Lines.Select(
+                            line => string.Join(
+                                " ",
+                                line.Words.Select(word => word.StringForm))));
+                    OnPropertyChanged(nameof(RawOutput));
+
+                    return newWordVm;
+                });
+            });
+        }
 
         private void AddIteration()
         {

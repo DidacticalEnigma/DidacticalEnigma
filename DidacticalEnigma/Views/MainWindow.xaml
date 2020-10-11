@@ -79,7 +79,7 @@
                             <views:JapaneseTextPreview
                                 Grid.Row="0"
                                 Lines="{Binding Lines}"
-                                SelectionInfo="{Binding SelectionInfo, Mode=OneWayToSource}" />
+                                SelectionInfo="{Binding SelectionInfo, Mode=TwoWay}" />
                             <Grid Grid.Row="1">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />

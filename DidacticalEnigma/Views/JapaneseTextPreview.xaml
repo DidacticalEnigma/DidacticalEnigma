@@ -54,7 +54,7 @@
                                                             <ContextMenu.ItemContainerStyle>
                                                                 <Style TargetType="MenuItem">
                                                                     <Setter Property="IsEnabled" Value="{Binding ., Converter={x:Static converters:NullabilityToBooleanConverter.Default}}" />
-                                                                    <Setter Property="Command" Value="{Binding DataContext.PlaceInClipboard, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                                                    <Setter Property="Command" Value="{Binding DataContext.ChooseTheSimilarCharacter, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
                                                                     <Setter Property="CommandParameter" Value="{Binding .}" />
                                                                 </Style>
                                                             </ContextMenu.ItemContainerStyle>
