@@ -117,7 +117,7 @@ Te - Te Form
             var senseType = entry.Senses
                 .Select(s => s.Type)
                 .OfNonNone()
-                .Where(t => (int)t <= (int)EdictType.vs_s)
+                .Where(t => (int)t <= (int)EdictType.v1_s)
                 .FirstOrNone();
             return senseType.Map(s => (EdictType)(int)s);
         }

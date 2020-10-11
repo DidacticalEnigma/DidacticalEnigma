@@ -50,7 +50,7 @@
       <HintPath>..\packages\JetBrains.Annotations.2019.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="LibJpConjSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LibJpConjSharp.0.5.8\lib\netstandard2.0\LibJpConjSharp.dll</HintPath>
+      <HintPath>..\packages\LibJpConjSharp.0.7.1\lib\netstandard2.0\LibJpConjSharp.dll</HintPath>
     </Reference>
     <Reference Include="LibNMeCabNetStandard, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NMeCabNetStandard.0.7.3\lib\netstandard2.0\LibNMeCabNetStandard.dll</HintPath>

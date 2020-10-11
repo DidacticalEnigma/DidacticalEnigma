@@ -124,7 +124,7 @@ namespace JDict
     // represents a lookup over an JMdict file
     public class JMDictLookup : IDisposable
     {
-        private static readonly Guid Version = new Guid("9D67F5E5-99CB-4FB5-A44B-E27DE67F6684");
+        private static readonly Guid Version = new Guid("139D49D0-43C7-49B2-AFE1-3F0C1B923587");
 
         private TinyIndex.Database db;
 
@@ -144,6 +144,8 @@ namespace JDict
                     .With(Serializer.ForReadOnlyCollection(Serializer.ForEnum<EdictDialect>()))
                     .With(Serializer.ForReadOnlyCollection(Serializer.ForStringAsUTF8()))
                     .With(Serializer.ForReadOnlyCollection(Serializer.ForStringAsUTF8()))
+                    .With(Serializer.ForReadOnlyCollection(Serializer.ForEnum<EdictField>()))
+                    .With(Serializer.ForReadOnlyCollection(Serializer.ForEnum<EdictMisc>()))
                     .Create()
                     .Mapping(
                         raw => new JMDictSense(
@@ -151,14 +153,18 @@ namespace JDict
                             (IReadOnlyCollection<EdictPartOfSpeech>)raw[1],
                             (IReadOnlyCollection<EdictDialect>)raw[2],
                             (IReadOnlyCollection<string>)raw[3],
-                            (IReadOnlyCollection<string>)raw[4]),
+                            (IReadOnlyCollection<string>)raw[4],
+                            (IReadOnlyCollection<EdictField>)raw[5],
+                            (IReadOnlyCollection<EdictMisc>)raw[6]),
                         obj => new object[]
                         {
                             obj.Type,
                             obj.PartOfSpeechInfo,
                             obj.DialectalInfo,
                             obj.Glosses,
-                            obj.Informational
+                            obj.Informational,
+                            obj.FieldData,
+                            obj.Misc
                         })))
                 .Create()
                 .Mapping(
@@ -241,7 +247,9 @@ namespace JDict
                     typedPartOfSpeech,
                     s.Dialect.Select(EdictDialectUtils.FromDescription).Values().ToList(),
                     s.Glosses.Select(g => g.Text.Trim()).ToList(),
-                    s.Information.ToList()));
+                    s.Information.ToList(),
+                    s.Field.Select(EdictFieldUtils.FromDescription).Values().ToList(),
+                    s.Misc.Select(EdictMiscUtils.FromDescription).Values().ToList()));
             }
 
             return sense;
@@ -539,19 +547,27 @@ namespace JDict
         private string Description => string.Join("/", Glosses);
 
         public IEnumerable<EdictDialect> DialectalInfo { get; }
+        
+        public IEnumerable<EdictField> FieldData { get; }
+        
+        public IEnumerable<EdictMisc> Misc { get; }
 
         public JMDictSense(
             Option<EdictPartOfSpeech> type,
             IReadOnlyCollection<EdictPartOfSpeech> pos,
             IReadOnlyCollection<EdictDialect> dialect,
             IReadOnlyCollection<string> text,
-            IReadOnlyCollection<string> informational)
+            IReadOnlyCollection<string> informational,
+            IReadOnlyCollection<EdictField> field,
+            IReadOnlyCollection<EdictMisc> misc)
         {
             Type = type;
             PartOfSpeechInfo = pos;
             DialectalInfo = dialect;
             Glosses = text;
             Informational = informational;
+            FieldData = field;
+            Misc = misc;
         }
 
         public override string ToString()
@@ -666,6 +682,9 @@ namespace JDict
 
         [Description("suru verb - special class")]
         vs_s = 27,
+        
+        [Description("Ichidan verb - kureru special class")]
+        v1_s = 28,
 
         [Description("Yodan verb with `ku' ending (archaic)")]
         v4k,
@@ -729,8 +748,6 @@ namespace JDict
         v_unspec,
         [Description("irregular verb")]
         iv,
-        [Description("Ichidan verb - kureru special class")]
-        v1_s,
         [Description("intransitive verb")]
         vi,
         [Description("irregular ru verb, plain form ends with -ri")]
@@ -863,7 +880,7 @@ namespace JDict
         private static EnumMapper<EdictDialect> mapping = new EnumMapper<EdictDialect>();
     }
 
-    enum EdictField
+    public enum EdictField
     {
         // reserving 0 for an "unknown"
         [Description("martial arts term")]
@@ -955,8 +972,28 @@ namespace JDict
         [Description("organization name")]
         organization,
     }
+    
+    public static class EdictFieldUtils
+    {
+        public static Option<EdictField> FromDescription(string description)
+        {
+            return mapping.FromDescription(description);
+        }
 
-    enum EdictMisc
+        public static string ToDescription(this EdictField d)
+        {
+            return mapping.ToLongString(d);
+        }
+
+        public static string ToAbbrevation(this EdictField d)
+        {
+            return d.ToString().Replace("_", "-");
+        }
+
+        private static EnumMapper<EdictField> mapping = new EnumMapper<EdictField>();
+    }
+
+    public enum EdictMisc
     {
         // reserving 0 for an "unknown"
         [Description("architecture term")]
@@ -1015,6 +1052,26 @@ namespace JDict
         vulg,
         [Description("jocular, humorous term")]
         joc,
+    }
+    
+    public static class EdictMiscUtils
+    {
+        public static Option<EdictMisc> FromDescription(string description)
+        {
+            return mapping.FromDescription(description);
+        }
+
+        public static string ToDescription(this EdictMisc d)
+        {
+            return mapping.ToLongString(d);
+        }
+
+        public static string ToAbbrevation(this EdictMisc d)
+        {
+            return d.ToString().Replace("_", "-");
+        }
+
+        private static EnumMapper<EdictMisc> mapping = new EnumMapper<EdictMisc>();
     }
 
     enum EdictReadingInformation

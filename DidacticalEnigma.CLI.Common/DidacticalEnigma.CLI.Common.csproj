@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="AsyncEnumerator" Version="2.2.2" />
     <PackageReference Include="Gu.Inject" Version="0.1.0-dev" />
-    <PackageReference Include="LibJpConjSharp" Version="0.5.8" />
+    <PackageReference Include="LibJpConjSharp" Version="0.7.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NMeCabNetStandard" Version="0.7.3" />
     <PackageReference Include="Optional" Version="4.0.0" />

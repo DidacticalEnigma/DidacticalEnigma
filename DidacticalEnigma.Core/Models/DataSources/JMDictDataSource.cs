@@ -85,6 +85,30 @@ namespace DidacticalEnigma.Core.Models.DataSources
                             if(!first)
                                 l.Add(new Text("\n"));
                         }
+                        {
+                            bool first = true;
+                            foreach (var dialect in sense.FieldData)
+                            {
+                                if(!first)
+                                    l.Add(new Text(", ", fontSize: FontSize.Medium));
+                                first = false;
+                                l.Add(new Text(dialect.ToDescription(), fontSize: FontSize.Medium));
+                            }
+                            if(!first)
+                                l.Add(new Text("\n"));
+                        }
+                        {
+                            bool first = true;
+                            foreach (var dialect in sense.Misc)
+                            {
+                                if(!first)
+                                    l.Add(new Text(", ", fontSize: FontSize.Medium));
+                                first = false;
+                                l.Add(new Text(dialect.ToDescription(), fontSize: FontSize.Medium));
+                            }
+                            if(!first)
+                                l.Add(new Text("\n"));
+                        }
                         foreach (var inf in sense.Informational)
                         {
                             l.Add(new Text(inf, fontSize: FontSize.Medium));
