@@ -7,3 +7,9 @@
 [submodule "DidacticalEnigma.Core"]
 	path = DidacticalEnigma.Core
 	url = https://github.com/DidacticalEnigma/DidacticalEnigma.Core
+[submodule "DidacticalEnigma.Misc"]
+	path = DidacticalEnigma.Misc
+	url = https://github.com/DidacticalEnigma/DidacticalEnigma.Misc
+[submodule "DidacticalEnigma.Project"]
+	path = DidacticalEnigma.Project
+	url = https://github.com/DidacticalEnigma/DidacticalEnigma.Project
