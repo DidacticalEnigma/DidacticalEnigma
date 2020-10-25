@@ -34,6 +34,11 @@ for:
       - image: Ubuntu
 
   test_script:
+  - ps: dotnet nuget add source $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack TinyIndex/TinyIndex/TinyIndex.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Core/Utility/Utility.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Core/JDict/JDict.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.Core/DidacticalEnigma.Core.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet test $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.Core/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj
 
 deploy:
