@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{EE43
 		Scripts\postBuild.bat = Scripts\postBuild.bat
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma.WPF", "DidacticalEnigma\DidacticalEnigma.WPF.csproj", "{BA5B8792-EAF8-4A87-B58E-225290FD14A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DidacticalEnigma.WPF", "DidacticalEnigma.WPF\DidacticalEnigma.WPF.csproj", "{BA5B8792-EAF8-4A87-B58E-225290FD14A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

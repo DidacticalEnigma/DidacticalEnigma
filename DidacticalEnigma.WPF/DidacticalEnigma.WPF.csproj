@@ -43,8 +43,14 @@
     <Reference Include="AsyncEnumerable, Version=2.2.2.0, Culture=neutral, PublicKeyToken=0426b068161bd1d1, processorArchitecture=MSIL">
       <HintPath>..\packages\AsyncEnumerator.2.2.2\lib\net45\AsyncEnumerable.dll</HintPath>
     </Reference>
+    <Reference Include="DidacticalEnigma.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DidacticalEnigma.Core.0.9.6\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Gu.Inject, Version=0.1.0.0, Culture=neutral, PublicKeyToken=84247aff6de990f8, processorArchitecture=MSIL">
       <HintPath>..\packages\Gu.Inject.0.1.0-dev\lib\net452\Gu.Inject.dll</HintPath>
+    </Reference>
+    <Reference Include="JDict, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\JDict.0.9.6\lib\netstandard2.0\JDict.dll</HintPath>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=2019.1.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2019.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
@@ -197,8 +203,14 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="TinyIndex, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TinyIndex.0.4.0\lib\netstandard2.0\TinyIndex.dll</HintPath>
+    </Reference>
     <Reference Include="UnicodeInformation, Version=2.3.0.26, Culture=neutral, PublicKeyToken=e54dbbddfea2ed0e, processorArchitecture=MSIL">
       <HintPath>..\packages\UnicodeInformation.2.3.0.26\lib\netstandard2.0\UnicodeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="Utility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Utility.0.9.6\lib\netstandard2.0\Utility.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -368,20 +380,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DidacticalEnigma.Core\DidacticalEnigma.Core.csproj">
-      <Project>{72613547-03d0-4cde-ae3e-946451e99726}</Project>
-      <Name>DidacticalEnigma.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JDict\JDict.csproj">
-      <Project>{82e18376-40e8-4f9d-bc46-e166354bccb3}</Project>
-      <Name>JDict</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{6014edb7-3375-4d85-90a5-4db7638d7b39}</Project>
-      <Name>Utility</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Gu.Analyzers.1.6.10-dev\analyzers\dotnet\cs\Gu.Analyzers.dll" />
