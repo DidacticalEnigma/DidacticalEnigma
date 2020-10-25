@@ -7,8 +7,12 @@ install:
   - git submodule update --init --recursive
 build_script:
   - ps: nuget restore
-  - ps: dotnet publish MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release/MagicTranslatorGlosser
-  - ps: dotnet publish MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release/MagicTranslatorGlosser
+  - ps: dotnet nuget add source $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack TinyIndex/TinyIndex.sln -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.Core.sln -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.Project.sln -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release/MagicTranslatorGlosser
+  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release/MagicTranslatorGlosser
   - ps: if($isWindows) { msbuild -verbosity:minimal DidacticalEnigma.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"; }
   - ps: if($isLinux) { dotnet build $env:APPVEYOR_BUILD_FOLDER/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj }
 after_build:
@@ -27,7 +31,7 @@ for:
       - image: Ubuntu
 
   test_script:
-  - ps: dotnet test $env:APPVEYOR_BUILD_FOLDER/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj
+  - ps: dotnet test $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.Core/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj
 
 deploy:
   tag: $(APPVEYOR_REPO_TAG_NAME)
