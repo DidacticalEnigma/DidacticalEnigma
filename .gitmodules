@@ -1,6 +1,9 @@
 [submodule "Data"]
 	path = Data
-	url = https://github.com/milleniumbug/DidacticalEnigma-Data
+	url = https://github.com/DidacticalEnigma/DidacticalEnigma-Data
 [submodule "TinyIndex"]
 	path = TinyIndex
-	url = https://github.com/milleniumbug/TinyIndex
+	url = https://github.com/DidacticalEnigma/TinyIndex
+[submodule "DidacticalEnigma.Core"]
+	path = DidacticalEnigma.Core
+	url = https://github.com/DidacticalEnigma/DidacticalEnigma.Core
