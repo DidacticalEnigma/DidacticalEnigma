@@ -13,14 +13,14 @@ build_script:
   - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.Core/DidacticalEnigma.Core.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
 #  - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.Project/DidacticalEnigma.Project.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
 #  - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.MagicTranslatorProject/DidacticalEnigma.MagicTranslatorProject.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: nuget restore
-  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release/MagicTranslatorGlosser
-  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release/MagicTranslatorGlosser
+  - ps: if($isWindows) { nuget restore; }
+  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release/MagicTranslatorGlosser
+  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release/MagicTranslatorGlosser
   - ps: if($isWindows) { msbuild -verbosity:minimal DidacticalEnigma.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"; }
-  - ps: if($isLinux) { dotnet build $env:APPVEYOR_BUILD_FOLDER/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj }
+  - ps: if($isLinux) { dotnet build $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.Core/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj }
 after_build:
-  - ps: if($isWindows) { mv $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/Release $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/DidacticalEnigma; }
-  - ps: if($isWindows) { 7z a -r DidacticalEnigma.zip $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma/bin/DidacticalEnigma; }
+  - ps: if($isWindows) { mv $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/DidacticalEnigma; }
+  - ps: if($isWindows) { 7z a -r DidacticalEnigma.zip $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/DidacticalEnigma; }
 artifacts:
   - path: DidacticalEnigma.zip
     name: Full program
@@ -34,11 +34,6 @@ for:
       - image: Ubuntu
 
   test_script:
-  - ps: dotnet nuget add source $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack TinyIndex/TinyIndex/TinyIndex.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Core/Utility/Utility.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Core/JDict/JDict.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.Core/DidacticalEnigma.Core.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet test $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.Core/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj
 
 deploy:
