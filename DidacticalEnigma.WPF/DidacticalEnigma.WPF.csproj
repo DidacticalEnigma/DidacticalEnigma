@@ -396,7 +396,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>call "$(SolutionDir)Scripts\postBuild.bat" "$(ProjectDir)$(OutDir)Data\" "$(SolutionDir)Data"</PostBuildEvent>
+    <PostBuildEvent>call "$(ProjectDir)..\Scripts\postBuild.bat" "$(ProjectDir)$(OutDir)Data\" "$(ProjectDir)..\Data"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
