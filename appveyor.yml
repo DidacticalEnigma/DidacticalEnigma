@@ -14,6 +14,7 @@ build_script:
   - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.Core/DidacticalEnigma.Core.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.Project/DidacticalEnigma.Project.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.MagicTranslatorProject/DidacticalEnigma.MagicTranslatorProject.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.Updater/DidacticalEnigma.Updater.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: if($isWindows) { nuget restore; }
   - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release/MagicTranslatorGlosser
   - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release/MagicTranslatorGlosser
