@@ -18,7 +18,6 @@ build_script:
   - ps: if($isWindows) { nuget restore; }
   - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release/MagicTranslatorGlosser
   - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release/MagicTranslatorGlosser
-  - ps: if($isWindows) { mkdir $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release; }
   - ps: if($isWindows) { msbuild -verbosity:minimal DidacticalEnigma.Updater.WPF\DidacticalEnigma.Updater.WPF.csproj /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"; }
   - ps: if($isWindows) { mv $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.Updater.WPF/bin/Release/* $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release; }
   - ps: if($isWindows) { msbuild -verbosity:minimal DidacticalEnigma.WPF\DidacticalEnigma.WPF.csproj /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"; }
