@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using DidacticalEnigma.Core.Models.Project;
+using DidacticalEnigma.Project;
 using Utility.Utils;
 
 namespace DidacticalEnigma.ViewModels

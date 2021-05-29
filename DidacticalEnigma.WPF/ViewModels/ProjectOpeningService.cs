@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DidacticalEnigma.Core.Models.Project;
+using DidacticalEnigma.Project;
 //using Microsoft.WindowsAPICodePack.Dialogs;
 using Optional;
 
