@@ -7,7 +7,6 @@ install:
   - git submodule update --init --recursive
 build_script:
   - ps: dotnet nuget add source $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: nuget sources Add -Name "DidacticalEnigma" -Source $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack TinyIndex/TinyIndex/TinyIndex.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Core/Utility/Utility.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Core/JDict/JDict.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
