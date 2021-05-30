@@ -92,7 +92,7 @@ namespace DidacticalEnigma
             reporter.Report("Initializing JMdict dictionary (first time may take up to several minutes)");
             kernel.Get<JMDictLookup>();
             reporter.Report("Initializing JMnedict dictionary (first time may take up to several minutes)");
-            kernel.Get<Jnedict>();
+            kernel.Get<JMNedictLookup>();
             reporter.Report("Initializing MeCab");
             kernel.Get<IMorphologicalAnalyzer<IEntry>>();
             reporter.Report("Initializing other components");
@@ -106,7 +106,7 @@ namespace DidacticalEnigma
             kernel.BindFactory(() => new Kradfile(Path.Combine(dataDir, "character", "kradfile1_plus_2_utf8"), Encoding.UTF8));
             kernel.BindFactory(() => new Radkfile(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8"), Encoding.UTF8));
             kernel.BindFactory(() => JMDictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")));
-            kernel.BindFactory(() => Jnedict.Create(Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache")));
+            kernel.BindFactory(() => JMNedictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache")));
             kernel.BindFactory(() =>
                 new FrequencyList(Path.Combine(dataDir, "other", "word_form_frequency_list.txt"), Encoding.UTF8));
             kernel.BindFactory(() => new Tanaka(Path.Combine(dataDir, "corpora", "examples.utf.gz"), Encoding.UTF8));
@@ -190,7 +190,7 @@ namespace DidacticalEnigma
                 new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JMDictDataSource(get.Get<JMDictLookup>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
-                new DataSourceVM(new JNeDictDataSource(get.Get<Jnedict>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new JNeDictDataSource(get.Get<JMNedictLookup>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDictLookup>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new WordFrequencyRatingDataSource(get.Get<FrequencyList>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>()), get.Get<IFlowDocumentRichFormattingRenderer>()),

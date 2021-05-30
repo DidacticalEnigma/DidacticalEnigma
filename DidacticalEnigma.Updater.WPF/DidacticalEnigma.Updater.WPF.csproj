@@ -40,13 +40,13 @@
       <HintPath>..\packages\AsyncEnumerator.2.2.2\lib\net45\AsyncEnumerable.dll</HintPath>
     </Reference>
     <Reference Include="DidacticalEnigma.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DidacticalEnigma.Core.0.9.6.2\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
+      <HintPath>..\packages\DidacticalEnigma.Core.0.9.6.3\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
     </Reference>
     <Reference Include="DidacticalEnigma.Updater, Version=0.9.6.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DidacticalEnigma.Updater.0.9.6.2\lib\netstandard2.0\DidacticalEnigma.Updater.dll</HintPath>
     </Reference>
     <Reference Include="JDict, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\JDict.0.9.6.2\lib\netstandard2.0\JDict.dll</HintPath>
+      <HintPath>..\packages\JDict.0.9.6.3\lib\netstandard2.0\JDict.dll</HintPath>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=2020.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2020.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
