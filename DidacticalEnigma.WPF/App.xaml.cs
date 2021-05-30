@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 using NMeCab;
 using Optional.Collections;
 using Sentry;
+using Utility.Utils;
 using SplashScreen = DidacticalEnigma.Views.SplashScreen;
 
 namespace DidacticalEnigma
@@ -282,11 +283,24 @@ namespace DidacticalEnigma
                 var dictionaries = new EpwingDictionaries();
                 try
                 {
-                    var dicts = Directory.EnumerateFiles(targetPath, "*.zip")
-                        .Select(file => new YomichanTermDictionary(file, file + ".cache"));
-                    foreach (var dict in dicts)
+                    var zipFiles = new Dictionary<string, ZipFile2>();
+                    try
                     {
-                        dictionaries.Add(dict);
+                        zipFiles = Directory.EnumerateFiles(targetPath, "*.zip")
+                            .ToDictionary(path => path, path => new ZipFile2(path));
+                        var dicts = zipFiles
+                            .Select(file => new YomichanTermDictionary(file.Value, file.Key + ".cache"));
+                        foreach (var dict in dicts)
+                        {
+                            dictionaries.Add(dict);
+                        }
+                    }
+                    finally
+                    {
+                        foreach(var entry in zipFiles)
+                        {
+                            entry.Value.Dispose();
+                        }
                     }
                 }
                 catch (DirectoryNotFoundException)
