@@ -39,11 +39,14 @@
     <Reference Include="AsyncEnumerable, Version=2.2.2.0, Culture=neutral, PublicKeyToken=0426b068161bd1d1, processorArchitecture=MSIL">
       <HintPath>..\packages\AsyncEnumerator.2.2.2\lib\net45\AsyncEnumerable.dll</HintPath>
     </Reference>
+    <Reference Include="CodeHollow.FeedReader, Version=1.2.1.0, Culture=neutral, PublicKeyToken=66d870f2b3d70f48, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeHollow.FeedReader.1.2.1\lib\net452\CodeHollow.FeedReader.dll</HintPath>
+    </Reference>
     <Reference Include="DidacticalEnigma.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DidacticalEnigma.Core.0.9.6.3\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
     </Reference>
     <Reference Include="DidacticalEnigma.Updater, Version=0.9.6.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DidacticalEnigma.Updater.0.9.6.2\lib\netstandard2.0\DidacticalEnigma.Updater.dll</HintPath>
+      <HintPath>..\packages\DidacticalEnigma.Updater.0.9.6.3\lib\netstandard2.0\DidacticalEnigma.Updater.dll</HintPath>
     </Reference>
     <Reference Include="JDict, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\JDict.0.9.6.3\lib\netstandard2.0\JDict.dll</HintPath>
