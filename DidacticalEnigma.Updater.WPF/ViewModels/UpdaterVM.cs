@@ -15,7 +15,9 @@ namespace DidacticalEnigma.Updater.WPF.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string CurrentStatus
+        public UpdateStatus CurrentStatus => updater.CurrentStatus;
+
+        public string CurrentStatusString
         {
             get
             {
@@ -33,7 +35,7 @@ namespace DidacticalEnigma.Updater.WPF.ViewModels
 
                         break;
                     case UpdateStatus.FailureStatus failureStatus:
-                        return $"Failure: {failureStatus.Reason}";
+                        return $"Failure";
                         break;
                     case UpdateStatus.ProcessingStatus processingStatus:
                         return "Processing...";
@@ -56,7 +58,11 @@ namespace DidacticalEnigma.Updater.WPF.ViewModels
 
         private void ForwardNotificationOfPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            PropertyChanged?.Invoke(this, e);
+            if (e.PropertyName == nameof(updater.CurrentStatus))
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentStatusString)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentStatus)));
+            }
         }
 
         public void Dispose()

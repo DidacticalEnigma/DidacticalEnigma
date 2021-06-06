@@ -12,6 +12,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" ItemsSource="{Binding Updaters}">
@@ -29,13 +30,20 @@
                             <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Name}" Grid.Column="0"/>
-                        <TextBlock Text="{Binding CurrentStatus}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding CurrentStatusString}" Grid.Column="1"/>
                         <Button Content="Update" Command="{Binding UpdateCommand}" Grid.Column="2"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Grid Grid.Row="1">
+        <TextBox
+            HorizontalScrollBarVisibility="Disabled"
+            IsReadOnly="True"
+            Text="{Binding FailureLog, Mode=OneWay}"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+            Grid.Row="1" />
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
