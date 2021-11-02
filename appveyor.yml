@@ -44,7 +44,7 @@ deploy:
   description: 'This is the full program, with all the files needed for it to work.'
   provider: GitHub
   auth_token:
-    secure: fzqkckOMapDGnWMt0ZWxBM4k+pxuAQtdO7H4sUj3nqqk65Cm+UYKUf7f6I3AqQIM
+    secure: P9IuL8ONTiUNMbvX1z83aFQxCyXkCGa/B8lT9hdASDPrKv6GrAG9iE1Ii61rvhXD
   artifact: DidacticalEnigma.zip
   draft: false
   prerelease: false
