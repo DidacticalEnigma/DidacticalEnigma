@@ -32,20 +32,14 @@ namespace DidacticalEnigma.Updater.WPF.ViewModels
                         {
                             return $"Downloading: {downloadingStatus.Percentage.Value}";
                         }
-
-                        break;
                     case UpdateStatus.FailureStatus failureStatus:
                         return $"Failure";
-                        break;
                     case UpdateStatus.ProcessingStatus processingStatus:
                         return "Processing...";
-                        break;
                     case UpdateStatus.ReadyToStartStatus readyToStartStatus:
                         return "Ready to start.";
-                        break;
                     case UpdateStatus.SuccessStatus successStatus:
                         return "Success!";
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(CurrentStatus));
                 }
