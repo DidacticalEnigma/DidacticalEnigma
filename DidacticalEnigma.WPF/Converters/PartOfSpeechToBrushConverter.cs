@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using DidacticalEnigma.Core.Models.LanguageService;
-using Optional.Collections;
-using Utility.Utils;
-using Brush = System.Drawing.Brush;
 using Brushes = System.Windows.Media.Brushes;
-using SystemColors = System.Windows.SystemColors;
 
 namespace DidacticalEnigma.Converters
 {
