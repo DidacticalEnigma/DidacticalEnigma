@@ -44,13 +44,13 @@
       <HintPath>..\packages\AsyncEnumerator.2.2.2\lib\net45\AsyncEnumerable.dll</HintPath>
     </Reference>
     <Reference Include="DidacticalEnigma.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DidacticalEnigma.Core.0.9.7\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
+      <HintPath>..\packages\DidacticalEnigma.Core.0.9.7.1\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
     </Reference>
     <Reference Include="DidacticalEnigma.Project, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DidacticalEnigma.Project.0.9.6\lib\netstandard2.0\DidacticalEnigma.Project.dll</HintPath>
     </Reference>
-    <Reference Include="Gu.Inject, Version=0.1.0.0, Culture=neutral, PublicKeyToken=84247aff6de990f8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Gu.Inject.0.1.0-dev\lib\net452\Gu.Inject.dll</HintPath>
+    <Reference Include="Gu.Inject, Version=0.3.9.0, Culture=neutral, PublicKeyToken=84247aff6de990f8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Gu.Inject.0.3.9\lib\net452\Gu.Inject.dll</HintPath>
     </Reference>
     <Reference Include="JDict, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\JDict.0.9.7.1\lib\netstandard2.0\JDict.dll</HintPath>
