@@ -8,7 +8,6 @@ using System.Windows.Media;
 using DidacticalEnigma.Core.Models.LanguageService;
 using Optional.Collections;
 using Utility.Utils;
-using Brush = System.Drawing.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using SystemColors = System.Windows.SystemColors;
 
