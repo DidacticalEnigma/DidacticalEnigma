@@ -44,13 +44,10 @@
       <HintPath>..\packages\AsyncEnumerator.2.2.2\lib\net45\AsyncEnumerable.dll</HintPath>
     </Reference>
     <Reference Include="DidacticalEnigma.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DidacticalEnigma.Core.0.9.7\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
+      <HintPath>..\packages\DidacticalEnigma.Core.0.9.7.1\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
     </Reference>
     <Reference Include="DidacticalEnigma.Project, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DidacticalEnigma.Project.0.9.6\lib\netstandard2.0\DidacticalEnigma.Project.dll</HintPath>
-    </Reference>
-    <Reference Include="Gu.Inject, Version=0.1.0.0, Culture=neutral, PublicKeyToken=84247aff6de990f8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Gu.Inject.0.1.0-dev\lib\net452\Gu.Inject.dll</HintPath>
     </Reference>
     <Reference Include="JDict, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\JDict.0.9.7.1\lib\netstandard2.0\JDict.dll</HintPath>
@@ -385,8 +382,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\Gu.Analyzers.1.6.10-dev\analyzers\dotnet\cs\Gu.Analyzers.dll" />
-    <Analyzer Include="..\packages\PropertyChangedAnalyzers.3.2.1\analyzers\dotnet\cs\Gu.Roslyn.Extensions.dll" />
+    <Analyzer Include="..\packages\Gu.Analyzers.1.8.5\analyzers\dotnet\cs\Gu.Analyzers.dll" />
+    <Analyzer Include="..\packages\Gu.Analyzers.1.8.5\analyzers\dotnet\cs\Gu.Roslyn.Extensions.dll" />
     <Analyzer Include="..\packages\PropertyChangedAnalyzers.3.2.1\analyzers\dotnet\cs\PropertyChangedAnalyzers.dll" />
     <Analyzer Include="..\packages\WpfAnalyzers.3.1.1\analyzers\dotnet\cs\WpfAnalyzers.dll" />
   </ItemGroup>

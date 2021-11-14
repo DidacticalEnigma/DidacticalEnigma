@@ -43,7 +43,7 @@
       <HintPath>..\packages\CodeHollow.FeedReader.1.2.1\lib\net452\CodeHollow.FeedReader.dll</HintPath>
     </Reference>
     <Reference Include="DidacticalEnigma.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DidacticalEnigma.Core.0.9.7\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
+      <HintPath>..\packages\DidacticalEnigma.Core.0.9.7.1\lib\netstandard2.0\DidacticalEnigma.Core.dll</HintPath>
     </Reference>
     <Reference Include="DidacticalEnigma.Updater, Version=0.9.6.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DidacticalEnigma.Updater.0.9.6.3\lib\netstandard2.0\DidacticalEnigma.Updater.dll</HintPath>
