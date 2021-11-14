@@ -10,12 +10,6 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\Gu.Analyzers.1.6.10-dev\analyzers\dotnet\cs\Gu.Analyzers.dll" />
-    <Analyzer Include="..\packages\PropertyChangedAnalyzers.3.2.1\analyzers\dotnet\cs\Gu.Roslyn.Extensions.dll" />
-    <Analyzer Include="..\packages\PropertyChangedAnalyzers.3.2.1\analyzers\dotnet\cs\PropertyChangedAnalyzers.dll" />
-    <Analyzer Include="..\packages\WpfAnalyzers.3.1.1\analyzers\dotnet\cs\WpfAnalyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="DidacticalEnigma.Core" Version="0.9.7.1" />
     <PackageReference Include="DidacticalEnigma.Project" Version="0.9.6" />
     <PackageReference Include="Gu.Analyzers" Version="1.6.10-dev" />
