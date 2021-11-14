@@ -51,7 +51,7 @@ namespace DidacticalEnigma
                 IProgress<string> progress = new Progress<string>(s => splashVm.ProgressReport = s);
                 splash.Show();
                 Encoding.RegisterProvider(new Utf8EncodingProviderHack());
-                kernel.Bind<ITextInsertCommand>(() => new TextInsertCommand(window.InsertTextAtCursor));
+                kernel.BindFactory<ITextInsertCommand>(() => new TextInsertCommand(window.InsertTextAtCursor));
                 await Task.Run(() =>
                 {
                     Preload(progress);
@@ -101,29 +101,29 @@ namespace DidacticalEnigma
         public static Kernel Configure(string dataDir)
         {
             var kernel = new Kernel();
-           
-            kernel.Bind(() => KanjiDict.Create(Path.Combine(dataDir, "character", "kanjidic2.xml.gz")));
-            kernel.Bind(() => new Kradfile(Path.Combine(dataDir, "character", "kradfile1_plus_2_utf8"), Encoding.UTF8));
-            kernel.Bind(() => new Radkfile(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8"), Encoding.UTF8));
-            kernel.Bind(() => JMDictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")));
-            kernel.Bind(() => JMNedictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache")));
-            kernel.Bind(() =>
+            
+            kernel.BindFactory(() => KanjiDict.Create(Path.Combine(dataDir, "character", "kanjidic2.xml.gz")));
+            kernel.BindFactory(() => new Kradfile(Path.Combine(dataDir, "character", "kradfile1_plus_2_utf8"), Encoding.UTF8));
+            kernel.BindFactory(() => new Radkfile(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8"), Encoding.UTF8));
+            kernel.BindFactory(() => JMDictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"), Path.Combine(dataDir, "dictionaries", "JMdict_e.cache")));
+            kernel.BindFactory(() => JMNedictLookup.Create(Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"), Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache")));
+            kernel.BindFactory(() =>
                 new FrequencyList(Path.Combine(dataDir, "other", "word_form_frequency_list.txt"), Encoding.UTF8));
-            kernel.Bind(() => new Tanaka(Path.Combine(dataDir, "corpora", "examples.utf.gz"), Encoding.UTF8));
-            kernel.Bind(() => new JESC(Path.Combine(dataDir, "corpora", "jesc_raw"), Encoding.UTF8));
-            kernel.Bind(() => new BasicExpressionsCorpus(Path.Combine(dataDir, "corpora", "JEC_basic_sentence_v1-2.csv"), Encoding.UTF8));
-            kernel.Bind<IFontResolver>(() => new DefaultFontResolver(Path.Combine(dataDir, "character", "KanjiStrokeOrders")));
-            kernel.Bind<IMorphologicalAnalyzer<IpadicEntry>>(() => new MeCabIpadic(new MeCabParam
+            kernel.BindFactory(() => new Tanaka(Path.Combine(dataDir, "corpora", "examples.utf.gz"), Encoding.UTF8));
+            kernel.BindFactory(() => new JESC(Path.Combine(dataDir, "corpora", "jesc_raw"), Encoding.UTF8));
+            kernel.BindFactory(() => new BasicExpressionsCorpus(Path.Combine(dataDir, "corpora", "JEC_basic_sentence_v1-2.csv"), Encoding.UTF8));
+            kernel.BindFactory<IFontResolver>(() => new DefaultFontResolver(Path.Combine(dataDir, "character", "KanjiStrokeOrders")));
+            kernel.BindFactory<IMorphologicalAnalyzer<IpadicEntry>>(() => new MeCabIpadic(new MeCabParam
             {
                 DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
                 UseMemoryMappedFile = true
             }));
-            kernel.Bind<IMorphologicalAnalyzer<UnidicEntry>>(() => new MeCabUnidic(new MeCabParam
+            kernel.BindFactory<IMorphologicalAnalyzer<UnidicEntry>>(() => new MeCabUnidic(new MeCabParam
             {
                 DicDir = Path.Combine(dataDir, "mecab", "unidic"),
                 UseMemoryMappedFile = true
             }));
-            kernel.Bind<IMorphologicalAnalyzer<IEntry>>(get =>
+            kernel.BindFactory<IMorphologicalAnalyzer<IEntry>>(get =>
             {
                 // not sure if objects created this way will be disposed twice
                 // probably doesn't matter (IDisposable.Dispose's contract says
@@ -137,7 +137,7 @@ namespace DidacticalEnigma
                     return get.Get<IMorphologicalAnalyzer<IpadicEntry>>();
                 }
             });
-            kernel.Bind<Models.Settings>(get =>
+            kernel.BindFactory<Models.Settings>(get =>
             {
                 try
                 {
@@ -148,15 +148,15 @@ namespace DidacticalEnigma
                     return Models.Settings.CreateDefault();
                 }
             });
-            kernel.Bind(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
-            kernel.Bind(get => EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")));
+            kernel.BindFactory(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
+            kernel.BindFactory(get => EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")));
             kernel.Bind<IKanjiProperties, KanjiProperties>();
-            kernel.Bind(get => new KanjiProperties(
+            kernel.BindFactory(get => new KanjiProperties(
                 get.Get<KanjiDict>(),
                 get.Get<Kradfile>(),
                 get.Get<Radkfile>(),
                 null));
-            kernel.Bind(get => new MainWindowVM(
+            kernel.BindFactory(get => new MainWindowVM(
                 get.Get<ISentenceParser>(),
                 new KanaBoardVM(Path.Combine(dataDir, "character", "hiragana_romaji.txt"), Encoding.UTF8),
                 new KanaBoardVM(Path.Combine(dataDir, "character", "katakana_romaji.txt"), Encoding.UTF8),
@@ -175,18 +175,18 @@ namespace DidacticalEnigma
                 },
                 get.Get<ITextInsertCommand>(),
                 get.Get<Models.Settings>()));
-            kernel.Bind(get => new KanjiRadicalLookupControlVM(
+            kernel.BindFactory(get => new KanjiRadicalLookupControlVM(
                 get.Get<KanjiRadicalLookup>(),
                 get.Get<IKanjiProperties>(),
                 get.Get<IRadicalSearcher>(),
                 CreateTextRadicalMappings(get.Get<KanjiRadicalLookup>().AllRadicals, get.Get<RadkfileKanjiAliveCorrelator>())));
             kernel.Bind<IRomaji, ModifiedHepburn>();
-            kernel.Bind(get => new ModifiedHepburn(
+            kernel.BindFactory(get => new ModifiedHepburn(
                 get.Get<IMorphologicalAnalyzer<IEntry>>(),
                 get.Get<IKanaProperties>()));
             kernel.Bind<IAutoGlosser, AutoGlosserNext>();
-            kernel.Bind(get => new AutoGlosserNext(get.Get<ISentenceParser>(), get.Get<JMDictLookup>(), get.Get<IKanaProperties>()));
-            kernel.Bind(get => new[] {
+            kernel.BindFactory(get => new AutoGlosserNext(get.Get<ISentenceParser>(), get.Get<JMDictLookup>(), get.Get<IKanaProperties>()));
+            kernel.BindFactory(get => new[] {
                 new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JMDictDataSource(get.Get<JMDictLookup>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
@@ -205,41 +205,41 @@ namespace DidacticalEnigma
                 new DataSourceVM(new RomajiDataSource(get.Get<IRomaji>()), get.Get<IFlowDocumentRichFormattingRenderer>())
             }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new DataSourceVM(new EpwingDataSource(dict, get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>(), dict.Revision))));
             kernel.Bind<IKanaProperties, KanaProperties2>();
-            kernel.Bind(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
-            kernel.Bind(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
-            kernel.Bind(get => new SentenceParser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>()));
+            kernel.BindFactory(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
+            kernel.BindFactory(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
+            kernel.BindFactory(get => new SentenceParser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>()));
             kernel.Bind<ISentenceParser, SentenceParser>();
-            kernel.Bind<IRelated>(get =>
+            kernel.BindFactory<IRelated>(get =>
                 new CompositeRelated(
                     get.Get<KanaProperties2>(),
                     get.Get<EasilyConfusedKana>(),
                     get.Get<SimilarKanji>()));
-            kernel.Bind<IEnumerable<UsageDataSourcePreviewVM>>(get => new []{
+            kernel.BindFactory<IEnumerable<UsageDataSourcePreviewVM>>(get => new []{
                 new UsageDataSourcePreviewVM(get.Get<IEnumerable<DataSourceVM>>(), "view.config"),
                 new UsageDataSourcePreviewVM(get.Get<IEnumerable<DataSourceVM>>(), "view_2.config"),
                 new UsageDataSourcePreviewVM(get.Get<IEnumerable<DataSourceVM>>(), "view_3.config")
             });
-            kernel.Bind(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
-            kernel.Bind(get => new IdiomDetector(get.Get<JMDictLookup>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
-            kernel.Bind(get => new PartialWordLookup(get.Get<JMDictLookup>(), get.Get<IRadicalSearcher>(), get.Get<KanjiRadicalLookup>()));
-            kernel.Bind(get =>
+            kernel.BindFactory(get => CreateEpwing(Path.Combine(dataDir, "epwing")));
+            kernel.BindFactory(get => new IdiomDetector(get.Get<JMDictLookup>(), get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "dictionaries", "idioms.cache")));
+            kernel.BindFactory(get => new PartialWordLookup(get.Get<JMDictLookup>(), get.Get<IRadicalSearcher>(), get.Get<KanjiRadicalLookup>()));
+            kernel.BindFactory(get =>
             {
                 using(var reader = File.OpenText(Path.Combine(dataDir, "character", "radkfile1_plus_2_utf8")))
                     return new KanjiRadicalLookup(Radkfile.Parse(reader), get.Get<KanjiDict>());
             });
-            kernel.Bind<IWebBrowser>(get => new WebBrowser());
-            kernel.Bind<IFlowDocumentRichFormattingRenderer>(get => new FlowDocumentRichFormattingRenderer(get.Get<IFontResolver>(), get.Get<IWebBrowser>()));
-            kernel.Bind<IJGramLookup>(get => new JGramLookup(
+            kernel.BindFactory<IWebBrowser>(get => new WebBrowser());
+            kernel.BindFactory<IFlowDocumentRichFormattingRenderer>(get => new FlowDocumentRichFormattingRenderer(get.Get<IFontResolver>(), get.Get<IWebBrowser>()));
+            kernel.BindFactory<IJGramLookup>(get => new JGramLookup(
                 Path.Combine(dataDir, "dictionaries", "jgram"),
                 Path.Combine(dataDir, "dictionaries", "jgram_lookup"),
                 Path.Combine(dataDir, "dictionaries", "jgram.cache")));
-            kernel.Bind(get => new RadkfileKanjiAliveCorrelator(Path.Combine(dataDir, "character", "radkfile_kanjilive_correlation_data.txt")));
+            kernel.BindFactory(get => new RadkfileKanjiAliveCorrelator(Path.Combine(dataDir, "character", "radkfile_kanjilive_correlation_data.txt")));
             kernel.Bind<IRadicalSearcher, RadicalSearcher>();
-            kernel.Bind(get => new RadicalSearcher(
+            kernel.BindFactory(get => new RadicalSearcher(
                 get.Get<KanjiRadicalLookup>().AllRadicals,
                 KanjiAliveJapaneseRadicalInformation.Parse(Path.Combine(dataDir, "character", "japanese-radicals.csv")),
                 get.Get<RadkfileKanjiAliveCorrelator>()));
-            kernel.Bind(get => new Corpus(get.Get<Tanaka>().AllSentences, get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "corpora", "tanaka.cache")));
+            kernel.BindFactory(get => new Corpus(get.Get<Tanaka>().AllSentences, get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "corpora", "tanaka.cache")));
             return kernel;
 
             IReadOnlyDictionary<CodePoint, string> CreateTextRadicalMappings(IEnumerable<CodePoint> radicals, IReadOnlyDictionary<int, int> remapper)
