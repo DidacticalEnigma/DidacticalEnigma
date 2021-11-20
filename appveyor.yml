@@ -1,5 +1,5 @@
 image:
-  - Visual Studio 2019
+  - Visual Studio 2022
   - Ubuntu
 configuration: Release
 install:
@@ -15,15 +15,14 @@ build_script:
   - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.MagicTranslatorProject/DidacticalEnigma.MagicTranslatorProject.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.Updater/DidacticalEnigma.Updater.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: if($isWindows) { nuget restore; }
-  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release/MagicTranslatorGlosser
-  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release/MagicTranslatorGlosser
-  - ps: if($isWindows) { msbuild -verbosity:minimal DidacticalEnigma.Updater.WPF\DidacticalEnigma.Updater.WPF.csproj /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"; }
-  - ps: if($isWindows) { mv $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.Updater.WPF/bin/Release/* $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release; }
-  - ps: if($isWindows) { msbuild -verbosity:minimal DidacticalEnigma.WPF\DidacticalEnigma.WPF.csproj /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"; }
+  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
+  - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
+  - ps: if($isWindows) { dotnet publish DidacticalEnigma.Updater.WPF/DidacticalEnigma.Updater.WPF.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma }
+  - ps: if($isWindows) { dotnet publish DidacticalEnigma.WPF/DidacticalEnigma.WPF.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma }
   - ps: if($isLinux) { dotnet build $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.Core/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj }
 after_build:
-  - ps: if($isWindows) { mv $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/Release $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/DidacticalEnigma; }
-  - ps: if($isWindows) { 7z a -r DidacticalEnigma.zip $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.WPF/bin/DidacticalEnigma; }
+  - ps: if($isWindows) { mv $env:APPVEYOR_BUILD_FOLDER/Data $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma; }
+  - ps: if($isWindows) { 7z a -r DidacticalEnigma.zip $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma; }
 artifacts:
   - path: DidacticalEnigma.zip
     name: Full program
