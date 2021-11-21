@@ -119,8 +119,10 @@ namespace DidacticalEnigma.ViewModels
             IWebBrowser webBrowser,
             Func<string> aboutTextProvider,
             ITextInsertCommand insertText,
-            Settings settings)
+            Settings settings,
+            ReplVM repl)
         {
+            this.Repl = repl;
             this.settings = settings;
             this.PropertyChanged += (sender, args) =>
             {
@@ -246,6 +248,8 @@ namespace DidacticalEnigma.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public ReplVM Repl { get; }
 
         public ThemeType ThemeType => settings.ThemeType;
 

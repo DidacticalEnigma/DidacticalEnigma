@@ -11,6 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DidacticalEnigma.Core" Version="0.9.7.1" />
+    <PackageReference Include="DidacticalEnigma.IronPython" Version="0.1.0" />
     <PackageReference Include="DidacticalEnigma.Project" Version="0.9.6" />
     <PackageReference Include="Gu.Analyzers" Version="1.6.10-dev" />
     <PackageReference Include="Gu.Inject" Version="0.3.9" />
@@ -47,5 +48,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.json" />
+  </ItemGroup>
+  <!-- Workaround for https://github.com/IronLanguages/ironpython3/issues/1227 -->
+  <ItemGroup>
+    <Reference Include="IronPython">
+      <HintPath>$(NuGetPackageRoot)ironpython\3.4.0-alpha1\lib\netcoreapp3.1\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules">
+      <HintPath>$(NuGetPackageRoot)ironpython\3.4.0-alpha1\lib\netcoreapp3.1\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Wpf">
+      <HintPath>$(NuGetPackageRoot)ironpython\3.4.0-alpha1\lib\netcoreapp3.1\IronPython.Wpf.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

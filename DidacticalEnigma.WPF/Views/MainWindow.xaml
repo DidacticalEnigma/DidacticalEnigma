@@ -149,6 +149,9 @@
             <TabItem Header="Katakana">
                 <views:KanaBoard DataContext="{Binding KatakanaBoard}" KeyClickCommand="{Binding DataContext.InsertTextAtCaret, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}" />
             </TabItem>
+            <TabItem Header="REPL">
+                <views:ReplControl Repl="{Binding Repl}"/>
+            </TabItem>
             <TabItem Header="Settings">
                 <TextBlock Text="To be implemented" />
             </TabItem>

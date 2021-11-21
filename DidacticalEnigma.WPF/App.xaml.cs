@@ -8,9 +8,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Models;
 using DidacticalEnigma.Utils;
 using DidacticalEnigma.ViewModels;
 using DidacticalEnigma.Views;
@@ -52,6 +54,7 @@ namespace DidacticalEnigma
                 splash.Show();
                 Encoding.RegisterProvider(new Utf8EncodingProviderHack());
                 kernel.Bind<ITextInsertCommand>(() => new TextInsertCommand(window.InsertTextAtCursor));
+                kernel.Bind(Dispatcher);
                 await Task.Run(() =>
                 {
                     Preload(progress);
@@ -148,6 +151,13 @@ namespace DidacticalEnigma
                     return Models.Settings.CreateDefault();
                 }
             });
+            kernel.Bind(get => new ReplRootModule(
+                get.Get<JMDictLookup>(),
+                get.Get<JMNedictLookup>(),
+                new ReplCorpora(
+                    get.Get<BasicExpressionsCorpus>(),
+                    get.Get<Tanaka>(),
+                    get.Get<JESC>())));
             kernel.Bind(get => new RadicalRemapper(get.Get<Kradfile>(), get.Get<Radkfile>()));
             kernel.Bind(get => EasilyConfusedKana.FromFile(Path.Combine(dataDir, "character", "confused.txt")));
             kernel.Bind<IKanjiProperties, KanjiProperties>();
@@ -174,7 +184,8 @@ namespace DidacticalEnigma
                         $"Didactical Enigma {version}\n\n{File.ReadAllText(Path.Combine(dataDir, @"about.txt"), Encoding.UTF8)}";
                 },
                 get.Get<ITextInsertCommand>(),
-                get.Get<Models.Settings>()));
+                get.Get<Models.Settings>(),
+                get.Get<ReplVM>()));
             kernel.Bind(get => new KanjiRadicalLookupControlVM(
                 get.Get<KanjiRadicalLookup>(),
                 get.Get<IKanjiProperties>(),
