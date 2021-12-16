@@ -153,7 +153,13 @@
                 <views:ReplControl Repl="{Binding Repl}"/>
             </TabItem>
             <TabItem Header="Settings">
-                <TextBlock Text="To be implemented" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <views:DidacticalEnigmaMemSettings Grid.Row="0" Fixture="{Binding DidacticalEnigmaMemVM}" WebBrowser="{Binding WebBrowser}" />
+                </Grid>
             </TabItem>
             <TabItem Header="About">
                 <TextBox IsReadOnly="True" Text="{Binding AboutText, Mode=OneWay}" />

@@ -185,7 +185,8 @@ namespace DidacticalEnigma
                 },
                 get.Get<ITextInsertCommand>(),
                 get.Get<Models.Settings>(),
-                get.Get<ReplVM>()));
+                get.Get<ReplVM>(),
+                get.Get<DidacticalEnigma.Mem.Client.DidacticalEnigmaMemViewModel>()));
             kernel.Bind(get => new KanjiRadicalLookupControlVM(
                 get.Get<KanjiRadicalLookup>(),
                 get.Get<IKanjiProperties>(),
@@ -251,6 +252,8 @@ namespace DidacticalEnigma
                 KanjiAliveJapaneseRadicalInformation.Parse(Path.Combine(dataDir, "character", "japanese-radicals.csv")),
                 get.Get<RadkfileKanjiAliveCorrelator>()));
             kernel.Bind(get => new Corpus(get.Get<Tanaka>().AllSentences, get.Get<IMorphologicalAnalyzer<IpadicEntry>>(), Path.Combine(dataDir, "corpora", "tanaka.cache")));
+
+            kernel.Bind(get => new DidacticalEnigma.Mem.Client.DidacticalEnigmaMemViewModel());
             return kernel;
 
             IReadOnlyDictionary<CodePoint, string> CreateTextRadicalMappings(IEnumerable<CodePoint> radicals, IReadOnlyDictionary<int, int> remapper)

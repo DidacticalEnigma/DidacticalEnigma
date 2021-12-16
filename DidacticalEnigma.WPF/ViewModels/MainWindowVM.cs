@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Mem.Client;
 using DidacticalEnigma.Models;
 using DidacticalEnigma.Utils;
 using Optional.Collections;
@@ -99,6 +100,8 @@ namespace DidacticalEnigma.ViewModels
 
         public KanjiRadicalLookupControlVM KanjiLookupVM { get; }
 
+        public IWebBrowser WebBrowser { get; }
+
         public KanaBoardVM HiraganaBoard { get; }
 
         public KanaBoardVM KatakanaBoard { get; }
@@ -120,9 +123,11 @@ namespace DidacticalEnigma.ViewModels
             Func<string> aboutTextProvider,
             ITextInsertCommand insertText,
             Settings settings,
-            ReplVM repl)
+            ReplVM repl,
+            Mem.Client.DidacticalEnigmaMemViewModel didacticalEnigmaMemViewModel)
         {
             this.Repl = repl;
+            this.DidacticalEnigmaMemVM = didacticalEnigmaMemViewModel;
             this.settings = settings;
             this.PropertyChanged += (sender, args) =>
             {
@@ -146,6 +151,7 @@ namespace DidacticalEnigma.ViewModels
             ClipboardTextBuffer = new TextBufferVM("Clipboard", parser, kanjiProperties, kanaProperties, related);
             TextBuffers.Add(ClipboardTextBuffer);
             KanjiLookupVM = kanjiLookupVm;
+            WebBrowser = webBrowser;
             hook = new ClipboardHook();
             hook.ClipboardChanged += SetContent;
             ChooseTheSimilarCharacter = new RelayCommand((p) =>
@@ -250,6 +256,8 @@ namespace DidacticalEnigma.ViewModels
         }
 
         public ReplVM Repl { get; }
+
+        public DidacticalEnigmaMemViewModel DidacticalEnigmaMemVM { get; }
 
         public ThemeType ThemeType => settings.ThemeType;
 
