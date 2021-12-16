@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace DidacticalEnigma.Utils
 {
@@ -12,9 +13,18 @@ namespace DidacticalEnigma.Utils
     {
         public void NavigateTo(Uri url)
         {
-            using (Process.Start(url.ToString()))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-
+                var u = url.ToString().Replace("&", "^&");
+                using var p = Process.Start(new ProcessStartInfo("cmd", $"/c start {u}") { CreateNoWindow = true });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                using var p = Process.Start("xdg-open", url.ToString());
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                using var p = Process.Start("open", url.ToString());
             }
         }
     }
