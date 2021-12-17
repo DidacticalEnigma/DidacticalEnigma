@@ -12,6 +12,7 @@ using System.Windows.Threading;
 using DidacticalEnigma.Core.Models;
 using DidacticalEnigma.Core.Models.DataSources;
 using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Mem.DataSource;
 using DidacticalEnigma.Models;
 using DidacticalEnigma.Utils;
 using DidacticalEnigma.ViewModels;
@@ -214,7 +215,8 @@ namespace DidacticalEnigma
                 new DataSourceVM(new BasicExpressionCorpusDataSource(get.Get<BasicExpressionsCorpus>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new PartialWordLookupJMDictDataSource(get.Get<PartialWordLookup>(), get.Get<FrequencyList>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JESCDataSource(get.Get<JESC>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
-                new DataSourceVM(new RomajiDataSource(get.Get<IRomaji>()), get.Get<IFlowDocumentRichFormattingRenderer>())
+                new DataSourceVM(new RomajiDataSource(get.Get<IRomaji>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new DidacticalEnigmaMemDataSource(get.Get<DidacticalEnigma.Mem.Client.DidacticalEnigmaMemViewModel>().ClientAccessor), get.Get<IFlowDocumentRichFormattingRenderer>())
             }.Concat(get.Get<EpwingDictionaries>().Dictionaries.Select(dict => new DataSourceVM(new EpwingDataSource(dict, get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>(), dict.Revision))));
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.Bind(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
