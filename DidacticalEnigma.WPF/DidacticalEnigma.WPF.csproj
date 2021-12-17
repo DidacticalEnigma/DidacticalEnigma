@@ -18,7 +18,7 @@
     <PackageReference Include="Gu.Analyzers" Version="1.6.10-dev" />
     <PackageReference Include="Gu.Inject" Version="0.3.9" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.2.1" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="6.0.1" />
     <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="PropertyChangedAnalyzers" Version="3.2.1" />
