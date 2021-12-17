@@ -11,6 +11,7 @@ build_script:
   - ps: dotnet pack DidacticalEnigma.Core/Utility/Utility.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Core/JDict/JDict.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.Core/DidacticalEnigma.Core.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.IoCModule/DidacticalEnigma.IoCModule.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.Project/DidacticalEnigma.Project.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.MagicTranslatorProject/DidacticalEnigma.MagicTranslatorProject.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.Updater/DidacticalEnigma.Updater.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
