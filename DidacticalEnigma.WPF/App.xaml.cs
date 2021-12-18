@@ -81,7 +81,7 @@ namespace DidacticalEnigma
             {
                 sentry = SentrySdk.Init(o =>
                 {
-                    o.Dsn = new Dsn(dsn);
+                    o.Dsn = dsn;
                     o.AttachStacktrace = true;
                 });
             };

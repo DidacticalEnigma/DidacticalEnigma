@@ -22,8 +22,7 @@
     <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="PropertyChangedAnalyzers" Version="3.2.1" />
-    <PackageReference Include="Sentry" Version="1.1.2" />
-    <PackageReference Include="Sentry.Protocol" Version="1.0.6" />
+    <PackageReference Include="Sentry" Version="3.12.2" />
     <PackageReference Include="System.AppContext" Version="4.3.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Console" Version="4.3.1" />
