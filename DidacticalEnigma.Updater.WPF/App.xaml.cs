@@ -3,6 +3,7 @@ using DidacticalEnigma.Updater.WPF.ViewModels;
 using DidacticalEnigma.Updater.WPF.Views;
 using NMeCab;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Net.Http;
 using System.Windows;
@@ -31,7 +32,7 @@ namespace DidacticalEnigma.Updater.WPF
                 {
                     new JMDictUpdaterProcess(
                         httpClient,
-                        "http://ftp.edrdg.org/pub/Nihongo/JMdict_e.gz",
+                        ConfigurationManager.AppSettings["JMDictSourceUrl"],
                         Path.Combine(dataDir, "dictionaries", "JMdict_e.gz"),
                         Path.Combine(dataDir, "dictionaries", "JMdict_e.cache"),
                         Path.Combine(dataDir, "dictionaries", "JMdict_e.gz.new"),
@@ -39,7 +40,7 @@ namespace DidacticalEnigma.Updater.WPF
                         Path.Combine(dataDir, "dictionaries", "jmdict_tested_schema.xml")),
                     new JMNedictUpdaterProcess(
                         httpClient,
-                        "http://ftp.edrdg.org/pub/Nihongo/JMnedict.xml.gz",
+                        ConfigurationManager.AppSettings["JMNeDictSourceUrl"],
                         Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz"),
                         Path.Combine(dataDir, "dictionaries", "JMnedict.xml.cache"),
                         Path.Combine(dataDir, "dictionaries", "JMnedict.xml.gz.new"),
@@ -47,12 +48,12 @@ namespace DidacticalEnigma.Updater.WPF
                         Path.Combine(dataDir, "dictionaries", "jmnedict_tested_schema.xml")),
                     new KanjiDictUpdaterProcess(
                         httpClient,
-                        "http://ftp.edrdg.org/pub/Nihongo/kanjidic2.xml.gz",
+                        ConfigurationManager.AppSettings["KanjiDicSourceUrl"],
                         Path.Combine(dataDir, "character", "kanjidic2.xml.gz"),
                         Path.Combine(dataDir, "character", "kanjidic2.xml.gz.new")),
                     new TanakaUpdaterProcess(
                         httpClient,
-                        "http://ftp.edrdg.org/pub/Nihongo/examples.utf.gz",
+                        ConfigurationManager.AppSettings["TanakaCorpusSourceUrl"],
                         Path.Combine(dataDir, "corpora", "examples.utf.gz"),
                         Path.Combine(dataDir, "corpora", "examples.utf.gz.new"),
                         Path.Combine(dataDir, "corpora", "tanaka.cache"),
