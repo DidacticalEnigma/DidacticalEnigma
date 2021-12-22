@@ -17,7 +17,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DidacticalEnigma.Core" Version="0.9.7.3" />
-    <PackageReference Include="DidacticalEnigma.Updater" Version="0.9.6.4" />
+    <PackageReference Include="DidacticalEnigma.Updater" Version="0.9.7" />
     <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>

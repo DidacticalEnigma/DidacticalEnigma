@@ -1,5 +1,7 @@
-﻿using DidacticalEnigma.Updater.WPF.ViewModels;
+﻿using DidacticalEnigma.Core.Models.LanguageService;
+using DidacticalEnigma.Updater.WPF.ViewModels;
 using DidacticalEnigma.Updater.WPF.Views;
+using NMeCab;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -20,6 +22,11 @@ namespace DidacticalEnigma.Updater.WPF
                 var dataDir = Path.Combine(baseDir, "Data");
                 var window = new MainWindow();
                 var httpClient = new HttpClient();
+                var mecab = new MeCabIpadic(new MeCabParam
+                {
+                    DicDir = Path.Combine(dataDir, "mecab", "ipadic"),
+                    UseMemoryMappedFile = true
+                });
                 window.DataContext = new MainWindowVM(new UpdaterProcess[]
                 {
                     new JMDictUpdaterProcess(
@@ -42,7 +49,15 @@ namespace DidacticalEnigma.Updater.WPF
                         httpClient,
                         "http://ftp.edrdg.org/pub/Nihongo/kanjidic2.xml.gz",
                         Path.Combine(dataDir, "character", "kanjidic2.xml.gz"),
-                        Path.Combine(dataDir, "character", "kanjidic2.xml.gz.new"))
+                        Path.Combine(dataDir, "character", "kanjidic2.xml.gz.new")),
+                    new TanakaUpdaterProcess(
+                        httpClient,
+                        "http://ftp.edrdg.org/pub/Nihongo/examples.utf.gz",
+                        Path.Combine(dataDir, "corpora", "examples.utf.gz"),
+                        Path.Combine(dataDir, "corpora", "examples.utf.gz.new"),
+                        Path.Combine(dataDir, "corpora", "tanaka.cache"),
+                        Path.Combine(dataDir, "corpora", "tanaka.cache.new"),
+                        mecab)
                 });
                 window.Show();
             };
