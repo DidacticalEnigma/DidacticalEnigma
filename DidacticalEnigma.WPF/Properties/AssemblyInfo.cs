@@ -8,9 +8,9 @@ using System.Windows;
 [assembly: AssemblyTitle("DidacticalEnigma")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("DidacticalEnigma")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2018")]
+[assembly: AssemblyCopyright("Copyright © milleniumbug 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -49,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9")]
-[assembly: AssemblyFileVersion("0.9.7")]
+[assembly: AssemblyVersion("0.10")]
+[assembly: AssemblyFileVersion("0.10.0.0")]
