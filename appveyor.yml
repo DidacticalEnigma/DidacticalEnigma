@@ -2,12 +2,15 @@ image:
   - Visual Studio 2022
   - Ubuntu2004
 configuration: Release
+environment:
+  nodejs_version: 14
 install:
   - ps: cd $env:APPVEYOR_BUILD_FOLDER
   - git submodule update --init --recursive
+  - cmd: powershell Install-Product node $env:nodejs_version
+  - sh: nvm install $nodejs_version
 build_script:
   - ps: dotnet nuget add source $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: Install-Product node 14 x64
   - ps: dotnet pack TinyIndex/TinyIndex/TinyIndex.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Core/Utility/Utility.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Core/JDict/JDict.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
