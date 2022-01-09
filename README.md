@@ -1,4 +1,4 @@
-Didactical Enigma [![Build status](https://ci.appveyor.com/api/projects/status/qt81054k5n9f1t2h/branch/master?svg=true)](https://ci.appveyor.com/project/milleniumbug/didacticalenigma/branch/master) [![Discord](https://img.shields.io/discord/563012720178495499.svg)](https://discord.gg/p4kGURM) [![GitHub](https://img.shields.io/github/license/milleniumbug/DidacticalEnigma.svg)](https://github.com/milleniumbug/DidacticalEnigma/blob/master/LICENSE)
+Didactical Enigma [![Build status](https://ci.appveyor.com/api/projects/status/qt81054k5n9f1t2h/branch/master?svg=true)](https://ci.appveyor.com/project/milleniumbug/didacticalenigma/branch/master) [![Discord](https://img.shields.io/discord/563012720178495499.svg)](https://discord.gg/p4kGURM) [![GitHub](https://img.shields.io/github/license/milleniumbug/DidacticalEnigma.svg)](https://github.com/milleniumbug/DidacticalEnigma/blob/master/LICENSE) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V02A5AY)
 =================
 
 This tool's goal is to assist in translation from Japanese to English.
