@@ -21,6 +21,8 @@ build_script:
   - ps: dotnet pack clipwatch/ClipwatchSharp/ClipwatchSharp/ClipwatchSharp.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack webview_csharp/src/SharpWebview/SharpWebview.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: if($isWindows) { nuget restore; }
+  - ps: dotnet publish DidacticalEnigma.Misc/DidacticalEnigma.Updater.CLI/DidacticalEnigma.Updater.CLI.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
+  - ps: dotnet publish DidacticalEnigma.Misc/DidacticalEnigma.Updater.CLI/DidacticalEnigma.Updater.CLI.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
   - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
   - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
   - ps: dotnet publish DidacticalEnigma.Next/DidacticalEnigma.Next/DidacticalEnigma.Next.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
