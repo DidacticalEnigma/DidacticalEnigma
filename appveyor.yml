@@ -1,12 +1,13 @@
 image:
   - Visual Studio 2022
-  - Ubuntu
+  - Ubuntu2004
 configuration: Release
 install:
   - ps: cd $env:APPVEYOR_BUILD_FOLDER
   - git submodule update --init --recursive
 build_script:
   - ps: dotnet nuget add source $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: Install-Product node 14 x64
   - ps: dotnet pack TinyIndex/TinyIndex/TinyIndex.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Core/Utility/Utility.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: dotnet pack DidacticalEnigma.Core/JDict/JDict.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
@@ -43,7 +44,7 @@ for:
 -
   matrix:
     only:
-      - image: Ubuntu
+      - image: Ubuntu2004
 
   test_script:
   - ps: dotnet test $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.Core/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj
