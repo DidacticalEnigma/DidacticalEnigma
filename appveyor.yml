@@ -7,20 +7,24 @@ install:
   - git submodule update --init --recursive
 build_script:
   - ps: dotnet nuget add source $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack TinyIndex/TinyIndex/TinyIndex.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Core/Utility/Utility.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Core/JDict/JDict.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.Core/DidacticalEnigma.Core.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.IoCModule/DidacticalEnigma.IoCModule.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.Project/DidacticalEnigma.Project.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.MagicTranslatorProject/DidacticalEnigma.MagicTranslatorProject.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.Updater/DidacticalEnigma.Updater.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.Mem.Client/DidacticalEnigma.Mem.Client.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.Mem.DataSource/DidacticalEnigma.Mem.DataSource.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
-  - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.IronPython/DidacticalEnigma.IronPython.csproj -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack TinyIndex/TinyIndex/TinyIndex.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Core/Utility/Utility.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Core/JDict/JDict.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.Core/DidacticalEnigma.Core.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Core/DidacticalEnigma.IoCModule/DidacticalEnigma.IoCModule.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.Project/DidacticalEnigma.Project.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Project/DidacticalEnigma.MagicTranslatorProject/DidacticalEnigma.MagicTranslatorProject.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.Updater/DidacticalEnigma.Updater.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.Mem.Client/DidacticalEnigma.Mem.Client.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.Mem.DataSource/DidacticalEnigma.Mem.DataSource.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack DidacticalEnigma.Misc/DidacticalEnigma.IronPython/DidacticalEnigma.IronPython.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack clipwatch/ClipwatchSharp/ClipwatchSharp/ClipwatchSharp.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
+  - ps: dotnet pack webview_csharp/src/SharpWebview/SharpWebview.csproj -c Release -o $env:APPVEYOR_BUILD_FOLDER/OutputNuget
   - ps: if($isWindows) { nuget restore; }
   - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
   - ps: dotnet publish DidacticalEnigma.Misc/MagicTranslatorGlosser/MagicTranslatorGlosser.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
+  - ps: dotnet publish DidacticalEnigma.Next/DidacticalEnigma.Next/DidacticalEnigma.Next.csproj -c Release -r linux-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
+  - ps: dotnet publish DidacticalEnigma.Next/DidacticalEnigma.Next/DidacticalEnigma.Next.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma
   - ps: if($isWindows) { dotnet publish DidacticalEnigma.Updater.WPF/DidacticalEnigma.Updater.WPF.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma }
   - ps: if($isWindows) { dotnet publish DidacticalEnigma.WPF/DidacticalEnigma.WPF.csproj -c Release -r win-x64 --self-contained false -o $env:APPVEYOR_BUILD_FOLDER/Output/DidacticalEnigma }
   - ps: if($isLinux) { dotnet build $env:APPVEYOR_BUILD_FOLDER/DidacticalEnigma.Core/AutomatedTests.NetCore/AutomatedTests.NetCore.csproj }

@@ -13,3 +13,12 @@
 [submodule "DidacticalEnigma.Project"]
 	path = DidacticalEnigma.Project
 	url = https://github.com/DidacticalEnigma/DidacticalEnigma.Project
+[submodule "clipwatch"]
+	path = clipwatch
+	url = https://github.com/milleniumbug/clipwatch
+[submodule "webview_csharp"]
+	path = webview_csharp
+	url = https://github.com/milleniumbug/webview_csharp
+[submodule "DidacticalEnigma.Next"]
+	path = DidacticalEnigma.Next
+	url = https://github.com/DidacticalEnigma/DidacticalEnigma.Next
