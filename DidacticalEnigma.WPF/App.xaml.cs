@@ -202,8 +202,9 @@ namespace DidacticalEnigma
             kernel.Bind(get => new[] {
                 new DataSourceVM(new CharacterDataSource(get.Get<IKanjiProperties>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new CharacterStrokeOrderDataSource(), get.Get<IFlowDocumentRichFormattingRenderer>()),
-                new DataSourceVM(new JMDictDataSource(get.Get<JMDictLookup>(), get.Get<IKanaProperties>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new JMDictDataSource(get.Get<JMDictLookup>(), get.Get<IKanaProperties>(), get.Get<JMDictEntrySorter>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new JNeDictDataSource(get.Get<JMNedictLookup>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
+                new DataSourceVM(new JMDictCompactDataSource(get.Get<JMDictLookup>(), get.Get<IKanaProperties>(), get.Get<JMDictEntrySorter>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new VerbConjugationDataSource(get.Get<JMDictLookup>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new WordFrequencyRatingDataSource(get.Get<FrequencyList>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
                 new DataSourceVM(new PartialExpressionJMDictDataSource(get.Get<IdiomDetector>()), get.Get<IFlowDocumentRichFormattingRenderer>()),
@@ -221,8 +222,9 @@ namespace DidacticalEnigma
             kernel.Bind<IKanaProperties, KanaProperties2>();
             kernel.Bind(get => new KanaProperties2(Path.Combine(dataDir, "character", "kana.txt"), Encoding.UTF8));
             kernel.Bind(get => new SimilarKanji(Path.Combine(dataDir, "character", "kanji.tgz_similars.ut8"), Encoding.UTF8));
-            kernel.Bind(get => new SentenceParser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>()));
+            kernel.Bind(get => new SentenceParser(get.Get<IMorphologicalAnalyzer<IEntry>>(), get.Get<JMDictLookup>(), get.Get<IKanaProperties>()));
             kernel.Bind<ISentenceParser, SentenceParser>();
+            kernel.Bind(get => new JMDictEntrySorter());
             kernel.Bind<IRelated>(get =>
                 new CompositeRelated(
                     get.Get<KanaProperties2>(),

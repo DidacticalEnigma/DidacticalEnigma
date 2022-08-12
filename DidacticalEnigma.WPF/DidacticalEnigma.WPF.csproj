@@ -10,7 +10,7 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DidacticalEnigma.Core" Version="0.9.7.10" />
+    <PackageReference Include="DidacticalEnigma.Core" Version="0.9.7.17" />
     <PackageReference Include="DidacticalEnigma.IronPython" Version="0.1.0" />
     <PackageReference Include="DidacticalEnigma.Mem.Client" Version="0.9.0.8" />
     <PackageReference Include="DidacticalEnigma.Mem.DataSource" Version="0.9.1" />
