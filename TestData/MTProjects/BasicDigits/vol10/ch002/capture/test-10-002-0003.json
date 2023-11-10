@@ -1,0 +1,69 @@
+{
+	"captureId": 4,
+	"captures": [
+		{
+			"position": {
+				"x": 85.75,
+				"y": 33
+			},
+			"size": {
+				"x": 444,
+				"y": 119
+			},
+			"text": "必ず助けるわ!!!",
+			"translation": "",
+			"notes": [
+				[
+					"",
+					""
+				]
+			],
+			"character": 31,
+			"id": 2
+		},
+		{
+			"position": {
+				"x": 281,
+				"y": 369
+			},
+			"size": {
+				"x": 268,
+				"y": 67
+			},
+			"text": "絶対!!!!!",
+			"translation": "",
+			"notes": [
+				[
+					"",
+					""
+				]
+			],
+			"character": 32,
+			"id": 1
+		},
+		{
+			"position": {
+				"x": 36.75,
+				"y": 454
+			},
+			"size": {
+				"x": 55,
+				"y": 49
+			},
+			"text": "",
+			"translation": "???",
+			"notes": [
+				[
+					"",
+					""
+				]
+			],
+			"character": "unknown",
+			"id": 3
+		}
+	],
+	"rawSize": {
+		"x": 618,
+		"y": 542
+	}
+}

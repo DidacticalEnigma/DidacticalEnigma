@@ -1,0 +1,29 @@
+{
+	"captureId": 1,
+	"captures": [
+		{
+			"position": {
+				"x": 158.75,
+				"y": 82
+			},
+			"size": {
+				"x": 140,
+				"y": 73
+			},
+			"text": "???",
+			"translation": "",
+			"notes": [
+				[
+					"",
+					""
+				]
+			],
+			"character": "narrator",
+			"id": 0
+		}
+	],
+	"rawSize": {
+		"x": 618,
+		"y": 542
+	}
+}

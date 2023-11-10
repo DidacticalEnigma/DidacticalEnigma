@@ -1,0 +1,14 @@
+{
+	"name": "Test project",
+	"structure": {
+		"volume": "vol##",
+		"chapter": "ch###",
+		"page": "test-{volumeDigits}-{chapterDigits}-####",
+		"raw": "{volume}/{chapter}/raw/{page}.png",
+		"translated": "{volume}/{chapter}/translated/{page}.png",
+		"capture": "{volume}/{chapter}/capture/{page}",
+		"save": "{volume}/{chapter}/save/{page}",
+		"character": "character",
+		"thumb": ".magictranslator/thumb"
+	}
+}
